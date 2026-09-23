@@ -49,6 +49,9 @@
   </Dialog>
 </template>
 <script setup>
+import { useLeadsOnlyMode } from '@/composables/leadsOnlyMode'
+
+const leadsOnlyMode = useLeadsOnlyMode()
 import LucideLayoutDashboard from '~icons/lucide/layout-dashboard'
 import LucideNetwork from '~icons/lucide/network'
 import MonitorCogIcon from '~icons/lucide/monitor-cog'
@@ -197,6 +200,7 @@ const tabs = computed(() => {
           label: __('SLA Policies'),
           icon: markRaw(h(ShieldCheck)),
           component: markRaw(SlaConfig),
+          condition: () => !leadsOnlyMode.value,
         },
         {
           label: __('Forms'),
@@ -224,6 +228,7 @@ const tabs = computed(() => {
           label: __('Telephony'),
           icon: PhoneIcon,
           component: markRaw(TelephonyPage),
+          condition: () => !leadsOnlyMode.value,
         },
         {
           label: __('WhatsApp'),
@@ -235,7 +240,7 @@ const tabs = computed(() => {
           label: __('ERPNext'),
           icon: ERPNextIcon,
           component: markRaw(ERPNextSettings),
-          condition: () => isManager(),
+          condition: () => isManager() && !leadsOnlyMode.value,
         },
         {
           label: __('Lead Syncing'),

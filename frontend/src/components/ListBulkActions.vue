@@ -31,6 +31,9 @@
 </template>
 
 <script setup>
+import { useLeadsOnlyMode } from '@/composables/leadsOnlyMode'
+
+const leadsOnlyMode = useLeadsOnlyMode()
 import EditValueModal from '@/components/Modals/EditValueModal.vue'
 import AssignmentModal from '@/components/Modals/AssignmentModal.vue'
 import { setupListCustomizations } from '@/utils'
@@ -190,7 +193,7 @@ function bulkActions(selections, unselectAll) {
     })
   }
 
-  if (props.doctype === 'CRM Lead') {
+  if (props.doctype === 'CRM Lead' && !leadsOnlyMode.value) {
     actions.push({
       label: __('Convert to Deal'),
       onClick: () => convertToDeal(selections, unselectAll),

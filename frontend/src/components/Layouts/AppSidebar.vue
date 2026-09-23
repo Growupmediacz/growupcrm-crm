@@ -111,7 +111,7 @@
               :afterUpgrade="() => capture('upgrade_plan_from_trial_banner')"
             />
             <GettingStartedBanner
-              v-if="!isOnboardingStepsCompleted"
+              v-if="!isOnboardingStepsCompleted && !leadsOnlyMode"
               :isSidebarCollapsed="isCollapsed"
             />
           </div>
@@ -126,7 +126,7 @@
             </template>
           </SidebarItem>
           <SidebarItem
-            v-if="isOnboardingStepsCompleted"
+            v-if="isOnboardingStepsCompleted && !leadsOnlyMode"
             :label="__('Help')"
             @click="toggleHelpModal"
           >
@@ -154,7 +154,7 @@
   <template v-if="!mobile">
     <Settings />
     <HelpModal
-      v-if="showHelpModal"
+      v-if="showHelpModal && !leadsOnlyMode"
       v-model="showHelpModal"
       v-model:articles="articles"
       :logo="CRMLogo"
@@ -172,6 +172,7 @@
 </template>
 
 <script setup>
+import { useLeadsOnlyMode, LEADS_ONLY_HIDDEN_ROUTES } from '@/composables/leadsOnlyMode'
 import BrushCleaningIcon from '~icons/lucide/brush-cleaning'
 import LucideLayoutDashboard from '~icons/lucide/layout-dashboard'
 import CRMLogo from '@/components/Icons/CRMLogo.vue'
@@ -249,6 +250,7 @@ const isSidebarCollapsed = useStorage('isSidebarCollapsed', false)
 const isCollapsed = computed(() => isSidebarCollapsed.value && !props.mobile)
 
 const isFCSite = ref(window.is_fc_site)
+const leadsOnlyMode = useLeadsOnlyMode()
 const isDemoSite = ref(window.is_demo_site)
 
 const links = [
@@ -303,6 +305,9 @@ const allViews = computed(() => {
       opened: true,
       views: links
         .filter((link) => {
+          if (leadsOnlyMode.value && LEADS_ONLY_HIDDEN_ROUTES.includes(link.to)) {
+            return false
+          }
           if (link.condition) {
             return link.condition()
           }

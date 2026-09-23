@@ -51,6 +51,7 @@
         :actions="document.actions"
       />
       <Tooltip
+        v-if="!leadsOnlyMode"
         :disabled="!isLeadConversionDisabled"
         :text="__('Cannot convert a lost lead to deal')"
       >
@@ -132,6 +133,9 @@
   />
 </template>
 <script setup>
+import { useLeadsOnlyMode } from '@/composables/leadsOnlyMode'
+
+const leadsOnlyMode = useLeadsOnlyMode()
 import DeleteLinkedDocModal from '@/components/DeleteLinkedDocModal.vue'
 import ErrorPage from '@/components/ErrorPage.vue'
 import Icon from '@/components/Icon.vue'
