@@ -13,21 +13,21 @@
           v-model="numberChart"
           type="select"
           :label="__('Number Chart')"
-          :options="numberCharts"
+          :options="leadsOnlyMode ? LEADS_ONLY_CHARTS.number : numberCharts"
         />
         <FormControl
           v-if="chartType === 'axis_chart'"
           v-model="axisChart"
           type="select"
           :label="__('Axis Chart')"
-          :options="axisCharts"
+          :options="leadsOnlyMode ? LEADS_ONLY_CHARTS.axis : axisCharts"
         />
         <FormControl
           v-if="chartType === 'donut_chart'"
           v-model="donutChart"
           type="select"
           :label="__('Donut Chart')"
-          :options="donutCharts"
+          :options="leadsOnlyMode ? LEADS_ONLY_CHARTS.donut : donutCharts"
         />
       </div>
     </template>
@@ -43,7 +43,8 @@
 <script setup lang="ts">
 import { getRandom } from '@/utils'
 import { createResource, Dialog, FormControl } from 'frappe-ui'
-import { ref, reactive, inject } from 'vue'
+import { ref, reactive, inject, watch } from 'vue'
+import { useLeadsOnlyMode, LEADS_ONLY_CHARTS } from '@/composables/leadsOnlyMode'
 
 const show = defineModel({
   type: Boolean,
@@ -102,6 +103,18 @@ const donutCharts = [
   { label: __('Leads by Source'), value: 'leads_by_source' },
   { label: __('Deals by Source'), value: 'deals_by_source' },
 ]
+
+const leadsOnlyMode = useLeadsOnlyMode()
+watch(
+  leadsOnlyMode,
+  (enabled) => {
+    if (!enabled) return
+    numberChart.value = LEADS_ONLY_CHARTS.number[0].value
+    axisChart.value = LEADS_ONLY_CHARTS.axis[0].value
+    donutChart.value = LEADS_ONLY_CHARTS.donut[0].value
+  },
+  { immediate: true },
+)
 
 async function addChart() {
   show.value = false
