@@ -147,7 +147,7 @@ const inviteeExistMessage = computed(() => {
 })
 
 const description = computed(() => {
-  return {
+  const text = {
     'System Manager':
       'Can manage all aspects of the CRM, including user management, customizations and settings.',
     'Sales Manager':
@@ -155,6 +155,7 @@ const description = computed(() => {
     'Sales User':
       'Can work with leads and deals and create private views (reports).',
   }[role.value]
+  return text ? __(text) : ''
 })
 
 const roleOptions = computed(() => {
