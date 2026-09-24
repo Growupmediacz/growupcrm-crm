@@ -35,7 +35,8 @@ export function formatTime(seconds) {
 
 export function formatDate(date, format, onlyDate = false, onlyTime = false) {
   if (!date) return ''
-  format = getFormat(date, format, onlyDate, onlyTime, false)
+  // growup: formát jde přes překlad, cs.po má české číselné formáty
+  format = getFormat(date, format && __(format), onlyDate, onlyTime, false)
   return dayjsLocal(date).format(format)
 }
 
@@ -84,7 +85,7 @@ export function getFormat(
       .replace('yyyy', 'YYYY')
       .replace('dd', 'DD') || 'YYYY-MM-DD'
   let timeFormat = window.sysdefaults.time_format || 'HH:mm:ss'
-  format = format || 'ddd, MMM D, YYYY h:mm a'
+  format = format || __('ddd, MMM D, YYYY h:mm a')
 
   if (onlyDate) format = dateFormat
   if (onlyTime) format = timeFormat
