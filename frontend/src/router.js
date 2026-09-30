@@ -267,7 +267,8 @@ router.beforeEach(async (to, from, next) => {
       }
 
       const doctype = doctypeMap[to.name]
-      let defaultViewType = 'list'
+      // GrowUp: Zakázky se otevírají primárně jako Kanban (uložený výchozí pohled uživatele má přednost)
+      let defaultViewType = to.name === 'Leads' ? 'kanban' : 'list'
 
       let globalDefault = getDefaultView(to.name)
       if (globalDefault) {
