@@ -61,6 +61,7 @@
         :days="days"
         :items="items"
         @slotClick="newEvent"
+        @rangeSelect="({ start, end }) => newEvent(start, end)"
         @itemClick="openItem"
       />
       <CalendarList v-else :days="days" :items="items" @itemClick="openItem" />
@@ -70,6 +71,7 @@
     v-model="showEvent"
     :item="activeEvent"
     :start="newStart"
+    :end="newEnd"
     :currentUser="currentUser"
     :users="users"
     @saved="reload"
@@ -204,14 +206,16 @@ const showTask = ref(false)
 const activeEvent = ref(null)
 const activeTask = ref(null)
 const newStart = ref(null)
+const newEnd = ref(null)
 
 function withTime(d, hour) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate(), hour, 0)
 }
 
-function newEvent(start) {
+function newEvent(start, end = null) {
   activeEvent.value = null
   newStart.value = start
+  newEnd.value = end
   showEvent.value = true
 }
 

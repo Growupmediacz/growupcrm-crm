@@ -78,6 +78,7 @@ const props = defineProps({
   // existující událost (položka kalendáře) nebo výchozí hodnoty nové
   item: { type: Object, default: null },
   start: { type: Date, default: null },
+  end: { type: Date, default: null },
   lead: { type: String, default: null },
   currentUser: { type: String, default: '' },
   users: { type: Array, default: () => [] },
@@ -115,7 +116,7 @@ function init() {
     }
   } else {
     const s = props.start || new Date()
-    const e = new Date(s.getTime() + 3600000)
+    const e = props.end || new Date(s.getTime() + 3600000)
     form.value = {
       subject: '',
       date: isoDate(s),

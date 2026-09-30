@@ -44,9 +44,18 @@
         <div
           v-for="d in days"
           :key="d.getTime()"
-          class="relative min-w-0 flex-1 cursor-pointer border-l border-outline-gray-2"
-          @click="onSlotClick($event, d)"
+          class="relative min-w-0 flex-1 cursor-pointer select-none border-l border-outline-gray-2"
+          :ref="(el) => setColumn(el, d)"
+          @pointerdown="onPointerDown($event, d)"
         >
+          <!-- výběr tažením myší (jako v Google kalendáři) -->
+          <div
+            v-if="drag && sameDay(drag.day, d)"
+            class="pointer-events-none absolute inset-x-0.5 z-30 overflow-hidden rounded border border-outline-green-2 bg-surface-green-2 px-1 py-0.5 text-xs text-ink-green-7 opacity-90"
+            :style="dragStyle"
+          >
+            {{ dragLabel }}
+          </div>
           <div
             v-for="h in 24"
             :key="h"
@@ -65,6 +74,7 @@
             :class="itemClasses(b.item)"
             :style="b.style"
             :title="b.item.title"
+            @pointerdown.stop
             @click.stop="$emit('itemClick', b.item)"
           >
             <div class="truncate font-medium">{{ b.item.title }}</div>
@@ -95,7 +105,7 @@ const props = defineProps({
   days: { type: Array, required: true },
   items: { type: Array, default: () => [] },
 })
-const emit = defineEmits(['slotClick', 'itemClick'])
+const emit = defineEmits(['slotClick', 'rangeSelect', 'itemClick'])
 
 const today = new Date()
 const scroller = ref(null)
@@ -154,12 +164,66 @@ function layout(d) {
   }))
 }
 
-function onSlotClick(e, d) {
-  const y = e.clientY - e.currentTarget.getBoundingClientRect().top
-  const minutes = Math.floor(((y / HOUR_HEIGHT) * 60) / 30) * 30
-  const at = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, minutes)
-  emit('slotClick', at)
+// Výběr času myší: stisk, tažení, puštění = rozsah (krok 15 min). Prosté kliknutí = hodina od kliknutí.
+const SNAP = 15
+const columns = new Map()
+function setColumn(el, d) {
+  if (el) columns.set(d.getTime(), el)
 }
+const drag = ref(null)
+
+function minuteAt(clientY, d, round) {
+  const el = columns.get(d.getTime())
+  const y = clientY - el.getBoundingClientRect().top
+  const raw = (y / HOUR_HEIGHT) * 60
+  const snapped = round ? Math.round(raw / SNAP) * SNAP : Math.floor(raw / SNAP) * SNAP
+  return Math.max(0, Math.min(24 * 60, snapped))
+}
+
+function atMinutes(d, minutes) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, minutes)
+}
+
+function onPointerDown(e, d) {
+  if (e.button !== 0) return
+  const from = minuteAt(e.clientY, d, false)
+  drag.value = { day: d, from, to: from, moved: false }
+  const move = (ev) => {
+    const to = minuteAt(ev.clientY, d, true)
+    drag.value.to = to
+    if (Math.abs(to - from) >= SNAP) drag.value.moved = true
+  }
+  const up = () => {
+    window.removeEventListener('pointermove', move)
+    window.removeEventListener('pointerup', up)
+    const r = drag.value
+    drag.value = null
+    if (!r) return
+    if (!r.moved) {
+      emit('slotClick', atMinutes(d, Math.floor(r.from / 30) * 30))
+      return
+    }
+    const start = Math.min(r.from, r.to)
+    const end = Math.max(r.from, r.to)
+    emit('rangeSelect', { start: atMinutes(d, start), end: atMinutes(d, end) })
+  }
+  window.addEventListener('pointermove', move)
+  window.addEventListener('pointerup', up)
+}
+
+const dragRange = computed(() => {
+  if (!drag.value?.moved) return null
+  return { start: Math.min(drag.value.from, drag.value.to), end: Math.max(drag.value.from, drag.value.to) }
+})
+const dragStyle = computed(() => {
+  const r = dragRange.value || { start: drag.value.from, end: drag.value.from + 30 }
+  return {
+    top: (r.start / 60) * HOUR_HEIGHT + 'px',
+    height: Math.max(((r.end - r.start) / 60) * HOUR_HEIGHT, 6) + 'px',
+  }
+})
+const hm = (m) => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}`
+const dragLabel = computed(() => (dragRange.value ? `${hm(dragRange.value.start)} – ${hm(dragRange.value.end)}` : ''))
 
 onMounted(() => {
   const el = scroller.value
