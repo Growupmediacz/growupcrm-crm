@@ -31,6 +31,17 @@
             @change="(v) => (form.lead = v)"
           />
         </div>
+        <div v-if="!form.lead">
+          <div class="mb-1.5 text-xs text-ink-gray-5">{{ __('Firma') }}</div>
+          <Link
+            class="form-control"
+            :value="form.organization"
+            doctype="CRM Organization"
+            :placeholder="__('Bez zakázky: vyberte firmu (volitelné)')"
+            :disabled="!canEdit"
+            @change="(v) => (form.organization = v)"
+          />
+        </div>
         <FormControl
           v-model="form.assignedTo"
           :label="__('Přiřazeno')"
@@ -45,6 +56,15 @@
           :rows="3"
           :disabled="!canEdit"
         />
+        <div v-if="!form.lead && form.organization" class="text-sm">
+          <router-link
+            :to="{ name: 'Organization', params: { organizationId: form.organization } }"
+            class="text-ink-blue-5 hover:underline"
+            @click="show = false"
+          >
+            {{ __('Otevřít firmu') }}
+          </router-link>
+        </div>
         <div v-if="form.lead" class="text-sm">
           <router-link
             :to="{ name: 'Lead', params: { leadId: form.lead } }"
@@ -111,6 +131,7 @@ function init() {
       from: hm(i.start),
       to: hm(i.end),
       lead: i.leadName || '',
+      organization: i.organization || '',
       assignedTo: i.assignedTo,
       description: i.description || '',
     }
@@ -124,6 +145,7 @@ function init() {
       from: hm(s),
       to: e.getDate() === s.getDate() ? hm(e) : '23:59',
       lead: props.lead || '',
+      organization: '',
       assignedTo: props.currentUser,
       description: '',
     }
@@ -145,6 +167,7 @@ async function save() {
       all_day: f.allDay ? 1 : 0,
       description: f.description,
       lead: f.lead || null,
+      organization: f.lead ? null : f.organization || null,
       assigned_to: f.assignedTo || null,
     })
     toast.success(isNew.value ? __('Událost byla vytvořena') : __('Událost byla uložena'))

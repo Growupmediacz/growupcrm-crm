@@ -113,6 +113,7 @@ export function toItems({ events = [], tasks = [] }) {
       assignedTo: e.assigned_to,
       leadName: e.reference_doctype === 'CRM Lead' ? e.reference_docname : null,
       leadTitle: e.lead_title,
+      organization: e.organization,
       description: e.description,
       canEdit: Boolean(e.can_edit),
       raw: e,
