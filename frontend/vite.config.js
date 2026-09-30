@@ -21,11 +21,13 @@ export default defineConfig(async ({ mode }) => {
         },
         manifest: {
           display: 'standalone',
-          name: 'Frappe CRM',
-          short_name: 'Frappe CRM',
+          name: 'GrowUpCRM',
+          short_name: 'GrowUpCRM',
+          lang: 'cs',
           start_url: '/crm',
-          description:
-            'Modern & 100% Open-source CRM tool to supercharge your sales operations',
+          theme_color: '#16a34a',
+          background_color: '#ffffff',
+          description: 'GrowUpCRM: zakázky, úkoly a kalendář na jednom místě',
           icons: [
             {
               src: '/assets/crm/manifest/manifest-icon-192.maskable.png',
