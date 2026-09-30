@@ -13,6 +13,7 @@
             )
           }}
         </p>
+        <SeatUsage :refreshKey="users.data?.crmUsers?.length" />
       </div>
       <div class="flex item-center space-x-2 w-3/12 justify-end">
         <Dropdown
@@ -166,6 +167,7 @@
 
 <script setup>
 import AddExistingUserModal from '@/components/Modals/AddExistingUserModal.vue'
+import SeatUsage from '@/components/Settings/SeatUsage.vue'
 import EmptyState from '@/components/ListViews/EmptyState.vue'
 import { activeSettingsPage } from '@/composables/settings'
 import { usersStore } from '@/stores/users'
