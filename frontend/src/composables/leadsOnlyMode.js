@@ -6,7 +6,7 @@
 import { computed } from 'vue'
 import { getSettings } from '@/stores/settings'
 
-export const LEADS_ONLY_HIDDEN_ROUTES = ['Deals', 'Contacts', 'Organizations']
+export const LEADS_ONLY_HIDDEN_ROUTES = ['Deals']
 
 export function useLeadsOnlyMode() {
   const { settings } = getSettings()
