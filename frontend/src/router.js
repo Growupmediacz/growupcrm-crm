@@ -27,6 +27,11 @@ const routes = [
     name: 'Home',
   },
   {
+    path: '/today',
+    name: 'Today',
+    component: () => import('@/pages/Dnes.vue'),
+  },
+  {
     path: '/notifications',
     name: 'Notifications',
     component: () => import('@/pages/MobileNotification.vue'),
@@ -212,7 +217,7 @@ router.beforeEach(async (to, from, next) => {
 
     let defaultView = getDefaultView()
     if (!defaultView) {
-      next({ name: 'Leads' })
+      next({ name: 'Today' })
       return
     }
 

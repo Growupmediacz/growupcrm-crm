@@ -42,6 +42,9 @@
     @update="(data) => viewControls.updateKanbanSettings(data)"
     @loadMore="(columnName) => viewControls.loadMoreKanban(columnName)"
   >
+    <template #card="{ fields }">
+      <GlLeadCard :lead="fields" />
+    </template>
     <template #title="{ titleField, itemName }">
       <div class="flex items-center gap-2">
         <div v-if="titleField === 'status'">
@@ -283,6 +286,7 @@ import LeadsListView from '@/components/ListViews/LeadsListView.vue'
 import EmptyState from '@/components/ListViews/EmptyState.vue'
 import KanbanView from '@/components/Kanban/KanbanView.vue'
 import LeadModal from '@/components/Modals/LeadModal.vue'
+import GlLeadCard from '@/components/Kanban/GlLeadCard.vue'
 import ViewControls from '@/components/ViewControls.vue'
 import { useDoctypeModal } from '@/composables/doctypeModal'
 import { getMeta } from '@/stores/meta'

@@ -1,44 +1,413 @@
-/* GrowUpCRM: značkový theme. Jediné místo pro barvy značky ve forku (kap. 8 PLAN.md).
-   Reskin přes proměnné a úzké selektory, ne přepisem komponent: upgrady CRM zůstanou levné.
-   Barvy jsou dočasné (zelená podle placeholder loga), po dodání grafických podkladů se mění tady
-   a v growupcrm/public/css/web.css (login). */
+/* GrowUpCRM: Liquid Glass · Indigo (podle designového balíčku growupcrm-design).
+   Jediné místo pro vzhled ve forku. Princip:
+   1) proměnné frappe-ui (šedá škála, povrchy, linky) přemapované na indigo-tónované a průsvitné hodnoty,
+   2) podklad s gradientem a rozmazanými skvrnami (sklo potřebuje světlo),
+   3) úzké selektory pro tlačítka, pole, dialogy a menu,
+   4) třídy materiálů (.gl-card, .gl-nav, .gl-lane, .gl-sheet) pro komponenty growup.
+   Dokumentace a hodnoty: docs/DESIGN.md v appce growupcrm. */
+
 :root {
-  --brand-50: #f0fdf4;
-  --brand-100: #dcfce7;
-  --brand-200: #bbf7d0;
-  --brand-500: #22c55e;
-  --brand-600: #16a34a;
-  --brand-700: #15803d;
-  --brand-800: #166534;
+  /* akcent Indigo */
+  --accent-50: #eef0ff;
+  --accent-200: #c7c9f6;
+  --accent-400: #8b8ff8;
+  --accent-600: #4f46e5;
+  --accent-700: #4338ca;
+  --accent-900: #312e81;
+  --accent-soft: rgba(79, 70, 229, 0.12);
+  --focus-ring: 0 0 0 4px rgba(79, 70, 229, 0.18);
+
+  /* text a linky */
+  --text-1: #0e1330;
+  --text-2: #3d4466;
+  --text-3: #5b6285;
+  --text-placeholder: #7f85a3;
+  --text-disabled: #8a90ae;
+  --line: rgba(110, 120, 200, 0.14);
+  --fill-tinted: rgba(110, 120, 200, 0.075);
+
+  /* signály a fáze */
+  --overdue: #c8321f;
+  --warning: #915200;
+  --info: #2e5bd8;
+  --success: #15803d;
+  --stage-nova: #3b82f6;
+  --stage-kontaktovano: #8b5cf6;
+  --stage-nabidka: #e0a100;
+  --stage-jednani: #f97316;
+  --stage-vyhrano: #22b35e;
+  --stage-prohrano: #9ca3af;
+
+  /* materiály */
+  --mat-nav-bg: rgba(255, 255, 255, 0.42);
+  --mat-nav-blur: blur(40px) saturate(200%);
+  --mat-card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.56));
+  --mat-card-blur: blur(36px) saturate(180%);
+  --mat-card-border: 1px solid rgba(255, 255, 255, 0.8);
+  --mat-card-shadow: inset 0 1px 0 #fff, 0 14px 44px -16px rgba(64, 72, 160, 0.24), 0 2px 6px rgba(64, 72, 160, 0.05);
+  --mat-sheet-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82));
+  --mat-sheet-blur: blur(50px) saturate(200%);
+  --mat-sheet-shadow: inset 0 1px 0 #fff, 0 40px 90px -30px rgba(40, 44, 120, 0.45);
+  --scrim: rgba(40, 44, 90, 0.18);
+
+  /* tvar a pohyb */
+  --r-field: 14px;
+  --r-row: 16px;
+  --r-card-m: 22px;
+  --r-card: 26px;
+  --r-modal: 30px;
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --sidebar-w: 264px;
+
+  --font-gl: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'InterVar', Inter, system-ui, sans-serif;
+
+  /* frappe-ui: šedá škála a povrchy → indigo tóny a sklo */
+  --surface-base: rgba(255, 255, 255, 0.66);
+  --surface-white: rgba(255, 255, 255, 0.66);
+  --surface-gray-1: rgba(110, 120, 200, 0.05);
+  --surface-gray-2: rgba(110, 120, 200, 0.085);
+  --surface-gray-3: rgba(110, 120, 200, 0.125);
+  --surface-gray-4: rgba(110, 120, 200, 0.18);
+  --surface-gray-5: rgba(110, 120, 200, 0.26);
+  --surface-gray-7: #5b6285;
+  --surface-gray-8: #3d4466;
+  --surface-gray-9: #262c52;
+  --surface-gray-10: #4f46e5;
+  --surface-sidebar: transparent;
+  --surface-elevation-1: rgba(255, 255, 255, 0.94);
+  --surface-elevation-2: rgba(255, 255, 255, 0.96);
+  --surface-elevation-3: rgba(255, 255, 255, 0.98);
+  --surface-modal: rgba(255, 255, 255, 0.9);
+  --surface-menu-bar: rgba(255, 255, 255, 0.94);
+  --surface-cards: rgba(255, 255, 255, 0.66);
+  --ink-gray-1: #f4f5ff;
+  --ink-gray-2: #c9cde6;
+  --ink-gray-3: #a5aac6;
+  --ink-gray-4: #7f85a3;
+  --ink-gray-5: #5b6285;
+  --ink-gray-6: #4a5174;
+  --ink-gray-7: #3d4466;
+  --ink-gray-8: #1c2242;
+  --ink-gray-9: #0e1330;
+  --outline-gray-1: rgba(110, 120, 200, 0.12);
+  --outline-gray-2: rgba(110, 120, 200, 0.17);
+  --outline-gray-3: rgba(110, 120, 200, 0.28);
+  --outline-gray-4: rgba(79, 70, 229, 0.55);
+  --outline-elevation-1: rgba(110, 120, 200, 0.12);
+  --outline-elevation-2: rgba(110, 120, 200, 0.22);
+  --ink-blue-3: #4f46e5;
+  --ink-blue-5: #4338ca;
+  --ink-blue-6: #4338ca;
+  --ink-blue-7: #3730a3;
 }
 
-/* Primární (plná) tlačítka: Vytvořit, Uložit, Pokračovat. Jen <button>, ne popisky a tooltipy. */
+/* ---------- podklad: gradient + světelné skvrny ---------- */
+html,
+body {
+  background: linear-gradient(155deg, #e9efff 0%, #eeeaff 50%, #f4efff 100%) fixed;
+  font-family: var(--font-gl);
+  color: var(--text-1);
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.01em;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: -10%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(620px 480px at 8% 14%, rgba(191, 211, 255, 0.95), transparent 70%),
+    radial-gradient(560px 460px at 90% 6%, rgba(220, 203, 255, 0.9), transparent 70%),
+    radial-gradient(720px 560px at 55% 96%, rgba(201, 218, 255, 0.9), transparent 70%),
+    radial-gradient(420px 340px at 96% 62%, rgba(240, 221, 255, 0.8), transparent 70%);
+  filter: blur(40px);
+}
+#app,
+.isolate {
+  background: transparent;
+}
+::selection {
+  background: rgba(79, 70, 229, 0.22);
+}
+* {
+  scrollbar-color: rgba(110, 120, 200, 0.35) transparent;
+}
+
+/* čísla tabulárně */
+table,
+.tabular-nums,
+[class*='text-2xl'],
+[class*='text-3xl'] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- materiály ---------- */
+.gl-card {
+  background: var(--mat-card-bg);
+  -webkit-backdrop-filter: var(--mat-card-blur);
+  backdrop-filter: var(--mat-card-blur);
+  border: var(--mat-card-border);
+  box-shadow: var(--mat-card-shadow);
+  border-radius: var(--r-card);
+}
+.gl-nav {
+  background: var(--mat-nav-bg);
+  -webkit-backdrop-filter: var(--mat-nav-blur);
+  backdrop-filter: var(--mat-nav-blur);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 10px 36px -14px rgba(64, 72, 160, 0.22);
+}
+.gl-lane {
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 24px;
+}
+.gl-sheet {
+  background: var(--mat-sheet-bg);
+  -webkit-backdrop-filter: var(--mat-sheet-blur);
+  backdrop-filter: var(--mat-sheet-blur);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: var(--mat-sheet-shadow);
+}
+.gl-lift {
+  transition:
+    transform 0.45s var(--spring),
+    box-shadow 0.3s ease;
+}
+.gl-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: inset 0 1px 0 #fff, 0 22px 50px -18px rgba(64, 72, 160, 0.32), 0 2px 6px rgba(64, 72, 160, 0.06);
+}
+
+/* ---------- tlačítka ---------- */
+button.inline-flex {
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  position: relative;
+  transition:
+    transform 0.5s var(--spring),
+    filter 0.25s ease,
+    box-shadow 0.3s ease,
+    background-color 0.2s ease;
+}
+button.inline-flex:not([disabled]):hover {
+  filter: brightness(1.04);
+}
+button.inline-flex:not([disabled]):active {
+  transform: scale(0.95);
+  transition-duration: 0.09s;
+  transition-timing-function: ease-out;
+}
+button.inline-flex.h-7 {
+  height: 36px;
+  padding-inline: 16px;
+}
+/* ikonová tlačítka: čtvercová (kulatá), bez bočního odsazení */
+button.inline-flex.w-7,
+button.inline-flex.w-8,
+button.inline-flex.w-6,
+button.inline-flex.\!w-6 {
+  width: 36px;
+  height: 36px;
+  padding-inline: 0;
+}
+button.inline-flex.w-6 {
+  width: 28px;
+  height: 28px;
+}
+/* primární (plná) */
 button.bg-surface-gray-10:not([disabled]) {
-  background-color: var(--brand-600);
+  background: #4f46e5;
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 8px 18px -8px rgba(30, 25, 110, 0.5);
 }
 button.bg-surface-gray-10:not([disabled]):hover {
-  background-color: var(--brand-700);
+  background: #4f46e5;
 }
 button.bg-surface-gray-10:not([disabled]):active {
-  background-color: var(--brand-800);
+  background: #4338ca;
+}
+/* sklo (subtle / outline) */
+button.inline-flex.bg-surface-gray-2,
+button.inline-flex.bg-surface-base {
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  color: var(--text-1);
+  box-shadow: inset 0 1px 0 #fff, 0 4px 14px -6px rgba(64, 72, 160, 0.22);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+button.inline-flex.bg-surface-gray-2:hover,
+button.inline-flex.bg-surface-base:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+/* destruktivní */
+button.inline-flex.bg-surface-red-2,
+button.inline-flex.bg-surface-red-7 {
+  border-radius: 999px;
 }
 
-/* Výběr textu a zvýraznění fokusu */
-::selection {
-  background: var(--brand-200);
+/* ---------- pole ---------- */
+input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']),
+textarea,
+select {
+  border-radius: var(--r-field);
+  border-color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 1px 2px rgba(64, 72, 160, 0.08);
+  color: var(--text-1);
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
-button:focus-visible,
-[role='button']:focus-visible,
-a:focus-visible {
-  --tw-ring-color: var(--brand-500);
+input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']).h-7 {
+  height: 40px;
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-placeholder);
+}
+input:not([type='checkbox']):not([type='radio']):not([type='range']):focus,
+textarea:focus,
+select:focus {
+  border-color: #4f46e5 !important;
+  box-shadow: var(--focus-ring) !important;
+  background: rgba(255, 255, 255, 0.9);
+}
+button.relative.flex.h-7.w-full {
+  height: 40px;
+  border-radius: var(--r-field);
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 1px 2px rgba(64, 72, 160, 0.08);
 }
 
-/* Kanban: karta Zakázky zvýrazní značkovou barvou při najetí (selektor závisí na KanbanView.vue,
-   po upgradu CRM zkontrolovat). */
-.min-w-72 .rounded-lg.border.bg-surface-base {
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+/* ---------- dialogy, panely, menu ---------- */
+[role='dialog'] {
+  background: var(--mat-sheet-bg) !important;
+  -webkit-backdrop-filter: var(--mat-sheet-blur);
+  backdrop-filter: var(--mat-sheet-blur);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: var(--mat-sheet-shadow) !important;
+  border-radius: var(--r-modal) !important;
 }
-.min-w-72 .rounded-lg.border.bg-surface-base:hover {
-  border-color: var(--brand-500);
-  box-shadow: 0 1px 4px rgb(22 163 74 / 0.18);
+[role='dialog'] > div,
+[role='dialog'] .bg-surface-modal,
+[role='dialog'] .bg-surface-elevation-1 {
+  background: transparent !important;
+}
+[data-state='open'][class*='bg-black'],
+[class*='bg-black'][class*='bg-opacity'],
+.fixed.inset-0[class*='bg-'] {
+  background: var(--scrim) !important;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+[role='menu'],
+[data-reka-popper-content-wrapper] > div[class*='bg-'],
+.menu-content {
+  background: var(--mat-sheet-bg) !important;
+  -webkit-backdrop-filter: var(--mat-sheet-blur);
+  backdrop-filter: var(--mat-sheet-blur);
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: var(--mat-sheet-shadow) !important;
+  border-radius: 18px !important;
+}
+
+/* ---------- přepínače, štítky, tabulkové řádky ---------- */
+[role='tablist'] button {
+  border-radius: 12px;
+}
+.prose-f {
+  color: var(--text-1);
+}
+
+/* animace obecně */
+@keyframes gl-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 150ms !important;
+    transition-duration: 150ms !important;
+  }
+}
+
+/* ---------- postranní menu ---------- */
+.gl-chev {
+  display: none !important;
+}
+.gl-navh {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--text-3) !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+[class*='group/sidebar-item'] {
+  height: 40px;
+  border-radius: 12px;
+  font-size: 15px;
+  color: var(--text-2);
+}
+[class*='group/sidebar-item']:hover {
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--text-1);
+}
+[class*='group/sidebar-item'].bg-surface-elevation-3 {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-1);
+  font-weight: 600;
+  box-shadow: 0 2px 10px -3px rgba(64, 72, 160, 0.25);
+}
+[class*='group/sidebar-item'] .truncate.text-sm {
+  font-size: 15px;
+}
+
+/* ---------- hlavička stránky ---------- */
+#app-header .text-lg-medium,
+#app-header a.text-lg-medium {
+  font-size: 28px;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text-1);
+}
+#app-header .text-ink-gray-5 {
+  color: var(--text-3);
+}
+
+/* ---------- seznamy: tabulka jako skleněná karta ---------- */
+div.relative.flex.w-full.flex-1.flex-col.overflow-x-auto:has(> div.flex.w-max) {
+  background: var(--mat-card-bg);
+  -webkit-backdrop-filter: var(--mat-card-blur);
+  backdrop-filter: var(--mat-card-blur);
+  border: var(--mat-card-border);
+  box-shadow: var(--mat-card-shadow);
+  border-radius: var(--r-card);
+  margin: 4px 8px 8px;
+  padding: 12px 4px 8px;
+  width: auto;
+}
+div.mb-2.grid.items-center.gap-4.rounded.bg-surface-gray-2 {
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-3);
+}
+div.mb-2.grid.items-center.gap-4.rounded.bg-surface-gray-2 * {
+  color: var(--text-3);
 }

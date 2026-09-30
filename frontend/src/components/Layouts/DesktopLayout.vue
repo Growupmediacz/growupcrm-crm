@@ -1,7 +1,7 @@
 <template>
-  <div class="flex h-screen w-screen">
+  <div class="flex h-screen w-screen gap-3 p-3">
     <AppSidebar />
-    <div class="flex-1 flex flex-col h-full overflow-auto bg-surface-base">
+    <div class="flex-1 flex flex-col h-full overflow-auto rounded-[26px]">
       <AppHeader />
       <slot />
     </div>

@@ -50,7 +50,10 @@
       </Tooltip>
     </template>
   </LayoutHeader>
-  <div v-if="doc.name" class="flex h-full overflow-hidden">
+  <div v-if="doc.name" class="flex h-full gap-3 overflow-hidden px-2 pb-2">
+    <div class="flex min-w-0 flex-1 flex-col gap-3 overflow-hidden">
+      <LeadHero :doc="doc" :stageOptions="statuses" @changed="reloadResources" />
+      <div class="gl-card flex flex-1 overflow-hidden">
     <Tabs
       v-model="tabIndex"
       :tabs="tabs"
@@ -69,7 +72,9 @@
         />
       </template>
     </Tabs>
-    <Resizer class="flex flex-col justify-between border-l" side="right">
+      </div>
+    </div>
+    <Resizer class="gl-card flex flex-col justify-between" side="right">
       <div
         class="flex h-[45px] cursor-copy items-center border-b px-5 py-2.5 text-lg-medium text-ink-gray-9"
         @click="copyToClipboard(leadId)"
@@ -265,6 +270,7 @@ import LinkIcon from '@/components/Icons/LinkIcon.vue'
 import AttachmentIcon from '@/components/Icons/AttachmentIcon.vue'
 import LostReasonModal from '@/components/Modals/LostReasonModal.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
+import LeadHero from '@/components/Lead/LeadHero.vue'
 import Activities from '@/components/Activities/Activities.vue'
 import AssignTo from '@/components/AssignTo.vue'
 import FilesUploader from '@/components/FilesUploader/FilesUploader.vue'

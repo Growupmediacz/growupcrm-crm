@@ -90,11 +90,11 @@ export function daysBetween(start, end) {
 // Barvy: Eventy modře, úkoly podle priority, hotové úkoly šedě.
 export function itemClasses(item) {
   if (item.kind === 'event')
-    return 'bg-surface-blue-2 text-ink-blue-7 border-outline-blue-1 hover:bg-surface-blue-3'
-  if (item.done) return 'bg-surface-gray-2 text-ink-gray-5 border-outline-gray-2 line-through'
-  if (item.priority === 'High') return 'bg-surface-red-2 text-ink-red-7 border-outline-red-1 hover:bg-surface-red-3'
-  if (item.priority === 'Medium') return 'bg-surface-amber-2 text-ink-amber-7 border-outline-amber-1 hover:bg-surface-amber-3'
-  return 'bg-surface-gray-2 text-ink-gray-7 border-outline-gray-2 hover:bg-surface-gray-3'
+    return 'bg-[rgba(59,110,246,.14)] text-[#2e5bd8] border-transparent hover:bg-[rgba(59,110,246,.22)]'
+  if (item.done) return 'bg-[rgba(110,120,200,.08)] text-ink-gray-4 border-transparent line-through'
+  if (item.priority === 'High') return 'bg-[rgba(200,50,31,.12)] text-[#c8321f] border-transparent hover:bg-[rgba(200,50,31,.2)]'
+  if (item.priority === 'Medium') return 'bg-[rgba(234,170,8,.18)] text-[#915200] border-transparent hover:bg-[rgba(234,170,8,.28)]'
+  return 'bg-[rgba(110,120,200,.12)] text-ink-gray-7 border-transparent hover:bg-[rgba(110,120,200,.2)]'
 }
 
 export function toItems({ events = [], tasks = [] }) {

@@ -11,7 +11,7 @@
       <template #item="{ element: column }">
         <div
           v-if="!column.column.delete"
-          class="flex flex-col gap-2.5 min-w-72 w-72 hover:bg-surface-gray-2 rounded-lg p-2.5"
+          class="gl-lane flex flex-col gap-3 min-w-72 w-72 p-3 mr-3 self-start"
         >
           <div class="flex gap-2 items-center group justify-between">
             <div class="flex items-center text-base">
@@ -50,7 +50,8 @@
                   </div>
                 </template>
               </Popover>
-              <div class="text-ink-gray-9">{{ __(column.column.name) }}</div>
+              <div class="font-semibold text-ink-gray-9">{{ __(column.column.name) }}</div>
+              <span class="num ml-1.5 text-ink-gray-5">{{ column.column.all_count }}</span>
             </div>
             <div class="flex">
               <Dropdown :options="actions(column)">
@@ -69,6 +70,12 @@
               />
             </div>
           </div>
+          <div
+            v-if="column.column.sum !== undefined"
+            class="num -mt-2 pl-9 text-[13px] text-ink-gray-5"
+          >
+            {{ new Intl.NumberFormat('cs-CZ').format(column.column.sum) }} Kč
+          </div>
           <div class="overflow-y-auto flex flex-col gap-2 h-full">
             <Draggable
               :list="column.data"
@@ -82,7 +89,7 @@
               <template #item="{ element: fields }">
                 <component
                   :is="options.getRoute ? 'router-link' : 'div'"
-                  class="pt-3 px-3.5 pb-2.5 rounded-lg border bg-surface-base text-base flex flex-col text-ink-gray-9"
+                  class="gl-card gl-lift !rounded-[18px] p-3.5 text-base flex flex-col text-ink-gray-9"
                   :data-name="fields.name"
                   v-bind="{
                     to: options.getRoute ? options.getRoute(fields) : undefined,
@@ -91,6 +98,7 @@
                       : undefined,
                   }"
                 >
+                  <slot name="card" v-bind="{ fields, column }">
                   <slot
                     name="title"
                     v-bind="{ fields, titleField, itemName: fields.name }"
@@ -133,9 +141,18 @@
                       />
                     </div>
                   </slot>
+                  </slot>
                 </component>
               </template>
             </Draggable>
+            <button
+              v-if="options.onNewClick"
+              class="gl-add flex items-center gap-2 rounded-xl px-2 py-2 text-[14px] font-semibold text-ink-gray-5 hover:bg-white/50 hover:text-ink-gray-9"
+              @click="options.onNewClick(column)"
+            >
+              <span class="lucide-plus size-4" aria-hidden="true" />
+              {{ __('Přidat') }}
+            </button>
             <div
               v-if="column.column.count < column.column.all_count"
               class="flex items-center justify-center"

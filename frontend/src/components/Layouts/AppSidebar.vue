@@ -8,12 +8,12 @@
        column falls through to the white page canvas. The token cannot be
        overridden on the Sidebar element itself — `bg-surface-sidebar` is emitted
        after `bg-surface-gray-1` in the utilities layer and would win. -->
-  <div class="relative flex h-full bg-surface-gray-1">
+  <div class="relative flex h-full">
     <Sidebar
       v-model:collapsed="isSidebarCollapsed"
       :disable-collapse="mobile"
-      :width="mobile ? '260px' : undefined"
-      class="border-r border-outline-gray-1"
+      :width="mobile ? '260px' : '264px'"
+      class="gl-nav rounded-[26px] !bg-transparent"
     >
       <div class="flex h-full flex-col p-2">
         <UserDropdown :isCollapsed="isCollapsed" />
@@ -58,14 +58,14 @@
             <template #header="{ opened, hide, toggle }">
               <SidebarLabel
                 v-if="!hide"
-                divider
-                class="mb-1 mt-4 select-none"
+                :divider="false"
+                class="gl-navh mb-1 mt-4 select-none"
                 :class="!isCollapsed && 'cursor-pointer'"
                 @click="toggle()"
               >
                 <span class="flex items-center gap-1.5">
                   <span
-                    class="lucide-chevron-right -ml-0.5 size-4 shrink-0 text-ink-gray-9 transition-transform duration-300 ease-in-out"
+                    class="gl-chev lucide-chevron-right -ml-0.5 size-4 shrink-0 text-ink-gray-9 transition-transform duration-300 ease-in-out"
                     :class="{ 'rotate-90': opened }"
                     aria-hidden="true"
                   />
@@ -182,6 +182,7 @@ import CommentIcon from '@/components/Icons/CommentIcon.vue'
 import EmailIcon from '@/components/Icons/EmailIcon.vue'
 import StepsIcon from '@/components/Icons/StepsIcon.vue'
 import CollapsibleSection from '@/components/CollapsibleSection.vue'
+import GlIcon from '@/components/GlIcon.vue'
 import Icon from '@/components/Icon.vue'
 import PinIcon from '@/components/Icons/PinIcon.vue'
 import UserDropdown from '@/components/UserDropdown.vue'
@@ -229,7 +230,7 @@ import {
 import router from '@/router'
 import { useStorage } from '@vueuse/core'
 import { useDemoData } from '@/composables/demoData'
-import { ref, reactive, computed, markRaw, onMounted, watch } from 'vue'
+import { ref, reactive, computed, markRaw, onMounted, watch, h, defineComponent } from 'vue'
 import { useRoute } from 'vue-router'
 
 const props = defineProps({
@@ -254,7 +255,41 @@ const isFCSite = ref(window.is_fc_site)
 const leadsOnlyMode = useLeadsOnlyMode()
 const isDemoSite = ref(window.is_demo_site)
 
+// GrowUp: ikony z designu (assets/gl-icons) jako komponenty pro <Icon :icon>
+const gl = (name) =>
+  markRaw(
+    defineComponent({
+      name: `Gl${name}`,
+      render: () => h(GlIcon, { name, size: 18 }),
+    }),
+  )
+const GL_ICONS = {
+  Today: gl('home'),
+  Dashboard: gl('chart'),
+  Leads: gl('brief'),
+  Deals: gl('brief'),
+  Contacts: gl('users'),
+  Organizations: gl('building'),
+  Notes: gl('doc'),
+  Tasks: gl('check'),
+  Calendar: gl('cal'),
+  'Call Logs': gl('phone'),
+}
+// Skupiny menu podle designu: Dnes · Prodej · Práce · Organizace
+const GROUPS = [
+  { name: 'Dnes', hideLabel: true, keys: ['Today', 'Dashboard'] },
+  { name: 'Prodej', keys: ['Leads', 'Deals', 'Contacts', 'Organizations'] },
+  { name: 'Práce', keys: ['Tasks', 'Notes', 'Call Logs'] },
+  { name: 'Organizace', keys: ['Calendar'] },
+]
+
 const links = [
+  {
+    label: 'Today',
+    icon: LucideLayoutDashboard,
+    to: 'Today',
+    condition: () => !props.mobile,
+  },
   {
     label: 'Dashboard',
     icon: LucideLayoutDashboard,
@@ -304,29 +339,28 @@ const links = [
 ]
 
 const allViews = computed(() => {
-  let _views = [
-    {
-      name: 'All Views',
-      hideLabel: true,
-      opened: true,
-      views: links
-        .filter((link) => {
-          if (leadsOnlyMode.value && LEADS_ONLY_HIDDEN_ROUTES.includes(link.to)) {
-            return false
-          }
-          if (link.condition) {
-            return link.condition()
-          }
-          return true
-        })
-        .map((link) => ({
-          label: link.label,
-          icon: link.icon,
-          key: link.to,
-          to: { name: link.to },
-        })),
-    },
-  ]
+  const visible = links
+    .filter((link) => {
+      if (leadsOnlyMode.value && LEADS_ONLY_HIDDEN_ROUTES.includes(link.to)) {
+        return false
+      }
+      if (link.condition) {
+        return link.condition()
+      }
+      return true
+    })
+    .map((link) => ({
+      label: link.label,
+      icon: GL_ICONS[link.to] || link.icon,
+      key: link.to,
+      to: { name: link.to },
+    }))
+  let _views = GROUPS.map((g) => ({
+    name: g.name,
+    hideLabel: g.hideLabel,
+    opened: true,
+    views: visible.filter((v) => g.keys.includes(v.key)),
+  })).filter((g) => g.views.length)
   if (getPublicViews().length) {
     _views.push({
       name: 'Public Views',

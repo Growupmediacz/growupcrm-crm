@@ -8,9 +8,9 @@
       <Button variant="solid" :label="__('Vytvořit')" iconLeft="plus" @click="newEvent(null)" />
     </template>
   </LayoutHeader>
-  <div class="flex h-[calc(100vh-56px)] flex-col overflow-hidden">
+  <div class="flex h-[calc(100vh-88px)] flex-col gap-3 overflow-hidden px-2 pb-2">
     <!-- ovládání -->
-    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-outline-gray-2 px-4 py-2">
+    <div class="flex flex-wrap items-center justify-between gap-2 px-1">
       <div class="flex items-center gap-1">
         <Button variant="ghost" icon="lucide-chevron-left" :aria-label="__('Předchozí')" @click="move(-1)" />
         <Button variant="ghost" :label="__('Dnes')" @click="goToday" />
@@ -31,20 +31,20 @@
       </div>
     </div>
     <!-- přehled týmu: kdo má kolik schůzek, klik přepne kalendář na daného člověka -->
-    <div v-if="isManager && team.length" class="flex flex-wrap items-center gap-1.5 border-b border-outline-gray-2 px-4 py-2">
+    <div v-if="isManager && team.length" class="flex flex-wrap items-center gap-1.5 px-1">
       <span class="mr-1 text-xs text-ink-gray-5">{{ __('Tým') }}:</span>
       <button
         v-for="m in team"
         :key="m.user"
         class="flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm"
-        :class="scope === 'user:' + m.user ? 'border-outline-gray-4 bg-surface-gray-3 text-ink-gray-9' : 'border-outline-gray-2 text-ink-gray-7 hover:bg-surface-gray-2'"
+        :class="scope === 'user:' + m.user ? 'border-[#0e1330] bg-[#0e1330] text-white' : 'border-white/80 bg-white/55 text-ink-gray-7 hover:bg-white/80'"
         @click="scope = scope === 'user:' + m.user ? 'team' : 'user:' + m.user"
       >
         <span>{{ m.full_name }}</span>
         <Badge variant="subtle" :theme="m.meetings ? 'green' : 'gray'" size="sm">{{ pluralMeetings(m.meetings) }}</Badge>
       </button>
     </div>
-    <div class="relative flex-1 overflow-hidden">
+    <div class="gl-card relative flex-1 overflow-hidden">
       <div v-if="loading" class="absolute right-4 top-2 z-30 text-xs text-ink-gray-5">{{ __('Načítání…') }}</div>
       <CalendarMonth
         v-if="view === 'month'"

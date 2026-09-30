@@ -14,9 +14,9 @@
       <Button variant="solid" :label="__('Nová zakázka')" iconLeft="plus" @click="showLeadModal = true" />
     </template>
   </LayoutHeader>
-  <div v-if="organization.doc" ref="parentRef" class="flex h-full">
-    <Resizer v-if="!isMobileView" :parent="$refs.parentRef" class="flex h-full flex-col overflow-hidden border-r">
-      <div class="border-b p-5">
+  <div v-if="organization.doc" ref="parentRef" class="flex h-full gap-3 px-2 pb-2">
+    <Resizer v-if="!isMobileView" :parent="$refs.parentRef" class="gl-card flex h-full flex-col overflow-hidden">
+      <div class="p-5">
         <div class="flex items-center gap-4">
           <Avatar size="3xl" class="h-15.5 w-15.5" :label="organization.doc.organization_name" :image="organization.doc.organization_logo" />
           <div class="flex min-w-0 flex-col gap-1.5">
@@ -30,12 +30,12 @@
         </div>
         <!-- souhrn -->
         <div v-if="summary" class="mt-4 grid grid-cols-2 gap-2">
-          <div v-for="s in stats" :key="s.label" class="rounded border border-outline-gray-2 px-3 py-2">
+          <div v-for="s in stats" :key="s.label" class="rounded-2xl bg-[rgba(110,120,200,.075)] px-3 py-2">
             <div class="text-xl-medium text-ink-gray-9">{{ s.value }}</div>
             <div class="text-xs text-ink-gray-5">{{ s.label }}</div>
           </div>
         </div>
-        <div v-if="summary?.last_call" class="mt-3 flex items-start gap-2 rounded bg-surface-gray-2 px-3 py-2 text-sm text-ink-gray-7">
+        <div v-if="summary?.last_call" class="mt-3 flex items-start gap-2 rounded-2xl bg-[rgba(224,161,0,.14)] px-3 py-2 text-sm text-[#915200]">
           <span class="lucide-phone mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <span>
             {{ __('Poslední hovor') }}: <b>{{ summary.last_call.title }}</b>
@@ -54,7 +54,7 @@
       </div>
     </Resizer>
 
-    <div class="flex flex-1 flex-col overflow-hidden">
+    <div class="gl-card flex flex-1 flex-col overflow-hidden">
       <!-- mobil: bez levého panelu, jen název a souhrn -->
       <div v-if="isMobileView" class="border-b p-4">
         <div class="truncate text-xl-medium text-ink-gray-9">{{ organization.doc.organization_name }}</div>
@@ -66,12 +66,12 @@
           <span v-for="s in stats" :key="s.label">{{ s.label }}: <b>{{ s.value }}</b></span>
         </div>
       </div>
-      <div class="flex min-h-[45px] items-center gap-7 overflow-x-auto border-b px-5">
+      <div class="m-4 mb-0 flex w-fit max-w-full gap-1 overflow-x-auto rounded-full bg-[rgba(110,120,200,.11)] p-[3px]">
         <button
           v-for="t in tabs"
           :key="t.key"
-          class="flex items-center gap-2 border-b border-transparent py-2.5 text-base text-ink-gray-5 duration-300 hover:text-ink-gray-9"
-          :class="{ '!border-ink-gray-9 text-ink-gray-9': tab === t.key }"
+          class="flex h-8 items-center gap-2 rounded-full px-4 text-[14px] font-semibold text-ink-gray-5 transition hover:text-ink-gray-9"
+          :class="{ '!bg-white !text-ink-gray-9 shadow-[0_2px_10px_-2px_rgba(64,72,160,.28)]': tab === t.key }"
           @click="tab = t.key"
         >
           {{ t.label }}
@@ -86,8 +86,8 @@
             <button
               v-for="f in kindFilters"
               :key="f.key"
-              class="rounded-full border px-3 py-1 text-sm"
-              :class="kind === f.key ? 'border-outline-gray-4 bg-surface-gray-3 text-ink-gray-9' : 'border-outline-gray-2 text-ink-gray-6 hover:bg-surface-gray-2'"
+              class="rounded-full border px-3.5 py-1 text-[14px] font-medium transition"
+              :class="kind === f.key ? 'border-[#0e1330] bg-[#0e1330] text-white' : 'border-white/80 bg-white/55 text-ink-gray-7 hover:bg-white/80'"
               @click="kind = f.key"
             >
               {{ f.label }}
@@ -97,10 +97,10 @@
             {{ __('Zatím tu není žádná aktivita. Zápisy, hovory, schůzky a úkoly u zakázek této firmy se zobrazí tady.') }}
           </div>
           <div v-for="item in timeline" :key="item.kind + item.id" class="mb-4 flex gap-3">
-            <div class="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-surface-gray-2 text-ink-gray-7">
+            <div class="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl" :class="kindTone[item.kind]">
               <span :class="kindIcon[item.kind]" class="size-4" aria-hidden="true" />
             </div>
-            <div class="min-w-0 flex-1 border-b pb-4">
+            <div class="min-w-0 flex-1 pb-2">
               <div class="flex flex-wrap items-baseline gap-x-2 text-sm">
                 <span class="font-medium text-ink-gray-9">{{ kindLabel[item.kind] }}</span>
                 <span v-if="item.title" class="text-ink-gray-8">{{ item.title }}</span>
@@ -309,6 +309,14 @@ const kindFilters = computed(() => [
 const kindLabel = computed(() => ({
   event: __('Schůzka'), note: __('Zápis'), call: __('Hovor'), task: __('Úkol'), comment: __('Komentář'), email: __('E-mail'),
 }))
+const kindTone = {
+  event: 'bg-[rgba(59,110,246,.13)] text-[#2e5bd8]',
+  note: 'bg-[rgba(139,92,246,.14)] text-[#6d3fd6]',
+  call: 'bg-[rgba(249,115,22,.14)] text-[#c2410c]',
+  task: 'bg-[rgba(234,170,8,.18)] text-[#915200]',
+  comment: 'bg-[rgba(100,110,150,.12)] text-[#4a5173]',
+  email: 'bg-[rgba(20,160,190,.13)] text-[#0b7488]',
+}
 const kindIcon = {
   event: 'lucide-calendar', note: 'lucide-notebook-pen', call: 'lucide-phone', task: 'lucide-check-square',
   comment: 'lucide-message-square', email: 'lucide-mail',
