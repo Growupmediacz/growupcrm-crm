@@ -125,7 +125,8 @@ async function createNewLead() {
     {
       validate() {
         error.value = null
-        if (!lead.doc.first_name) {
+        // GrowUp: Zakázka pro firmu nemusí mít osobu
+        if (!lead.doc.first_name && !lead.doc.organization_link && !lead.doc.ico) {
           error.value = __('First Name is mandatory')
           return error.value
         }
