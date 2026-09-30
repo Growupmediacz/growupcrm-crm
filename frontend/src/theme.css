@@ -1,0 +1,44 @@
+/* GrowUpCRM: značkový theme. Jediné místo pro barvy značky ve forku (kap. 8 PLAN.md).
+   Reskin přes proměnné a úzké selektory, ne přepisem komponent: upgrady CRM zůstanou levné.
+   Barvy jsou dočasné (zelená podle placeholder loga), po dodání grafických podkladů se mění tady
+   a v growupcrm/public/css/web.css (login). */
+:root {
+  --brand-50: #f0fdf4;
+  --brand-100: #dcfce7;
+  --brand-200: #bbf7d0;
+  --brand-500: #22c55e;
+  --brand-600: #16a34a;
+  --brand-700: #15803d;
+  --brand-800: #166534;
+}
+
+/* Primární (plná) tlačítka: Vytvořit, Uložit, Pokračovat. Jen <button>, ne popisky a tooltipy. */
+button.bg-surface-gray-10:not([disabled]) {
+  background-color: var(--brand-600);
+}
+button.bg-surface-gray-10:not([disabled]):hover {
+  background-color: var(--brand-700);
+}
+button.bg-surface-gray-10:not([disabled]):active {
+  background-color: var(--brand-800);
+}
+
+/* Výběr textu a zvýraznění fokusu */
+::selection {
+  background: var(--brand-200);
+}
+button:focus-visible,
+[role='button']:focus-visible,
+a:focus-visible {
+  --tw-ring-color: var(--brand-500);
+}
+
+/* Kanban: karta Zakázky zvýrazní značkovou barvou při najetí (selektor závisí na KanbanView.vue,
+   po upgradu CRM zkontrolovat). */
+.min-w-72 .rounded-lg.border.bg-surface-base {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.min-w-72 .rounded-lg.border.bg-surface-base:hover {
+  border-color: var(--brand-500);
+  box-shadow: 0 1px 4px rgb(22 163 74 / 0.18);
+}
