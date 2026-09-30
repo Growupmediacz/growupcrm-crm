@@ -1,18 +1,28 @@
 <template>
+  <!-- GrowUp: dočasné logo (placeholder), stejná značka jako growupcrm/public/images/logo.svg -->
   <svg
-    width="300"
-    height="300"
-    viewBox="0 0 300 300"
+    width="64"
+    height="64"
+    viewBox="0 0 64 64"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    role="img"
+    aria-label="GrowUpCRM"
   >
+    <rect width="64" height="64" rx="14" fill="#16a34a" />
     <path
-      d="M214.286 0H85.7143C38.3756 0 0 38.3756 0 85.7143V214.286C0 261.624 38.3756 300 85.7143 300H214.286C261.624 300 300 261.624 300 214.286V85.7143C300 38.3756 261.624 0 214.286 0Z"
-      fill="#EF0BF5"
+      d="M18 42 L30 30 L37 37 L48 24"
+      stroke="#fff"
+      stroke-width="5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
     />
     <path
-      d="M64.2141 90.301V111.862H214.339V140.214L160.187 193.146V208.993L139.705 208.885V193.146L85.6605 140.214H64.2141V149.269L118.259 202.202V230.23L181.634 230.769V202.202L235.786 149.269V90.301H64.2141Z"
-      fill="white"
+      d="M40 23 H49 V32"
+      stroke="#fff"
+      stroke-width="5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
     />
   </svg>
 </template>

@@ -5,7 +5,7 @@
         <div class="flex justify-center">
           <div class="flex flex-col items-center">
             <CRMLogo class="mb-3 size-12" />
-            <h3 class="text-2xl-semibold text-ink-gray-9">Frappe CRM</h3>
+            <h3 class="text-2xl-semibold text-ink-gray-9">GrowUpCRM</h3>
           </div>
         </div>
         <hr class="border-t my-3 mx-2" />
@@ -29,6 +29,7 @@
         </div>
         <hr class="border-t my-3 mx-2" />
         <p class="text-sm text-ink-gray-6 px-2 mt-2">
+          {{ __('GrowUpCRM je postaveno na open-source CRM Frappe CRM (AGPL-3.0).') }}
           © Frappe Technologies Pvt. Ltd. and contributors
         </p>
       </div>
@@ -38,38 +39,21 @@
 <script setup>
 import CRMLogo from '@/components/Icons/CRMLogo.vue'
 import GitHubIcon from '@/components/Icons/GitHubIcon.vue'
-import LucideGlobe from '~icons/lucide/globe'
 import LucideHeadset from '~icons/lucide/headset'
-import LucideBug from '~icons/lucide/bug'
-import LucideBookOpen from '~icons/lucide/book-open'
 
 let show = defineModel({ type: Boolean })
 
+// GrowUp: podpora jde na GrowUpMedia, zdrojový kód je veřejný kvůli AGPL-3.0.
 let links = [
   {
-    label: __('Website'),
-    url: 'https://frappe.io/crm',
-    icon: LucideGlobe,
-  },
-  {
-    label: __('GitHub Repository'),
-    url: 'https://github.com/frappe/crm',
-    icon: GitHubIcon,
-  },
-  {
-    label: __('Documentation'),
-    url: 'https://docs.frappe.io/crm',
-    icon: LucideBookOpen,
-  },
-  {
-    label: __('Report an Issue'),
-    url: 'https://github.com/frappe/crm/issues',
-    icon: LucideBug,
-  },
-  {
-    label: __('Contact Support'),
-    url: 'https://support.frappe.io',
+    label: __('Kontaktovat podporu'),
+    url: 'mailto:dancenko@growupmedia.cz',
     icon: LucideHeadset,
+  },
+  {
+    label: __('Zdrojový kód (AGPL-3.0)'),
+    url: 'https://github.com/Growupmediacz/growupcrm-crm',
+    icon: GitHubIcon,
   },
 ]
 </script>
