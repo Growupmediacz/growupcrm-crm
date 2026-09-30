@@ -154,3 +154,10 @@ export function fetchCalendar(start, end, scope) {
     scope,
   })
 }
+
+// Česká číslovka: 1 schůzka, 2–4 schůzky, 0 a 5+ schůzek.
+export function pluralMeetings(n) {
+  if (n === 1) return `${n} schůzka`
+  if (n >= 2 && n <= 4) return `${n} schůzky`
+  return `${n} schůzek`
+}

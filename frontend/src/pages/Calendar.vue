@@ -4,6 +4,7 @@
       <ViewBreadcrumbs routeName="Calendar" />
     </template>
     <template #right-header>
+      <Button :label="__('Naplánovat týden')" iconLeft="lucide-calendar-plus" @click="showPlan = true" />
       <Button variant="solid" :label="__('Vytvořit')" iconLeft="plus" @click="newEvent(null)" />
     </template>
   </LayoutHeader>
@@ -23,10 +24,25 @@
             { label: __('Moje'), value: 'mine' },
             { label: __('Celý tým'), value: 'team' },
           ]"
-          v-model="scope"
+          :modelValue="scope === 'mine' ? 'mine' : 'team'"
+          @update:modelValue="(v) => (scope = v)"
         />
         <TabButtons :buttons="viewButtons" v-model="view" />
       </div>
+    </div>
+    <!-- přehled týmu: kdo má kolik schůzek, klik přepne kalendář na daného člověka -->
+    <div v-if="isManager && team.length" class="flex flex-wrap items-center gap-1.5 border-b border-outline-gray-2 px-4 py-2">
+      <span class="mr-1 text-xs text-ink-gray-5">{{ __('Tým') }}:</span>
+      <button
+        v-for="m in team"
+        :key="m.user"
+        class="flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm"
+        :class="scope === 'user:' + m.user ? 'border-outline-gray-4 bg-surface-gray-3 text-ink-gray-9' : 'border-outline-gray-2 text-ink-gray-7 hover:bg-surface-gray-2'"
+        @click="scope = scope === 'user:' + m.user ? 'team' : 'user:' + m.user"
+      >
+        <span>{{ m.full_name }}</span>
+        <Badge variant="subtle" :theme="m.meetings ? 'green' : 'gray'" size="sm">{{ pluralMeetings(m.meetings) }}</Badge>
+      </button>
     </div>
     <div class="relative flex-1 overflow-hidden">
       <div v-if="loading" class="absolute right-4 top-2 z-30 text-xs text-ink-gray-5">{{ __('Načítání…') }}</div>
@@ -59,6 +75,13 @@
     @saved="reload"
   />
   <CalendarTaskModal v-model="showTask" :item="activeTask" @saved="reload" />
+  <CalendarPlanWeekModal
+    v-model="showPlan"
+    :weekStart="range.start"
+    :currentUser="currentUser"
+    :users="users"
+    @saved="reload"
+  />
 </template>
 <script setup>
 import CalendarList from '@/components/Calendar/CalendarList.vue'
@@ -66,6 +89,7 @@ import CalendarMonth from '@/components/Calendar/CalendarMonth.vue'
 import CalendarTimeGrid from '@/components/Calendar/CalendarTimeGrid.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
 import CalendarTaskModal from '@/components/Modals/CalendarTaskModal.vue'
+import CalendarPlanWeekModal from '@/components/Modals/CalendarPlanWeekModal.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import ViewBreadcrumbs from '@/components/ViewBreadcrumbs.vue'
 import {
@@ -74,12 +98,14 @@ import {
   LIST_DAYS,
   fetchCalendar,
   getRange,
+  isoDate,
+  pluralMeetings,
   monthYearLabel,
   rangeLabel,
   startOfDay,
   toItems,
 } from '@/composables/calendar'
-import { Button, TabButtons, call, toast } from 'frappe-ui'
+import { Badge, Button, TabButtons, call, toast } from 'frappe-ui'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 // Na úzkém displeji (<768 px) jen seznam a den, na širokém měsíc, týden a den.
@@ -100,6 +126,8 @@ const loading = ref(false)
 const isManager = ref(false)
 const currentUser = ref('')
 const users = ref([])
+const team = ref([])
+const showPlan = ref(false)
 
 const viewButtons = computed(() =>
   narrow.value
@@ -148,10 +176,23 @@ async function reload() {
     items.value = toItems(data)
     isManager.value = data.is_manager
     currentUser.value = data.user
+    loadTeam()
   } catch (e) {
     if (id === requestId) toast.error(e.messages?.[0] || __('Kalendář se nepodařilo načíst'))
   } finally {
     if (id === requestId) loading.value = false
+  }
+}
+
+async function loadTeam() {
+  if (!isManager.value) return
+  try {
+    team.value = await call('growupcrm.calendar.get_team_summary', {
+      start: isoDate(range.value.start),
+      end: isoDate(range.value.end),
+    })
+  } catch {
+    team.value = []
   }
 }
 
