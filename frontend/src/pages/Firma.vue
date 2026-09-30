@@ -120,6 +120,9 @@
 
         <!-- Zakázky -->
         <div v-else-if="tab === 'leads'">
+          <div class="mb-3 flex justify-end">
+            <Button :label="__('Nová zakázka')" iconLeft="plus" @click="showLeadModal = true" />
+          </div>
           <div v-if="!leads.length" class="py-16 text-center text-sm text-ink-gray-5">{{ __('Firma zatím nemá žádnou zakázku.') }}</div>
           <table v-else class="w-full text-left text-sm">
             <thead class="text-xs text-ink-gray-5">
@@ -135,7 +138,8 @@
             <tbody>
               <tr v-for="l in leads" :key="l.name" class="border-t">
                 <td class="py-2 pr-3">
-                  <router-link :to="{ name: 'Lead', params: { leadId: l.name } }" class="text-ink-blue-5 hover:underline">{{ l.lead_name || l.name }}</router-link>
+                  <router-link :to="{ name: 'Lead', params: { leadId: l.name } }" class="text-ink-blue-5 hover:underline">{{ l.order_title || l.lead_name || l.name }}</router-link>
+                  <div v-if="l.order_title && l.lead_name" class="text-xs text-ink-gray-5">{{ l.lead_name }}</div>
                 </td>
                 <td class="py-2 pr-3">{{ __(l.status) }}</td>
                 <td class="py-2 pr-3">{{ money(l.order_value) }}</td>
@@ -217,7 +221,7 @@
   </div>
   <ErrorPage v-else-if="errorTitle" :errorTitle="errorTitle" :errorMessage="errorMessage" />
 
-  <LeadModal v-if="showLeadModal" v-model="showLeadModal" :defaults="{ organization_link: organization.doc?.name }" />
+  <LeadModal v-if="showLeadModal" v-model="showLeadModal" :defaults="leadDefaults" />
   <BranchDialog v-model="showBranchDialog" :organization="props.organizationId" :branch="activeBranch" @saved="reload" />
   <ContactDialog v-model="showContactDialog" :organization="props.organizationId" :branches="branches" @saved="reload" />
 </template>
@@ -232,21 +236,32 @@ import BranchDialog from '@/components/Firma/BranchDialog.vue'
 import ContactDialog from '@/components/Firma/ContactDialog.vue'
 import { useDocument } from '@/data/document'
 import { getSettings } from '@/stores/settings'
+import { statusesStore } from '@/stores/statuses'
 import { isMobileView } from '@/composables/settings'
 import { htmlToText } from '@/utils'
 import { Avatar, Badge, Breadcrumbs, Button, call, createResource, toast, usePageMeta } from 'frappe-ui'
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 // GrowUp: přehled firmy (Zakázky, kontakty, pobočky, aktivita). Data dodává growupcrm.firmy.get_overview.
 const props = defineProps({ organizationId: { type: String, required: true } })
 
 const { brand } = getSettings()
+const { leadStatuses } = statusesStore()
 const router = useRouter()
 
 const errorTitle = ref('')
 const errorMessage = ref('')
 const { document: organization } = useDocument('CRM Organization', props.organizationId)
+
+// Ikona firmy se stahuje z webu na pozadí: když ještě není, po chvíli dokument načteme znovu
+let logoChecks = 0
+const logoTimer = setInterval(() => {
+  const d = organization.doc
+  if (!d || d.organization_logo || !d.website || ++logoChecks > 4) return clearInterval(logoTimer)
+  organization.reload?.()
+}, 5000)
+onBeforeUnmount(() => clearInterval(logoTimer))
 
 const overview = createResource({
   url: 'growupcrm.firmy.get_overview',
@@ -306,6 +321,12 @@ const dateFmt = new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'numer
 const dateTime = (d) => (d ? dateFmt.format(new Date(String(d).replace(' ', 'T'))) : '')
 const money = (v) => (v ? new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(v) : '–')
 const plain = (html) => htmlToText(html || '')
+
+// Nová zakázka z Firmy: firma a výchozí stav (první stav pipeline) jsou předvyplněné
+const leadDefaults = computed(() => ({
+  organization_link: organization.doc?.name,
+  status: leadStatuses.data?.[0]?.name || 'Nová',
+}))
 
 // Větve a dialogy
 const showLeadModal = ref(false)

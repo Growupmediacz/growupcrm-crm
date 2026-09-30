@@ -1,10 +1,17 @@
-// GrowUp: Zakázka s Firmou. Po zadání IČO se firma načte z ARES (náhled, server ji založí při uložení),
-// pobočky se nabízejí jen z vybrané firmy. Logika ukládání je na serveru (growupcrm.firmy, growupcrm.ares).
+// GrowUp: Zakázka s Firmou.
+// - IČO (nebo tlačítko „Načíst z ARES“): firma se hned načte z ARES, založí (nebo najde) a zobrazí ve formuláři.
+// - Zakázka zakládaná přímo z Firmy má firmu pevně danou a nevyplňuje se znovu.
+// - Pobočky se nabízejí jen z vybrané firmy. Ukládání a práva hlídá server (growupcrm.firmy, growupcrm.ares).
 export class CRMLead {
+  onLoad() {
+    this.applyFirmaMode()
+  }
+
   onRender() {
+    this.applyFirmaMode()
     this.filterBranches()
     // proklik na Firmu (přehled zakázek, kontaktů, poboček a aktivity)
-    if (this.doc.organization_link) {
+    if (this.doc.organization_link && !this.doc.__newDocument) {
       this.actions = [
         {
           name: 'Open Firma',
@@ -17,6 +24,16 @@ export class CRMLead {
         },
       ]
     }
+  }
+
+  // Nová zakázka otevřená z Firmy: firma je dána, schováme IČO, ARES, web a obor.
+  applyFirmaMode() {
+    if (!this.doc.__newDocument || !this.doc.organization_link) return
+    this.setFieldProperties('ico', { hidden: true })
+    this.setFieldProperties('ares_load', { hidden: true })
+    this.setFieldProperties('website', { hidden: true })
+    this.setFieldProperties('industry', { hidden: true })
+    this.setFieldProperties('organization_link', { read_only: true })
   }
 
   filterBranches() {
@@ -35,29 +52,32 @@ export class CRMLead {
   }
 
   async ico() {
-    const digits = (this.value || '').replace(/\D/g, '')
-    if (digits.length < 7) return
+    await this.loadFromAres(this.value)
+  }
+
+  async ares_load() {
+    await this.loadFromAres(this.doc.ico)
+  }
+
+  async loadFromAres(value) {
+    const digits = (value || '').replace(/\D/g, '')
+    if (digits.length < 7) {
+      this.toast.error(__('Zadejte IČO (8 číslic).'))
+      return
+    }
     try {
-      const d = await this.call('growupcrm.ares.lookup', { ico: digits })
-      this.doc.ico = d.ico
+      const d = await this.call('growupcrm.ares.import_organization', {
+        ico: digits,
+      })
+      this.doc.ico = digits
+      this.doc.organization_link = d.name
       if (d.territory) this.doc.territory = d.territory
-      if (d.existing_organization) {
-        this.doc.organization_link = d.existing_organization
-        this.filterBranches()
-        this.toast.success(
-          __('Firma {0} už v databázi je, zakázka se k ní připojí.', [d.existing_organization]),
-        )
-      } else {
-        this.doc.organization_link = ''
-        this.filterBranches()
-        this.doc.organization = d.organization_name
-        this.toast.success(
-          __('ARES: {0}, {1}. Firma se založí při uložení zakázky.', [
-            d.organization_name,
-            d.address || d.city || '',
-          ]),
-        )
-      }
+      this.filterBranches()
+      this.toast.success(
+        d.created
+          ? __('Firma {0} byla načtena z ARES a založena.', [d.organization_name])
+          : __('Firma {0} už v databázi je, zakázka se k ní připojí.', [d.name]),
+      )
     } catch (e) {
       this.toast.error(e.messages?.[0] || e.message)
     }

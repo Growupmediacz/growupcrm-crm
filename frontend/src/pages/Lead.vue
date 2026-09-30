@@ -418,7 +418,8 @@ const breadcrumbs = computed(() => {
 
 const title = computed(() => {
   let t = doctypeMeta.value?.title_field || 'name'
-  return doc.value?.[t] || props.leadId
+  // GrowUp: Název zakázky (např. „Nový web“) má přednost před jménem osoby
+  return doc.value?.order_title || doc.value?.[t] || props.leadId
 })
 
 const statuses = computed(() => {
