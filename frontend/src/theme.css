@@ -572,3 +572,183 @@ input.gl-chip-input:not(#_):focus {
   padding: 0;
   outline: none;
 }
+
+/* ---------- 2. kolo: jednotná pole (oprava 3) ----------
+   Pole 44 px, zaoblení 14 px, text 15 px regular (hodnota nikdy tučně), štítek 13 px / 600 / #3D4466 nad polem. */
+.gl-field {
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text-1);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 1px 2px rgba(64, 72, 160, 0.08);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+textarea.gl-field {
+  height: auto;
+  min-height: 88px;
+  padding: 11px 14px;
+  line-height: 1.45;
+}
+.gl-field:focus,
+.gl-field-focus {
+  outline: none;
+  border-color: #4f46e5 !important;
+  box-shadow: var(--focus-ring) !important;
+  background: rgba(255, 255, 255, 0.92);
+}
+.gl-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #3d4466;
+}
+/* dialogy frappe-ui: stejná výška, písmo a štítky jako .gl-field */
+[role='dialog'] input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']):not(.gl-chip-input),
+[role='dialog'] select,
+[role='dialog'] button.relative.flex.h-7.w-full {
+  height: 44px !important;
+  border-radius: 14px !important;
+  font-size: 15px !important;
+  font-weight: 400;
+}
+[role='dialog'] label.block.text-xs.text-ink-gray-5,
+[role='dialog'] label.text-xs.text-ink-gray-5 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #3d4466;
+  margin-bottom: 2px;
+}
+
+/* segmentový přepínač (pravděpodobnost, období) */
+.gl-segf {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 14px;
+  background: rgba(110, 120, 200, 0.12);
+}
+.gl-segf > button {
+  height: 38px;
+  border-radius: 11px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-2);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.gl-segf > button[aria-pressed='true'] {
+  background: #fff;
+  color: var(--text-1);
+  font-weight: 600;
+  box-shadow: 0 2px 10px -2px rgba(64, 72, 160, 0.3);
+}
+
+/* ---------- 2. kolo: zaškrtávátka (oprava 19) ----------
+   Kolečko = hotový úkol (vlastní tlačítka), čtvereček se zaoblením 6 px = výběr v seznamu a filtru, přepínač = nastavení. */
+input[type='checkbox']:not([role='switch']) {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--check-square-radius, 6px) !important;
+  border: 1.5px solid rgba(64, 72, 160, 0.35);
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #4f46e5;
+  cursor: pointer;
+}
+input[type='checkbox']:not([role='switch']):checked {
+  background-color: #4f46e5;
+  border-color: #4f46e5;
+}
+input[type='checkbox']:not([role='switch']):focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+/* vybraný řádek seznamu */
+.gl-row-selected {
+  background: var(--row-selected, rgba(79, 70, 229, 0.07));
+}
+
+/* prázdná hodnota (oprava 7): tlumené „Bez hodnoty“ + odkaz „Doplnit“ */
+.gl-empty {
+  color: var(--empty-color, #5b6285);
+  font-size: var(--empty-fs, 13px);
+  font-weight: 400;
+}
+.gl-fill {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4f46e5;
+}
+.gl-fill:hover {
+  text-decoration: underline;
+}
+
+/* text zápisů a popisů (oprava 16): lámat po slabikách, nikdy uprostřed znaků */
+.gl-text {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* detail Zakázky – čipy aktivity (oprava 10): nadpis vlevo, 5 čipů + „Více“ vpravo */
+.gl-chiptabs-d [role='tablist'] {
+  justify-content: flex-end;
+  padding-left: 150px !important;
+}
+.gl-chiptabs-d:has(.gl-more-tabs) [role='tablist'] {
+  padding-right: 112px !important;
+}
+.gl-chiptabs-d [role='tablist'] > button[role='tab']:nth-of-type(n + 6) {
+  display: none;
+}
+.gl-quick {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 10px -4px rgba(64, 72, 160, 0.3);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+  transition: background 0.15s, transform 0.15s;
+}
+.gl-quick:hover { background: #fff; }
+.gl-quick:active { transform: scale(0.96); }
+
+/* Kanban: posuvník schovaný, pozici ukazuje vlastní ukazatel pod sloupci */
+.gl-kanban-scroll { scrollbar-width: none; }
+.gl-kanban-scroll::-webkit-scrollbar { display: none; }
+
+/* ---------- 2. kolo: destruktivní tlačítka (oprava 4) ----------
+   Smazat nikdy jako výrazné tlačítko na stránce: subtle = červený text bez podkladu (patička formuláře, menu „…“).
+   Plná červená #C8321F jen v potvrzení, které smazání dokončí (solid). */
+button.inline-flex.bg-surface-red-2 {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  color: #c8321f !important;
+  font-weight: 600;
+}
+button.inline-flex.bg-surface-red-2:hover {
+  background: rgba(200, 50, 31, 0.08) !important;
+}
+button.inline-flex.bg-surface-red-7 {
+  background: #c8321f !important;
+  color: #fff !important;
+  box-shadow: 0 6px 18px -8px rgba(200, 50, 31, 0.6) !important;
+}
+button.inline-flex.bg-surface-red-7:hover {
+  background: #b02a19 !important;
+}
+
+/* mobilní lišta: aktivní položka v bílé pilulce (design 2. kolo) */
+.gl-tab-on { background: rgba(255, 255, 255, 0.92); border-radius: 22px; box-shadow: 0 2px 10px -3px rgba(64, 72, 160, 0.3); margin: 6px 2px; }

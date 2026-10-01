@@ -47,7 +47,14 @@
           </span>
         </div>
       </div>
-      <div v-if="sections.data" class="flex flex-1 flex-col justify-between overflow-hidden">
+      <!-- GrowUp (oprava 13): Údaje o firmě jen ke čtení; celý formulář CRM až pod „Všechna pole“ -->
+      <div v-if="!allFields" class="flex-1 overflow-y-auto px-3 pb-3">
+        <GlOrgInfoCard :doc="organization.doc" :branches="branches" @saved="reload" @allFields="allFields = true" />
+      </div>
+      <div v-else-if="sections.data" class="flex flex-1 flex-col justify-between overflow-hidden">
+        <button class="mx-5 mb-2 self-start text-[13px] font-semibold text-[#4F46E5] hover:underline" @click="allFields = false">
+          ‹ {{ __('Zpět na přehled') }}
+        </button>
         <SidePanelLayout
           :sections="sections.data"
           doctype="CRM Organization"
@@ -167,8 +174,8 @@
                 </td>
                 <td class="py-2 pr-3">{{ __(l.status) }}</td>
                 <td class="py-2 pr-3">{{ money(l.order_value) }}</td>
-                <td class="py-2 pr-3">{{ l.branch_name || '–' }}</td>
-                <td class="py-2 pr-3">{{ l.owner_name || '–' }}</td>
+                <td class="py-2 pr-3">{{ l.branch_name }}</td>
+                <td class="py-2 pr-3">{{ l.owner_name }}</td>
                 <td class="py-2">{{ dateTime(l.modified) }}</td>
               </tr>
             </tbody>
@@ -199,11 +206,11 @@
                 <td class="py-2 pr-3">
                   <router-link :to="{ name: 'Contact', params: { contactId: c.name } }" class="text-ink-blue-5 hover:underline">{{ c.full_name || c.name }}</router-link>
                 </td>
-                <td class="py-2 pr-3">{{ c.contact_type ? __(c.contact_type) : '–' }}</td>
-                <td class="py-2 pr-3">{{ c.designation || '–' }}</td>
-                <td class="py-2 pr-3">{{ c.branch_name || '–' }}</td>
-                <td class="py-2 pr-3">{{ c.email_id || '–' }}</td>
-                <td class="py-2">{{ c.mobile_no || '–' }}</td>
+                <td class="py-2 pr-3">{{ c.contact_type ? __(c.contact_type) : '' }}</td>
+                <td class="py-2 pr-3">{{ c.designation }}</td>
+                <td class="py-2 pr-3">{{ c.branch_name }}</td>
+                <td class="py-2 pr-3">{{ c.email_id }}</td>
+                <td class="py-2">{{ c.mobile_no }}</td>
               </tr>
             </tbody>
           </table>
@@ -231,9 +238,9 @@
             <tbody>
               <tr v-for="b in branches" :key="b.name" class="border-t">
                 <td class="py-2 pr-3 text-ink-gray-9">{{ b.branch_name }}</td>
-                <td class="py-2 pr-3">{{ b.territory || '–' }}</td>
-                <td class="py-2 pr-3">{{ b.city || '–' }}</td>
-                <td class="py-2 pr-3">{{ b.responsible_name || '–' }}</td>
+                <td class="py-2 pr-3">{{ b.territory }}</td>
+                <td class="py-2 pr-3">{{ b.city }}</td>
+                <td class="py-2 pr-3">{{ b.responsible_name }}</td>
                 <td class="py-2 pr-3">{{ b.leads }}</td>
                 <td class="py-2 text-right"><Button variant="ghost" :label="__('Upravit')" @click="editBranch(b)" /></td>
               </tr>
@@ -268,6 +275,7 @@ import LayoutHeader from '@/components/LayoutHeader.vue'
 import LeadModal from '@/components/Modals/GlNewLeadModal.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import GlOrgInfoCard from '@/components/Firma/GlOrgInfoCard.vue'
 import { sessionStore } from '@/stores/session'
 import BranchDialog from '@/components/Firma/BranchDialog.vue'
 import ContactDialog from '@/components/Firma/ContactDialog.vue'
@@ -315,6 +323,7 @@ function reload() {
 }
 
 const summary = computed(() => overview.data?.summary)
+const allFields = ref(false)
 
 // mobil: rychlé akce přes první kontakt firmy s telefonem / e-mailem
 const REL_COLORS = { Klient: '#22b35e', Prospekt: '#3b82f6', 'Bývalý klient': '#9ca3af' }
@@ -388,7 +397,7 @@ const timeline = computed(() =>
 
 const dateFmt = new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 const dateTime = (d) => (d ? dateFmt.format(new Date(String(d).replace(' ', 'T'))) : '')
-const money = (v) => (v ? new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(v) : '–')
+const money = (v) => (v ? new Intl.NumberFormat('cs-CZ', { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }).format(v) : '')
 const plain = (html) => htmlToText(html || '')
 
 // Nová zakázka z Firmy: firma a výchozí stav (první stav pipeline) jsou předvyplněné

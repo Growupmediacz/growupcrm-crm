@@ -157,6 +157,14 @@
           @applyQuickFilter="(f, v) => applyQuickFilter(f, v)"
         />
       </div>
+      <!-- GrowUp (oprava 12): zrušit všechny rychlé filtry najednou -->
+      <button
+        v-if="activeQuickFilters.length"
+        class="m-1 shrink-0 whitespace-nowrap px-1 text-[13px] font-semibold text-[#4F46E5] hover:underline"
+        @click="clearQuickFilters"
+      >
+        {{ __('Vymazat') }}
+      </button>
     </FadedScrollableDiv>
     <div class="-ml-2 h-[70%] border-l" />
     <div class="flex items-center gap-2">
@@ -882,6 +890,16 @@ function setupNewQuickFilters(filters) {
     fieldname: f.fieldname,
     fieldtype: f.fieldtype,
   }))
+}
+
+const activeQuickFilters = computed(() => quickFilterList.value.filter((f) => f.value))
+function clearQuickFilters() {
+  let filters = { ...getListParams().filters }
+  activeQuickFilters.value.forEach((f) => {
+    delete filters[f.fieldname]
+    f.value = f.fieldtype == 'Check' ? false : ''
+  })
+  updateFilter(filters)
 }
 
 function applyQuickFilter(filter, value) {

@@ -6,7 +6,7 @@
       <div class="flex min-w-0 items-center gap-3">
         <span class="text-lg-medium shrink-0 text-ink-gray-9">{{ __('Kontakty') }}</span>
         <div class="gl-seg hidden shrink-0 sm:inline-flex">
-          <button class="gl-seg-btn gl-seg-on"><GlIcon name="users" :size="15" />{{ __('Karty') }}</button>
+          <button class="gl-seg-btn gl-seg-on"><GlIcon name="grid" :size="15" />{{ __('Karty') }}</button>
           <router-link class="gl-seg-btn" :to="{ name: 'Contacts', params: { viewType: 'list' } }">
             <GlIcon name="list" :size="15" />{{ __('Tabulka') }}
           </router-link>
@@ -92,7 +92,11 @@
               <dt class="shrink-0 text-[14px] text-ink-gray-5">{{ r.label }}</dt>
               <dd class="min-w-0 truncate text-right text-[14px] font-medium text-ink-gray-9">
                 <a v-if="r.href" :href="r.href" target="_blank" class="font-semibold text-[#4f46e5] hover:underline">{{ r.value }}</a>
-                <template v-else>{{ r.value }}</template>
+                <template v-else-if="r.value">
+                  {{ r.value }}
+                  <span v-if="r.sub" class="block text-[12px] font-normal text-ink-gray-5">{{ r.sub }}</span>
+                </template>
+                <span v-else class="gl-empty">{{ __('Bez hodnoty') }}</span>
               </dd>
             </div>
           </dl>
@@ -228,13 +232,15 @@ const actions = computed(() => [
   { label: __('Zápis'), icon: 'doc', onClick: () => ((noteText.value = ''), (showNote.value = true)) },
 ])
 
-const dash = '–'
+const dash = ''
 const details = computed(() => [
   { label: __('Mobil'), value: phone.value || dash },
   { label: __('E-mail'), value: c.value.email_id || dash, href: c.value.email_id ? `mailto:${c.value.email_id}` : null },
   { label: __('LinkedIn'), value: c.value.linkedin ? __('Profil') : dash, href: c.value.linkedin || null },
   { label: __('Preferuje'), value: c.value.preferred_contact || dash },
   { label: __('Typ'), value: c.value.contact_type ? __(c.value.contact_type) : dash },
+  // bez pobočky se řádek nezobrazí
+  ...(c.value.branch ? [{ label: __('Pobočka'), value: c.value.branch.name, sub: c.value.branch.address }] : []),
 ])
 
 const noteTarget = computed(() =>

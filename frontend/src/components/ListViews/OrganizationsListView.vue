@@ -170,6 +170,7 @@
   />
 </template>
 <script setup>
+import ListFooter from '@/components/GlListFooter.vue'
 const REL_COLORS = { Klient: '#22b35e', Prospekt: '#3b82f6', 'Bývalý klient': '#9ca3af' }
 const TONES = [
   'bg-[#dde6ff] text-[#2e4bb8]',
@@ -198,7 +199,6 @@ import {
   ListHeaderItem,
   ListSelectBanner,
   ListRowItem,
-  ListFooter,
   Tooltip,
   Dropdown,
 } from 'frappe-ui'

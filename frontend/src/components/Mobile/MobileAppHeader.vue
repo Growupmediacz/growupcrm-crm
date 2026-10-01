@@ -1,14 +1,6 @@
 <template>
-  <div class="flex pr-3">
-    <div class="z-20 ml-2 flex items-center justify-center">
-      <Button
-        class="size-7"
-        variant="ghost"
-        @click="sidebarOpened = !sidebarOpened"
-      >
-        <MenuIcon class="h-4 text-ink-gray-9" />
-      </Button>
-    </div>
+  <!-- GrowUp (oprava 21): bez hamburgeru, menu je pod „Více“ ve spodní liště; nadpis začíná u okraje -->
+  <div class="flex pl-2 pr-3">
     <div id="app-header" class="min-w-0 flex-1" />
     <div class="flex items-center"><GlSearch /></div>
   </div>
@@ -17,7 +9,5 @@
 
 <script setup>
 import GlSearch from '@/components/GlSearch.vue'
-import MenuIcon from '@/components/Icons/MenuIcon.vue'
 import CallUI from '@/components/Telephony/CallUI.vue'
-import { mobileSidebarOpened as sidebarOpened } from '@/composables/settings'
 </script>

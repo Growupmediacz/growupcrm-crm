@@ -42,7 +42,10 @@
               :class="[n.read ? 'bg-transparent' : 'bg-surface-gray-10']"
             />
             <WhatsAppIcon v-if="n.type == 'WhatsApp'" class="size-7" />
-            <UserAvatar v-else :user="n.from_user.name" size="lg" />
+            <!-- GrowUp (design 2. kolo, oprava 18): ikona podle typu místo avataru -->
+            <span v-else class="flex size-9 items-center justify-center rounded-xl" :class="kindOf(n).tone">
+              <GlIcon :name="kindOf(n).icon" :size="17" />
+            </span>
           </div>
           <div>
             <div
@@ -60,8 +63,8 @@
                 {{ n.reference_name }}
               </span>
             </div>
-            <div class="text-sm text-ink-gray-5">
-              {{ __(timeAgo(n.creation)) }}
+            <div class="text-sm text-ink-gray-5" :title="formatDateCz(n.creation) + ' ' + formatTimeCz(n.creation)">
+              {{ relativeCz(n.creation) }}
             </div>
           </div>
         </RouterLink>
@@ -81,14 +84,15 @@ import WhatsAppIcon from '@/components/Icons/WhatsAppIcon.vue'
 import MarkAsDoneIcon from '@/components/Icons/MarkAsDoneIcon.vue'
 import NotificationsIcon from '@/components/Icons/NotificationsIcon.vue'
 import EmptyState from '@/components/ListViews/EmptyState.vue'
-import UserAvatar from '@/components/UserAvatar.vue'
+import GlIcon from '@/components/GlIcon.vue'
+import { formatDateCz, formatTimeCz, relativeCz } from '@/utils/glDate'
 import {
   visible,
   notifications,
   notificationsStore,
 } from '@/stores/notifications'
 import { globalStore } from '@/stores/global'
-import { timeAgo, sanitizeHTML } from '@/utils'
+import { sanitizeHTML } from '@/utils'
 import { onClickOutside } from '@vueuse/core'
 import { useTelemetry } from 'frappe-ui/frappe'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
@@ -127,6 +131,26 @@ onMounted(() => {
     notifications.reload()
   })
 })
+
+const KINDS = {
+  task: { icon: 'check', tone: 'bg-[rgba(234,170,8,.18)] text-[#915200]' },
+  event: { icon: 'cal', tone: 'bg-[rgba(59,110,246,.13)] text-[#2e5bd8]' },
+  call: { icon: 'phone', tone: 'bg-[rgba(249,115,22,.14)] text-[#c2410c]' },
+  email: { icon: 'mail', tone: 'bg-[rgba(20,160,190,.13)] text-[#0b7488]' },
+  won: { icon: 'star', tone: 'bg-[rgba(34,179,94,.14)] text-[#15803d]' },
+  assign: { icon: 'brief', tone: 'bg-[rgba(79,70,229,.1)] text-[#4338ca]' },
+  mention: { icon: 'reply', tone: 'bg-[rgba(110,120,200,.12)] text-[#4a5173]' },
+}
+function kindOf(n) {
+  const text = (n.notification_text || '').toLowerCase()
+  if (n.notification_type_doctype === 'Event' || n.reference_doctype === 'Event') return KINDS.event
+  if (n.type === 'Task' || n.notification_type_doctype === 'CRM Task') return KINDS.task
+  if (n.notification_type_doctype === 'CRM Call Log') return KINDS.call
+  if (text.includes('vyhr')) return KINDS.won
+  if (n.type === 'Assignment') return KINDS.assign
+  if (n.notification_type_doctype === 'Communication') return KINDS.email
+  return KINDS.mention
+}
 
 function getRoute(notification) {
   let params = {

@@ -35,7 +35,7 @@
         @click="editNote(note.name)"
       >
         <div class="flex items-center justify-between">
-          <div class="truncate text-lg-medium text-ink-gray-9">
+          <div lang="cs" class="gl-text line-clamp-2 text-lg-medium text-ink-gray-9">
             {{ note.title }}
           </div>
           <Dropdown
@@ -55,14 +55,14 @@
             />
           </Dropdown>
         </div>
-        <!-- content is passed through sanitizeHTML() (DOMPurify) before rendering, so v-html is safe here -->
-        <!-- eslint-disable vue/no-v-html -->
+        <!-- GrowUp (design 2. kolo, oprava 16): obsah jako čistý text, slova se lámou po slabikách, ne uprostřed -->
         <div
           v-if="note.content"
-          class="prose-f prose-sm text-p-sm max-w-none text-ink-gray-5 flex-1 overflow-hidden"
-          v-html="sanitizeHTML(note.content)"
-        />
-        <!-- eslint-enable vue/no-v-html -->
+          lang="cs"
+          class="gl-text line-clamp-5 flex-1 overflow-hidden whitespace-pre-line text-[14px] leading-relaxed text-ink-gray-7"
+        >
+          {{ plainText(note.content) }}
+        </div>
         <div class="mt-2 flex items-center justify-between gap-2">
           <div class="flex items-center gap-2">
             <UserAvatar :user="note.owner" size="xs" />
@@ -93,6 +93,11 @@
 </template>
 
 <script setup>
+// HTML značky (i zapsané jako text, např. „&lt;p&gt;“) nikdy nezobrazovat.
+// DOMParser nespouští skripty ani nenačítá obrázky, na rozdíl od innerHTML.
+const toText = (html) => new DOMParser().parseFromString(html || '', 'text/html').body.textContent || ''
+const plainText = (html) => toText(toText(html)).trim()
+import ListFooter from '@/components/GlListFooter.vue'
 import ViewBreadcrumbs from '@/components/ViewBreadcrumbs.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
@@ -103,7 +108,7 @@ import EmptyState from '@/components/ListViews/EmptyState.vue'
 import { usersStore } from '@/stores/users'
 import { timeAgo, formatDate, sanitizeHTML } from '@/utils'
 import { useOnboarding, useTelemetry } from 'frappe-ui/frappe'
-import { call, Dropdown, Tooltip, ListFooter } from 'frappe-ui'
+import { call, Dropdown, Tooltip } from 'frappe-ui'
 import { ref, watch } from 'vue'
 
 const { getUser } = usersStore()

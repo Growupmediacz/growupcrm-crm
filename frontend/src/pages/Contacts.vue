@@ -1,7 +1,7 @@
 <template>
   <LayoutHeader>
     <template #left-header>
-      <GlViewHeader :title="__('Kontakty')" routeName="Contacts" :viewControls="viewControls" :kanban="false" />
+      <GlViewHeader :title="__('Kontakty')" routeName="Contacts" cardsRoute="ContactsCards" :viewControls="viewControls" :kanban="false" />
     </template>
     <template #right-header>
       <CustomActions
@@ -10,7 +10,7 @@
       />
       <Button
         variant="solid"
-        :label="__('Create')"
+        :label="__('Nový kontakt')"
         iconLeft="plus"
         @click="showContactModal = true"
       />

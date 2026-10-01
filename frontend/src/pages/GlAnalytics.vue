@@ -231,9 +231,9 @@ const kpis = computed(() => {
       badgeUp: x.revenue_delta >= 0,
       sub: `Kč · ${months(s)} – ${months(e)}`,
     },
-    { label: __('Úspěšnost'), value: x.success === null ? '—' : `${x.success} %`, sub: __('vyhráno {0} z {1} založených', [x.won, x.created]) },
+    { label: __('Úspěšnost'), value: x.success === null ? __('Bez dat') : `${x.success} %`, sub: __('vyhráno {0} z {1} založených', [x.won, x.created]) },
     { label: __('Průměrná zakázka'), value: thousandsLabel(x.avg_value), sub: __('Kč · vyhrané zakázky') },
-    { label: __('Délka obchodu'), value: x.cycle_days === null ? '—' : __('{0} dní', [x.cycle_days]), sub: __('od založení po výhru') },
+    { label: __('Délka obchodu'), value: x.cycle_days === null ? __('Bez dat') : __('{0} dní', [x.cycle_days]), sub: __('od založení po výhru') },
   ]
 })
 

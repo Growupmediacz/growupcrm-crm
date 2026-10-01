@@ -46,6 +46,8 @@ const props = defineProps({
   routeName: { type: String, required: true },
   viewControls: { type: Object, default: null },
   kanban: { type: Boolean, default: true },
+  // GrowUp (oprava 15): stránka s kartami (např. ContactsCards) → přepínač Karty / Tabulka
+  cardsRoute: { type: String, default: '' },
 })
 
 const route = useRoute()
@@ -53,13 +55,19 @@ const router = useRouter()
 const current = computed(() => route.params.viewType || 'list')
 const savedView = computed(() => !!route.query.view)
 const segments = computed(() =>
-  [
-    props.kanban && { type: 'kanban', label: __('Kanban'), icon: 'kanban' },
-    { type: 'list', label: __('Seznam'), icon: 'list' },
-  ].filter(Boolean),
+  props.cardsRoute
+    ? [
+        { type: 'cards', label: __('Karty'), icon: 'grid' },
+        { type: 'list', label: __('Tabulka'), icon: 'list' },
+      ]
+    : [
+        props.kanban && { type: 'kanban', label: __('Kanban'), icon: 'kanban' },
+        { type: 'list', label: __('Seznam'), icon: 'list' },
+      ].filter(Boolean),
 )
 
 function go(type) {
+  if (type === 'cards') return router.push({ name: props.cardsRoute })
   if (type !== current.value) router.push({ name: props.routeName, params: { viewType: type } })
 }
 </script>

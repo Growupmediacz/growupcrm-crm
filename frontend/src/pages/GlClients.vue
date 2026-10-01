@@ -61,7 +61,7 @@
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div class="rounded-2xl bg-[rgba(110,120,200,.075)] px-3 py-2.5">
-            <div class="num text-[19px] font-bold text-ink-gray-9">{{ c.monthly ? money(c.monthly) : '—' }}</div>
+            <div class="num text-[19px] font-bold text-ink-gray-9">{{ c.monthly ? money(c.monthly) : '' }}</div>
             <div class="text-[12px] text-ink-gray-5">{{ __('měsíčně') }}</div>
           </div>
           <router-link :to="{ name: 'Projects' }" class="rounded-2xl bg-[rgba(110,120,200,.075)] px-3 py-2.5 hover:bg-[rgba(110,120,200,.12)]">
@@ -103,9 +103,9 @@
             <td class="px-3 py-2.5">
               <span class="flex items-center gap-1.5"><span class="size-2 rounded-full" :style="{ background: HEALTH_COLORS[c.health] }" />{{ __(c.health) }}</span>
             </td>
-            <td class="num px-3 py-2.5 text-right font-semibold">{{ c.monthly ? money(c.monthly) : '—' }}</td>
+            <td class="num px-3 py-2.5 text-right font-semibold">{{ c.monthly ? money(c.monthly) : '' }}</td>
             <td class="num px-3 py-2.5 text-right">{{ c.projects }}</td>
-            <td class="px-3 py-2.5 text-ink-gray-7">{{ c.next_event ? `${c.next_event.title} · ${shortDate(c.next_event.at)}` : '—' }}</td>
+            <td class="px-3 py-2.5 text-ink-gray-7">{{ c.next_event ? `${c.next_event.title} · ${shortDate(c.next_event.at)}` : '' }}</td>
             <td class="px-3 py-2.5 text-right">
               <Dropdown :options="menu(c)" placement="right">
                 <button class="flex size-8 items-center justify-center rounded-full text-ink-gray-5 hover:bg-white/70" :aria-label="__('Další akce')"><GlIcon name="more" :size="18" /></button>

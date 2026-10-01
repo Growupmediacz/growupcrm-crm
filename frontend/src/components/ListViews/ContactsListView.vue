@@ -126,9 +126,11 @@
                 })
             "
           />
+          <!-- GrowUp (oprava 15): dlouhý text se zkrátí „…“, celý je v nápovědě -->
           <div
             v-else-if="label"
             class="truncate text-base"
+            :title="String(label)"
             @click="
               (event) =>
                 emit('applyFilter', {
@@ -175,6 +177,7 @@
   />
 </template>
 <script setup>
+import ListFooter from '@/components/GlListFooter.vue'
 import HeartIcon from '@/components/Icons/HeartIcon.vue'
 import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
 import RatingInput from '@/components/Controls/RatingInput.vue'
@@ -188,7 +191,6 @@ import {
   ListHeaderItem,
   ListSelectBanner,
   ListRowItem,
-  ListFooter,
   Tooltip,
   Dropdown,
 } from 'frappe-ui'

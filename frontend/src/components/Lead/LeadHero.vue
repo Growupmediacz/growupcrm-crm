@@ -23,7 +23,12 @@
       </div>
       <div class="shrink-0 text-right">
         <div class="text-[13px] text-ink-gray-5">{{ __('Hodnota') }}</div>
-        <div class="num font-bold leading-tight tracking-tight text-ink-gray-9" :class="compact ? 'text-[22px]' : 'text-[38px]'">{{ money }}</div>
+        <div v-if="doc.order_value" class="num font-bold leading-tight tracking-tight text-ink-gray-9" :class="compact ? 'text-[22px]' : 'text-[38px]'">{{ money }}</div>
+        <!-- oprava 7: prázdná hodnota = tlumené „Bez hodnoty“ + „Doplnit“ -->
+        <template v-else>
+          <div class="font-semibold leading-tight text-[var(--empty-color,#5B6285)]" :class="compact ? 'text-[16px]' : 'text-[20px]'">{{ __('Bez hodnoty') }}</div>
+          <button class="gl-fill" @click="emit('fill')">{{ __('Doplnit') }}</button>
+        </template>
       </div>
     </div>
 
@@ -48,9 +53,9 @@
       <GlIcon name="clock" :size="22" :class="overdue ? 'text-[#c8321f]' : 'text-[#915200]'" />
       <div class="min-w-0 flex-1">
         <div class="truncate text-[16px] font-bold" :class="overdue ? 'text-[#c8321f]' : 'text-[#915200]'">
-          {{ __('Další krok') }}: {{ next.title }}, {{ dueLabel }}
+          {{ __('Další krok') }}: {{ next.title }}
         </div>
-        <div v-if="plain" class="truncate text-[13px] text-ink-gray-7">{{ plain }}</div>
+        <div class="truncate text-[13px] text-ink-gray-7">{{ nextSub }}</div>
       </div>
       <button
         class="inline-flex h-9 items-center gap-2 rounded-full bg-white/80 px-4 text-[14px] font-semibold text-ink-gray-9 shadow-[0_2px_10px_-4px_rgba(64,72,160,.3)] hover:bg-white"
@@ -66,6 +71,8 @@
 import GlIcon from '@/components/GlIcon.vue'
 import { statusesStore } from '@/stores/statuses'
 import { htmlToText } from '@/utils'
+import { formatDateCz, formatTimeCz } from '@/utils/glDate'
+import { usersStore } from '@/stores/users'
 import { completeTaskWithUndo } from '@/composables/glTaskDone'
 import { call, createListResource, toast } from 'frappe-ui'
 import { computed } from 'vue'
@@ -75,7 +82,7 @@ const props = defineProps({
   stageOptions: { type: Array, default: () => [] },
   compact: { type: Boolean, default: false },
 })
-const emit = defineEmits(['changed'])
+const emit = defineEmits(['changed', 'fill'])
 
 const { leadStatuses } = statusesStore()
 
@@ -95,7 +102,7 @@ const STAGE_COLORS = {
 const stageColor = computed(() => STAGE_COLORS[props.doc.status] || '#9ca3af')
 const person = computed(() => [props.doc.first_name, props.doc.last_name].filter(Boolean).join(' '))
 const money = computed(() =>
-  props.doc.order_value ? `${new Intl.NumberFormat('cs-CZ').format(props.doc.order_value)} Kč` : '–',
+  props.doc.order_value ? `${new Intl.NumberFormat('cs-CZ').format(props.doc.order_value)} Kč` : '',
 )
 
 function move(stage) {
@@ -112,7 +119,7 @@ const tasks = createListResource({
     status: ['not in', ['Done', 'Canceled']],
     due_date: ['is', 'set'],
   },
-  fields: ['name', 'title', 'description', 'due_date'],
+  fields: ['name', 'title', 'description', 'due_date', 'assigned_to'],
   orderBy: 'due_date asc',
   pageLength: 1,
   auto: true,
@@ -127,7 +134,15 @@ const dueLabel = computed(() => {
   if (diff === 0) return 'dnes'
   if (diff === 1) return 'zítra'
   if (diff === -1) return 'včera'
-  return `${d.getDate()}. ${d.getMonth() + 1}. ${d.getFullYear()}`
+  return formatDateCz(d)
+})
+
+const { getUser } = usersStore()
+const nextSub = computed(() => {
+  const d = new Date(String(next.value.due_date).replace(' ', 'T'))
+  const time = d.getHours() || d.getMinutes() ? ` ${formatTimeCz(d)}` : ''
+  const who = next.value.assigned_to ? getUser(next.value.assigned_to)?.full_name : ''
+  return [`${dueLabel.value}${time}`, who].filter(Boolean).join(' · ') + (plain.value ? ` · ${plain.value}` : '')
 })
 
 async function done() {

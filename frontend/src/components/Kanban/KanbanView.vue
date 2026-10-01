@@ -1,5 +1,7 @@
 <template>
-  <div class="flex overflow-x-auto h-full">
+  <!-- GrowUp (design 2. kolo, oprava 12): sloupce se posouvají, okraj s přechodem + šipka a ukazatel pozice -->
+  <div class="relative flex h-full min-h-0 flex-col">
+  <div ref="scroller" class="gl-kanban-scroll flex h-full overflow-x-auto" @scroll="measure">
     <Draggable
       v-if="columns"
       :list="columns"
@@ -191,6 +193,33 @@
       </Combobox>
     </div>
   </div>
+    <div
+      v-if="canRight"
+      class="pointer-events-none absolute bottom-6 right-0 top-0 w-24 bg-gradient-to-l from-[rgba(238,234,255,.95)] to-transparent"
+    />
+    <button
+      v-if="canRight"
+      class="gl-round absolute right-3 top-40 flex size-11 items-center justify-center rounded-full"
+      :aria-label="__('Další sloupce')"
+      @click="scrollBy(1)"
+    >
+      <GlIcon name="right" :size="18" />
+    </button>
+    <button
+      v-if="canLeft"
+      class="gl-round absolute left-3 top-40 flex size-11 items-center justify-center rounded-full"
+      :aria-label="__('Předchozí sloupce')"
+      @click="scrollBy(-1)"
+    >
+      <GlIcon name="left" :size="18" />
+    </button>
+    <div v-if="canLeft || canRight" class="mx-auto mb-2 h-1 w-60 shrink-0 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]" aria-hidden="true">
+      <div
+        class="h-full rounded-full bg-[#4F46E5] opacity-60 transition-[margin] duration-150"
+        :style="{ width: `${thumb.width}%`, marginLeft: `${thumb.left}%` }"
+      />
+    </div>
+  </div>
 </template>
 <script setup>
 import RefreshIcon from '@/components/Icons/RefreshIcon.vue'
@@ -198,7 +227,8 @@ import IndicatorIcon from '@/components/Icons/IndicatorIcon.vue'
 import { isTouchScreenDevice, colors, parseColor } from '@/utils'
 import Draggable from 'vuedraggable'
 import { Combobox, Dropdown, Popover } from 'frappe-ui'
-import { computed } from 'vue'
+import GlIcon from '@/components/GlIcon.vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 defineProps({
   options: {
@@ -214,6 +244,33 @@ defineProps({
 const emit = defineEmits(['update', 'loadMore'])
 
 const kanban = defineModel({ type: Object })
+
+// posun sloupců: šipky, přechod na okraji a ukazatel pozice
+const scroller = ref(null)
+const canLeft = ref(false)
+const canRight = ref(false)
+const thumb = reactive({ width: 100, left: 0 })
+function measure() {
+  const el = scroller.value
+  if (!el) return
+  const max = el.scrollWidth - el.clientWidth
+  canLeft.value = el.scrollLeft > 4
+  canRight.value = el.scrollLeft < max - 4
+  thumb.width = Math.min(100, (el.clientWidth / el.scrollWidth) * 100)
+  thumb.left = max > 0 ? (el.scrollLeft / max) * (100 - thumb.width) : 0
+}
+function scrollBy(dir) {
+  // o jeden sloupec (288 px + mezera)
+  scroller.value?.scrollBy({ left: dir * 300, behavior: 'smooth' })
+}
+let ro
+onMounted(() => {
+  ro = new ResizeObserver(measure)
+  scroller.value && ro.observe(scroller.value)
+  measure()
+})
+onBeforeUnmount(() => ro?.disconnect())
+watch(() => kanban.value?.data, () => nextTick(measure))
 
 const titleField = computed(() => {
   return kanban.value?.data?.title_field

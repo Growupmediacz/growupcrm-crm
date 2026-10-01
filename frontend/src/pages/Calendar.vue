@@ -1,11 +1,33 @@
 <template>
   <LayoutHeader>
+    <!-- GrowUp (design 2. kolo, R2Kalendar): měsíc jako nadpis, šipky, Dnes; vpravo Den/Týden/Měsíc a akce -->
     <template #left-header>
-      <ViewBreadcrumbs v-if="!narrow" routeName="Calendar" />
+      <ViewBreadcrumbs v-if="narrow" routeName="Calendar" />
+      <div v-else class="flex items-center gap-3">
+        <h1 class="text-lg-medium whitespace-nowrap">{{ title }}</h1>
+        <button class="gl-round flex size-11 items-center justify-center rounded-full" :aria-label="__('Předchozí')" @click="move(-1)">
+          <GlIcon name="left" :size="18" />
+        </button>
+        <button class="gl-round flex size-11 items-center justify-center rounded-full" :aria-label="__('Další')" @click="move(1)">
+          <GlIcon name="right" :size="18" />
+        </button>
+        <button class="gl-quick" @click="goToday">{{ __('Dnes') }}</button>
+      </div>
     </template>
     <template #right-header>
-      <Button :label="__('Naplánovat týden')" iconLeft="lucide-calendar-plus" @click="showPlan = true" />
-      <Button v-if="!narrow" variant="solid" :label="__('Vytvořit')" iconLeft="plus" @click="newEvent(null)" />
+      <div v-if="!narrow" class="gl-seg inline-flex">
+        <button
+          v-for="b in viewButtons"
+          :key="b.value"
+          class="gl-seg-btn"
+          :class="view === b.value && 'gl-seg-on'"
+          @click="view = b.value"
+        >
+          {{ b.label }}
+        </button>
+      </div>
+      <Button :label="__('Naplánovat týden')" iconLeft="calendar" @click="showPlan = true" />
+      <Button v-if="!narrow" variant="solid" :label="__('Nová událost')" iconLeft="plus" @click="newEvent(null)" />
     </template>
   </LayoutHeader>
   <!-- GrowUp: mobil podle designu – týden a program dne -->
@@ -21,40 +43,36 @@
     />
   </div>
   <div v-else class="flex h-[calc(100vh-88px)] flex-col gap-3 overflow-hidden px-2 pb-2">
-    <!-- ovládání -->
-    <div class="flex flex-wrap items-center justify-between gap-2 px-1">
-      <div class="flex items-center gap-1">
-        <Button variant="ghost" icon="lucide-chevron-left" :aria-label="__('Předchozí')" @click="move(-1)" />
-        <Button variant="ghost" :label="__('Dnes')" @click="goToday" />
-        <Button variant="ghost" icon="lucide-chevron-right" :aria-label="__('Další')" @click="move(1)" />
-        <span class="ml-2 text-lg font-medium text-ink-gray-8">{{ title }}</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <TabButtons
-          v-if="isManager"
-          :buttons="[
-            { label: __('Moje'), value: 'mine' },
-            { label: __('Celý tým'), value: 'team' },
-          ]"
-          :modelValue="scope === 'mine' ? 'mine' : 'team'"
-          @update:modelValue="(v) => (scope = v)"
-        />
-        <TabButtons :buttons="viewButtons" v-model="view" />
-      </div>
-    </div>
-    <!-- přehled týmu: kdo má kolik schůzek, klik přepne kalendář na daného člověka -->
-    <div v-if="isManager && team.length" class="flex flex-wrap items-center gap-1.5 px-1">
-      <span class="mr-1 text-xs text-ink-gray-5">{{ __('Tým') }}:</span>
+    <!-- přehled týmu (oprava 6): počet schůzek tlumeným číslem vedle jména, klik přepne kalendář na daného člověka -->
+    <div v-if="isManager" class="flex flex-wrap items-center gap-2 px-1">
+      <span class="mr-1 text-[13px] font-medium text-ink-gray-5">{{ __('Tým') }}</span>
+      <button
+        class="gl-chip flex h-9 items-center rounded-full px-3.5 text-[14px]"
+        :class="scope === 'mine' && 'gl-chip-on'"
+        @click="scope = 'mine'"
+      >
+        {{ __('Moje') }}
+      </button>
+      <button
+        class="gl-chip flex h-9 items-center rounded-full px-3.5 text-[14px]"
+        :class="scope === 'team' && 'gl-chip-on'"
+        @click="scope = 'team'"
+      >
+        {{ __('Celý tým') }}
+      </button>
       <button
         v-for="m in team"
         :key="m.user"
-        class="flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-sm"
-        :class="scope === 'user:' + m.user ? 'border-[#0e1330] bg-[#0e1330] text-white' : 'border-white/80 bg-white/55 text-ink-gray-7 hover:bg-white/80'"
+        class="gl-chip flex h-9 items-center gap-2 rounded-full pl-1.5 pr-3.5 text-[14px]"
+        :class="scope === 'user:' + m.user && 'gl-chip-on'"
+        :title="pluralMeetings(m.meetings)"
         @click="scope = scope === 'user:' + m.user ? 'team' : 'user:' + m.user"
       >
-        <span>{{ m.full_name }}</span>
-        <Badge variant="subtle" :theme="m.meetings ? 'green' : 'gray'" size="sm">{{ pluralMeetings(m.meetings) }}</Badge>
+        <UserAvatar :user="m.user" size="sm" />
+        <span>{{ firstName(m.full_name) }}</span>
+        <span class="num font-semibold text-ink-gray-5">{{ m.meetings }}</span>
       </button>
+      <span v-if="team.length" class="text-[13px] text-ink-gray-5">· {{ __('počet schůzek v týdnu') }}</span>
     </div>
     <div class="gl-card relative flex-1 overflow-hidden">
       <div v-if="loading" class="absolute right-4 top-2 z-30 text-xs text-ink-gray-5">{{ __('Načítání…') }}</div>
@@ -128,7 +146,9 @@ import {
   startOfDay,
   toItems,
 } from '@/composables/calendar'
-import { Badge, Button, TabButtons, call, toast } from 'frappe-ui'
+import GlIcon from '@/components/GlIcon.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
+import { Button, call, toast } from 'frappe-ui'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 // Na úzkém displeji (<768 px) jen seznam a den, na širokém měsíc, týden a den.
@@ -160,16 +180,17 @@ const viewButtons = computed(() =>
         { label: __('Den'), value: 'day' },
       ]
     : [
-        { label: __('Měsíc'), value: 'month' },
-        { label: __('Týden'), value: 'week' },
         { label: __('Den'), value: 'day' },
+        { label: __('Týden'), value: 'week' },
+        { label: __('Měsíc'), value: 'month' },
       ],
 )
 
 const range = computed(() => getRange(view.value, anchor.value))
 const days = computed(() => daysBetween(range.value.start, range.value.end))
+const firstName = (n) => (n || '').split(' ')[0]
 const title = computed(() => {
-  const t = view.value === 'month' ? monthYearLabel(anchor.value) : rangeLabel(days.value)
+  const t = view.value === 'day' ? rangeLabel(days.value) : monthYearLabel(anchor.value)
   return t.charAt(0).toUpperCase() + t.slice(1)
 })
 

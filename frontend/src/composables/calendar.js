@@ -3,7 +3,7 @@
 // Data dodává growupcrm.calendar (Eventy jako bloky, úkoly jako body v čase).
 import { call } from 'frappe-ui'
 
-export const HOUR_HEIGHT = 48
+export const HOUR_HEIGHT = 60
 export const LIST_DAYS = 14
 
 export function startOfDay(d) {

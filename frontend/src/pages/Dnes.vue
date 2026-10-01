@@ -171,7 +171,7 @@ const greeting = computed(() => {
 })
 
 const nf = new Intl.NumberFormat('cs-CZ')
-const money = (v) => (v ? `${nf.format(v)} Kč` : '–')
+const money = (v) => (v ? `${nf.format(v)} Kč` : '')
 const cards = computed(() => {
   const k = data.value?.kpis
   if (!k) return []

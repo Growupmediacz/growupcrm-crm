@@ -81,7 +81,7 @@
               </div>
             </td>
             <td class="num whitespace-nowrap px-3 py-3" :class="p.display_status === 'Zpožděno' ? 'font-semibold text-[#c8321f]' : 'text-ink-gray-7'">
-              {{ p.deadline ? shortDate(p.deadline) : '—' }}
+              {{ p.deadline ? shortDate(p.deadline) : '' }}
             </td>
             <td class="px-3 py-3">
               <span class="flex -space-x-1.5">

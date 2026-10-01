@@ -102,7 +102,7 @@
             <span v-if="orgLabel(row)" class="truncate text-[12.5px] text-ink-gray-5">{{ orgLabel(row) }}</span>
           </div>
           <div v-else-if="column.key === 'next_step'" class="truncate text-[13.5px] font-semibold" :class="nextTone(row)">
-            {{ row.next_step ? `${row.next_step} – ${nextWhen(row)}` : '—' }}
+            {{ row.next_step ? `${row.next_step} – ${nextWhen(row)}` : '' }}
           </div>
           <div
             v-else-if="
@@ -251,6 +251,7 @@
 </template>
 
 <script setup>
+import ListFooter from '@/components/GlListFooter.vue'
 // Další krok: po termínu červeně, dnes/zítra jantarově, později modře (design)
 const dayDiff = (row) => {
   if (!row.next_step_at) return null
@@ -288,7 +289,6 @@ import {
   ListHeaderItem,
   ListSelectBanner,
   ListRowItem,
-  ListFooter,
   Dropdown,
   Tooltip,
 } from 'frappe-ui'

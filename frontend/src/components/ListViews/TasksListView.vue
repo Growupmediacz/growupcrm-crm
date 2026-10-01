@@ -184,6 +184,7 @@
   />
 </template>
 <script setup>
+import ListFooter from '@/components/GlListFooter.vue'
 import HeartIcon from '@/components/Icons/HeartIcon.vue'
 import TaskStatusIcon from '@/components/Icons/TaskStatusIcon.vue'
 import TaskPriorityIcon from '@/components/Icons/TaskPriorityIcon.vue'
@@ -204,7 +205,6 @@ import {
   ListHeaderItem,
   ListSelectBanner,
   ListRowItem,
-  ListFooter,
   Dropdown,
   Tooltip,
 } from 'frappe-ui'

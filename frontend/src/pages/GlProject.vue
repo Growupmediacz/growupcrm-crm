@@ -34,7 +34,7 @@
           </div>
           <div class="shrink-0 text-right">
             <div class="text-[13px] text-ink-gray-5">{{ __('Termín') }}</div>
-            <div class="num text-[26px] font-bold" :class="p.display_status === 'Zpožděno' ? 'text-[#c8321f]' : 'text-ink-gray-9'">{{ p.deadline ? fullDate(p.deadline) : '—' }}</div>
+            <div class="num text-[26px] font-bold" :class="p.display_status === 'Zpožděno' ? 'text-[#c8321f]' : 'text-ink-gray-9'">{{ p.deadline ? fullDate(p.deadline) : __('Bez termínu') }}</div>
           </div>
         </div>
         <div class="mt-5 flex items-center gap-3">
@@ -86,7 +86,10 @@
         <dl class="flex flex-col">
           <div v-for="r in details" :key="r.label" class="flex items-baseline justify-between gap-4 py-[7px]">
             <dt class="shrink-0 text-[14px] text-ink-gray-5">{{ r.label }}</dt>
-            <dd class="min-w-0 truncate text-right text-[14px] font-medium text-ink-gray-9">{{ r.value }}</dd>
+            <dd class="min-w-0 truncate text-right text-[14px] font-medium text-ink-gray-9">
+              <template v-if="r.value">{{ r.value }}</template>
+              <span v-else class="gl-empty">{{ __('Bez hodnoty') }}</span>
+            </dd>
           </div>
         </dl>
       </div>
@@ -195,11 +198,11 @@ async function addTask() {
 }
 
 const details = computed(() => [
-  { label: __('Šablona'), value: p.value.template ? __(p.value.template) : '—' },
-  { label: __('Začátek'), value: p.value.start_date ? fullDate(p.value.start_date) : '—' },
-  { label: __('Termín'), value: p.value.deadline ? fullDate(p.value.deadline) : '—' },
-  { label: __('Vlastník'), value: p.value.project_owner ? userName(p.value.project_owner) : '—' },
-  { label: __('Další krok'), value: p.value.next_step || '—' },
+  { label: __('Šablona'), value: p.value.template ? __(p.value.template) : '' },
+  { label: __('Začátek'), value: p.value.start_date ? fullDate(p.value.start_date) : '' },
+  { label: __('Termín'), value: p.value.deadline ? fullDate(p.value.deadline) : '' },
+  { label: __('Vlastník'), value: p.value.project_owner ? userName(p.value.project_owner) : '' },
+  { label: __('Další krok'), value: p.value.next_step || '' },
 ])
 
 const userName = (u) => getUser(u)?.full_name || u

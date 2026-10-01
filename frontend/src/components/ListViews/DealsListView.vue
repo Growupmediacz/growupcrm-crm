@@ -237,6 +237,7 @@
 </template>
 
 <script setup>
+import ListFooter from '@/components/GlListFooter.vue'
 import HeartIcon from '@/components/Icons/HeartIcon.vue'
 import MultipleAvatar from '@/components/MultipleAvatar.vue'
 import IndicatorIcon from '@/components/Icons/IndicatorIcon.vue'
@@ -252,7 +253,6 @@ import {
   ListHeaderItem,
   ListRowItem,
   ListSelectBanner,
-  ListFooter,
   Dropdown,
   Tooltip,
 } from 'frappe-ui'

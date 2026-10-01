@@ -16,20 +16,22 @@
         v-if="document.actions?.length"
         :actions="document.actions"
       />
-      <template v-if="editing">
+      <!-- GrowUp (design 2. kolo, oprava 8): max. 3 tlačítka + „…“; „Další fáze“ s názvem fáze v nápovědě -->
+      <template v-if="allFields">
         <AssignTo v-model="assignees.data" doctype="CRM Lead" :docname="leadId" />
-        <Button variant="solid" :label="__('Hotovo')" iconLeft="check" @click="editing = false" />
+        <Button variant="solid" :label="__('Hotovo')" iconLeft="check" @click="allFields = false" />
       </template>
       <template v-else>
         <Button :label="__('Upravit')" iconLeft="edit-2" @click="editing = true" />
         <Button :label="__('Naplánovat')" iconLeft="calendar" @click="showSchedule = true" />
-        <Button
-          v-if="nextStage"
-          variant="solid"
-          iconLeft="arrow-right"
-          :label="__('Posunout do {0}', [nextStage.label])"
-          @click="nextStage.onClick()"
-        />
+        <Tooltip v-if="nextStage" :text="__('Posune do fáze {0}', [nextStage.label])">
+          <Button
+            variant="solid"
+            iconLeft="arrow-right"
+            :label="__('Další fáze')"
+            @click="nextStage.onClick()"
+          />
+        </Tooltip>
       </template>
       <Dropdown :options="moreOptions" placement="right">
         <Button icon="more-horizontal" :aria-label="__('Další akce')" />
@@ -38,8 +40,19 @@
   </LayoutHeader>
   <div v-if="doc.name" class="flex h-full gap-3 overflow-hidden px-2 pb-2">
     <div class="flex min-w-0 flex-1 flex-col gap-3 overflow-hidden">
-      <LeadHero :key="heroKey" :doc="doc" :stageOptions="statuses" @changed="reloadResources" />
-      <div class="gl-card gl-chiptabs flex flex-1 overflow-hidden">
+      <LeadHero :key="heroKey" :doc="doc" :stageOptions="statuses" @changed="reloadResources" @fill="editing = true" />
+      <div class="gl-card gl-chiptabs gl-chiptabs-d relative flex flex-1 overflow-hidden" :class="moreTab && 'gl-chiptabs-more'">
+        <h2 class="pointer-events-none absolute left-6 top-[22px] z-[1] text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Aktivita') }}</h2>
+        <!-- oprava 10: 5 čipů (Vše, Zápisy, Hovory, E-maily, Úkoly), ostatní záložky v nabídce „Více“ -->
+        <Dropdown v-if="extraTabs.length" :options="extraTabs" placement="right" class="gl-more-tabs absolute right-5 top-4 z-[1]">
+          <button
+            class="inline-flex h-9 items-center gap-1 rounded-full px-3.5 text-[14px] font-semibold transition"
+            :class="moreTab ? 'bg-[#0e1330] text-white' : 'bg-white/55 text-[var(--ink-gray-6,#5b6280)] hover:bg-white/85'"
+          >
+            {{ moreTab ? moreTab.label : __('Více') }}
+            <GlIcon name="down" :size="14" />
+          </button>
+        </Dropdown>
     <Tabs
       v-model="tabIndex"
       :tabs="tabs"
@@ -58,9 +71,23 @@
         />
       </template>
     </Tabs>
+        <!-- rychlé akce pod aktivitou (design 2. kolo, R2ZakazkaDetail) -->
+        <div class="flex shrink-0 flex-wrap gap-2 border-t border-[rgba(110,120,200,.14)] px-5 py-3">
+          <button v-for="a in quickActions" :key="a.label" class="gl-quick" @click="a.onClick">
+            <GlIcon :name="a.icon" :size="16" />{{ a.label }}
+          </button>
+        </div>
       </div>
     </div>
-    <LeadAside v-if="!editing" :doc="doc" @email="openEmailBox" @call="(p) => ((callPerson = p), (showCall = true))" />
+    <LeadAside
+      v-if="!allFields"
+      v-model:editing="editing"
+      :doc="doc"
+      @email="openEmailBox"
+      @call="(p) => ((callPerson = p), (showCall = true))"
+      @saved="afterAsideSave"
+      @allFields="(editing = false), (allFields = true)"
+    />
     <Resizer v-else class="gl-card flex flex-col justify-between" side="right">
       <div
         class="flex h-[45px] cursor-copy items-center border-b px-5 py-2.5 text-lg-medium text-ink-gray-9"
@@ -276,6 +303,7 @@ import LostReasonModal from '@/components/Modals/LostReasonModal.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import LeadHero from '@/components/Lead/LeadHero.vue'
 import LeadAside from '@/components/Lead/LeadAside.vue'
+import GlIcon from '@/components/GlIcon.vue'
 import GlCallModal from '@/components/Modals/GlCallModal.vue'
 import GlWonModal from '@/components/Modals/GlWonModal.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
@@ -340,8 +368,15 @@ const showDeleteLinkedDocModal = ref(false)
 const showConvertToDealModal = ref(false)
 const showFilesUploader = ref(false)
 
-// GrowUp: design detailu zakázky. Celý panel CRM se ukáže až v režimu „Upravit“.
-const editing = ref(false)
+// GrowUp: design detailu zakázky (2. kolo). „Upravit“ přepne kartu Detaily do úprav,
+// celý panel CRM (vlastní pole, přiřazení) je až pod „Všechna pole“ / v nabídce „…“.
+const editing = ref(!!route.query.edit)
+const allFields = ref(false)
+async function afterAsideSave() {
+  await document.reload()
+  activities.value?.all_activities?.reload()
+  heroKey.value++
+}
 const showCall = ref(false)
 const callPerson = ref({})
 const heroKey = ref(0)
@@ -478,46 +513,14 @@ usePageMeta(() => {
 
 const tabs = computed(() => {
   let tabOptions = [
-    {
-      name: 'Activity',
-      label: __('Activity'),
-      icon: ActivityIcon,
-    },
-    {
-      name: 'Emails',
-      label: __('Emails'),
-      icon: EmailIcon,
-    },
-    {
-      name: 'Comments',
-      label: __('Comments'),
-      icon: CommentIcon,
-    },
-    {
-      name: 'Data',
-      label: __('Data'),
-      icon: DetailsIcon,
-    },
-    {
-      name: 'Calls',
-      label: __('Calls'),
-      icon: PhoneIcon,
-    },
-    {
-      name: 'Tasks',
-      label: __('Tasks'),
-      icon: TaskIcon,
-    },
-    {
-      name: 'Notes',
-      label: __('Notes'),
-      icon: NoteIcon,
-    },
-    {
-      name: 'Attachments',
-      label: __('Attachments'),
-      icon: AttachmentIcon,
-    },
+    { name: 'Activity', label: __('Vše'), icon: ActivityIcon },
+    { name: 'Notes', label: __('Zápisy'), icon: NoteIcon },
+    { name: 'Calls', label: __('Hovory'), icon: PhoneIcon },
+    { name: 'Emails', label: __('E-maily'), icon: EmailIcon },
+    { name: 'Tasks', label: __('Úkoly'), icon: TaskIcon },
+    { name: 'Comments', label: __('Komentáře'), icon: CommentIcon },
+    { name: 'Data', label: __('Data'), icon: DetailsIcon },
+    { name: 'Attachments', label: __('Přílohy'), icon: AttachmentIcon },
     {
       name: 'WhatsApp',
       label: __('WhatsApp'),
@@ -529,6 +532,23 @@ const tabs = computed(() => {
 })
 
 const { tabIndex, changeTabTo } = useActiveTabManager(tabs, 'lastLeadTab')
+
+// Čipy: prvních 5 záložek je vidět, zbytek je v „Více“
+const VISIBLE_TABS = 5
+const extraTabs = computed(() =>
+  tabs.value.slice(VISIBLE_TABS).map((t, i) => ({
+    label: t.label,
+    onClick: () => (tabIndex.value = VISIBLE_TABS + i),
+  })),
+)
+const quickActions = computed(() => [
+  { label: __('Zapsat hovor'), icon: 'phone', onClick: () => ((callPerson.value = {}), (showCall.value = true)) },
+  { label: __('Zápis'), icon: 'doc', onClick: () => activities.value?.modalRef?.showNote() },
+  { label: __('E-mail'), icon: 'mail', onClick: () => openEmailBox() },
+  { label: __('Úkol'), icon: 'check', onClick: () => activities.value?.modalRef?.showTask() },
+  { label: __('Naplánovat'), icon: 'cal', onClick: () => (showSchedule.value = true) },
+])
+const moreTab = computed(() => (tabIndex.value >= VISIBLE_TABS ? tabs.value[tabIndex.value] : null))
 
 const sections = createResource({
   url: 'crm.fcrm.doctype.crm_fields_layout.crm_fields_layout.get_sidepanel_sections',
@@ -588,6 +608,7 @@ const moreOptions = computed(() => {
       group: __('Zakázka'),
       items: [
         { label: __('Přiložit soubor'), icon: 'paperclip', onClick: () => (showFilesUploader.value = true) },
+        { label: __('Všechna pole'), icon: 'sliders', onClick: () => ((editing.value = false), (allFields.value = true)) },
         { label: __('Kopírovat číslo zakázky'), icon: 'copy', onClick: () => copyToClipboard(props.leadId) },
         !leadsOnlyMode.value && {
           label: __('Convert to Deal'),

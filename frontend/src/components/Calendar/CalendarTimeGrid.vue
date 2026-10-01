@@ -1,57 +1,74 @@
 <template>
-  <div class="flex h-full flex-col overflow-hidden">
+  <!-- GrowUp (design 2. kolo, oprava 17): dny jako „Po / 28“, úkoly v řádku nad mřížkou,
+       souběžné události vedle sebe, dnešní sloupec podbarvený, horní hodina není useknutá. -->
+  <div class="flex h-full flex-col overflow-hidden px-4 pt-4">
     <!-- hlavička dnů -->
-    <div class="flex border-b border-outline-gray-2 pr-[var(--sb)]" :style="{ '--sb': scrollbar + 'px' }">
-      <div class="w-14 shrink-0" />
-      <div
-        v-for="d in days"
-        :key="d.getTime()"
-        class="flex-1 border-l border-outline-gray-2 py-2 text-center text-sm"
-        :class="sameDay(d, today) ? 'font-semibold text-ink-gray-9' : 'text-ink-gray-6'"
-      >
-        <span class="capitalize">{{ weekdayShort(d) }}</span> {{ d.getDate() }}.
+    <div class="flex pr-[var(--sb)]" :style="{ '--sb': scrollbar + 'px' }">
+      <div class="w-16 shrink-0" />
+      <div v-for="d in days" :key="d.getTime()" class="flex flex-1 flex-col items-center gap-1 pb-2">
+        <span class="text-[13px] font-medium capitalize text-ink-gray-5">{{ weekdayShort(d) }}</span>
+        <span
+          class="flex size-9 items-center justify-center rounded-full text-[20px] font-bold tabular-nums"
+          :class="sameDay(d, today) ? 'bg-[#4F46E5] text-white shadow-[0_6px_16px_-6px_rgba(79,70,229,.7)]' : 'text-ink-gray-9'"
+        >
+          {{ d.getDate() }}
+        </span>
       </div>
     </div>
-    <!-- celodenní -->
+    <!-- úkoly a celodenní události -->
     <div
-      v-if="hasAllDay"
-      class="flex border-b border-outline-gray-2 pr-[var(--sb)]"
+      v-if="hasTopRow"
+      class="flex border-b border-[rgba(110,120,200,.16)] pb-2 pr-[var(--sb)]"
       :style="{ '--sb': scrollbar + 'px' }"
     >
-      <div class="w-14 shrink-0 px-1 py-1 text-right text-xs text-ink-gray-5">{{ __('Celý den') }}</div>
-      <div v-for="d in days" :key="d.getTime()" class="min-w-0 flex-1 border-l border-outline-gray-2 p-0.5">
-        <CalendarItemChip
-          v-for="item in allDayItems(d)"
+      <div class="w-16 shrink-0 pt-1.5 text-[12px] font-medium text-ink-gray-5">{{ __('Úkoly') }}</div>
+      <div v-for="d in days" :key="d.getTime()" class="flex min-w-0 flex-1 flex-col gap-1 px-1">
+        <button
+          v-for="item in topItems(d)"
           :key="item.key"
-          :item="item"
+          class="flex min-w-0 items-center gap-1.5 rounded-lg px-2 py-1 text-left text-[12px] font-semibold"
+          :class="topClasses(item)"
+          :title="item.title"
           @click="$emit('itemClick', item)"
-        />
+        >
+          <span
+            v-if="item.kind === 'task'"
+            class="size-3 shrink-0 rounded-full border-[1.5px] border-current"
+            :class="item.done && 'bg-current'"
+            aria-hidden="true"
+          />
+          <span class="truncate" :class="item.done && 'line-through'">{{ item.title }}</span>
+        </button>
       </div>
     </div>
     <!-- mřížka hodin -->
     <div ref="scroller" class="flex-1 overflow-y-auto">
-      <div class="flex" :style="{ height: 24 * HOUR_HEIGHT + 'px' }">
-        <div class="relative w-14 shrink-0">
+      <div class="flex pt-3" :style="{ height: 24 * HOUR_HEIGHT + 12 + 'px' }">
+        <div class="relative w-16 shrink-0">
           <div
             v-for="h in 24"
             :key="h"
-            class="absolute right-2 -translate-y-1/2 text-xs text-ink-gray-4"
+            class="absolute left-0 -translate-y-1/2 text-[12px] tabular-nums text-ink-gray-5"
             :style="{ top: (h - 1) * HOUR_HEIGHT + 'px' }"
           >
-            <span v-if="h > 1">{{ h - 1 }}:00</span>
+            {{ h - 1 }}:00
           </div>
         </div>
         <div
           v-for="d in days"
           :key="d.getTime()"
-          class="relative min-w-0 flex-1 cursor-pointer select-none border-l border-outline-gray-2"
+          class="relative min-w-0 flex-1 cursor-pointer select-none"
           :ref="(el) => setColumn(el, d)"
           @pointerdown="onPointerDown($event, d)"
         >
+          <div
+            v-if="sameDay(d, today)"
+            class="pointer-events-none absolute inset-x-0.5 -top-3 bottom-0 rounded-[14px] bg-[rgba(79,70,229,.07)]"
+          />
           <!-- výběr tažením myší (jako v Google kalendáři) -->
           <div
             v-if="drag && sameDay(drag.day, d)"
-            class="pointer-events-none absolute inset-x-0.5 z-30 overflow-hidden rounded border border-outline-green-2 bg-surface-green-2 px-1 py-0.5 text-xs text-ink-green-7 opacity-90"
+            class="pointer-events-none absolute inset-x-1 z-30 overflow-hidden rounded-[10px] bg-[rgba(79,70,229,.18)] px-2 py-1 text-[12px] font-semibold text-[#4338ca]"
             :style="dragStyle"
           >
             {{ dragLabel }}
@@ -59,27 +76,29 @@
           <div
             v-for="h in 24"
             :key="h"
-            class="pointer-events-none absolute inset-x-0 border-t border-outline-gray-2"
+            class="pointer-events-none absolute inset-x-0 border-t border-[rgba(110,120,200,.14)]"
             :style="{ top: (h - 1) * HOUR_HEIGHT + 'px' }"
           />
           <div
             v-if="sameDay(d, today)"
-            class="pointer-events-none absolute inset-x-0 z-20 border-t-2 border-outline-red-3"
+            class="pointer-events-none absolute inset-x-0 z-20 border-t-2 border-[#C8321F]"
             :style="{ top: nowTop + 'px' }"
-          />
+          >
+            <span class="absolute -left-1.5 -top-[6px] size-2.5 rounded-full bg-[#C8321F]" />
+          </div>
           <div
             v-for="b in layout(d)"
             :key="b.item.key"
-            class="absolute z-10 overflow-hidden rounded border px-1 py-0.5 text-xs"
+            class="absolute z-10 overflow-hidden rounded-[10px] px-2 py-1 text-[12px] shadow-[0_2px_8px_-4px_rgba(64,72,160,.35)]"
             :class="itemClasses(b.item)"
             :style="b.style"
             :title="b.item.title"
             @pointerdown.stop
             @click.stop="$emit('itemClick', b.item)"
           >
-            <div class="truncate font-medium">{{ b.item.title }}</div>
-            <div v-if="b.item.kind === 'event' && b.tall" class="truncate opacity-80">
-              {{ timeLabel(b.item.start) }}–{{ timeLabel(b.item.end) }}
+            <div class="gl-text line-clamp-2 font-semibold leading-tight">{{ b.item.title }}</div>
+            <div v-if="b.tall" class="truncate tabular-nums opacity-80">
+              {{ timeLabel(b.item.start) }}<template v-if="b.item.kind === 'event'">–{{ timeLabel(b.item.end) }}</template>
             </div>
           </div>
         </div>
@@ -88,7 +107,6 @@
   </div>
 </template>
 <script setup>
-import CalendarItemChip from '@/components/Calendar/CalendarItemChip.vue'
 import {
   HOUR_HEIGHT,
   addDays,
@@ -111,20 +129,27 @@ const today = new Date()
 const scroller = ref(null)
 const scrollbar = ref(0)
 const nowTop = computed(() => ((today.getHours() * 60 + today.getMinutes()) / 60) * HOUR_HEIGHT)
-const hasAllDay = computed(() => props.days.some((d) => allDayItems(d).length))
+const hasTopRow = computed(() => props.days.some((d) => topItems(d).length))
 
 // Úkol je bod v čase: krátký blok od termínu (30 min), událost má skutečnou délku.
 const TASK_MINUTES = 30
 
-function allDayItems(d) {
-  return itemsOnDay(props.items, d).filter((i) => i.allDay)
+// nad mřížkou: úkoly (bod v čase, ne blok) a celodenní události
+function topItems(d) {
+  return itemsOnDay(props.items, d).filter((i) => i.allDay || i.kind === 'task')
+}
+function topClasses(item) {
+  if (item.kind === 'event') return 'bg-[rgba(59,110,246,.14)] text-[#2e5bd8]'
+  if (item.done) return 'bg-[rgba(110,120,200,.1)] text-ink-gray-5'
+  if (item.priority === 'High') return 'bg-[rgba(200,50,31,.12)] text-[#c8321f]'
+  return 'bg-[rgba(234,170,8,.2)] text-[#915200]'
 }
 
 function layout(d) {
   const dayStart = startOfDay(d)
   const dayEnd = addDays(dayStart, 1)
   const blocks = itemsOnDay(props.items, d)
-    .filter((i) => !i.allDay)
+    .filter((i) => !i.allDay && i.kind !== 'task')
     .map((item) => {
       const s = item.start < dayStart ? dayStart : item.start
       let e = item.kind === 'task' ? new Date(item.start.getTime() + TASK_MINUTES * 60000) : item.end
@@ -154,12 +179,12 @@ function layout(d) {
 
   return blocks.map((b) => ({
     item: b.item,
-    tall: b.height >= 40,
+    tall: b.height >= 44,
     style: {
       top: b.top + 'px',
       height: b.height + 'px',
-      left: `calc(${(b.col / b.cols) * 100}% + 1px)`,
-      width: `calc(${100 / b.cols}% - 2px)`,
+      left: `calc(${(b.col / b.cols) * 100}% + 3px)`,
+      width: `calc(${100 / b.cols}% - 6px)`,
     },
   }))
 }
@@ -229,6 +254,7 @@ onMounted(() => {
   const el = scroller.value
   if (!el) return
   scrollbar.value = el.offsetWidth - el.clientWidth
-  el.scrollTop = 7 * HOUR_HEIGHT
+  // začít v 8:00, nad ní kousek místa, aby popisek horní hodiny nebyl useknutý
+  el.scrollTop = 8 * HOUR_HEIGHT - 6
 })
 </script>

@@ -41,7 +41,7 @@
               <span class="size-3 shrink-0 rounded-[4px]" :style="{ background: r.color }" />
               <span class="flex-1 text-ink-gray-9">{{ r.label }}</span>
               <span class="num font-bold text-ink-gray-9">{{ r.actualLabel }} / {{ r.targetLabel }}</span>
-              <span class="num w-12 text-right text-[13px] text-ink-gray-5">{{ r.percent === null ? '—' : `${r.percent} %` }}</span>
+              <span class="num w-12 text-right text-[13px] text-ink-gray-5">{{ r.percent === null ? '' : `${r.percent} %` }}</span>
             </div>
             <div v-if="!hasTargets" class="text-[13px] text-ink-gray-5">{{ __('Cíle zatím nejsou nastavené.') }}</div>
           </div>
@@ -69,8 +69,8 @@
                   <span class="font-semibold text-ink-gray-9">{{ r.full_name }}</span>
                 </span>
               </td>
-              <td class="num py-2.5">{{ r.actual.won }} / {{ r.target.won || '—' }}</td>
-              <td class="num py-2.5">{{ r.actual.meetings }} / {{ r.target.meetings || '—' }}</td>
+              <td class="num py-2.5">{{ r.actual.won }} / {{ r.target.won || '' }}</td>
+              <td class="num py-2.5">{{ r.actual.meetings }} / {{ r.target.meetings || '' }}</td>
               <td class="num py-2.5">{{ thousands(r.actual.revenue) }}</td>
               <td class="py-2.5">
                 <span v-if="r.progress !== null" class="flex items-center gap-2">
@@ -96,18 +96,20 @@
           </span>
         </div>
         <div class="num mt-1 text-[38px] font-bold tracking-tight text-ink-gray-9">
-          {{ p.projection ?? '—' }}<span v-if="p.team.target.won" class="text-[20px] text-ink-gray-5"> / {{ p.team.target.won }}</span>
+          {{ p.projection ?? 0 }}<span v-if="p.team.target.won" class="text-[20px] text-ink-gray-5"> / {{ p.team.target.won }}</span>
         </div>
         <div class="text-[13px] text-ink-gray-5">{{ p.projection !== null ? __('zakázek při současném tempu') : __('období už skončilo nebo ještě nezačalo') }}</div>
       </div>
       <div class="gl-card p-5">
         <div class="text-[14px] text-ink-gray-7">{{ __('Potřebné tempo') }}</div>
-        <div class="num mt-1 text-[38px] font-bold tracking-tight text-ink-gray-9">{{ p.pace ? czNumber(p.pace) : '—' }}</div>
+        <div v-if="p.pace" class="num mt-1 text-[38px] font-bold tracking-tight text-ink-gray-9">{{ czNumber(p.pace) }}</div>
+        <div v-else class="mt-3 text-[20px] font-semibold text-[var(--empty-color)]">{{ __('Bez dat') }}</div>
         <div class="text-[13px] text-ink-gray-5">{{ p.pace ? __('zakázky týdně navíc') : __('cíl je splněný nebo nenastavený') }}</div>
       </div>
       <div class="gl-card p-5">
         <div class="text-[14px] text-ink-gray-7">{{ __('Nejlepší zdroj') }}</div>
-        <div class="mt-1 truncate text-[34px] font-bold tracking-tight text-ink-gray-9">{{ p.best_source ? __(p.best_source.source) : '—' }}</div>
+        <div v-if="p.best_source" class="mt-1 truncate text-[34px] font-bold tracking-tight text-ink-gray-9">{{ __(p.best_source.source) }}</div>
+        <div v-else class="mt-3 text-[20px] font-semibold text-[var(--empty-color)]">{{ __('Bez dat') }}</div>
         <div class="text-[13px] text-ink-gray-5">
           {{ p.best_source ? __('{0} z {1} vyhraných zakázek', [p.best_source.count, p.best_source.total]) : __('zatím žádná vyhraná zakázka') }}
         </div>
@@ -152,7 +154,7 @@ const rings = computed(() =>
       length: target ? Math.min(actual / target, 1) * circumference : 0,
       percent,
       actualLabel: fmt(actual),
-      targetLabel: target ? fmt(target) : '—',
+      targetLabel: target ? fmt(target) : __('bez cíle'),
     }
   }),
 )

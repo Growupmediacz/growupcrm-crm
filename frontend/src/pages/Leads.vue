@@ -462,12 +462,12 @@ function parseRows(rows, columns = []) {
       }
 
       if (fieldType && fieldType == 'Currency') {
-        // GrowUp: hodnota zakázky jako „120 000 Kč“, nula jako pomlčka (design)
+        // GrowUp: hodnota zakázky jako „120 000 Kč“, prázdná hodnota se v seznamu nezobrazuje (design 2. kolo, oprava 7)
         _rows[row] =
           row == 'order_value'
             ? lead[row]
               ? `${new Intl.NumberFormat('cs-CZ').format(lead[row])} Kč`
-              : '–'
+              : ''
             : getFormattedCurrency(row, lead)
       }
 

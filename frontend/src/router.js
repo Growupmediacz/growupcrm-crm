@@ -32,6 +32,12 @@ const routes = [
     component: () => import('@/pages/Dnes.vue'),
   },
   {
+    // GrowUp (design 2. kolo, oprava 21): mobilní „Více“ – sekce mimo spodní lištu
+    path: '/more',
+    name: 'More',
+    component: () => import('@/pages/GlMore.vue'),
+  },
+  {
     path: '/notifications',
     name: 'Notifications',
     component: () => import('@/pages/MobileNotification.vue'),

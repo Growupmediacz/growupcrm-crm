@@ -10,16 +10,28 @@
           autofocus
           :disabled="!canEdit"
         />
-        <div class="grid grid-cols-2 gap-3">
-          <FormControl v-model="form.date" :label="__('Datum')" type="date" :disabled="!canEdit" />
-          <div class="flex items-end pb-1.5">
-            <FormControl v-model="form.allDay" :label="__('Celý den')" type="checkbox" :disabled="!canEdit" />
+        <!-- GrowUp (design 2. kolo, opravy 2 a 3): Datum · Od · Do v jedné řadě, „čt 1. 10. 2026“, čas po 15 min -->
+        <fieldset :disabled="!canEdit" class="flex flex-col gap-2">
+          <div class="grid gap-2.5" :class="form.allDay ? 'grid-cols-1' : 'grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)]'">
+            <div>
+              <span class="gl-label">{{ __('Datum') }}</span>
+              <GlDatePicker v-model="form.date" :label="__('Datum')" :clearable="false" />
+            </div>
+            <template v-if="!form.allDay">
+              <div>
+                <span class="gl-label">{{ __('Od') }}</span>
+                <GlTimePicker :modelValue="form.from" :label="__('Od')" @update:modelValue="setFrom" />
+              </div>
+              <div>
+                <span class="gl-label">{{ __('Do') }}</span>
+                <GlTimePicker v-model="form.to" :label="__('Do')" />
+              </div>
+            </template>
           </div>
-        </div>
-        <div v-if="!form.allDay" class="grid grid-cols-2 gap-3">
-          <FormControl v-model="form.from" :label="__('Od')" type="time" :disabled="!canEdit" />
-          <FormControl v-model="form.to" :label="__('Do')" type="time" :disabled="!canEdit" />
-        </div>
+          <label class="inline-flex items-center gap-2 text-[14px] text-ink-gray-7">
+            <input v-model="form.allDay" type="checkbox" />{{ __('Celý den') }}
+          </label>
+        </fieldset>
         <div>
           <div class="mb-1.5 text-xs text-ink-gray-5">{{ __('Zakázka') }}</div>
           <Link
@@ -80,7 +92,7 @@
       <div class="flex items-center justify-between gap-2">
         <div><ErrorMessage :message="error" /></div>
         <div class="flex gap-2">
-          <Button v-if="!isNew && canEdit" variant="subtle" theme="red" :label="__('Smazat')" @click="remove" />
+          <Button v-if="!isNew && canEdit" variant="subtle" theme="red" iconLeft="trash-2" :label="__('Smazat')" @click="remove" />
           <Button :label="__('Zrušit')" @click="show = false" />
           <Button v-if="canEdit" variant="solid" :label="__('Uložit')" :loading="saving" @click="save" />
         </div>
@@ -90,6 +102,8 @@
 </template>
 <script setup>
 import Link from '@/components/Controls/Link.vue'
+import GlDatePicker from '@/components/GlDatePicker.vue'
+import GlTimePicker from '@/components/GlTimePicker.vue'
 import { isoDate, isoDateTime, pad } from '@/composables/calendar'
 import { Button, Dialog, ErrorMessage, FormControl, call, toast } from 'frappe-ui'
 import { computed, onMounted, ref, watch } from 'vue'
@@ -113,6 +127,14 @@ const canEdit = computed(() => isNew.value || props.item.canEdit)
 const saving = ref(false)
 const error = ref('')
 const form = ref({})
+// „Do“ se posune o stejnou délku jako „Od“
+const toMin = (t) => Number(String(t).slice(0, 2)) * 60 + Number(String(t).slice(3, 5))
+function setFrom(v) {
+  const dur = form.value.from && form.value.to ? Math.max(toMin(form.value.to) - toMin(form.value.from), 15) : 60
+  const end = Math.min(toMin(v) + dur, 23 * 60 + 59)
+  form.value.from = v
+  form.value.to = `${pad(Math.floor(end / 60))}:${pad(end % 60)}`
+}
 
 const userOptions = computed(() =>
   props.users.map((u) => ({ label: u.full_name || u.name, value: u.name })),

@@ -13,7 +13,9 @@
       <span class="truncate">{{ nextText }}</span>
     </div>
     <div class="mt-1 flex items-center justify-between gap-2">
-      <div class="num text-[15px] font-bold text-ink-gray-9">{{ money }}</div>
+      <div v-if="lead.order_value" class="num text-[15px] font-bold text-ink-gray-9">{{ money }}</div>
+      <!-- oprava 7: bez hodnoty odkaz „+ hodnota“ (otevře detail s kartou Detaily v úpravách) -->
+      <button v-else class="gl-fill" @click.stop.prevent="fillValue">+ {{ __('hodnota') }}</button>
       <UserAvatar v-if="lead.lead_owner" :user="lead.lead_owner" size="md" />
     </div>
   </div>
@@ -23,6 +25,7 @@
 import GlIcon from '@/components/GlIcon.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({ lead: { type: Object, required: true } })
 
@@ -30,8 +33,12 @@ const title = computed(() => props.lead.order_title || props.lead.lead_name || p
 const money = computed(() =>
   props.lead.order_value
     ? `${new Intl.NumberFormat('cs-CZ').format(props.lead.order_value)} Kč`
-    : '–',
+    : '',
 )
+const router = useRouter()
+function fillValue() {
+  router.push({ name: 'Lead', params: { leadId: props.lead.name }, query: { edit: 1 } })
+}
 const next = computed(() => props.lead.next_action)
 
 function dayLabel(iso) {
