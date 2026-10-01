@@ -5,7 +5,7 @@
       <span class="text-lg-medium text-ink-gray-9">{{ __('Analytika') }}</span>
     </template>
     <template #right-header>
-      <div class="gl-seg hidden sm:inline-flex">
+      <div v-if="!isMobileView" class="gl-seg inline-flex">
         <button v-for="o in GRAINS" :key="o.value" class="gl-seg-btn" :class="grain === o.value && 'gl-seg-on'" @click="setGrain(o.value)">{{ o.label }}</button>
       </div>
       <Button iconLeft="download" :disabled="!data?.won_rows?.length" @click="exportCsv">
@@ -16,6 +16,10 @@
 
   <div v-if="res.error" class="px-4 py-10 text-center text-ink-gray-5">{{ res.error.messages?.[0] || __('Analytiku se nepodařilo načíst.') }}</div>
   <div v-else class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
+    <!-- oprava 26: na mobilu přepínač Měsíc / Čtvrtletí / Rok na celou šířku pod nadpisem -->
+    <div v-if="isMobileView" class="gl-seg flex w-full">
+      <button v-for="o in GRAINS" :key="o.value" class="gl-seg-btn flex-1 justify-center" :class="grain === o.value && 'gl-seg-on'" @click="setGrain(o.value)">{{ o.label }}</button>
+    </div>
     <!-- filtry v jedné řadě nad grafy -->
     <div class="flex flex-wrap items-center gap-2">
       <Dropdown :options="periodMenu">
@@ -52,7 +56,17 @@
       <div class="gl-card p-6">
         <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Tržby po měsících') }}</h2>
         <div class="text-[13px] text-ink-gray-5">{{ __('tis. Kč · zvýrazněn poslední měsíc období') }}</div>
-        <div class="relative mt-4 flex h-[230px] items-end gap-3 border-b border-[rgba(110,120,200,.18)] px-2">
+        <!-- oprava 26: prázdný stav místo prázdného grafu -->
+        <div v-if="!hasRevenue" class="mt-4 flex flex-col items-center gap-3 py-8 text-center">
+          <span class="flex size-14 items-center justify-center rounded-2xl bg-[rgba(110,120,200,.12)] text-ink-gray-7"><GlIcon name="chart" :size="26" /></span>
+          <div class="text-[18px] font-bold text-ink-gray-9">{{ __('Zatím žádné vyhrané zakázky') }}</div>
+          <p class="max-w-[300px] text-[14px] text-ink-gray-5">{{ __('Graf tržeb se ukáže po první výhře v tomto období. Zkuste jiné období.') }}</p>
+          <div class="flex gap-2">
+            <button class="gl-quick" @click="setGrain('year')">{{ __('Celý rok') }}</button>
+            <router-link :to="{ name: 'Leads' }" class="inline-flex h-9 items-center rounded-full bg-[#4F46E5] px-4 text-[14px] font-semibold text-white shadow-[0_6px_16px_-6px_rgba(79,70,229,.6)]">{{ __('Zakázky') }}</router-link>
+          </div>
+        </div>
+        <div v-else class="relative mt-4 flex h-[230px] items-end gap-3 border-b border-[rgba(110,120,200,.18)] px-2">
           <div
             v-for="(m, i) in data?.by_month || []"
             :key="m.month"
@@ -71,7 +85,7 @@
             </div>
           </div>
         </div>
-        <div class="mt-2 flex gap-3 px-2">
+        <div v-if="hasRevenue" class="mt-2 flex gap-3 px-2">
           <span v-for="m in data?.by_month || []" :key="m.month" class="flex-1 text-center text-[12px] text-ink-gray-5">{{ m.label }}</span>
         </div>
       </div>
@@ -127,6 +141,8 @@
 </template>
 <script setup>
 import LayoutHeader from '@/components/LayoutHeader.vue'
+import GlIcon from '@/components/GlIcon.vue'
+import { isMobileView } from '@/composables/settings'
 import { usersStore } from '@/stores/users'
 import { Button, Dropdown, createResource, usePageMeta } from 'frappe-ui'
 import { computed, ref } from 'vue'
@@ -238,6 +254,7 @@ const kpis = computed(() => {
 })
 
 const hoverBar = ref(null)
+const hasRevenue = computed(() => (data.value?.by_month || []).some((m) => m.value))
 const lastIndex = computed(() => (data.value?.by_month?.length || 1) - 1)
 const maxMonth = computed(() => Math.max(1, ...(data.value?.by_month || []).map((m) => m.value)))
 const barHeight = (v) => Math.round((v / maxMonth.value) * 82)

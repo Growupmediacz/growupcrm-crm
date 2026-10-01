@@ -5,12 +5,12 @@
       <span class="text-lg-medium text-ink-gray-9">{{ __('Plány') }}</span>
     </template>
     <template #right-header>
-      <div class="gl-seg">
+      <div v-if="!isMobileView" class="gl-seg">
         <button v-for="o in plan.data?.periods || []" :key="o.value" class="gl-seg-btn" :class="period === o.value && 'gl-seg-on'" @click="period = o.value">
           {{ o.label }}
         </button>
       </div>
-      <Button v-if="plan.data?.can_edit" iconLeft="edit-2" @click="showTargets = true">
+      <Button v-if="plan.data?.can_edit" :icon="isMobileView ? 'edit-2' : undefined" iconLeft="edit-2" :aria-label="__('Upravit cíle')" @click="showTargets = true">
         <span class="hidden sm:inline">{{ __('Upravit cíle') }}</span>
       </Button>
     </template>
@@ -18,6 +18,12 @@
 
   <div v-if="plan.error" class="px-4 py-10 text-center text-ink-gray-5">{{ plan.error.messages?.[0] || __('Plány se nepodařilo načíst.') }}</div>
   <div v-else-if="p" class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
+    <!-- oprava 25: na mobilu přepínač období pod nadpisem na celou šířku -->
+    <div v-if="isMobileView" class="gl-seg flex w-full">
+      <button v-for="o in plan.data?.periods || []" :key="o.value" class="gl-seg-btn flex-1 justify-center" :class="period === o.value && 'gl-seg-on'" @click="period = o.value">
+        {{ o.label }}
+      </button>
+    </div>
     <div class="grid gap-4 lg:grid-cols-[1fr_1.25fr]">
       <!-- tým -->
       <div class="gl-card p-6">
@@ -49,7 +55,27 @@
       </div>
 
       <!-- obchodníci -->
-      <div class="gl-card overflow-x-auto p-6">
+      <!-- mobil: obchodníci jako karty -->
+      <template v-if="isMobileView">
+        <div class="-mb-2 px-1 text-[13px] font-semibold text-[var(--text-3,#5B6285)]">{{ __('Obchodníci') }}</div>
+        <div class="gl-card !rounded-[22px] px-4">
+          <div v-for="(r, i) in p.people" :key="r.user" class="flex items-center gap-3 py-3" :class="i && 'border-t border-[rgba(110,120,200,.12)]'">
+            <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2e4bb8]">{{ initials(r.full_name) }}</span>
+            <span class="min-w-0 flex-1">
+              <span class="block truncate text-[17px] font-bold text-ink-gray-9">{{ r.full_name }}</span>
+              <span class="num block text-[13px] text-ink-gray-5">
+                {{ __('zakázky') }} {{ r.actual.won }}<template v-if="r.target.won">/{{ r.target.won }}</template>
+                · {{ __('schůzky') }} {{ r.actual.meetings }}<template v-if="r.target.meetings">/{{ r.target.meetings }}</template>
+              </span>
+            </span>
+            <span class="num text-[19px] font-bold text-ink-gray-9">
+              <template v-if="r.progress !== null">{{ r.progress }} %</template>
+              <span v-else class="text-[13px] font-normal text-ink-gray-5">{{ __('bez cíle') }}</span>
+            </span>
+          </div>
+        </div>
+      </template>
+      <div v-else class="gl-card overflow-x-auto p-6">
         <h2 class="mb-2 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Podle obchodníka') }}</h2>
         <table class="w-full min-w-[520px] text-[14px]">
           <thead class="text-left text-[12px] font-bold text-ink-gray-5">
@@ -121,6 +147,7 @@
 </template>
 <script setup>
 import LayoutHeader from '@/components/LayoutHeader.vue'
+import { isMobileView } from '@/composables/settings'
 import GlTargetsModal from '@/components/Modals/GlTargetsModal.vue'
 import { Button, createResource, usePageMeta } from 'frappe-ui'
 import { computed, ref, watch } from 'vue'

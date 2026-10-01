@@ -28,8 +28,16 @@
       allowedViews: ['list', 'group_by', 'kanban'],
     }"
   />
+  <!-- GrowUp (design 2. kolo, opravy 22, 23, 28): mobil = karty a pipeline po fázích -->
+  <GlMobileLeads
+    v-if="isMobileView && leads.data && ['kanban', 'list'].includes(route.params.viewType || 'list')"
+    :leads="leads"
+    :mode="route.params.viewType === 'kanban' ? 'kanban' : 'list'"
+    @loadMore="() => loadMore++"
+    @won="(d) => ((wonLead = { name: d.name, order_value: d.order_value, order_title: d.order_title, organization: d.organization }), (showWon = true))"
+  />
   <KanbanView
-    v-if="route.params.viewType == 'kanban'"
+    v-else-if="route.params.viewType == 'kanban'"
     v-model="leads"
     :options="{
       getRoute: (row) => ({
@@ -273,6 +281,8 @@
 
 <script setup>
 import GlWonModal from '@/components/Modals/GlWonModal.vue'
+import GlMobileLeads from '@/components/Kanban/GlMobileLeads.vue'
+import { isMobileView } from '@/composables/settings'
 import GlViewHeader from '@/components/GlViewHeader.vue'
 import ViewBreadcrumbs from '@/components/ViewBreadcrumbs.vue'
 import MultipleAvatar from '@/components/MultipleAvatar.vue'

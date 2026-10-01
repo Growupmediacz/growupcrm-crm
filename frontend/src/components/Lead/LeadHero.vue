@@ -21,7 +21,7 @@
           <span v-if="person"> · {{ person }}</span>
         </div>
       </div>
-      <div class="shrink-0 text-right">
+      <div v-if="!compact" class="shrink-0 text-right">
         <div class="text-[13px] text-ink-gray-5">{{ __('Hodnota') }}</div>
         <div v-if="doc.order_value" class="num font-bold leading-tight tracking-tight text-ink-gray-9" :class="compact ? 'text-[22px]' : 'text-[38px]'">{{ money }}</div>
         <!-- oprava 7: prázdná hodnota = tlumené „Bez hodnoty“ + „Doplnit“ -->

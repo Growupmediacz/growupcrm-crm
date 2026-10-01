@@ -1,6 +1,6 @@
 <template>
   <!-- GrowUp: pravý sloupec detailu zakázky (design 2. kolo): Detaily (čtení / úpravy přímo v kartě) a Kontakt. -->
-  <div class="flex w-[360px] shrink-0 flex-col gap-3 overflow-y-auto pb-1">
+  <div class="flex shrink-0 flex-col gap-3 overflow-y-auto pb-1" :class="mobile ? 'w-full' : 'w-[360px]'">
     <!-- Detaily: jen ke čtení -->
     <div v-if="!editing" class="gl-card p-6">
       <div class="mb-3 flex items-baseline justify-between">
@@ -173,7 +173,7 @@ import { globalStore } from '@/stores/global'
 import { call, createListResource, createResource, toast } from 'frappe-ui'
 import { computed, reactive, ref, watch } from 'vue'
 
-const props = defineProps({ doc: { type: Object, required: true } })
+const props = defineProps({ doc: { type: Object, required: true }, mobile: { type: Boolean, default: false } })
 const emit = defineEmits(['email', 'call', 'saved', 'allFields'])
 const editing = defineModel('editing', { type: Boolean, default: false })
 
