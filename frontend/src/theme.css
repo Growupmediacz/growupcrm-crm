@@ -698,7 +698,7 @@ input[type='checkbox']:not([role='switch']):focus-visible {
 
 /* detail Zakázky – čipy aktivity (oprava 10): nadpis vlevo, 5 čipů + „Více“ vpravo */
 .gl-chiptabs-d [role='tablist'] {
-  justify-content: flex-end;
+  justify-content: flex-start;
   padding-left: 150px !important;
 }
 .gl-chiptabs-d:has(.gl-more-tabs) [role='tablist'] {
@@ -900,4 +900,15 @@ button[role='switch'] > span {
   margin-top: 4px;
   font-size: 12px;
   color: #c8321f;
+}
+
+/* detail Zakázky na užším okně (karta aktivity < 640 px): nadpis a „Více“ v prvním řádku, čipy pod nimi */
+.gl-chiptabs-d { container-type: inline-size; }
+@container (max-width: 640px) {
+  .gl-chiptabs-d [role='tablist'] {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    padding-top: 58px !important;
+  }
+  .gl-chiptabs-d:has(.gl-more-tabs) [role='tablist'] { padding-right: 20px !important; }
 }

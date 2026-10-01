@@ -1,7 +1,7 @@
 <template>
   <!-- GrowUp (design systém 2. kola): prázdný seznam = ikona, věta, co dělat. Vždy česky, nikdy „No Leads Found“ -->
-  <div class="flex h-full w-full justify-center px-4 pt-[12vh]">
-    <GlEmptyState class="h-fit w-full max-w-[420px]" :icon="glIcon" :title="computedTitle" :text="computedDescription" />
+  <div class="mx-auto w-full max-w-[460px] px-4 py-10">
+    <GlEmptyState class="w-full" :icon="glIcon" :title="computedTitle" :text="computedDescription" />
   </div>
 </template>
 <script setup>

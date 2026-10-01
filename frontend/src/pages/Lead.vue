@@ -41,10 +41,10 @@
   <div v-if="doc.name" class="flex h-full gap-3 overflow-hidden px-2 pb-2">
     <div class="flex min-w-0 flex-1 flex-col gap-3 overflow-hidden">
       <LeadHero :key="heroKey" :doc="doc" :stageOptions="statuses" @changed="reloadResources" @fill="editing = true" />
-      <div class="gl-card gl-chiptabs gl-chiptabs-d relative flex flex-1 overflow-hidden" :class="moreTab && 'gl-chiptabs-more'">
-        <h2 class="pointer-events-none absolute left-6 top-[22px] z-[1] text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Aktivita') }}</h2>
+      <div class="gl-card gl-chiptabs gl-chiptabs-d relative flex min-h-0 flex-1 flex-col overflow-hidden" :class="moreTab && 'gl-chiptabs-more'">
+        <h2 class="pointer-events-none absolute left-0 top-[16px] z-[2] bg-gradient-to-r from-[#fbf9ff] from-80% to-transparent py-1 pl-6 pr-5 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Aktivita') }}</h2>
         <!-- oprava 10: 5 čipů (Vše, Zápisy, Hovory, E-maily, Úkoly), ostatní záložky v nabídce „Více“ -->
-        <Dropdown v-if="extraTabs.length" :options="extraTabs" placement="right" class="gl-more-tabs absolute right-5 top-4 z-[1]">
+        <div v-if="extraTabs.length" class="gl-more-tabs absolute right-0 top-[16px] z-[2] bg-gradient-to-l from-[#fbf9ff] from-70% to-transparent pb-0.5 pl-5 pr-5"><Dropdown :options="extraTabs" placement="right">
           <button
             class="inline-flex h-9 items-center gap-1 rounded-full px-3.5 text-[14px] font-semibold transition"
             :class="moreTab ? 'bg-[#0e1330] text-white' : 'bg-white/55 text-[var(--ink-gray-6,#5b6280)] hover:bg-white/85'"
@@ -52,7 +52,7 @@
             {{ moreTab ? moreTab.label : __('Více') }}
             <GlIcon name="down" :size="14" />
           </button>
-        </Dropdown>
+        </Dropdown></div>
     <Tabs
       v-model="tabIndex"
       :tabs="tabs"
