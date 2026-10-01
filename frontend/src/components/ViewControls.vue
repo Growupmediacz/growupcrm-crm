@@ -1021,8 +1021,8 @@ function persistCustomView() {
 
 function updateKanbanSettings(data) {
   if (data.item && data.to) {
-    // GrowUp: přesun do „Prohráno“ vyžaduje důvod, uložení řeší stránka Zakázek dialogem (server by bez důvodu změnu odmítl)
-    if (props.doctype === 'CRM Lead' && view.value.column_field === 'status' && leadStatusType(data.to) === 'Lost') return
+    // GrowUp: přesun do „Prohráno“ (důvod) a „Vyhráno“ (datum podpisu, hodnota) ukládá stránka Zakázek až po potvrzení dialogu
+    if (props.doctype === 'CRM Lead' && view.value.column_field === 'status' && ['Lost', 'Won'].includes(leadStatusType(data.to))) return
     call('frappe.client.set_value', {
       doctype: props.doctype,
       name: data.item,

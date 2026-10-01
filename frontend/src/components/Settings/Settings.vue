@@ -49,6 +49,8 @@
   </Dialog>
 </template>
 <script setup>
+import AgencySettings from '@/components/Settings/AgencySettings.vue'
+import { agencyEnabled, outreachEnabled } from '@/composables/agency'
 import { useLeadsOnlyMode } from '@/composables/leadsOnlyMode'
 
 const leadsOnlyMode = useLeadsOnlyMode()
@@ -91,7 +93,7 @@ import {
 } from '@/composables/settings'
 import { isWhatsappInstalled } from '@/composables/whatsapp'
 import { Dialog, Avatar, SidebarItem } from 'frappe-ui'
-import { ref, markRaw, computed, watch, h, nextTick } from 'vue'
+import { ref, markRaw, computed, watch, h, nextTick, defineComponent } from 'vue'
 import AssignmentRulePage from './AssignmentRules/AssignmentRulePage.vue'
 import ShieldCheck from '~icons/lucide/shield-check'
 import SlaConfig from './Sla/SlaConfig.vue'
@@ -187,6 +189,25 @@ const tabs = computed(() => {
           component: markRaw(EmailTemplatePage),
         },
       ],
+    },
+    {
+      // GrowUp: agenturní moduly (jen správci se zapnutým growupcrm_agency)
+      label: __('Agentura'),
+      items: [
+        {
+          label: __('Schránka'),
+          icon: Email2Icon,
+          component: markRaw(defineComponent({ render: () => h(AgencySettings, { kind: 'mailbox' }) })),
+          condition: () => outreachEnabled.value,
+        },
+        {
+          label: __('Šablony projektů'),
+          icon: EmailTemplateIcon,
+          component: markRaw(defineComponent({ render: () => h(AgencySettings, { kind: 'templates' }) })),
+          condition: () => agencyEnabled.value,
+        },
+      ],
+      condition: () => isManager() && agencyEnabled.value,
     },
     {
       label: __('Automation & Rules'),

@@ -35,7 +35,7 @@
     :leads="leads"
     :mode="route.params.viewType === 'kanban' ? 'kanban' : 'list'"
     @loadMore="() => loadMore++"
-    @won="(d) => ((wonLead = { name: d.name, order_value: d.order_value, order_title: d.order_title, organization: d.organization }), (showWon = true))"
+    @won="(d, status) => ((wonStatus = status), (wonConfirmed = false), (wonLead = { name: d.name, order_value: d.order_value, order_title: d.order_title, organization: d.organization }), (showWon = true))"
   />
   <KanbanView
     v-else-if="route.params.viewType == 'kanban'"
@@ -316,7 +316,7 @@ import { timestampCell } from '@/composables/useTimelinePreferences'
 import { useOnboarding, useTelemetry } from 'frappe-ui/frappe'
 import { Avatar, Tooltip, Dropdown, call, toast } from 'frappe-ui'
 import { useRoute } from 'vue-router'
-import { ref, computed, reactive, h } from 'vue'
+import { ref, computed, reactive, h, watch } from 'vue'
 
 const { getFormattedPercent, getFormattedFloat, getFormattedCurrency } =
   getMeta('CRM Lead')
@@ -569,6 +569,12 @@ function parseRows(rows, columns = []) {
 // GrowUp: přetažení do „Vyhráno“ otevře dialog Zakázka vyhrána (datum podpisu, finální hodnota)
 const showWon = ref(false)
 const wonLead = ref(null)
+const wonStatus = ref('')
+let wonConfirmed = false
+// zavření dialogu Vyhráno bez potvrzení = karta zpět na původní místo
+watch(showWon, (open) => {
+  if (!open && wonLead.value && !wonConfirmed) leads.value.reload()
+})
 const showLost = ref(false)
 const lostLead = ref(null)
 const lostStatus = ref('')
@@ -585,11 +591,14 @@ function onKanbanUpdate(data) {
     return
   }
   if (getLeadStatus(data.to)?.type !== 'Won') return
+  wonStatus.value = data.to
+  wonConfirmed = false
   wonLead.value = { name: data.item, order_value: card?.order_value, order_title: card?.order_title, organization: card?.organization }
   showWon.value = true
 }
 async function confirmWon(values) {
-  await call('growupcrm.calls.mark_won', { lead: wonLead.value.name, ...values })
+  wonConfirmed = true
+  await call('growupcrm.calls.mark_won', { lead: wonLead.value.name, status: wonStatus.value, ...values })
   leads.value.reload()
   toast.success(__('Gratulujeme, zakázka je vyhraná'))
 }

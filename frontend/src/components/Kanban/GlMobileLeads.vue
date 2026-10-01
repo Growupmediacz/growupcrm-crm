@@ -132,7 +132,7 @@ async function move(s) {
   const d = moving.value
   moving.value = null
   if (!d || s.name === d.status) return
-  if (getLeadStatus(s.name)?.type === 'Won') return emit('won', d)
+  if (getLeadStatus(s.name)?.type === 'Won') return emit('won', d, s.name)
   try {
     await call('frappe.client.set_value', { doctype: 'CRM Lead', name: d.name, fieldname: 'status', value: s.name })
     props.leads.reload()
