@@ -7,7 +7,8 @@
           {{ f.label }}<span v-if="f.key === 'open' && list.data?.length" class="num ml-1 opacity-80">{{ list.data.length }}</span>
         </button>
       </div>
-      <p v-if="!list.data?.length" class="px-3 py-8 text-center text-[14px] text-ink-gray-5">{{ __('Žádné odpovědi.') }}</p>
+      <GlSkeleton v-if="list.loading && !list.data" :rows="3" />
+      <GlEmptyState v-else-if="!list.data?.length" icon="inbox" :title="__('Žádné odpovědi')" :text="filter === 'open' ? __('Nevyřízené odpovědi se objeví tady.') : __('V tomto výběru nic není.')" />
       <div class="flex-1 overflow-y-auto">
         <button v-for="r in list.data || []" :key="r.name" class="mb-1 flex w-full gap-3 rounded-2xl px-3 py-3 text-left transition" :class="current?.name === r.name ? 'bg-white shadow-[0_2px_10px_-4px_rgba(64,72,160,.3)]' : 'hover:bg-white/60'" @click="select(r.name)">
           <span class="flex size-11 shrink-0 items-center justify-center rounded-full text-[13px] font-bold" :style="avatarTone(r.contact_name)">{{ initials(r.contact_name) }}</span>
@@ -68,6 +69,8 @@
 </template>
 
 <script setup>
+import GlSkeleton from '@/components/GlSkeleton.vue'
+import GlEmptyState from '@/components/GlEmptyState.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
 import { api, avatarTone, initials, plain, REPLY_LABEL, whenLabel } from '@/composables/outreach'
 import { isMobileView } from '@/composables/settings'

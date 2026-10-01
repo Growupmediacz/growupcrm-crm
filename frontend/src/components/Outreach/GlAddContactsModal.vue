@@ -49,8 +49,9 @@
 
       <!-- ARES -->
       <template v-else-if="source === 'ares'">
+        <GlErrorBanner v-if="aresDown" class="mb-3" :title="__('ARES teď neodpovídá')" :text="__('Údaje můžete vyplnit ručně, nebo to zkuste za chvíli.')" @retry="add" />
         <div class="grid gap-3 md:grid-cols-2">
-          <label><span class="gl-label">{{ __('IČO firmy') }}</span><input v-model="ares.ico" class="gl-field w-full tabular-nums" inputmode="numeric" maxlength="8" /></label>
+          <label><span class="gl-label">{{ __('IČO firmy') }}</span><input v-model="ares.ico" class="gl-field w-full tabular-nums" :class="icoBad && 'gl-field-error'" inputmode="numeric" maxlength="8" /><span v-if="icoBad" class="gl-field-hint-error block">{{ __('IČO má 8 číslic') }}</span></label>
           <label><span class="gl-label">{{ __('E-mail kontaktu') }}</span><input v-model="ares.email" class="gl-field w-full" type="email" /></label>
           <label><span class="gl-label">{{ __('Jméno') }}</span><input v-model="ares.first_name" class="gl-field w-full" /></label>
           <label><span class="gl-label">{{ __('Příjmení') }}</span><input v-model="ares.last_name" class="gl-field w-full" /></label>
@@ -78,6 +79,7 @@
 </template>
 
 <script setup>
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import { api, avatarTone, initials } from '@/composables/outreach'
 import { Button, Dialog, ErrorMessage, createResource, toast } from 'frappe-ui'
@@ -167,8 +169,10 @@ function onFile(e) {
 
 // ARES
 const ares = reactive({ ico: '', email: '', first_name: '', last_name: '' })
+const icoBad = computed(() => ares.ico.length > 0 && !/^\d{8}$/.test(ares.ico))
+const aresDown = ref(false)
 
-const canAdd = computed(() => (source.value === 'crm' ? picked.value.size > 0 : source.value === 'csv' ? csv.rows.length && map.email !== '' : source.value === 'ares' ? ares.ico && ares.email : false))
+const canAdd = computed(() => (source.value === 'crm' ? picked.value.size > 0 : source.value === 'csv' ? csv.rows.length && map.email !== '' : source.value === 'ares' ? /^\d{8}$/.test(ares.ico) && ares.email : false))
 const addLabel = computed(() => (source.value === 'crm' ? __('Přidat {0} kontakty', [picked.value.size]) : __('Přidat')))
 
 async function add() {
@@ -183,7 +187,11 @@ async function add() {
         const v = (r, k) => (map[k] === '' ? '' : (r[Number(map[k])] || '').trim())
         items = csv.rows.map((r) => Object.fromEntries(CSV_FIELDS.map((f) => [f.key, v(r, f.key)])))
       } else {
-        const org = await api('import_ares_company', { ico: ares.ico })
+        aresDown.value = false
+        const org = await api('import_ares_company', { ico: ares.ico }).catch((e) => {
+          aresDown.value = /ARES/.test(e.messages?.[0] || '') && /nedostupný/.test(e.messages?.[0] || '')
+          throw e
+        })
         items = [{ first_name: ares.first_name, last_name: ares.last_name, email: ares.email, company: org.organization_name }]
       }
       res = await api('import_rows', { campaign: props.campaign, rows: JSON.stringify(items) })

@@ -163,6 +163,7 @@
 </template>
 
 <script setup>
+import { saveFailed } from '@/composables/glToast'
 import GlIcon from '@/components/GlIcon.vue'
 import GlDatePicker from '@/components/GlDatePicker.vue'
 import ContactModal from '@/components/Modals/ContactModal.vue'
@@ -282,7 +283,7 @@ async function save() {
     emit('saved')
     toast.success(__('Uloženo'))
   } catch (e) {
-    toast.error(e.messages?.[0] || e.message)
+    saveFailed(e, save)
   } finally {
     saving.value = false
   }

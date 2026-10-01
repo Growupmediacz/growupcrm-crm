@@ -17,7 +17,9 @@
           <select v-model="linked" class="gl-chip h-10 rounded-full px-3 text-[14px] font-semibold"><option value="">{{ __('Vše') }}</option><option value="lead">{{ __('Zakázka') }}</option><option value="org">{{ __('Firma') }}</option><option value="project">{{ __('Projekt') }}</option><option value="contact">{{ __('Kontakt') }}</option></select>
         </label>
       </div>
-      <p v-if="res.data && !res.data.items.length" class="py-16 text-center text-[14px] text-ink-gray-5">{{ q ? __('Nic jsme nenašli.') : __('Zatím žádné zápisy.') }}</p>
+      <GlErrorBanner v-if="res.error" :title="__('Zápisy se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" />
+      <GlSkeleton v-else-if="!res.data" variant="cards" :rows="3" />
+      <GlEmptyState v-else-if="!res.data.items.length" icon="doc" :title="q ? __('Nic nenalezeno') : __('Zatím žádné zápisy')" :text="q ? __('Zkuste jiné slovo nebo zrušte filtr.') : __('Zápisy vznikají u zakázek, firem a kontaktů.')" :action="q ? __('Zrušit hledání') : __('Nový zápis')" :primary="!q" @action="q ? (q = '') : createNote()" />
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         <div v-for="n in res.data?.items || []" :key="n.name" class="gl-card gl-lift flex min-h-[200px] cursor-pointer flex-col gap-2.5 p-5" @click="editNote(n.name)">
           <div class="flex items-start justify-between gap-2">
@@ -40,6 +42,9 @@
 </template>
 
 <script setup>
+import GlSkeleton from '@/components/GlSkeleton.vue'
+import GlEmptyState from '@/components/GlEmptyState.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import { useDoctypeModal } from '@/composables/doctypeModal'

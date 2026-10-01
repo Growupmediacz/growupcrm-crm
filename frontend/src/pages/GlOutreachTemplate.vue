@@ -69,6 +69,7 @@
 </template>
 
 <script setup>
+import { saveFailed } from '@/composables/glToast'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import { api } from '@/composables/outreach'
@@ -103,11 +104,13 @@ async function load() {
   refreshPreview()
 }
 function setBody(html) {
-  nextTick(() => editor.value && (editor.value.innerHTML = html))
+  nextTick(() => editor.value && (editor.value.innerHTML = chips(html)))
 }
 load()
 
-const onInput = () => (form.body = sanitizeHTML(editor.value.innerHTML))
+// proměnné v textu jako indigové čipy (design systém 2. kola); do uložené šablony jdou jako čistý text {proměnná}
+const chips = (html) => (html || '').replace(/\{([a-z_]+)\}/g, '<mark>{$1}</mark>')
+const onInput = () => (form.body = sanitizeHTML(editor.value.innerHTML.replace(/<\/?mark[^>]*>/g, '')))
 const fmt = (cmd) => document.execCommand(cmd) && onInput()
 function link() {
   const url = window.prompt(__('Adresa odkazu'))
@@ -118,7 +121,7 @@ function insert(key) {
   if (target.value === 'subject') form.subject = `${form.subject || ''}${token}`
   else {
     editor.value.focus()
-    document.execCommand('insertText', false, token)
+    document.execCommand('insertHTML', false, `<mark>${token}</mark>&nbsp;`)
     onInput()
   }
 }
@@ -144,6 +147,7 @@ async function save() {
     if (isNew.value) router.replace({ name: 'OutreachTemplate', params: { name: n } })
   } catch (e) {
     error.value = e.messages?.[0] || e.message
+    saveFailed(e, save)
   } finally {
     saving.value = false
   }

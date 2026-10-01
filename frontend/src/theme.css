@@ -837,3 +837,67 @@ button.inline-flex.bg-surface-red-7:hover {
   --tw-shadow: 0 0 #0000 !important;
   border-radius: inherit !important;
 }
+
+/* ---------- design systém 2. kola: skeleton, přepínač, čipy proměnných, chyby polí ---------- */
+@keyframes gl-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+.gl-skel {
+  display: block;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--skeleton, rgba(110, 120, 200, 0.12)) 25%, var(--skeleton-shine, rgba(255, 255, 255, 0.55)) 50%, var(--skeleton, rgba(110, 120, 200, 0.12)) 75%);
+  background-size: 200% 100%;
+  animation: gl-shimmer var(--dur-skeleton, 1.4s) linear infinite;
+}
+.gl-skel-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+@media (prefers-reduced-motion: reduce) {
+  .gl-skel { animation: none; }
+}
+
+/* přepínač (nastavení zapnout / vypnout): indigová stopa, bílé kolečko */
+button[role='switch'] {
+  background-color: rgba(110, 120, 200, 0.25) !important;
+  border-radius: 999px !important;
+  transition: background-color 0.2s ease;
+}
+button[role='switch'][data-state='checked'] {
+  background-color: #4f46e5 !important;
+}
+button[role='switch'] > span {
+  background: #fff !important;
+  box-shadow: 0 2px 6px -1px rgba(40, 40, 120, 0.4);
+  transition: transform 0.35s var(--spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+
+/* proměnné v editoru e-mailu = indigový čip (Schválení, editor šablony) */
+.gl-var,
+.gl-text mark,
+[contenteditable] mark {
+  background: rgba(79, 70, 229, 0.12);
+  color: #3b32c4;
+  border-radius: 7px;
+  padding: 1px 6px;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.88em;
+  font-weight: 600;
+}
+
+/* pole s chybou: červený okraj a nápověda pod polem */
+.gl-field-error {
+  border-color: #c8321f !important;
+  box-shadow: 0 0 0 3px rgba(200, 50, 31, 0.14) !important;
+}
+.gl-field-hint-error {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #c8321f;
+}

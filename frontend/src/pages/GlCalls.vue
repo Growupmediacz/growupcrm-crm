@@ -12,7 +12,9 @@
         <Button variant="solid" iconLeft="phone" @click="showPick = true"><span class="hidden sm:inline">{{ __('Zapsat hovor') }}</span></Button>
       </template>
     </LayoutHeader>
-    <div v-if="k" class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
+    <div v-if="res.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Hovory se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" /></div>
+    <div v-else-if="!k" class="px-3 md:px-2"><GlSkeleton :rows="4" /></div>
+    <div v-else class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
       <div class="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
         <div class="gl-card p-4 md:p-5"><div class="text-[14px] text-ink-gray-7">{{ periodTitle }}</div><div class="num text-[34px] font-bold leading-tight text-ink-gray-9 md:text-[42px]">{{ k.total }}</div><div class="text-[13px] text-ink-gray-5">{{ __('{0} odchozích · {1} příchozích', [k.outgoing, k.incoming]) }}</div></div>
         <div class="gl-card p-4 md:p-5"><div class="text-[14px] text-ink-gray-7">{{ __('Dovolal jsem se') }}</div><div class="num text-[34px] font-bold leading-tight text-ink-gray-9 md:text-[42px]">{{ k.reached }}</div><div class="text-[13px] text-ink-gray-5">{{ __('{0} % hovorů', [k.reached_pct]) }}</div></div>
@@ -27,7 +29,7 @@
           <select v-model="period" class="gl-chip h-10 rounded-full px-3 text-[14px] font-semibold"><option value="week">{{ __('Tento týden') }}</option><option value="month">{{ __('30 dní') }}</option><option value="quarter">{{ __('90 dní') }}</option></select></label>
       </div>
       <div class="gl-card p-4 md:p-6">
-        <p v-if="!res.data.items.length" class="py-12 text-center text-[14px] text-ink-gray-5">{{ __('V tomto období nejsou žádné hovory.') }}</p>
+        <GlEmptyState v-if="!res.data.items.length" icon="phone" :title="__('Zatím žádné hovory')" :text="__('Hovory se zapisují z detailu zakázky nebo tlačítkem Zapsat hovor.')" :action="__('Zapsat hovor')" primary @action="showPick = true" />
         <div v-else class="flex flex-col">
           <div class="hidden grid-cols-[110px_1.4fr_50px_130px_70px_1.6fr_40px] gap-3 pb-2 text-[12px] font-semibold text-ink-gray-5 md:grid"><span>{{ __('Kdy') }}</span><span>{{ __('Kontakt') }}</span><span>{{ __('Směr') }}</span><span>{{ __('Výsledek') }}</span><span>{{ __('Délka') }}</span><span>{{ __('Poznámka') }}</span><span>{{ __('Kdo') }}</span></div>
           <component :is="c.lead ? 'router-link' : 'div'" v-for="c in res.data.items" :key="c.name" :to="c.lead ? { name: 'Lead', params: { leadId: c.lead } } : undefined" class="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 border-t border-[rgba(110,120,200,.12)] py-3 md:grid-cols-[110px_1.4fr_50px_130px_70px_1.6fr_40px]">
@@ -52,6 +54,9 @@
 </template>
 
 <script setup>
+import GlSkeleton from '@/components/GlSkeleton.vue'
+import GlEmptyState from '@/components/GlEmptyState.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlListFooter from '@/components/GlListFooter.vue'

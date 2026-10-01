@@ -12,7 +12,8 @@
     </template>
   </LayoutHeader>
 
-  <div v-if="res.error" class="px-4 py-10 text-center text-ink-gray-5">{{ res.error.messages?.[0] }}</div>
+  <div v-if="res.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Kampaň se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" /></div>
+  <div v-else-if="!d" class="px-3 md:px-2"><GlSkeleton :rows="4" /></div>
   <div v-else-if="d" class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
     <div class="flex flex-wrap items-center gap-x-2 px-1 text-[14px] text-ink-gray-7">
       <span class="size-2 rounded-full" :style="{ background: STATUS[d.status] }" /><b class="text-ink-gray-9">{{ __(d.status) }}</b>
@@ -46,7 +47,7 @@
           <span class="size-2 rounded-full" :style="{ background: CONTACT_STATUS[s] }" />{{ __(s) }} <span class="num opacity-80">{{ c }}</span>
         </button>
       </div>
-      <p v-if="!d.contacts.length" class="py-10 text-center text-[14px] text-ink-gray-5">{{ __('Žádné kontakty. Přidejte je z CRM, ze souboru CSV nebo podle IČO.') }}</p>
+      <GlEmptyState v-if="!d.contacts.length" class="mt-3" icon="users" :title="__('Zatím žádné kontakty')" :text="__('Přidejte je z CRM, ze souboru CSV nebo podle IČO.')" :action="__('Přidat kontakty')" primary @action="showAdd = true" />
       <div v-else class="mt-2 flex flex-col">
         <div class="hidden grid-cols-[1.4fr_70px_130px_1.3fr_1fr] gap-3 pb-1 text-[12px] font-semibold text-ink-gray-5 md:grid"><span>{{ __('Kontakt') }}</span><span>{{ __('Krok') }}</span><span>{{ __('Stav') }}</span><span>{{ __('Poslední událost') }}</span><span>{{ __('Další') }}</span></div>
         <div v-for="c in d.contacts" :key="c.name" class="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-0.5 border-t border-[rgba(110,120,200,.12)] py-2.5 first:border-0 md:grid-cols-[1.4fr_70px_130px_1.3fr_1fr]">
@@ -67,6 +68,9 @@
 </template>
 
 <script setup>
+import GlSkeleton from '@/components/GlSkeleton.vue'
+import GlEmptyState from '@/components/GlEmptyState.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlListFooter from '@/components/GlListFooter.vue'

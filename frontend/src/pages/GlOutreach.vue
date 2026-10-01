@@ -3,7 +3,9 @@
        Data: growupcrm.outreach.* (jen správci, jen se zapnutým growupcrm_agency). -->
   <OutreachHeader :active="tab" :connected="!!ov?.connected" :counts="ov?.counts || {}" @mailbox="showMailbox = true" @newCampaign="showNew = true" />
 
-  <GlForbidden v-if="overview.error" :message="overview.error.messages?.[0]" />
+  <GlForbidden v-if="overview.error && isForbidden(overview.error)" :message="overview.error.messages?.[0]" />
+  <div v-else-if="overview.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Outreach se nepodařilo načíst')" :text="overview.error.messages?.[0]" @retry="overview.reload()" /></div>
+  <div v-else-if="!ov" class="px-3 md:px-2"><GlSkeleton :rows="5" /></div>
   <div v-else-if="ov" class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
     <!-- upozornění: bez schránky nic neodejde -->
     <div v-if="!ov.connected" class="gl-card flex flex-wrap items-center justify-between gap-3 !rounded-[18px] px-5 py-3.5">
@@ -49,7 +51,7 @@
             <h2 class="text-[22px] font-bold tracking-tight text-ink-gray-9">{{ __('Ke schválení') }}</h2>
             <span class="text-[13px] text-ink-gray-5">{{ ov.approve_total ? __('{0} čeká', [ov.approve_total]) : '' }}</span>
           </div>
-          <p v-if="!ov.approve.length" class="py-6 text-[14px] text-ink-gray-5">{{ __('Nic ke schválení. Další e-maily se objeví, jakmile přijde čas na další krok kampaní.') }}</p>
+          <GlEmptyState v-if="!ov.approve.length" icon="check" :title="__('Všechno schváleno')" :text="__('Další e-maily se objeví, jakmile přijde čas na další krok kampaní.')" />
           <div v-for="m in ov.approve" :key="m.name" class="flex items-center gap-3 py-2">
             <span class="flex size-10 shrink-0 items-center justify-center rounded-full text-[12px] font-bold" :style="avatarTone(m.contact_name)">{{ initials(m.contact_name) }}</span>
             <div class="min-w-0 flex-1">
@@ -73,7 +75,7 @@
               <h2 class="text-[22px] font-bold tracking-tight text-ink-gray-9">{{ __('Ke zpracování') }}</h2>
               <span class="num text-[13px] text-ink-gray-5">{{ ov.process.length || '' }}</span>
             </div>
-            <p v-if="!ov.process.length" class="py-3 text-[14px] text-ink-gray-5">{{ __('Žádné hovory ani zprávy na LinkedIn.') }}</p>
+            <GlEmptyState v-if="!ov.process.length" icon="phone" :title="__('Nic ke zpracování')" :text="__('Hovory a zprávy na LinkedIn se objeví podle sekvence kampaně.')" />
             <div v-for="m in ov.process" :key="m.name" class="flex items-center gap-3 py-2">
               <span class="flex size-10 shrink-0 items-center justify-center rounded-xl" :class="m.step_type === 'Hovor' ? 'bg-[rgba(249,115,22,.14)] text-[#c2410c]' : 'bg-[rgba(79,70,229,.12)] text-[#4338ca]'">
                 <GlIcon :name="m.step_type === 'Hovor' ? 'phone' : 'link'" :size="18" />
@@ -93,7 +95,7 @@
               <h2 class="text-[22px] font-bold tracking-tight text-ink-gray-9">{{ __('Nové odpovědi') }}</h2>
               <router-link :to="{ name: 'Outreach', params: { tab: 'replies' } }" class="gl-fill">{{ __('Všechny') }} ({{ ov.kpis.replies_new }})</router-link>
             </div>
-            <p v-if="!ov.replies.length" class="py-3 text-[14px] text-ink-gray-5">{{ __('Zatím žádné nové odpovědi.') }}</p>
+            <GlEmptyState v-if="!ov.replies.length" icon="inbox" :title="__('Zatím žádné nové odpovědi')" :text="__('Odpovědi kontaktů se načítají každých 15 minut.')" />
             <router-link v-for="r in ov.replies" :key="r.name" :to="{ name: 'Outreach', params: { tab: 'replies' }, query: { r: r.name } }" class="flex items-center gap-3 py-2">
               <span class="flex size-10 shrink-0 items-center justify-center rounded-full text-[12px] font-bold" :style="avatarTone(r.contact_name)">{{ initials(r.contact_name) }}</span>
               <div class="min-w-0 flex-1">
@@ -117,7 +119,8 @@
           <GlIcon name="check" :size="15" />{{ __('Schvalovat postupně') }}
         </router-link>
       </div>
-      <p v-if="!queue.data?.length" class="py-10 text-center text-[14px] text-ink-gray-5">{{ __('Nic ke schválení.') }}</p>
+      <GlSkeleton v-if="queue.loading && !queue.data" :rows="4" />
+      <GlEmptyState v-else-if="!queue.data?.length" icon="check" :title="__('Nic ke schválení')" :text="__('Pracovní fronta je prázdná.')" />
       <router-link v-for="m in queue.data || []" :key="m.name" :to="{ name: 'OutreachReview', params: { name: m.name } }" class="flex items-center gap-3 border-t border-[rgba(110,120,200,.12)] py-3 first:border-0">
         <span class="flex size-10 shrink-0 items-center justify-center rounded-full text-[12px] font-bold" :style="avatarTone(m.contact_name)">{{ initials(m.contact_name) }}</span>
         <div class="min-w-0 flex-1">
@@ -158,6 +161,9 @@
 </template>
 
 <script setup>
+import GlSkeleton from '@/components/GlSkeleton.vue'
+import GlEmptyState from '@/components/GlEmptyState.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import GlForbidden from '@/components/GlForbidden.vue'
 import OutreachHeader from '@/components/Outreach/OutreachHeader.vue'
 import CampaignsTable from '@/components/Outreach/CampaignsTable.vue'
@@ -192,6 +198,7 @@ watch(
   { immediate: true },
 )
 
+const isForbidden = (e) => /Permission|oprávnění|přístup|nejsou na tomto CRM zapnuté/i.test(`${e?.exc_type || ''} ${e?.messages?.[0] || ''} ${e?.message || ''}`)
 const showMailbox = ref(false)
 const showNew = ref(false)
 

@@ -40,7 +40,9 @@
           <kbd class="rounded-md bg-[rgba(110,120,200,.14)] px-1.5 text-[12px] text-ink-gray-5">↵</kbd>
         </form>
 
-        <p v-if="res.data && !items.length" class="py-12 text-center text-[14px] text-ink-gray-5">{{ __('Žádné úkoly. Napište první do pole nahoře.') }}</p>
+        <GlErrorBanner v-if="res.error" class="my-2" :title="__('Úkoly se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" />
+        <GlSkeleton v-else-if="!res.data" :rows="5" />
+        <GlEmptyState v-else-if="!items.length" class="my-3" icon="check" :title="bucket === 'all' && !kind ? __('Všechno hotovo') : __('Nic nenalezeno')" :text="bucket === 'all' && !kind ? __('Nemáte žádné otevřené úkoly. Pěkná práce.') : __('Filtru neodpovídá žádný úkol.')" :action="bucket === 'all' && !kind ? '' : __('Zrušit filtr')" @action="(bucket = 'all'), (kind = '')" />
         <template v-for="g in grouped" :key="g.bucket">
           <div class="mb-1 mt-3 flex items-baseline gap-2 px-2 text-[13px]"><b :class="g.bucket === 'overdue' ? 'text-[#c8321f]' : 'text-ink-gray-9'">{{ g.label }}</b><span class="num text-ink-gray-5">{{ g.items.length }}</span></div>
           <div v-for="t in g.items" :key="t.name" class="flex items-center gap-3 rounded-2xl px-2 py-2.5 hover:bg-white/50">
@@ -61,6 +63,10 @@
 </template>
 
 <script setup>
+import { saveFailed } from '@/composables/glToast'
+import GlSkeleton from '@/components/GlSkeleton.vue'
+import GlEmptyState from '@/components/GlEmptyState.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlListFooter from '@/components/GlListFooter.vue'
@@ -132,7 +138,7 @@ async function add() {
     newTitle.value = ''
     res.reload()
   } catch (e) {
-    toast.error(e.messages?.[0] || e.message)
+    saveFailed(e, add, __('Úkol se nepodařilo přidat'))
   }
 }
 async function toggle(t) {
