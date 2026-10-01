@@ -62,11 +62,11 @@
   <ErrorPage v-else-if="errorTitle" :errorTitle="errorTitle" :errorMessage="errorMessage" />
 
   <!-- pevná spodní lišta akcí -->
-  <nav v-if="doc.name" class="gl-tabbar fixed inset-x-3 bottom-3 z-30 flex h-16 items-stretch gap-1 rounded-[26px] px-2 py-2" :aria-label="__('Akce zakázky')">
+  <nav v-if="doc.name" class="gl-tabbar fixed inset-x-3 bottom-3 z-30 flex items-center gap-1 rounded-[26px] px-2 pt-2 pb-2" :aria-label="__('Akce zakázky')">
     <button
       v-for="a in actions"
       :key="a.label"
-      class="gl-round flex flex-1 items-center justify-center rounded-2xl text-ink-gray-9 disabled:opacity-40"
+      class="flex h-12 flex-1 items-center justify-center rounded-2xl text-ink-gray-9 transition active:bg-white/80 disabled:opacity-40"
       :aria-label="a.label"
       :title="a.label"
       :disabled="a.disabled"
