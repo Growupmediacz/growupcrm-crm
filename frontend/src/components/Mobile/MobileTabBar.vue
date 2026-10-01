@@ -1,5 +1,6 @@
 <template>
   <nav
+    v-if="!isDetail"
     class="gl-tabbar fixed inset-x-3 bottom-3 z-30 flex h-[68px] items-stretch rounded-[30px] px-2"
   >
     <router-link
@@ -25,6 +26,7 @@
 import GlIcon from '@/components/GlIcon.vue'
 import { mobileSidebarOpened as sidebarOpened } from '@/composables/settings'
 import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 
 const route = useRoute()
 const tabs = [
@@ -34,4 +36,7 @@ const tabs = [
   { label: __('Kalendář'), icon: 'cal', to: { name: 'Calendar' }, names: ['Calendar'] },
 ]
 const isActive = (t) => t.names.includes(route.name)
+// Na detailu (zakázka, firma, kontakt) lišta není, jako v návrhu: zpět vede tlačítko v hlavičce.
+const DETAIL_ROUTES = ['Lead', 'Organization', 'Contact', 'Deal']
+const isDetail = computed(() => DETAIL_ROUTES.includes(route.name))
 </script>

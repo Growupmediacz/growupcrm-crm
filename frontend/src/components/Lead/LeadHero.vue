@@ -1,12 +1,12 @@
 <template>
-  <div class="gl-card p-6">
+  <div class="gl-card" :class="compact ? 'p-4' : 'p-6'">
     <div class="flex items-start justify-between gap-6">
       <div class="min-w-0">
         <div class="flex items-center gap-2 text-[13px] font-medium text-ink-gray-7">
           <span class="dot size-2 rounded-full" :style="{ background: stageColor }" />
           {{ __(doc.status) }}
         </div>
-        <h1 class="mt-1 truncate text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9">
+        <h1 class="mt-1 truncate font-bold leading-tight tracking-tight text-ink-gray-9" :class="compact ? 'text-[24px]' : 'text-[34px]'">
           {{ doc.order_title || doc.lead_name || doc.name }}
         </h1>
         <div class="mt-1 truncate text-[17px] text-ink-gray-7">
@@ -23,7 +23,7 @@
       </div>
       <div class="shrink-0 text-right">
         <div class="text-[13px] text-ink-gray-5">{{ __('Hodnota') }}</div>
-        <div class="num text-[38px] font-bold leading-tight tracking-tight text-ink-gray-9">{{ money }}</div>
+        <div class="num font-bold leading-tight tracking-tight text-ink-gray-9" :class="compact ? 'text-[22px]' : 'text-[38px]'">{{ money }}</div>
       </div>
     </div>
 
@@ -36,7 +36,7 @@
         @click="move(s)"
       >
         <span class="h-1.5 rounded-full" :style="{ background: i <= currentIndex ? '#4f46e5' : 'rgba(110,120,200,.16)' }" />
-        <span class="text-[13px]" :class="i === currentIndex ? 'font-bold text-ink-gray-9' : 'text-ink-gray-5'">{{ __(s.name) }}</span>
+        <span v-if="!compact || i === currentIndex" class="text-[13px]" :class="i === currentIndex ? 'font-bold text-ink-gray-9' : 'text-ink-gray-5'">{{ __(s.name) }}</span>
       </button>
     </div>
 
@@ -72,6 +72,7 @@ import { computed } from 'vue'
 const props = defineProps({
   doc: { type: Object, required: true },
   stageOptions: { type: Array, default: () => [] },
+  compact: { type: Boolean, default: false },
 })
 const emit = defineEmits(['changed'])
 
@@ -98,7 +99,7 @@ const money = computed(() =>
 
 function move(stage) {
   if (stage.name === props.doc.status) return
-  const opt = props.stageOptions.find((o) => o.label === stage.name)
+  const opt = props.stageOptions.find((o) => (o.value || o.label) === stage.name)
   opt?.onClick?.()
 }
 

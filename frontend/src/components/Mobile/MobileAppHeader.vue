@@ -9,12 +9,14 @@
         <MenuIcon class="h-4 text-ink-gray-9" />
       </Button>
     </div>
-    <div id="app-header" class="flex-1" />
+    <div id="app-header" class="min-w-0 flex-1" />
+    <div class="flex items-center"><GlSearch /></div>
   </div>
   <CallUI class="mr-3 mt-2" />
 </template>
 
 <script setup>
+import GlSearch from '@/components/GlSearch.vue'
 import MenuIcon from '@/components/Icons/MenuIcon.vue'
 import CallUI from '@/components/Telephony/CallUI.vue'
 import { mobileSidebarOpened as sidebarOpened } from '@/composables/settings'

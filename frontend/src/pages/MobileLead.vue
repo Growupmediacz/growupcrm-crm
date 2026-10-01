@@ -1,14 +1,10 @@
 <template>
   <LayoutHeader>
-    <header
-      class="relative flex h-10.5 items-center justify-between gap-2 py-2.5 pl-2"
-    >
-      <Breadcrumbs :items="breadcrumbs">
-        <template #prefix="{ item }">
-          <Icon v-if="item.icon" :icon="item.icon" class="mr-2 h-4" />
-        </template>
-      </Breadcrumbs>
-      <div class="absolute right-0">
+    <header class="flex min-w-0 items-center justify-between gap-2 py-2.5 pl-2">
+      <router-link :to="{ name: 'Leads' }" class="truncate text-[17px] font-bold text-ink-gray-9">
+        ‹ {{ __('Zakázky') }}
+      </router-link>
+      <div class="shrink-0">
         <Dropdown
           v-if="doc"
           :options="
@@ -38,7 +34,7 @@
   </LayoutHeader>
   <div
     v-if="doc.name"
-    class="flex h-12 items-center justify-between gap-2 border-b px-3 py-2.5"
+    class="flex h-12 items-center justify-between gap-2 px-3 py-2.5"
   >
     <AssignTo v-model="assignees.data" doctype="CRM Lead" :docname="leadId" />
     <div class="flex items-center gap-2">
@@ -66,7 +62,10 @@
       </Tooltip>
     </div>
   </div>
-  <div v-if="doc.name" class="flex h-full overflow-hidden">
+  <div v-if="doc.name" class="px-3 pt-1">
+    <LeadHero :doc="doc" :stageOptions="mobileStages" compact />
+  </div>
+  <div v-if="doc.name" class="gl-chiptabs flex h-full overflow-hidden">
     <Tabs
       v-model="tabIndex"
       as="div"
@@ -151,6 +150,7 @@ import WhatsAppIcon from '@/components/Icons/WhatsAppIcon.vue'
 import IndicatorIcon from '@/components/Icons/IndicatorIcon.vue'
 import LostReasonModal from '@/components/Modals/LostReasonModal.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
+import LeadHero from '@/components/Lead/LeadHero.vue'
 import Activities from '@/components/Activities/Activities.vue'
 import AssignTo from '@/components/AssignTo.vue'
 import SidePanelLayout from '@/components/SidePanelLayout.vue'
@@ -398,6 +398,14 @@ function statusLabel(status) {
   if (isTranslatable('CRM Lead Status')) return __(status)
   return status
 }
+
+const mobileStages = computed(() =>
+  statusOptions(
+    'lead',
+    document.statuses?.length ? document.statuses : document._statuses,
+    triggerStatusChange,
+  ),
+)
 
 async function triggerStatusChange(value) {
   await triggerOnChange('status', value)

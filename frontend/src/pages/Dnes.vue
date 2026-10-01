@@ -7,7 +7,7 @@
       </div>
     </template>
     <template #right-header>
-      <div v-if="data?.is_manager" class="mr-2 inline-flex rounded-full bg-[rgba(110,120,200,.11)] p-[3px]">
+      <div v-if="data?.is_manager" class="mr-2 hidden rounded-full sm:inline-flex bg-[rgba(110,120,200,.11)] p-[3px]">
         <button
           v-for="o in scopes"
           :key="o.value"

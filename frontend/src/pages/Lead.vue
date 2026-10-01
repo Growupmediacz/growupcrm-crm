@@ -16,44 +16,30 @@
         v-if="document.actions?.length"
         :actions="document.actions"
       />
-      <AssignTo v-model="assignees.data" doctype="CRM Lead" :docname="leadId" />
-      <Dropdown
-        v-if="doc && document.statuses"
-        :options="statuses"
-        placement="right"
-      >
-        <template #default="{ open }">
-          <Button
-            v-if="doc.status"
-            :label="statusLabel(doc.status)"
-            :iconRight="open ? 'chevron-up' : 'chevron-down'"
-          >
-            <template #prefix>
-              <IndicatorIcon :class="getLeadStatus(doc.status).color" />
-            </template>
-          </Button>
-        </template>
+      <template v-if="editing">
+        <AssignTo v-model="assignees.data" doctype="CRM Lead" :docname="leadId" />
+        <Button variant="solid" :label="__('Hotovo')" iconLeft="check" @click="editing = false" />
+      </template>
+      <template v-else>
+        <Button :label="__('Upravit')" iconLeft="edit-2" @click="editing = true" />
+        <Button :label="__('Naplánovat')" iconLeft="calendar" @click="showSchedule = true" />
+        <Button
+          v-if="nextStage"
+          variant="solid"
+          iconLeft="arrow-right"
+          :label="__('Posunout do {0}', [nextStage.label])"
+          @click="nextStage.onClick()"
+        />
+      </template>
+      <Dropdown :options="moreOptions" placement="right">
+        <Button icon="more-horizontal" :aria-label="__('Další akce')" />
       </Dropdown>
-      <Tooltip
-        v-if="!leadsOnlyMode"
-        :disabled="!isLeadConversionDisabled"
-        :text="__('Cannot convert a lost lead to deal')"
-      >
-        <div class="inline-flex">
-          <Button
-            :label="__('Convert to Deal')"
-            variant="solid"
-            :disabled="isLeadConversionDisabled"
-            @click="showConvertToDealModal = true"
-          />
-        </div>
-      </Tooltip>
     </template>
   </LayoutHeader>
   <div v-if="doc.name" class="flex h-full gap-3 overflow-hidden px-2 pb-2">
     <div class="flex min-w-0 flex-1 flex-col gap-3 overflow-hidden">
       <LeadHero :doc="doc" :stageOptions="statuses" @changed="reloadResources" />
-      <div class="gl-card flex flex-1 overflow-hidden">
+      <div class="gl-card gl-chiptabs flex flex-1 overflow-hidden">
     <Tabs
       v-model="tabIndex"
       :tabs="tabs"
@@ -74,7 +60,8 @@
     </Tabs>
       </div>
     </div>
-    <Resizer class="gl-card flex flex-col justify-between" side="right">
+    <LeadAside v-if="!editing" :doc="doc" @email="openEmailBox" />
+    <Resizer v-else class="gl-card flex flex-col justify-between" side="right">
       <div
         class="flex h-[45px] cursor-copy items-center border-b px-5 py-2.5 text-lg-medium text-ink-gray-9"
         @click="copyToClipboard(leadId)"
@@ -240,6 +227,15 @@
     :title="doc.lead_name"
     name="Leads"
   />
+  <CalendarEventModal
+    v-if="showSchedule"
+    v-model="showSchedule"
+    :lead="leadId"
+    :start="scheduleStart"
+    :currentUser="sessionUser"
+    :users="calendarUsers.data || []"
+    @saved="() => activities?.all_activities?.reload()"
+  />
   <LostReasonModal
     v-if="showLostReasonModal"
     v-model="showLostReasonModal"
@@ -271,6 +267,9 @@ import AttachmentIcon from '@/components/Icons/AttachmentIcon.vue'
 import LostReasonModal from '@/components/Modals/LostReasonModal.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import LeadHero from '@/components/Lead/LeadHero.vue'
+import LeadAside from '@/components/Lead/LeadAside.vue'
+import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
+import { sessionStore } from '@/stores/session'
 import Activities from '@/components/Activities/Activities.vue'
 import AssignTo from '@/components/AssignTo.vue'
 import FilesUploader from '@/components/FilesUploader/FilesUploader.vue'
@@ -330,6 +329,18 @@ const errorMessage = ref('')
 const showDeleteLinkedDocModal = ref(false)
 const showConvertToDealModal = ref(false)
 const showFilesUploader = ref(false)
+
+// GrowUp: design detailu zakázky. Celý panel CRM se ukáže až v režimu „Upravit“.
+const editing = ref(false)
+const showSchedule = ref(false)
+const sessionUser = sessionStore().user
+const calendarUsers = createResource({ url: 'growupcrm.calendar.get_users', auto: true })
+const scheduleStart = computed(() => {
+  const d = new Date()
+  d.setDate(d.getDate() + 1)
+  d.setHours(10, 0, 0, 0)
+  return d
+})
 
 const {
   triggerOnChange,
@@ -527,6 +538,37 @@ function updateField(name, value) {
     },
   })
 }
+
+const nextStage = computed(() => {
+  const order = statuses.value.filter((o) => getLeadStatus(o.value)?.type !== 'Lost')
+  const i = order.findIndex((o) => o.value === doc.value.status)
+  if (i < 0 || getLeadStatus(doc.value.status)?.type === 'Lost') return null
+  return order[i + 1] || null
+})
+
+const moreOptions = computed(() => {
+  const groups = [
+    {
+      group: __('Změnit stav'),
+      items: statuses.value,
+    },
+    {
+      group: __('Zakázka'),
+      items: [
+        { label: __('Přiložit soubor'), icon: 'paperclip', onClick: () => (showFilesUploader.value = true) },
+        { label: __('Kopírovat číslo zakázky'), icon: 'copy', onClick: () => copyToClipboard(props.leadId) },
+        !leadsOnlyMode.value && {
+          label: __('Convert to Deal'),
+          icon: 'repeat',
+          condition: () => !isLeadConversionDisabled.value,
+          onClick: () => (showConvertToDealModal.value = true),
+        },
+        canDelete.value && { label: __('Smazat zakázku'), icon: 'trash-2', theme: 'red', onClick: deleteLead },
+      ].filter(Boolean),
+    },
+  ]
+  return groups
+})
 
 function deleteLead() {
   showDeleteLinkedDocModal.value = true

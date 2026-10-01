@@ -1,12 +1,14 @@
 <template>
   <div class="flex pr-2 pt-1">
     <div id="app-header" class="flex-1"></div>
-    <div class="flex items-center justify-center">
+    <div class="flex items-center justify-center gap-2 pl-2">
+      <GlSearch />
       <CallUI />
     </div>
   </div>
 </template>
 
 <script setup>
+import GlSearch from '@/components/GlSearch.vue'
 import CallUI from '@/components/Telephony/CallUI.vue'
 </script>
