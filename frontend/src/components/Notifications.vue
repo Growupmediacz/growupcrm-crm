@@ -3,14 +3,9 @@
   <div
     v-if="visible"
     ref="target"
-    class="gl-sheet absolute z-20 h-[calc(100vh-24px)] overflow-hidden rounded-[22px] transition-all duration-300 ease-in-out"
-    :style="{
-            'max-width': '350px',
-      'min-width': '350px',
-      left: 'calc(100% + 12px)',
-    }"
+    class="gl-sheet fixed right-5 top-[68px] z-30 max-h-[70vh] w-[380px] overflow-hidden rounded-[22px]"
   >
-    <div class="flex h-full flex-col text-ink-gray-9">
+    <div class="flex max-h-[70vh] flex-col text-ink-gray-9">
       <div class="z-20 flex items-center justify-between border-b px-4 py-2.5">
         <div class="text-lg-medium text-ink-gray-8">
           {{ __('Notifications') }}

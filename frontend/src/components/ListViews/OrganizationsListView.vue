@@ -46,19 +46,28 @@
     >
       <ListRowItem :item="item" :align="column.align" class="overflow-hidden">
         <template #prefix>
-          <div v-if="column.key === 'organization_name'">
-            <Avatar
-              v-if="item.label"
-              class="flex items-center"
-              :image="item.logo"
-              :label="item.label"
-              size="sm"
-            />
+          <!-- GrowUp: logo firmy jako v designu (iniciály v barevném čtverci, jinak favicon) -->
+          <div v-if="column.key === 'organization_name'" class="mr-1">
+            <img v-if="item.logo" :src="item.logo" class="size-9 rounded-xl bg-white object-contain p-1" />
+            <span
+              v-else-if="item.label"
+              class="flex size-9 items-center justify-center rounded-xl text-[12px] font-bold"
+              :class="tone(item.label)"
+            >{{ initials(item.label) }}</span>
           </div>
+          <span
+            v-else-if="column.key === 'relationship' && item"
+            class="mr-1.5 size-2 rounded-full"
+            :style="{ background: REL_COLORS[item] || '#9ca3af' }"
+          />
         </template>
         <template #default="{ label }">
+          <div v-if="column.key === 'organization_name'" class="flex min-w-0 flex-col leading-tight">
+            <span class="truncate text-[14px] font-semibold text-ink-gray-9">{{ item.label }}</span>
+            <span v-if="row.ico" class="truncate text-[12.5px] text-ink-gray-5">IČO {{ row.ico }}</span>
+          </div>
           <div
-            v-if="['modified', 'creation'].includes(column.key)"
+            v-else-if="['modified', 'creation'].includes(column.key)"
             class="truncate text-base"
             @click="
               (event) =>
@@ -161,6 +170,22 @@
   />
 </template>
 <script setup>
+const REL_COLORS = { Klient: '#22b35e', Prospekt: '#3b82f6', 'Bývalý klient': '#9ca3af' }
+const TONES = [
+  'bg-[#dde6ff] text-[#2e4bb8]',
+  'bg-[#efe7ff] text-[#6d3fd0]',
+  'bg-[#ffe9d6] text-[#b4560f]',
+  'bg-[#dcf5e6] text-[#15803d]',
+]
+const tone = (s) => TONES[[...(s || '')].reduce((a, c) => a + c.charCodeAt(0), 0) % TONES.length]
+const initials = (s) =>
+  (s || '?')
+    .replace(/[,.]|s\.r\.o|a\.s/gi, ' ')
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join('')
 import HeartIcon from '@/components/Icons/HeartIcon.vue'
 import RatingInput from '@/components/Controls/RatingInput.vue'
 import ListBulkActions from '@/components/ListBulkActions.vue'

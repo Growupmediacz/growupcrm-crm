@@ -94,8 +94,15 @@
           </div>
         </template>
         <template #default="{ label }">
+          <!-- GrowUp: buňka Zakázka podle designu: název a pod ním firma -->
+          <div v-if="column.key === 'order_title'" class="flex min-w-0 flex-col leading-tight">
+            <span class="truncate text-[14px] font-semibold text-ink-gray-9">
+              {{ row.order_title || row.lead_name?.label || orgLabel(row) || row.name }}
+            </span>
+            <span v-if="orgLabel(row)" class="truncate text-[12.5px] text-ink-gray-5">{{ orgLabel(row) }}</span>
+          </div>
           <div
-            v-if="
+            v-else-if="
               [
                 'modified',
                 'creation',
@@ -241,6 +248,7 @@
 </template>
 
 <script setup>
+const orgLabel = (row) => (typeof row.organization === 'object' ? row.organization?.label : row.organization) || ''
 import HeartIcon from '@/components/Icons/HeartIcon.vue'
 import IndicatorIcon from '@/components/Icons/IndicatorIcon.vue'
 import PhoneIcon from '@/components/Icons/PhoneIcon.vue'

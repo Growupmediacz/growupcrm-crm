@@ -1,7 +1,22 @@
 <template>
   <Dropdown :options="dropdownItems" v-bind="$attrs">
     <template #default="{ open }">
+      <!-- GrowUp: patička postranního menu (design): avatar, jméno, role -->
       <button
+        v-if="footer"
+        class="flex h-12 min-w-0 items-center gap-2.5 rounded-2xl px-1.5 text-left transition hover:bg-white/55"
+        :class="[isCollapsed ? 'w-auto' : 'w-full', open && 'bg-white/70']"
+      >
+        <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2e4bb8]">
+          {{ initials }}
+        </span>
+        <span v-if="!isCollapsed" class="flex min-w-0 flex-col leading-tight">
+          <span class="truncate text-[14px] font-bold text-ink-gray-9">{{ user.full_name }}</span>
+          <span class="truncate text-[12px] text-ink-gray-5">{{ roleLabel }}</span>
+        </span>
+      </button>
+      <button
+        v-else
         class="flex h-12 items-center rounded-md py-2 duration-300 ease-in-out"
         :class="
           isCollapsed
@@ -60,6 +75,7 @@ import { computed, h, markRaw } from 'vue'
 
 defineProps({
   isCollapsed: { type: Boolean, default: false },
+  footer: { type: Boolean, default: false },
 })
 
 const { settings, brand } = getSettings()
@@ -67,6 +83,20 @@ const { logout } = sessionStore()
 const { getUser } = usersStore()
 
 const user = computed(() => getUser() || {})
+const ROLE_LABELS = {
+  'System Manager': __('Správce'),
+  'Sales Manager': __('Vedoucí obchodu'),
+  'Sales User': __('Obchodník'),
+}
+const roleLabel = computed(() => ROLE_LABELS[user.value.role] || '')
+const initials = computed(() =>
+  (user.value.full_name || '?')
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join(''),
+)
 
 const apps = createResource({
   url: 'frappe.apps.get_apps',

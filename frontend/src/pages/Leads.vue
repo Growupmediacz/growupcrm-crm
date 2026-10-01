@@ -1,19 +1,19 @@
 <template>
   <LayoutHeader>
     <template #left-header>
-      <ViewBreadcrumbs v-model="viewControls" routeName="Leads" />
+      <GlViewHeader :title="__('Zakázky')" routeName="Leads" :viewControls="viewControls" />
     </template>
     <template #right-header>
       <CustomActions
         v-if="leadsListView?.customListActions"
         :actions="leadsListView.customListActions"
       />
-      <Button
-        variant="solid"
-        :label="__('Create')"
-        iconLeft="plus"
-        @click="showLeadModal = true"
-      />
+      <span v-if="summary" class="num mr-1 hidden whitespace-nowrap text-[14px] text-ink-gray-5 lg:inline">
+        <b class="font-semibold text-ink-gray-9">{{ summary.count }}</b>{{ summary.sum }}
+      </span>
+      <Button variant="solid" iconLeft="plus" @click="showLeadModal = true">
+        <span class="hidden sm:inline">{{ __('Nová zakázka') }}</span>
+      </Button>
     </template>
   </LayoutHeader>
   <ViewControls
@@ -271,6 +271,7 @@
 </template>
 
 <script setup>
+import GlViewHeader from '@/components/GlViewHeader.vue'
 import ViewBreadcrumbs from '@/components/ViewBreadcrumbs.vue'
 import MultipleAvatar from '@/components/MultipleAvatar.vue'
 import CustomActions from '@/components/CustomActions.vue'
@@ -325,6 +326,27 @@ const defaults = reactive({})
 
 // leads data is loaded in the ViewControls component
 const leads = ref({})
+
+// GrowUp: souhrn v hlavičce „11 zakázek · 1 240 000 Kč“ (součet jen v Kanbanu, kde ho počítá server)
+const summary = computed(() => {
+  const d = leads.value?.data
+  if (!d) return null
+  let count = d.total_count
+  let sum = null
+  if (route.params.viewType === 'kanban' && Array.isArray(d.data)) {
+    const cols = d.data.filter((c) => !c.column?.delete)
+    count = cols.reduce((a, c) => a + (c.column?.all_count || 0), 0)
+    if (cols.some((c) => c.column?.sum !== undefined)) {
+      sum = cols.reduce((a, c) => a + (c.column?.sum || 0), 0)
+    }
+  }
+  if (count === undefined || count === null) return null
+  const word = count === 1 ? __('zakázka') : count >= 2 && count <= 4 ? __('zakázky') : __('zakázek')
+  return {
+    count: `${count} ${word}`,
+    sum: sum !== null ? ` · ${new Intl.NumberFormat('cs-CZ').format(sum)} Kč` : '',
+  }
+})
 const loadMore = ref(1)
 const triggerResize = ref(1)
 const updatedPageCount = ref(20)
@@ -438,7 +460,13 @@ function parseRows(rows, columns = []) {
       }
 
       if (fieldType && fieldType == 'Currency') {
-        _rows[row] = getFormattedCurrency(row, lead)
+        // GrowUp: hodnota zakázky jako „120 000 Kč“, nula jako pomlčka (design)
+        _rows[row] =
+          row == 'order_value'
+            ? lead[row]
+              ? `${new Intl.NumberFormat('cs-CZ').format(lead[row])} Kč`
+              : '–'
+            : getFormattedCurrency(row, lead)
       }
 
       if (fieldType && fieldType == 'Float') {

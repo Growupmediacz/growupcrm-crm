@@ -12,9 +12,9 @@
           <div
             v-for="filter in quickFilterList"
             :key="filter.fieldname"
-            class="m-1 min-w-36"
+            class="m-1"
           >
-            <QuickFilterField
+            <GlQuickFilter
               :filter="filter"
               @applyQuickFilter="(f, v) => applyQuickFilter(f, v)"
             />
@@ -150,9 +150,9 @@
       <div
         v-for="filter in quickFilterList"
         :key="filter.fieldname"
-        class="m-1 min-w-36"
+        class="m-1"
       >
-        <QuickFilterField
+        <GlQuickFilter
           :filter="filter"
           @applyQuickFilter="(f, v) => applyQuickFilter(f, v)"
         />
@@ -317,7 +317,7 @@ import Icon from '@/components/Icon.vue'
 import ListIcon from '@/components/Icons/ListIcon.vue'
 import KanbanIcon from '@/components/Icons/KanbanIcon.vue'
 import GroupByIcon from '@/components/Icons/GroupByIcon.vue'
-import QuickFilterField from '@/components/QuickFilterField.vue'
+import GlQuickFilter from '@/components/GlQuickFilter.vue'
 import EditIcon from '@/components/Icons/EditIcon.vue'
 import DuplicateIcon from '@/components/Icons/DuplicateIcon.vue'
 import CheckIcon from '@/components/Icons/CheckIcon.vue'

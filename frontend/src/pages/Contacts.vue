@@ -1,7 +1,7 @@
 <template>
   <LayoutHeader>
     <template #left-header>
-      <ViewBreadcrumbs v-model="viewControls" routeName="Contacts" />
+      <GlViewHeader :title="__('Kontakty')" routeName="Contacts" :viewControls="viewControls" :kanban="false" />
     </template>
     <template #right-header>
       <CustomActions
@@ -60,6 +60,7 @@
 </template>
 
 <script setup>
+import GlViewHeader from '@/components/GlViewHeader.vue'
 import ViewBreadcrumbs from '@/components/ViewBreadcrumbs.vue'
 import CustomActions from '@/components/CustomActions.vue'
 import ContactsIcon from '@/components/Icons/ContactsIcon.vue'

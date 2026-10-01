@@ -1,19 +1,19 @@
 <template>
   <LayoutHeader>
     <template #left-header>
-      <ViewBreadcrumbs v-model="viewControls" routeName="Organizations" />
+      <GlViewHeader :title="__('Firmy')" routeName="Organizations" :viewControls="viewControls" :kanban="false" />
     </template>
     <template #right-header>
       <CustomActions
         v-if="organizationsListView?.customListActions"
         :actions="organizationsListView.customListActions"
       />
-      <Button
-        variant="solid"
-        :label="__('Create')"
-        iconLeft="plus"
-        @click="showOrganizationModal = true"
-      />
+      <Button iconLeft="refresh-cw" class="hidden md:inline-flex" @click="showOrganizationModal = true">
+        {{ __('Načíst z ARES') }}
+      </Button>
+      <Button variant="solid" iconLeft="plus" @click="showOrganizationModal = true">
+        <span class="hidden sm:inline">{{ __('Nová firma') }}</span>
+      </Button>
     </template>
   </LayoutHeader>
   <ViewControls
@@ -58,6 +58,7 @@
   />
 </template>
 <script setup>
+import GlViewHeader from '@/components/GlViewHeader.vue'
 import ViewBreadcrumbs from '@/components/ViewBreadcrumbs.vue'
 import CustomActions from '@/components/CustomActions.vue'
 import OrganizationsIcon from '@/components/Icons/OrganizationsIcon.vue'

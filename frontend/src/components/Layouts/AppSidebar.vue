@@ -16,13 +16,24 @@
       class="gl-nav rounded-[26px] !bg-transparent"
     >
       <div class="flex h-full flex-col p-2">
-        <UserDropdown :isCollapsed="isCollapsed" />
+        <!-- GrowUp: značka nahoře, uživatel dole (design) -->
+        <router-link
+          :to="{ name: 'Today' }"
+          class="flex h-12 items-center gap-2.5 rounded-2xl px-1.5"
+          :aria-label="brand.name || 'GrowUpCRM'"
+        >
+          <BrandLogo v-model="brand" class="size-9 shrink-0 overflow-hidden rounded-xl" />
+          <span v-if="!isCollapsed" class="truncate text-[19px] tracking-tight text-ink-gray-9">
+            <b class="font-bold">{{ brandParts[0] }}</b><span class="font-normal text-ink-gray-5">{{ brandParts[1] }}</span>
+          </span>
+        </router-link>
 
         <!-- overflow-y-auto forces overflow-x to clip too, which would slice the
              active row's shadow. Widen the scroll box to the sidebar edges and
              pad the content back in so the shadow has room. -->
         <div class="-mx-2 mt-2 flex flex-1 flex-col gap-1 overflow-y-auto px-2">
           <SidebarItem
+            v-if="mobile"
             id="notifications-btn"
             :label="__('Notifications')"
             :to="mobile ? { name: 'Notifications' } : undefined"
@@ -98,6 +109,9 @@
           </CollapsibleSection>
         </div>
 
+        <div v-if="mobile" class="mt-auto pt-2">
+          <UserDropdown footer />
+        </div>
         <div v-if="!mobile" class="mt-auto flex flex-col gap-1 pt-2">
           <div class="mb-1 flex flex-col gap-2">
             <SignupBanner
@@ -134,17 +148,28 @@
               <HelpIcon class="size-4 text-ink-gray-7" />
             </template>
           </SidebarItem>
-          <SidebarItem
-            :label="isCollapsed ? __('Expand') : __('Collapse')"
-            @click="isSidebarCollapsed = !isSidebarCollapsed"
-          >
-            <template #prefix>
+          <div class="flex items-center gap-1" :class="isCollapsed && 'flex-col'">
+            <UserDropdown footer :isCollapsed="isCollapsed" class="min-w-0 flex-1" />
+            <button
+              class="flex size-9 shrink-0 items-center justify-center rounded-full text-ink-gray-5 transition hover:bg-white/60 hover:text-ink-gray-9"
+              :aria-label="__('Nastavení')"
+              :title="__('Nastavení')"
+              @click="openSettings"
+            >
+              <GlIcon name="gear" :size="18" />
+            </button>
+            <button
+              class="flex size-9 shrink-0 items-center justify-center rounded-full text-ink-gray-5 transition hover:bg-white/60 hover:text-ink-gray-9"
+              :aria-label="isCollapsed ? __('Expand') : __('Collapse')"
+              :title="isCollapsed ? __('Expand') : __('Collapse')"
+              @click="isSidebarCollapsed = !isSidebarCollapsed"
+            >
               <CollapseSidebar
-                class="size-4 text-ink-gray-7 duration-300 ease-in-out"
+                class="size-4 duration-300 ease-in-out"
                 :class="{ '[transform:rotateY(180deg)]': isCollapsed }"
               />
-            </template>
-          </SidebarItem>
+            </button>
+          </div>
         </div>
       </div>
     </Sidebar>
@@ -183,6 +208,8 @@ import EmailIcon from '@/components/Icons/EmailIcon.vue'
 import StepsIcon from '@/components/Icons/StepsIcon.vue'
 import CollapsibleSection from '@/components/CollapsibleSection.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import BrandLogo from '@/components/BrandLogo.vue'
+import { getSettings } from '@/stores/settings'
 import Icon from '@/components/Icon.vue'
 import PinIcon from '@/components/Icons/PinIcon.vue'
 import UserDropdown from '@/components/UserDropdown.vue'
@@ -247,6 +274,16 @@ const { send } = useBroadcast()
 
 const isSidebarCollapsed = useStorage('isSidebarCollapsed', false)
 
+const { brand } = getSettings()
+// „GrowUpCRM“ → tučně „GrowUp“, světle „CRM“ (jako v návrhu)
+const brandParts = computed(() => {
+  const name = brand.name || 'GrowUpCRM'
+  return name.endsWith('CRM') && name.length > 3 ? [name.slice(0, -3), 'CRM'] : [name, '']
+})
+function openSettings() {
+  showSettings.value = true
+}
+
 // The mobile drawer pins the sidebar open, so it is never visually collapsed
 // even when the stored rail state says otherwise.
 const isCollapsed = computed(() => isSidebarCollapsed.value && !props.mobile)
@@ -277,10 +314,10 @@ const GL_ICONS = {
 }
 // Skupiny menu podle designu: Dnes · Prodej · Práce · Organizace
 const GROUPS = [
-  { name: 'Dnes', hideLabel: true, keys: ['Today', 'Dashboard'] },
-  { name: 'Prodej', keys: ['Leads', 'Deals', 'Contacts', 'Organizations'] },
+  { name: 'Dnes', hideLabel: true, keys: ['Today'] },
+  { name: 'Prodej', keys: ['Leads', 'Deals', 'Organizations', 'Contacts'] },
   { name: 'Práce', keys: ['Tasks', 'Notes', 'Call Logs'] },
-  { name: 'Organizace', keys: ['Calendar'] },
+  { name: 'Organizace', keys: ['Calendar', 'Dashboard'] },
 ]
 
 const links = [
@@ -359,19 +396,19 @@ const allViews = computed(() => {
     name: g.name,
     hideLabel: g.hideLabel,
     opened: true,
-    views: visible.filter((v) => g.keys.includes(v.key)),
+    views: g.keys.map((k) => visible.find((v) => v.key === k)).filter(Boolean),
   })).filter((g) => g.views.length)
   if (getPublicViews().length) {
     _views.push({
-      name: 'Public Views',
-      opened: true,
+      name: 'Uložené pohledy',
+      opened: false,
       views: parseView(getPublicViews()),
     })
   }
 
   if (getPinnedViews().length) {
     _views.push({
-      name: 'Pinned Views',
+      name: 'Připnuté pohledy',
       opened: true,
       views: parseView(getPinnedViews()),
     })
