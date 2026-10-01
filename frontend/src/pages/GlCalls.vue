@@ -5,7 +5,7 @@
     <LayoutHeader>
       <template #left-header><h1 class="text-lg-medium">{{ __('Hovory') }}</h1></template>
       <template #right-header>
-        <div v-if="res.data?.is_manager" class="gl-seg">
+        <div v-if="res.data?.is_manager && !isMobileView" class="gl-seg">
           <button class="gl-seg-btn" :class="scope === 'mine' && 'gl-seg-on'" @click="scope = 'mine'">{{ __('Moje') }}</button>
           <button class="gl-seg-btn" :class="scope === 'team' && 'gl-seg-on'" @click="scope = 'team'">{{ __('Celý tým') }}</button>
         </div>
@@ -15,13 +15,18 @@
     <div v-if="res.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Hovory se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" /></div>
     <div v-else-if="!k" class="px-3 md:px-2"><GlSkeleton :rows="4" /></div>
     <div v-else class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
-      <div class="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+      <!-- mobil (R2MHovory): bez souhrnu, nahoře Moje / Celý tým na celou šířku -->
+      <div v-if="isMobileView && res.data?.is_manager" class="gl-seg flex w-full shrink-0">
+        <button class="gl-seg-btn flex-1 justify-center" :class="scope === 'mine' && 'gl-seg-on'" @click="scope = 'mine'">{{ __('Moje') }}</button>
+        <button class="gl-seg-btn flex-1 justify-center" :class="scope === 'team' && 'gl-seg-on'" @click="scope = 'team'">{{ __('Celý tým') }}</button>
+      </div>
+      <div class="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4" :class="isMobileView && 'hidden'">
         <div class="gl-card p-4 md:p-5"><div class="text-[14px] text-ink-gray-7">{{ periodTitle }}</div><div class="num text-[34px] font-bold leading-tight text-ink-gray-9 md:text-[42px]">{{ k.total }}</div><div class="text-[13px] text-ink-gray-5">{{ __('{0} odchozích · {1} příchozích', [k.outgoing, k.incoming]) }}</div></div>
         <div class="gl-card p-4 md:p-5"><div class="text-[14px] text-ink-gray-7">{{ __('Dovolal jsem se') }}</div><div class="num text-[34px] font-bold leading-tight text-ink-gray-9 md:text-[42px]">{{ k.reached }}</div><div class="text-[13px] text-ink-gray-5">{{ __('{0} % hovorů', [k.reached_pct]) }}</div></div>
         <div class="gl-card p-4 md:p-5"><div class="text-[14px] text-ink-gray-7">{{ __('Průměrná délka') }}</div><div v-if="k.avg_seconds" class="num text-[34px] font-bold leading-tight text-ink-gray-9 md:text-[42px]">{{ mmss(k.avg_seconds) }}</div><div v-else class="mt-2 text-[20px] font-semibold text-[var(--empty-color)]">{{ __('Bez dat') }}</div><div class="text-[13px] text-ink-gray-5">{{ __('jen dovolané hovory') }}</div></div>
         <div class="gl-card p-4 md:p-5"><div class="text-[14px] text-ink-gray-7">{{ __('Zavolat zpět') }}</div><div class="num text-[34px] font-bold leading-tight text-ink-gray-9 md:text-[42px]">{{ k.callbacks }}</div><div class="text-[13px] text-ink-gray-5">{{ k.next_callback ? __('nejbližší {0}', [whenLabel(k.next_callback)]) : __('nic nečeká') }}</div></div>
       </div>
-      <div class="flex flex-wrap items-center justify-between gap-2 px-1">
+      <div class="flex flex-wrap items-center justify-between gap-2 px-1" :class="isMobileView && 'hidden'">
         <div class="flex flex-wrap gap-2">
           <button v-for="o in OUTCOMES" :key="o.key" class="gl-chip flex h-10 items-center gap-1.5 rounded-full px-4 text-[14px] font-medium" :class="outcome === o.key && '!border-[#0e1330] !bg-[#0e1330] !text-white'" @click="outcome = o.key">{{ o.label }}</button>
         </div>
@@ -31,8 +36,20 @@
       <div class="gl-card p-4 md:p-6">
         <GlEmptyState v-if="!res.data.items.length" icon="phone" :title="__('Zatím žádné hovory')" :text="__('Hovory se zapisují z detailu zakázky nebo tlačítkem Zapsat hovor.')" :action="__('Zapsat hovor')" primary @action="showPick = true" />
         <div v-else class="flex flex-col">
-          <div class="hidden grid-cols-[110px_1.4fr_50px_130px_70px_1.6fr_40px] gap-3 pb-2 text-[12px] font-semibold text-ink-gray-5 md:grid"><span>{{ __('Kdy') }}</span><span>{{ __('Kontakt') }}</span><span>{{ __('Směr') }}</span><span>{{ __('Výsledek') }}</span><span>{{ __('Délka') }}</span><span>{{ __('Poznámka') }}</span><span>{{ __('Kdo') }}</span></div>
-          <component :is="c.lead ? 'router-link' : 'div'" v-for="c in res.data.items" :key="c.name" :to="c.lead ? { name: 'Lead', params: { leadId: c.lead } } : undefined" class="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 border-t border-[rgba(110,120,200,.12)] py-3 md:grid-cols-[110px_1.4fr_50px_130px_70px_1.6fr_40px]">
+          <!-- mobil: karta řádku – jméno a čas, firma, výsledek s délkou, poznámka -->
+          <div v-if="isMobileView" class="flex flex-col">
+            <component :is="c.lead ? 'router-link' : 'div'" v-for="c in res.data.items" :key="c.name" :to="c.lead ? { name: 'Lead', params: { leadId: c.lead } } : undefined" class="flex gap-3 border-t border-[rgba(110,120,200,.12)] py-3.5 first:border-0">
+              <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2e4bb8]">{{ initials(c.person || c.org) }}</span>
+              <span class="min-w-0 flex-1">
+                <span class="flex items-baseline justify-between gap-2"><b class="truncate text-[18px] text-ink-gray-9">{{ c.person || c.org }}</b><span class="num shrink-0 text-[13px] text-ink-gray-5">{{ whenLabel(c.when) }}</span></span>
+                <span class="block truncate text-[14px] text-ink-gray-5">{{ c.org }}</span>
+                <span class="mt-1 flex items-center gap-2"><span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[13px] font-bold" :class="TONE[c.kind]">{{ LABEL[c.kind] }}</span><span class="num text-[14px] text-ink-gray-7">{{ c.duration ? mmss(c.duration) : '' }}</span></span>
+                <span class="gl-text mt-1 block text-[15px] text-ink-gray-9">{{ c.note || __('Bez poznámky') }}</span>
+              </span>
+            </component>
+          </div>
+          <div v-else class="hidden grid-cols-[110px_1.4fr_50px_130px_70px_1.6fr_40px] gap-3 pb-2 text-[12px] font-semibold text-ink-gray-5 md:grid"><span>{{ __('Kdy') }}</span><span>{{ __('Kontakt') }}</span><span>{{ __('Směr') }}</span><span>{{ __('Výsledek') }}</span><span>{{ __('Délka') }}</span><span>{{ __('Poznámka') }}</span><span>{{ __('Kdo') }}</span></div>
+          <component v-if="!isMobileView" :is="c.lead ? 'router-link' : 'div'" v-for="c in res.data.items" :key="c.name" :to="c.lead ? { name: 'Lead', params: { leadId: c.lead } } : undefined" class="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 border-t border-[rgba(110,120,200,.12)] py-3 md:grid-cols-[110px_1.4fr_50px_130px_70px_1.6fr_40px]">
             <span class="num hidden text-[13px] text-ink-gray-5 md:block">{{ whenLabel(c.when) }}</span>
             <span class="flex min-w-0 items-center gap-3"><span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2e4bb8]">{{ initials(c.person || c.org) }}</span><span class="min-w-0"><span class="block truncate text-[15px] font-bold text-ink-gray-9">{{ c.person || c.org }}</span><span class="block truncate text-[13px] text-ink-gray-5">{{ c.org }}</span></span></span>
             <span class="hidden text-ink-gray-5 md:block"><GlIcon :name="c.incoming ? 'down' : 'up'" :size="15" class="[transform:rotate(-45deg)]" /></span>
@@ -54,6 +71,7 @@
 </template>
 
 <script setup>
+import { isMobileView } from '@/composables/settings'
 import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlEmptyState from '@/components/GlEmptyState.vue'
 import GlErrorBanner from '@/components/GlErrorBanner.vue'

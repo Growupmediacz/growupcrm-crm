@@ -12,8 +12,8 @@
     <div class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
       <div class="flex flex-wrap items-center gap-2 px-1">
         <label class="gl-chip flex h-10 flex-1 items-center gap-2 rounded-full px-4 md:hidden"><GlIcon name="search" :size="15" class="opacity-60" /><input v-model="q" class="gl-chip-input w-full bg-transparent text-[14px]" :placeholder="__('Hledat v zápisech')" /></label>
-        <button v-for="f in FILTERS" :key="f.key" class="gl-chip h-10 rounded-full px-4 text-[14px] font-medium" :class="filter === f.key && '!border-[#0e1330] !bg-[#0e1330] !text-white'" @click="filter = f.key">{{ f.label }}</button>
-        <label class="flex items-center gap-2 text-[14px]"><span class="text-ink-gray-5">{{ __('Navázáno na') }}:</span>
+        <button v-for="f in FILTERS" :key="f.key" class="gl-chip hidden h-10 rounded-full px-4 text-[14px] font-medium md:inline-flex md:items-center" :class="filter === f.key && '!border-[#0e1330] !bg-[#0e1330] !text-white'" @click="filter = f.key">{{ f.label }}</button>
+        <label class="hidden items-center gap-2 text-[14px] md:flex"><span class="text-ink-gray-5">{{ __('Navázáno na') }}:</span>
           <select v-model="linked" class="gl-chip h-10 rounded-full px-3 text-[14px] font-semibold"><option value="">{{ __('Vše') }}</option><option value="lead">{{ __('Zakázka') }}</option><option value="org">{{ __('Firma') }}</option><option value="project">{{ __('Projekt') }}</option><option value="contact">{{ __('Kontakt') }}</option></select>
         </label>
       </div>

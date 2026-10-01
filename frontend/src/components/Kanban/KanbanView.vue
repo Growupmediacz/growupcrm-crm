@@ -93,6 +93,7 @@
                   :is="options.getRoute ? 'router-link' : 'div'"
                   class="gl-card gl-lift !rounded-[18px] p-3.5 text-base flex flex-col text-ink-gray-9"
                   :data-name="fields.name"
+                  @contextmenu.prevent="emit('cardMenu', { x: $event.clientX, y: $event.clientY, lead: fields })"
                   v-bind="{
                     to: options.getRoute ? options.getRoute(fields) : undefined,
                     onClick: options.onClick
@@ -241,7 +242,7 @@ defineProps({
   },
 })
 
-const emit = defineEmits(['update', 'loadMore'])
+const emit = defineEmits(['update', 'loadMore', 'cardMenu'])
 
 const kanban = defineModel({ type: Object })
 

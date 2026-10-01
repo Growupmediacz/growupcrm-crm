@@ -23,12 +23,12 @@
 
     <div class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-3 pb-6 md:px-2">
       <div class="flex flex-wrap items-center justify-between gap-2 px-1">
-        <div class="flex flex-wrap gap-2">
-          <button v-for="c in CHIPS" :key="c.key" class="gl-chip flex h-10 items-center gap-1.5 rounded-full px-4 text-[14px] font-medium" :class="chipClass(c)" @click="bucket = bucket === c.key ? 'all' : c.key">
+        <div class="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:overflow-visible md:px-0">
+          <button v-for="c in CHIPS" :key="c.key" class="gl-chip flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-4 text-[14px] font-medium" :class="chipClass(c)" @click="bucket = bucket === c.key ? 'all' : c.key">
             {{ c.label }} <span class="num font-semibold">{{ counts[c.count] || 0 }}</span>
           </button>
         </div>
-        <label class="flex items-center gap-2 text-[14px]"><span class="text-ink-gray-5">{{ __('Navázáno na') }}:</span>
+        <label class="hidden items-center gap-2 text-[14px] md:flex"><span class="text-ink-gray-5">{{ __('Navázáno na') }}:</span>
           <select v-model="kind" class="gl-chip h-10 rounded-full px-3 text-[14px] font-semibold"><option value="">{{ __('Vše') }}</option><option value="lead">{{ __('Zakázka') }}</option><option value="org">{{ __('Firma') }}</option><option value="project">{{ __('Projekt') }}</option><option value="contact">{{ __('Kontakt') }}</option></select>
         </label>
       </div>
@@ -49,11 +49,18 @@
             <button class="flex size-6 shrink-0 items-center justify-center rounded-full border-[1.75px] transition" :class="t.status === 'Done' ? 'border-[#4f46e5] bg-[#4f46e5] text-white' : 'border-[rgba(110,120,200,.45)] hover:border-[#4f46e5]'" :aria-label="t.status === 'Done' ? __('Hotovo') : __('Označit jako hotové')" @click="toggle(t)">
               <GlIcon v-if="t.status === 'Done'" name="check" :size="14" />
             </button>
-            <span class="min-w-0 flex-1 truncate text-[15px]" :class="t.status === 'Done' ? 'text-ink-gray-5 line-through' : 'font-medium text-ink-gray-9'">{{ t.title }}<GlIcon v-if="t.flag && t.status !== 'Done'" name="flag" :size="13" class="ml-1.5 inline text-[#c8321f]" /></span>
-            <router-link v-if="t.ref" :to="refRoute(t.ref)" class="hidden max-w-[260px] shrink-0 truncate rounded-full px-2.5 py-0.5 text-[12px] font-bold sm:block" :class="REF_TONE[t.ref.kind]">{{ t.ref.label }}</router-link>
-            <span class="num w-16 shrink-0 text-right text-[13px]" :class="t.bucket === 'overdue' ? 'font-semibold text-[#c8321f]' : 'text-ink-gray-5'">{{ dueLabel(t) }}</span>
-            <span v-if="t.assigned_to" class="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2e4bb8]" :title="userName(t.assigned_to)">{{ initials(userName(t.assigned_to)) }}</span>
-            <span v-else class="size-7 shrink-0" />
+            <!-- mobil (design R2MUkoly): název a pod ním „včera · Zakázka“ -->
+            <span v-if="isMobileView" class="min-w-0 flex-1">
+              <span class="block text-[17px] leading-snug" :class="t.status === 'Done' ? 'text-ink-gray-5 line-through' : 'font-medium text-ink-gray-9'">{{ t.title }}</span>
+              <span class="block truncate text-[13px] text-ink-gray-5"><span :class="t.bucket === 'overdue' && 'font-semibold text-[#c8321f]'">{{ mobileDue(t) }}</span><template v-if="t.ref"> · {{ t.ref.label.split(' · ')[1] || t.ref.label }}</template></span>
+            </span>
+            <template v-else>
+              <span class="min-w-0 flex-1 truncate text-[15px]" :class="t.status === 'Done' ? 'text-ink-gray-5 line-through' : 'font-medium text-ink-gray-9'">{{ t.title }}<GlIcon v-if="t.flag && t.status !== 'Done'" name="flag" :size="13" class="ml-1.5 inline text-[#c8321f]" /></span>
+              <router-link v-if="t.ref" :to="refRoute(t.ref)" class="hidden max-w-[260px] shrink-0 truncate rounded-full px-2.5 py-0.5 text-[12px] font-bold sm:block" :class="REF_TONE[t.ref.kind]">{{ t.ref.label }}</router-link>
+              <span class="num w-16 shrink-0 text-right text-[13px]" :class="t.bucket === 'overdue' ? 'font-semibold text-[#c8321f]' : 'text-ink-gray-5'">{{ dueLabel(t) }}</span>
+              <span v-if="t.assigned_to" class="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2e4bb8]" :title="userName(t.assigned_to)">{{ initials(userName(t.assigned_to)) }}</span>
+              <span v-else class="size-7 shrink-0" />
+            </template>
           </div>
         </template>
         <GlListFooter v-if="items.length" class="mt-4 px-2" :modelValue="limit" :options="{ rowCount: items.length, totalCount: res.data?.total }" @update:modelValue="(v) => (limit = v)" @loadMore="limit += 20" />
@@ -63,6 +70,7 @@
 </template>
 
 <script setup>
+import { isMobileView } from '@/composables/settings'
 import { saveFailed } from '@/composables/glToast'
 import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlEmptyState from '@/components/GlEmptyState.vue'
@@ -122,6 +130,16 @@ const REF_TONE = {
   org: 'bg-[rgba(110,120,200,.14)] text-[#4a5173]', contact: 'bg-[rgba(110,120,200,.14)] text-[#4a5173]',
 }
 const refRoute = (r) => ({ lead: { name: 'Lead', params: { leadId: r.to } }, project: { name: 'Project', params: { projectId: r.to } }, org: { name: 'Organization', params: { organizationId: r.to } }, contact: { name: 'Contact', params: { contactId: r.to } } })[r.kind]
+// mobil: „včera“, „9:00“, „30. 9.“
+const mobileDue = (t) => {
+  if (!t.due_date) return __('Bez termínu')
+  const d = new Date(t.due_date.replace(' ', 'T'))
+  const diff = Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())) / 86400000)
+  if (diff === -1) return __('včera')
+  if (diff === 0) return formatTimeCz(d)
+  if (diff === 1) return `${__('zítra')} ${formatTimeCz(d)}`
+  return shortDateCz(d)
+}
 const dueLabel = (t) => {
   if (!t.due_date) return ''
   const d = new Date(t.due_date.replace(' ', 'T'))

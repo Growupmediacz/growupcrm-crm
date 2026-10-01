@@ -50,6 +50,7 @@
       onNewClick: (column) => onNewClick(column),
     }"
     @update="onKanbanUpdate"
+    @cardMenu="(m) => (cardMenu = m)"
     @loadMore="(columnName) => viewControls.loadMoreKanban(columnName)"
   >
     <template #card="{ fields }">
@@ -273,6 +274,9 @@
     name="Leads"
     :icon="LeadsIcon"
   />
+  <GlKanbanMenu :menu="cardMenu" @close="cardMenu = null" @action="onCardAction" />
+  <DeleteLinkedDocModal v-if="deleteTarget" v-model="showDelete" doctype="CRM Lead" :docname="deleteTarget.name" :title="deleteTarget.order_title || deleteTarget.lead_name" name="Leads" />
+  <GlCallModal v-if="callTarget" v-model="showCallModal" :lead="callTarget" @saved="leads.reload()" />
   <GlLostModal v-if="showLost" v-model="showLost" :lead="lostLead" :status="lostStatus" @saved="leads.reload()" @cancel="leads.reload()" />
   <GlWonModal v-if="wonLead" v-model="showWon" :lead="wonLead" :onConfirm="confirmWon" />
   <LeadModal
@@ -286,6 +290,9 @@
 import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlWonModal from '@/components/Modals/GlWonModal.vue'
 import GlLostModal from '@/components/Modals/GlLostModal.vue'
+import GlKanbanMenu from '@/components/Kanban/GlKanbanMenu.vue'
+import DeleteLinkedDocModal from '@/components/DeleteLinkedDocModal.vue'
+import GlCallModal from '@/components/Modals/GlCallModal.vue'
 import GlMobileLeads from '@/components/Kanban/GlMobileLeads.vue'
 import { isMobileView } from '@/composables/settings'
 import GlViewHeader from '@/components/GlViewHeader.vue'
@@ -317,7 +324,7 @@ import { formatDate, timeAgo, website, formatTime } from '@/utils'
 import { timestampCell } from '@/composables/useTimelinePreferences'
 import { useOnboarding, useTelemetry } from 'frappe-ui/frappe'
 import { Avatar, Tooltip, Dropdown, call, toast } from 'frappe-ui'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ref, computed, reactive, h, watch } from 'vue'
 
 const { getFormattedPercent, getFormattedFloat, getFormattedCurrency } =
@@ -331,6 +338,7 @@ const { capture } = useTelemetry()
 const { showModal } = useDoctypeModal()
 
 const route = useRoute()
+const router = useRouter()
 
 const leadsListView = ref(null)
 const showLeadModal = ref(false)
@@ -577,11 +585,55 @@ let wonConfirmed = false
 watch(showWon, (open) => {
   if (!open && wonLead.value && !wonConfirmed) leads.value.reload()
 })
+// kontextové menu karty (pravé tlačítko)
+const cardMenu = ref(null)
+const deleteTarget = ref(null)
+const showDelete = ref(false)
+const callTarget = ref(null)
+const showCallModal = ref(false)
+async function onCardAction(it, lead) {
+  const go = (extra = {}) => router.push({ name: 'Lead', params: { leadId: lead.name }, ...extra })
+  if (it.key === 'open') return go()
+  if (it.key === 'edit') return go({ query: { edit: 1 } })
+  if (it.key === 'email') return go({ hash: '#emails' })
+  if (it.key === 'call') {
+    callTarget.value = await call('frappe.client.get', { doctype: 'CRM Lead', name: lead.name })
+    showCallModal.value = true
+    return
+  }
+  if (it.key === 'duplicate') {
+    try {
+      const copy = await call('growupcrm.calls.duplicate_lead', { lead: lead.name })
+      toast.success(__('Zakázka byla zduplikována'))
+      leads.value.reload()
+      return router.push({ name: 'Lead', params: { leadId: copy } })
+    } catch (e) {
+      return toast.error(e.messages?.[0] || e.message)
+    }
+  }
+  if (it.key === 'delete') {
+    deleteTarget.value = lead
+    showDelete.value = true
+    return
+  }
+  if (it.key === 'move') {
+    if (it.status === lead.status) return
+    const type = getLeadStatus(it.status)?.type
+    // Vyhráno a Prohráno mají dialog (jako při přetažení), ostatní fáze se uloží hned
+    if (type === 'Won' || type === 'Lost') return onKanbanUpdate({ item: lead.name, to: it.status })
+    try {
+      await call('frappe.client.set_value', { doctype: 'CRM Lead', name: lead.name, fieldname: 'status', value: it.status })
+      leads.value.reload()
+    } catch (e) {
+      toast.error(e.messages?.[0] || e.message)
+    }
+  }
+}
 const showLost = ref(false)
 const lostLead = ref(null)
 const lostStatus = ref('')
 function onKanbanUpdate(data) {
-  viewControls.value.updateKanbanSettings(data)
+  viewControls.value.updateKanbanSettings({ ...data, to: data.to })
   const field = leads.value?.params?.column_field
   if (!data?.item || !data?.to || field !== 'status') return
   const card = (leads.value.data?.data || []).flatMap((c) => c.data || []).find((d) => d.name === data.item)
