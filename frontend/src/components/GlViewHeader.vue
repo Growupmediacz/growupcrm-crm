@@ -63,28 +63,3 @@ function go(type) {
   if (type !== current.value) router.push({ name: props.routeName, params: { viewType: type } })
 }
 </script>
-<style>
-.gl-seg {
-  gap: 2px;
-  padding: 3px;
-  border-radius: 999px;
-  background: rgba(110, 120, 200, 0.11);
-}
-.gl-seg-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 32px;
-  padding: 0 14px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink-gray-5, #6b7194);
-  transition: background 0.15s, color 0.15s;
-}
-.gl-seg-on {
-  background: #fff;
-  color: var(--ink-gray-9, #0e1330);
-  box-shadow: 0 2px 10px -2px rgba(64, 72, 160, 0.28);
-}
-</style>

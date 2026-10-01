@@ -38,7 +38,7 @@
   </LayoutHeader>
   <div v-if="doc.name" class="flex h-full gap-3 overflow-hidden px-2 pb-2">
     <div class="flex min-w-0 flex-1 flex-col gap-3 overflow-hidden">
-      <LeadHero :doc="doc" :stageOptions="statuses" @changed="reloadResources" />
+      <LeadHero :key="heroKey" :doc="doc" :stageOptions="statuses" @changed="reloadResources" />
       <div class="gl-card gl-chiptabs flex flex-1 overflow-hidden">
     <Tabs
       v-model="tabIndex"
@@ -60,7 +60,7 @@
     </Tabs>
       </div>
     </div>
-    <LeadAside v-if="!editing" :doc="doc" @email="openEmailBox" />
+    <LeadAside v-if="!editing" :doc="doc" @email="openEmailBox" @call="(p) => ((callPerson = p), (showCall = true))" />
     <Resizer v-else class="gl-card flex flex-col justify-between" side="right">
       <div
         class="flex h-[45px] cursor-copy items-center border-b px-5 py-2.5 text-lg-medium text-ink-gray-9"
@@ -236,6 +236,14 @@
     :users="calendarUsers.data || []"
     @saved="() => activities?.all_activities?.reload()"
   />
+  <GlWonModal v-if="showWon" v-model="showWon" :lead="doc" :onConfirm="confirmWon" />
+  <GlCallModal
+    v-if="showCall"
+    v-model="showCall"
+    :lead="doc"
+    :person="callPerson"
+    @saved="afterCall"
+  />
   <LostReasonModal
     v-if="showLostReasonModal"
     v-model="showLostReasonModal"
@@ -268,6 +276,8 @@ import LostReasonModal from '@/components/Modals/LostReasonModal.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import LeadHero from '@/components/Lead/LeadHero.vue'
 import LeadAside from '@/components/Lead/LeadAside.vue'
+import GlCallModal from '@/components/Modals/GlCallModal.vue'
+import GlWonModal from '@/components/Modals/GlWonModal.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
 import { sessionStore } from '@/stores/session'
 import Activities from '@/components/Activities/Activities.vue'
@@ -332,6 +342,22 @@ const showFilesUploader = ref(false)
 
 // GrowUp: design detailu zakázky. Celý panel CRM se ukáže až v režimu „Upravit“.
 const editing = ref(false)
+const showCall = ref(false)
+const callPerson = ref({})
+const heroKey = ref(0)
+const showWon = ref(false)
+const wonStatus = ref('')
+async function confirmWon(values) {
+  await call('growupcrm.calls.mark_won', { lead: props.leadId, status: wonStatus.value, ...values })
+  await document.reload()
+  activities.value?.all_activities?.reload()
+  sections.reload()
+  toast.success(__('Gratulujeme, zakázka je vyhraná'))
+}
+function afterCall() {
+  activities.value?.all_activities?.reload()
+  heroKey.value++
+}
 const showSchedule = ref(false)
 const sessionUser = sessionStore().user
 const calendarUsers = createResource({ url: 'growupcrm.calendar.get_users', auto: true })
@@ -512,6 +538,12 @@ const sections = createResource({
 })
 
 async function triggerStatusChange(value) {
+  // GrowUp: výhra jde přes dialog „Zakázka vyhrána“ (datum podpisu, finální hodnota)
+  if (getLeadStatus(value)?.type === 'Won' && doc.value.status !== value) {
+    wonStatus.value = value
+    showWon.value = true
+    return
+  }
   await triggerOnChange('status', value)
   setLostReason()
 }

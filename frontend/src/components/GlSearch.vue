@@ -78,7 +78,7 @@
 </template>
 <script setup>
 import GlIcon from '@/components/GlIcon.vue'
-import LeadModal from '@/components/Modals/LeadModal.vue'
+import LeadModal from '@/components/Modals/GlNewLeadModal.vue'
 import { statusesStore } from '@/stores/statuses'
 import { call } from 'frappe-ui'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'

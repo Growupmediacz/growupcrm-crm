@@ -39,7 +39,7 @@
       }),
       onNewClick: (column) => onNewClick(column),
     }"
-    @update="(data) => viewControls.updateKanbanSettings(data)"
+    @update="onKanbanUpdate"
     @loadMore="(columnName) => viewControls.loadMoreKanban(columnName)"
   >
     <template #card="{ fields }">
@@ -263,6 +263,7 @@
     name="Leads"
     :icon="LeadsIcon"
   />
+  <GlWonModal v-if="wonLead" v-model="showWon" :lead="wonLead" :onConfirm="confirmWon" />
   <LeadModal
     v-if="showLeadModal"
     v-model="showLeadModal"
@@ -271,6 +272,7 @@
 </template>
 
 <script setup>
+import GlWonModal from '@/components/Modals/GlWonModal.vue'
 import GlViewHeader from '@/components/GlViewHeader.vue'
 import ViewBreadcrumbs from '@/components/ViewBreadcrumbs.vue'
 import MultipleAvatar from '@/components/MultipleAvatar.vue'
@@ -286,7 +288,7 @@ import LayoutHeader from '@/components/LayoutHeader.vue'
 import LeadsListView from '@/components/ListViews/LeadsListView.vue'
 import EmptyState from '@/components/ListViews/EmptyState.vue'
 import KanbanView from '@/components/Kanban/KanbanView.vue'
-import LeadModal from '@/components/Modals/LeadModal.vue'
+import LeadModal from '@/components/Modals/GlNewLeadModal.vue'
 import GlLeadCard from '@/components/Kanban/GlLeadCard.vue'
 import ViewControls from '@/components/ViewControls.vue'
 import { useDoctypeModal } from '@/composables/doctypeModal'
@@ -299,7 +301,7 @@ import { useBroadcast } from '@/composables/useBroadcast'
 import { formatDate, timeAgo, website, formatTime } from '@/utils'
 import { timestampCell } from '@/composables/useTimelinePreferences'
 import { useOnboarding, useTelemetry } from 'frappe-ui/frappe'
-import { Avatar, Tooltip, Dropdown } from 'frappe-ui'
+import { Avatar, Tooltip, Dropdown, call, toast } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { ref, computed, reactive, h } from 'vue'
 
@@ -549,6 +551,24 @@ function parseRows(rows, columns = []) {
     _rows['_comment_count'] = lead._comment_count
     return _rows
   })
+}
+
+// GrowUp: přetažení do „Vyhráno“ otevře dialog Zakázka vyhrána (datum podpisu, finální hodnota)
+const showWon = ref(false)
+const wonLead = ref(null)
+function onKanbanUpdate(data) {
+  viewControls.value.updateKanbanSettings(data)
+  const field = leads.value?.params?.column_field
+  if (!data?.item || !data?.to || field !== 'status') return
+  if (getLeadStatus(data.to)?.type !== 'Won') return
+  const card = (leads.value.data?.data || []).flatMap((c) => c.data || []).find((d) => d.name === data.item)
+  wonLead.value = { name: data.item, order_value: card?.order_value, order_title: card?.order_title, organization: card?.organization }
+  showWon.value = true
+}
+async function confirmWon(values) {
+  await call('growupcrm.calls.mark_won', { lead: wonLead.value.name, ...values })
+  leads.value.reload()
+  toast.success(__('Gratulujeme, zakázka je vyhraná'))
 }
 
 function onNewClick(column) {

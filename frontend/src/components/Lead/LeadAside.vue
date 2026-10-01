@@ -36,7 +36,7 @@
           class="gl-round flex size-11 items-center justify-center rounded-full"
           :aria-label="__('Zavolat')"
           :title="person.phone"
-          @click="callEnabled && (makeCall(person.phone), $event.preventDefault())"
+          @click="onCall"
         >
           <GlIcon name="phone" :size="18" />
         </a>
@@ -65,7 +65,7 @@ import { createResource } from 'frappe-ui'
 import { computed, watch } from 'vue'
 
 const props = defineProps({ doc: { type: Object, required: true } })
-defineEmits(['email'])
+const emit = defineEmits(['email', 'call'])
 
 const { makeCall } = globalStore()
 const { getUser } = usersStore()
@@ -105,6 +105,15 @@ const rows = computed(() => {
   if (d.branch) out.push({ label: __('Pobočka'), value: d.branch })
   return out
 })
+
+// Zavolat: telefonie CRM (je-li zapnutá), jinak odkaz tel: a k tomu dialog „Zapsat hovor“
+function onCall(event) {
+  if (callEnabled.value) {
+    event.preventDefault()
+    makeCall(person.value.phone)
+  }
+  emit('call', person.value)
+}
 
 const initials = (s) =>
   (s || '?')

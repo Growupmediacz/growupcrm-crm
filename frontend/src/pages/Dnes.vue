@@ -132,7 +132,7 @@ function programLink(item) {
 // GrowUp: úvodní stránka „Dnes“ (design Liquid Glass). Data: growupcrm.today.get_today.
 import GlIcon from '@/components/GlIcon.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
-import LeadModal from '@/components/Modals/LeadModal.vue'
+import LeadModal from '@/components/Modals/GlNewLeadModal.vue'
 import { statusesStore } from '@/stores/statuses'
 import { usersStore } from '@/stores/users'
 import { Button, call, createResource, toast, usePageMeta } from 'frappe-ui'
