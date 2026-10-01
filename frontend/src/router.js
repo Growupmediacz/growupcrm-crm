@@ -89,6 +89,16 @@ const routes = [
     component: () => import('@/pages/GlProjects.vue'),
   },
   {
+    path: '/plans',
+    name: 'Plans',
+    component: () => import('@/pages/GlPlans.vue'),
+  },
+  {
+    path: '/analytics',
+    name: 'Analytics',
+    component: () => import('@/pages/GlAnalytics.vue'),
+  },
+  {
     path: '/projects/:projectId',
     name: 'Project',
     component: () => import('@/pages/GlProject.vue'),

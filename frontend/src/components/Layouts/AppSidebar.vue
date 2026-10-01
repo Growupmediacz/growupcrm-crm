@@ -208,7 +208,7 @@ import EmailIcon from '@/components/Icons/EmailIcon.vue'
 import StepsIcon from '@/components/Icons/StepsIcon.vue'
 import CollapsibleSection from '@/components/CollapsibleSection.vue'
 import GlIcon from '@/components/GlIcon.vue'
-import { agencyEnabled } from '@/composables/agency'
+import { agencyEnabled, analyticsEnabled } from '@/composables/agency'
 import BrandLogo from '@/components/BrandLogo.vue'
 import { getSettings } from '@/stores/settings'
 import Icon from '@/components/Icon.vue'
@@ -303,13 +303,15 @@ const gl = (name) =>
   )
 const GL_ICONS = {
   Today: gl('home'),
-  Dashboard: gl('chart'),
+  Dashboard: gl('grid'),
   Leads: gl('brief'),
   Deals: gl('brief'),
   Contacts: gl('users'),
   ContactsCards: gl('users'),
   Clients: gl('star'),
   Projects: gl('folder'),
+  Plans: gl('target'),
+  Analytics: gl('chart'),
   Organizations: gl('building'),
   Notes: gl('doc'),
   Tasks: gl('check'),
@@ -321,7 +323,7 @@ const GROUPS = [
   { name: 'Dnes', hideLabel: true, keys: ['Today'] },
   { name: 'Prodej', keys: ['Leads', 'Deals', 'Organizations', 'ContactsCards'] },
   { name: 'Práce', keys: ['Tasks', 'Notes', 'Call Logs'] },
-  { name: 'Dodání', keys: ['Clients', 'Projects'] },
+  { name: 'Dodání', keys: ['Clients', 'Projects', 'Plans', 'Analytics'] },
   { name: 'Organizace', keys: ['Calendar', 'Dashboard'] },
 ]
 
@@ -376,6 +378,8 @@ const links = [
   // GrowUp: agenturní moduly jen se zapnutým growupcrm_agency
   { label: 'Klienti', icon: CalendarIcon, to: 'Clients', condition: () => agencyEnabled.value },
   { label: 'Projekty', icon: CalendarIcon, to: 'Projects', condition: () => agencyEnabled.value },
+  { label: 'Plány', icon: CalendarIcon, to: 'Plans', condition: () => agencyEnabled.value },
+  { label: 'Analytika', icon: CalendarIcon, to: 'Analytics', condition: () => analyticsEnabled.value },
   {
     label: 'Call Logs',
     icon: PhoneIcon,
