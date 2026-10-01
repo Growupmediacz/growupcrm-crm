@@ -105,6 +105,15 @@ const routes = [
     component: () => import('@/pages/GlAnalytics.vue'),
   },
   {
+    // GrowUp: Outreach (M3), jen správci se zapnutým modulem; stránky samy ověří přes API
+    path: '/outreach/:tab(approve|replies|campaigns|templates)?',
+    name: 'Outreach',
+    component: () => import('@/pages/GlOutreach.vue'),
+  },
+  { path: '/outreach/review/:name', name: 'OutreachReview', component: () => import('@/pages/GlOutreachReview.vue'), props: true },
+  { path: '/outreach/campaigns/:name', name: 'OutreachCampaign', component: () => import('@/pages/GlOutreachCampaign.vue'), props: true },
+  { path: '/outreach/templates/:name', name: 'OutreachTemplate', component: () => import('@/pages/GlOutreachTemplate.vue'), props: true },
+  {
     path: '/projects/:projectId',
     name: 'Project',
     component: () => import('@/pages/GlProject.vue'),

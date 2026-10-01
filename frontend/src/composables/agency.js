@@ -11,3 +11,4 @@ const modules = createResource({
 
 export const agencyEnabled = computed(() => Boolean(modules.data?.agency))
 export const analyticsEnabled = computed(() => Boolean(modules.data?.analytics))
+export const outreachEnabled = computed(() => Boolean(modules.data?.outreach))

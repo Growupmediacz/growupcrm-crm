@@ -31,7 +31,7 @@ const tabs = [
     label: __('Více'),
     icon: 'grid',
     to: { name: 'More' },
-    names: ['More', 'Notifications', 'ContactsCards', 'Contacts', 'Tasks', 'Notes', 'Call Logs', 'Clients', 'Projects', 'Project', 'Plans', 'Analytics'],
+    names: ['More', 'Notifications', 'ContactsCards', 'Contacts', 'Tasks', 'Notes', 'Call Logs', 'Clients', 'Projects', 'Project', 'Plans', 'Analytics', 'Outreach', 'OutreachReview', 'OutreachCampaign', 'OutreachTemplate'],
   },
 ]
 const isActive = (t) => t.names.includes(route.name)

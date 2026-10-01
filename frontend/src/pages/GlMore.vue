@@ -56,7 +56,7 @@
 
 <script setup>
 import GlIcon from '@/components/GlIcon.vue'
-import { agencyEnabled, analyticsEnabled } from '@/composables/agency'
+import { agencyEnabled, analyticsEnabled, outreachEnabled } from '@/composables/agency'
 import { useLeadsOnlyMode, LEADS_ONLY_HIDDEN_ROUTES } from '@/composables/leadsOnlyMode'
 import { unreadNotificationsCount } from '@/stores/notifications'
 import { sessionStore } from '@/stores/session'
@@ -89,8 +89,10 @@ const groups = computed(() => {
   const out = [
     {
       name: __('Prodej'),
-      // Outreach přibude s modulem M3
-      items: [{ label: __('Kontakty'), icon: 'users', route: 'ContactsCards' }],
+      items: [
+        { label: __('Kontakty'), icon: 'users', route: 'ContactsCards' },
+        outreachEnabled.value && { label: __('Outreach'), icon: 'send', route: 'Outreach', count: counts.data?.outreach },
+      ].filter(Boolean),
     },
     {
       name: __('Práce'),

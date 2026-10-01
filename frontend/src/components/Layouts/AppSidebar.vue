@@ -219,7 +219,7 @@ import EmailIcon from '@/components/Icons/EmailIcon.vue'
 import StepsIcon from '@/components/Icons/StepsIcon.vue'
 import CollapsibleSection from '@/components/CollapsibleSection.vue'
 import GlIcon from '@/components/GlIcon.vue'
-import { agencyEnabled, analyticsEnabled } from '@/composables/agency'
+import { agencyEnabled, analyticsEnabled, outreachEnabled } from '@/composables/agency'
 import { getSettings } from '@/stores/settings'
 import Icon from '@/components/Icon.vue'
 import PinIcon from '@/components/Icons/PinIcon.vue'
@@ -304,7 +304,7 @@ const navCounts = createResource({
   cache: 'growupcrm-nav-counts',
   auto: true,
 })
-const NAV_COUNT_KEYS = { Leads: 'leads', Tasks: 'overdue_tasks' }
+const NAV_COUNT_KEYS = { Leads: 'leads', Tasks: 'overdue_tasks', Outreach: 'outreach' }
 function navCount(key) {
   return navCounts.data?.[NAV_COUNT_KEYS[key]] || 0
 }
@@ -345,6 +345,7 @@ const GL_ICONS = {
   Projects: gl('folder'),
   Plans: gl('target'),
   Analytics: gl('chart'),
+  Outreach: gl('send'),
   Organizations: gl('building'),
   Notes: gl('doc'),
   Tasks: gl('check'),
@@ -356,7 +357,7 @@ const GL_ICONS = {
 // Outreach přibude do Prodeje s modulem M3. Klientská verze nemá Dodání (podmínka agencyEnabled).
 const GROUPS = [
   { name: 'Dnes', hideLabel: true, keys: ['Today'] },
-  { name: 'Prodej', keys: ['Leads', 'Deals', 'Organizations', 'ContactsCards'] },
+  { name: 'Prodej', keys: ['Leads', 'Deals', 'Organizations', 'ContactsCards', 'Outreach'] },
   { name: 'Práce', keys: ['Tasks', 'Calendar', 'Notes', 'Call Logs'] },
   { name: 'Dodání', keys: ['Clients', 'Projects', 'Plans', 'Analytics'] },
 ]
@@ -404,6 +405,7 @@ const links = [
     to: 'Calendar',
   },
   // GrowUp: agenturní moduly jen se zapnutým growupcrm_agency
+  { label: 'Outreach', icon: CalendarIcon, to: 'Outreach', condition: () => outreachEnabled.value },
   { label: 'Klienti', icon: CalendarIcon, to: 'Clients', condition: () => agencyEnabled.value },
   { label: 'Projekty', icon: CalendarIcon, to: 'Projects', condition: () => agencyEnabled.value },
   { label: 'Plány', icon: CalendarIcon, to: 'Plans', condition: () => agencyEnabled.value },
@@ -500,6 +502,7 @@ function currentRouteKey() {
   // GrowUp: tabulka kontaktů patří pod položku Kontakty (karty)
   if (route.name === 'Contacts' && !route.query.view) return 'ContactsCards'
   if (route.name === 'Project') return 'Projects'
+  if (String(route.name).startsWith('Outreach')) return 'Outreach'
   return route.query.view || route.name
 }
 
