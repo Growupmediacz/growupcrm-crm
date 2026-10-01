@@ -147,6 +147,7 @@
     </div>
   </div>
 
+  <GlImportContactsModal v-if="showImport" v-model="showImport" @done="directory.reload()" />
   <ContactModal
     v-if="showContactModal"
     v-model="showContactModal"
@@ -181,6 +182,7 @@ import GlIcon from '@/components/GlIcon.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
 import ContactModal from '@/components/Modals/ContactModal.vue'
+import GlImportContactsModal from '@/components/Modals/GlImportContactsModal.vue'
 import { isMobileView } from '@/composables/settings'
 import { sessionStore } from '@/stores/session'
 import { Button, Dialog, FormControl, call, createResource, toast, usePageMeta } from 'frappe-ui'
@@ -270,8 +272,10 @@ const tomorrowTen = computed(() => {
   return d
 })
 
+// C8: import kontaktů z CSV průvodcem (Soubor → Mapování → Kontrola → Výsledek)
+const showImport = ref(false)
 function openImport() {
-  router.push({ name: 'NewDataImport', params: { doctype: 'Contact' } })
+  showImport.value = true
 }
 
 const KIND = {

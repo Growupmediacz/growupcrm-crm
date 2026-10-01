@@ -14,7 +14,7 @@
     </template>
   </LayoutHeader>
 
-  <div v-if="res.error" class="px-4 py-10 text-center text-ink-gray-5">{{ res.error.messages?.[0] || __('Analytiku se nepodařilo načíst.') }}</div>
+  <GlForbidden v-if="res.error" :message="res.error.messages?.[0]" />
   <div v-else class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
     <!-- oprava 26: na mobilu přepínač Měsíc / Čtvrtletí / Rok na celou šířku pod nadpisem -->
     <div v-if="isMobileView" class="gl-seg flex w-full">
@@ -140,6 +140,7 @@
   </div>
 </template>
 <script setup>
+import GlForbidden from '@/components/GlForbidden.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import { isMobileView } from '@/composables/settings'

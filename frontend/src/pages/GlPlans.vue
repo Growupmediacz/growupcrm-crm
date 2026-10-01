@@ -16,7 +16,7 @@
     </template>
   </LayoutHeader>
 
-  <div v-if="plan.error" class="px-4 py-10 text-center text-ink-gray-5">{{ plan.error.messages?.[0] || __('Plány se nepodařilo načíst.') }}</div>
+  <GlForbidden v-if="plan.error" :message="plan.error.messages?.[0]" />
   <div v-else-if="p" class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
     <!-- oprava 25: na mobilu přepínač období pod nadpisem na celou šířku -->
     <div v-if="isMobileView" class="gl-seg flex w-full">
@@ -146,6 +146,7 @@
   <GlTargetsModal v-if="showTargets" v-model="showTargets" :months="monthOptions" :initial="editMonth" @saved="plan.reload()" />
 </template>
 <script setup>
+import GlForbidden from '@/components/GlForbidden.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import { isMobileView } from '@/composables/settings'
 import GlTargetsModal from '@/components/Modals/GlTargetsModal.vue'

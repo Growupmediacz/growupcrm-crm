@@ -3,9 +3,7 @@
        Data: growupcrm.outreach.* (jen správci, jen se zapnutým growupcrm_agency). -->
   <OutreachHeader :active="tab" :connected="!!ov?.connected" :counts="ov?.counts || {}" @mailbox="showMailbox = true" @newCampaign="showNew = true" />
 
-  <div v-if="overview.error" class="px-4 py-10 text-center text-ink-gray-5">
-    {{ overview.error.messages?.[0] || __('Outreach se nepodařilo načíst.') }}
-  </div>
+  <GlForbidden v-if="overview.error" :message="overview.error.messages?.[0]" />
   <div v-else-if="ov" class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
     <!-- upozornění: bez schránky nic neodejde -->
     <div v-if="!ov.connected" class="gl-card flex flex-wrap items-center justify-between gap-3 !rounded-[18px] px-5 py-3.5">
@@ -160,6 +158,7 @@
 </template>
 
 <script setup>
+import GlForbidden from '@/components/GlForbidden.vue'
 import OutreachHeader from '@/components/Outreach/OutreachHeader.vue'
 import CampaignsTable from '@/components/Outreach/CampaignsTable.vue'
 import RepliesTab from '@/components/Outreach/RepliesTab.vue'
