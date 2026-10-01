@@ -1,14 +1,26 @@
 <template>
   <LayoutHeader>
     <template #left-header>
-      <ViewBreadcrumbs routeName="Calendar" />
+      <ViewBreadcrumbs v-if="!narrow" routeName="Calendar" />
     </template>
     <template #right-header>
       <Button :label="__('Naplánovat týden')" iconLeft="lucide-calendar-plus" @click="showPlan = true" />
-      <Button variant="solid" :label="__('Vytvořit')" iconLeft="plus" @click="newEvent(null)" />
+      <Button v-if="!narrow" variant="solid" :label="__('Vytvořit')" iconLeft="plus" @click="newEvent(null)" />
     </template>
   </LayoutHeader>
-  <div class="flex h-[calc(100vh-88px)] flex-col gap-3 overflow-hidden px-2 pb-2">
+  <!-- GrowUp: mobil podle designu – týden a program dne -->
+  <div v-if="narrow" class="flex h-[calc(100vh-56px)] flex-col overflow-hidden px-2">
+    <GlCalendarMobile
+      :days="days"
+      :items="items"
+      :selected="anchor"
+      @select="(d) => (anchor = d)"
+      @move="(dir) => (anchor = addDays(anchor, 7 * dir))"
+      @new="(d) => newEvent(withTime(d, 9))"
+      @itemClick="openItem"
+    />
+  </div>
+  <div v-else class="flex h-[calc(100vh-88px)] flex-col gap-3 overflow-hidden px-2 pb-2">
     <!-- ovládání -->
     <div class="flex flex-wrap items-center justify-between gap-2 px-1">
       <div class="flex items-center gap-1">
@@ -76,6 +88,13 @@
     :users="users"
     @saved="reload"
   />
+  <GlEventPeek
+    :item="peekItem"
+    :anchor="peekAnchor"
+    @close="peekItem = null"
+    @edit="editFromPeek"
+    @changed="reload"
+  />
   <CalendarTaskModal v-model="showTask" :item="activeTask" @saved="reload" />
   <CalendarPlanWeekModal
     v-model="showPlan"
@@ -87,6 +106,8 @@
 </template>
 <script setup>
 import CalendarList from '@/components/Calendar/CalendarList.vue'
+import GlEventPeek from '@/components/Calendar/GlEventPeek.vue'
+import GlCalendarMobile from '@/components/Calendar/GlCalendarMobile.vue'
 import CalendarMonth from '@/components/Calendar/CalendarMonth.vue'
 import CalendarTimeGrid from '@/components/Calendar/CalendarTimeGrid.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
@@ -116,11 +137,12 @@ const onResize = () => {
   const n = window.innerWidth < 768
   if (n !== narrow.value) {
     narrow.value = n
-    view.value = n ? 'list' : 'week'
+    view.value = 'week'
   }
 }
 
-const view = ref(narrow.value ? 'list' : 'week')
+// mobil i desktop načítají týden; mobil ho kreslí jako pás dnů (GlCalendarMobile)
+const view = ref('week')
 const scope = ref('mine')
 const anchor = ref(startOfDay(new Date()))
 const items = ref([])
@@ -219,10 +241,24 @@ function newEvent(start, end = null) {
   showEvent.value = true
 }
 
+// GrowUp: klik na událost ukáže náhled u kurzoru (design), úprava až z něj
+const peekItem = ref(null)
+const peekAnchor = ref({ x: 0, y: 0 })
+const lastPointer = { x: 0, y: 0 }
+function rememberPointer(e) {
+  lastPointer.x = e.clientX
+  lastPointer.y = e.clientY
+}
+function editFromPeek(item) {
+  peekItem.value = null
+  activeEvent.value = item
+  showEvent.value = true
+}
+
 function openItem(item) {
   if (item.kind === 'event') {
-    activeEvent.value = item
-    showEvent.value = true
+    peekAnchor.value = { ...lastPointer }
+    peekItem.value = item
   } else {
     activeTask.value = item
     showTask.value = true
@@ -231,8 +267,12 @@ function openItem(item) {
 
 onMounted(async () => {
   window.addEventListener('resize', onResize)
+  window.addEventListener('pointerdown', rememberPointer, true)
   reload()
   users.value = await call('growupcrm.calendar.get_users')
 })
-onBeforeUnmount(() => window.removeEventListener('resize', onResize))
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', onResize)
+  window.removeEventListener('pointerdown', rememberPointer, true)
+})
 </script>

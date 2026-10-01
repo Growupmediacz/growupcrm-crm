@@ -1,9 +1,12 @@
 <template>
   <LayoutHeader v-if="organization.doc">
     <template #left-header>
-      <Breadcrumbs :items="breadcrumbs" />
+      <router-link v-if="isMobileView" :to="{ name: 'Organizations' }" class="text-[17px] font-bold text-ink-gray-9">‹ {{ __('Firmy') }}</router-link>
+      <Breadcrumbs v-else :items="breadcrumbs" />
     </template>
     <template #right-header>
+      <Button v-if="isMobileView" variant="solid" icon="plus" :aria-label="__('Nová zakázka')" @click="showLeadModal = true" />
+      <template v-else>
       <Button
         v-if="organization.doc.ico"
         :label="__('Načíst z ARES')"
@@ -12,6 +15,7 @@
         @click="refreshFromAres"
       />
       <Button variant="solid" :label="__('Nová zakázka')" iconLeft="plus" @click="showLeadModal = true" />
+      </template>
     </template>
   </LayoutHeader>
   <div v-if="organization.doc" ref="parentRef" class="flex h-full gap-3 px-2 pb-2">
@@ -55,15 +59,35 @@
     </Resizer>
 
     <div class="gl-card flex flex-1 flex-col overflow-hidden">
-      <!-- mobil: bez levého panelu, jen název a souhrn -->
-      <div v-if="isMobileView" class="border-b p-4">
-        <div class="truncate text-xl-medium text-ink-gray-9">{{ organization.doc.organization_name }}</div>
-        <div class="mt-0.5 text-sm text-ink-gray-6">
+      <!-- mobil (design „Mobil – Detail firmy“): logo, stav, rychlé akce a čísla -->
+      <div v-if="isMobileView" class="flex flex-col items-center px-4 pt-5 text-center">
+        <Avatar size="3xl" class="h-16 w-16" :label="organization.doc.organization_name" :image="organization.doc.organization_logo" />
+        <div class="mt-3 text-[24px] font-bold leading-tight tracking-tight text-ink-gray-9">{{ organization.doc.organization_name }}</div>
+        <div class="mt-1 flex items-center gap-2 text-[13px] text-ink-gray-6">
+          <span v-if="organization.doc.relationship" class="flex items-center gap-1.5 font-bold text-ink-gray-9">
+            <span class="size-2 rounded-full" :style="{ background: REL_COLORS[organization.doc.relationship] || '#9ca3af' }" />
+            {{ __(organization.doc.relationship) }}
+          </span>
           <span v-if="organization.doc.ico">{{ __('IČO') }} {{ organization.doc.ico }}</span>
-          <span v-if="organization.doc.territory"> · {{ organization.doc.territory }}</span>
         </div>
-        <div v-if="summary" class="mt-2 flex flex-wrap gap-x-4 text-sm text-ink-gray-7">
-          <span v-for="s in stats" :key="s.label">{{ s.label }}: <b>{{ s.value }}</b></span>
+        <div class="mt-4 grid w-full grid-cols-4 gap-2">
+          <a
+            v-for="a in mobileActions"
+            :key="a.label"
+            :href="a.href"
+            :target="a.external ? '_blank' : undefined"
+            class="gl-round flex flex-col items-center gap-1 rounded-2xl py-2.5 text-[12px] font-bold"
+            :class="a.disabled && 'pointer-events-none opacity-40'"
+            @click="a.onClick && ($event.preventDefault(), a.onClick())"
+          >
+            <GlIcon :name="a.icon" :size="19" class="text-[#4f46e5]" />{{ a.label }}
+          </a>
+        </div>
+        <div v-if="summary" class="mt-2 grid w-full grid-cols-4 gap-2">
+          <div v-for="st in stats" :key="st.label" class="rounded-2xl bg-white/60 py-2">
+            <div class="text-[20px] font-bold text-ink-gray-9">{{ st.value }}</div>
+            <div class="text-[11px] text-ink-gray-5">{{ st.label }}</div>
+          </div>
         </div>
       </div>
       <div class="m-4 mb-0 flex w-fit max-w-full gap-1 overflow-x-auto rounded-full bg-[rgba(110,120,200,.11)] p-[3px]">
@@ -221,6 +245,16 @@
   </div>
   <ErrorPage v-else-if="errorTitle" :errorTitle="errorTitle" :errorMessage="errorMessage" />
 
+  <CalendarEventModal
+    v-if="showEvent"
+    v-model="showEvent"
+    :organization="organization.doc?.name"
+    :subject="__('Schůzka: {0}', [organization.doc?.organization_name])"
+    :start="tomorrowTen"
+    :currentUser="sessionUser"
+    :users="calendarUsers.data || []"
+    @saved="overview.reload()"
+  />
   <LeadModal v-if="showLeadModal" v-model="showLeadModal" :defaults="leadDefaults" />
   <BranchDialog v-model="showBranchDialog" :organization="props.organizationId" :branch="activeBranch" @saved="reload" />
   <ContactDialog v-model="showContactDialog" :organization="props.organizationId" :branches="branches" @saved="reload" />
@@ -232,6 +266,9 @@ import Resizer from '@/components/Resizer.vue'
 import SidePanelLayout from '@/components/SidePanelLayout.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import LeadModal from '@/components/Modals/GlNewLeadModal.vue'
+import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
+import GlIcon from '@/components/GlIcon.vue'
+import { sessionStore } from '@/stores/session'
 import BranchDialog from '@/components/Firma/BranchDialog.vue'
 import ContactDialog from '@/components/Firma/ContactDialog.vue'
 import { useDocument } from '@/data/document'
@@ -278,6 +315,30 @@ function reload() {
 }
 
 const summary = computed(() => overview.data?.summary)
+
+// mobil: rychlé akce přes první kontakt firmy s telefonem / e-mailem
+const REL_COLORS = { Klient: '#22b35e', Prospekt: '#3b82f6', 'Bývalý klient': '#9ca3af' }
+const showEvent = ref(false)
+const sessionUser = sessionStore().user
+const calendarUsers = createResource({ url: 'growupcrm.calendar.get_users', auto: true })
+const tomorrowTen = computed(() => {
+  const d = new Date()
+  d.setDate(d.getDate() + 1)
+  d.setHours(10, 0, 0, 0)
+  return d
+})
+const mobileActions = computed(() => {
+  const list = overview.data?.contacts || []
+  const phone = list.find((x) => x.mobile_no)?.mobile_no
+  const email = list.find((x) => x.email_id)?.email_id
+  const web = organization.doc?.website
+  return [
+    { label: __('Zavolat'), icon: 'phone', href: phone ? `tel:${phone}` : undefined, disabled: !phone },
+    { label: __('E-mail'), icon: 'mail', href: email ? `mailto:${email}` : undefined, disabled: !email },
+    { label: __('Schůzka'), icon: 'cal', onClick: () => (showEvent.value = true) },
+    { label: __('Web'), icon: 'globe', href: web || undefined, external: true, disabled: !web },
+  ]
+})
 const leads = computed(() => overview.data?.leads || [])
 const contacts = computed(() => overview.data?.contacts || [])
 const branches = computed(() => overview.data?.branches || [])

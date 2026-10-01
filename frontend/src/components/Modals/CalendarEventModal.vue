@@ -100,6 +100,8 @@ const props = defineProps({
   start: { type: Date, default: null },
   end: { type: Date, default: null },
   lead: { type: String, default: null },
+  organization: { type: String, default: null },
+  subject: { type: String, default: '' },
   currentUser: { type: String, default: '' },
   users: { type: Array, default: () => [] },
 })
@@ -139,13 +141,13 @@ function init() {
     const s = props.start || new Date()
     const e = props.end || new Date(s.getTime() + 3600000)
     form.value = {
-      subject: '',
+      subject: props.subject || '',
       date: isoDate(s),
       allDay: false,
       from: hm(s),
       to: e.getDate() === s.getDate() ? hm(e) : '23:59',
       lead: props.lead || '',
-      organization: '',
+      organization: props.organization || '',
       assignedTo: props.currentUser,
       description: '',
     }

@@ -66,6 +66,7 @@
 import GlIcon from '@/components/GlIcon.vue'
 import { statusesStore } from '@/stores/statuses'
 import { htmlToText } from '@/utils'
+import { completeTaskWithUndo } from '@/composables/glTaskDone'
 import { call, createListResource, toast } from 'frappe-ui'
 import { computed } from 'vue'
 
@@ -131,10 +132,10 @@ const dueLabel = computed(() => {
 
 async function done() {
   try {
-    await call('frappe.client.set_value', { doctype: 'CRM Task', name: next.value.name, fieldname: 'status', value: 'Done' })
-    toast.success(__('Úkol byl označen jako hotový'))
-    tasks.reload()
-    emit('changed')
+    await completeTaskWithUndo(next.value.name, next.value.title, () => {
+      tasks.reload()
+      emit('changed')
+    })
   } catch (e) {
     toast.error(e.messages?.[0] || e.message)
   }

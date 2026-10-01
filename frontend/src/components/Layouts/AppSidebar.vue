@@ -306,6 +306,7 @@ const GL_ICONS = {
   Leads: gl('brief'),
   Deals: gl('brief'),
   Contacts: gl('users'),
+  ContactsCards: gl('users'),
   Organizations: gl('building'),
   Notes: gl('doc'),
   Tasks: gl('check'),
@@ -315,7 +316,7 @@ const GL_ICONS = {
 // Skupiny menu podle designu: Dnes · Prodej · Práce · Organizace
 const GROUPS = [
   { name: 'Dnes', hideLabel: true, keys: ['Today'] },
-  { name: 'Prodej', keys: ['Leads', 'Deals', 'Organizations', 'Contacts'] },
+  { name: 'Prodej', keys: ['Leads', 'Deals', 'Organizations', 'ContactsCards'] },
   { name: 'Práce', keys: ['Tasks', 'Notes', 'Call Logs'] },
   { name: 'Organizace', keys: ['Calendar', 'Dashboard'] },
 ]
@@ -346,7 +347,7 @@ const links = [
   {
     label: 'Contacts',
     icon: ContactsIcon,
-    to: 'Contacts',
+    to: 'ContactsCards',
   },
   {
     label: 'Organizations',
@@ -454,6 +455,8 @@ function getIcon(routeName, icon) {
 
 // A saved view's key is its name; a plain nav item's key is its route name.
 function currentRouteKey() {
+  // GrowUp: tabulka kontaktů patří pod položku Kontakty (karty)
+  if (route.name === 'Contacts' && !route.query.view) return 'ContactsCards'
   return route.query.view || route.name
 }
 

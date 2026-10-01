@@ -101,6 +101,9 @@
             </span>
             <span v-if="orgLabel(row)" class="truncate text-[12.5px] text-ink-gray-5">{{ orgLabel(row) }}</span>
           </div>
+          <div v-else-if="column.key === 'next_step'" class="truncate text-[13.5px] font-semibold" :class="nextTone(row)">
+            {{ row.next_step ? `${row.next_step} – ${nextWhen(row)}` : '—' }}
+          </div>
           <div
             v-else-if="
               [
@@ -248,6 +251,27 @@
 </template>
 
 <script setup>
+// Další krok: po termínu červeně, dnes/zítra jantarově, později modře (design)
+const dayDiff = (row) => {
+  if (!row.next_step_at) return null
+  const d = new Date(String(row.next_step_at).replace(' ', 'T'))
+  const s = (x) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime()
+  return { d, diff: Math.round((s(d) - s(new Date())) / 86400000) }
+}
+const nextTone = (row) => {
+  const x = dayDiff(row)
+  if (!row.next_step || !x) return 'text-ink-gray-4 font-normal'
+  if (x.d < new Date()) return 'text-[#c8321f]'
+  return x.diff <= 1 ? 'text-[#915200]' : 'text-[#2e5bd8]'
+}
+const nextWhen = (row) => {
+  const x = dayDiff(row)
+  if (!x) return ''
+  if (x.diff === 0) return __('dnes')
+  if (x.diff === 1) return __('zítra')
+  if (x.diff === -1) return __('včera')
+  return `${x.d.getDate()}. ${x.d.getMonth() + 1}.`
+}
 const orgLabel = (row) => (typeof row.organization === 'object' ? row.organization?.label : row.organization) || ''
 import HeartIcon from '@/components/Icons/HeartIcon.vue'
 import IndicatorIcon from '@/components/Icons/IndicatorIcon.vue'

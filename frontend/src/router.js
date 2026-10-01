@@ -78,7 +78,12 @@ const routes = [
     component: () => import('@/pages/Tasks.vue'),
   },
   {
-    alias: '/contacts',
+    // GrowUp: Kontakty podle designu (seznam + karta); tabulka CRM zůstává na /contacts/view/list
+    path: '/contacts',
+    name: 'ContactsCards',
+    component: () => import('@/pages/GlContacts.vue'),
+  },
+  {
     path: '/contacts/view/:viewType?',
     name: 'Contacts',
     component: () => import('@/pages/Contacts.vue'),

@@ -132,6 +132,7 @@ function programLink(item) {
 // GrowUp: úvodní stránka „Dnes“ (design Liquid Glass). Data: growupcrm.today.get_today.
 import GlIcon from '@/components/GlIcon.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
+import { completeTaskWithUndo } from '@/composables/glTaskDone'
 import LeadModal from '@/components/Modals/GlNewLeadModal.vue'
 import { statusesStore } from '@/stores/statuses'
 import { usersStore } from '@/stores/users'
@@ -206,10 +207,18 @@ const initials = (s) => (s || '?').split(/\s+/).map((w) => w[0]).slice(0, 2).joi
 const doneIds = reactive(new Set())
 async function markDone(t) {
   try {
-    await call('frappe.client.set_value', { doctype: 'CRM Task', name: t.name, fieldname: 'status', value: 'Done' })
     doneIds.add(t.name)
-    toast.success(__('Úkol byl označen jako hotový'))
-    setTimeout(() => res.reload(), 900)
+    let first = true
+    await completeTaskWithUndo(t.name, t.title, () => {
+      // po dokončení nechat chvíli dobíhat animaci zaškrtnutí, po „Zpět“ obnovit hned
+      if (first) {
+        first = false
+        setTimeout(() => res.reload(), 900)
+      } else {
+        doneIds.delete(t.name)
+        res.reload()
+      }
+    })
   } catch (e) {
     toast.error(e.messages?.[0] || e.message)
   }
