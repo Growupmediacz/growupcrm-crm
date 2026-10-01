@@ -48,18 +48,19 @@
           {{ __('Na dnešek nemáte nic naplánováno.') }}
         </div>
         <component
-          :is="item.lead ? 'router-link' : 'div'"
+          :is="programLink(item) ? 'router-link' : 'div'"
           v-for="item in data?.program"
           :key="item.kind + item.name"
-          :to="item.lead ? { name: 'Lead', params: { leadId: item.lead } } : undefined"
+          :to="programLink(item)"
           class="flex items-center gap-4 rounded-2xl px-2 py-3 transition hover:bg-white/65"
+          :class="item.status === 'Done' ? 'opacity-55' : ''"
         >
           <div class="num w-14 text-[15px] font-bold text-ink-gray-9">{{ item.all_day ? __('Celý den') : hhmm(item.at) }}</div>
           <div class="flex size-10 shrink-0 items-center justify-center rounded-xl" :class="tone[item.kind]">
             <GlIcon :name="item.kind === 'event' ? 'cal' : 'check'" :size="18" />
           </div>
           <div class="min-w-0 flex-1">
-            <div class="truncate text-[16px] font-semibold text-ink-gray-9">{{ item.title }}</div>
+            <div class="truncate text-[16px] font-semibold text-ink-gray-9" :class="item.status === 'Done' ? 'line-through' : ''">{{ item.title }}</div>
             <div class="truncate text-[13px] text-ink-gray-5">{{ item.sub }}</div>
           </div>
           <span v-if="soon(item)" class="rounded-full bg-[rgba(79,70,229,.12)] px-3 py-1 text-[13px] font-semibold text-[#4338ca]">{{ soon(item) }}</span>
@@ -122,6 +123,12 @@
   <LeadModal v-if="showLeadModal" v-model="showLeadModal" :defaults="leadDefaults" />
 </template>
 <script setup>
+function programLink(item) {
+  if (item.lead) return { name: 'Lead', params: { leadId: item.lead }, hash: item.kind === 'task' ? '#tasks' : '#activity' }
+  if (item.org) return { name: 'Organization', params: { organizationId: item.org } }
+  if (item.kind === 'event') return { name: 'Calendar' }
+  return undefined
+}
 // GrowUp: úvodní stránka „Dnes“ (design Liquid Glass). Data: growupcrm.today.get_today.
 import GlIcon from '@/components/GlIcon.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
