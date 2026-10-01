@@ -208,6 +208,7 @@ import EmailIcon from '@/components/Icons/EmailIcon.vue'
 import StepsIcon from '@/components/Icons/StepsIcon.vue'
 import CollapsibleSection from '@/components/CollapsibleSection.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import { agencyEnabled } from '@/composables/agency'
 import BrandLogo from '@/components/BrandLogo.vue'
 import { getSettings } from '@/stores/settings'
 import Icon from '@/components/Icon.vue'
@@ -307,6 +308,8 @@ const GL_ICONS = {
   Deals: gl('brief'),
   Contacts: gl('users'),
   ContactsCards: gl('users'),
+  Clients: gl('star'),
+  Projects: gl('folder'),
   Organizations: gl('building'),
   Notes: gl('doc'),
   Tasks: gl('check'),
@@ -318,6 +321,7 @@ const GROUPS = [
   { name: 'Dnes', hideLabel: true, keys: ['Today'] },
   { name: 'Prodej', keys: ['Leads', 'Deals', 'Organizations', 'ContactsCards'] },
   { name: 'Práce', keys: ['Tasks', 'Notes', 'Call Logs'] },
+  { name: 'Dodání', keys: ['Clients', 'Projects'] },
   { name: 'Organizace', keys: ['Calendar', 'Dashboard'] },
 ]
 
@@ -369,6 +373,9 @@ const links = [
     icon: CalendarIcon,
     to: 'Calendar',
   },
+  // GrowUp: agenturní moduly jen se zapnutým growupcrm_agency
+  { label: 'Klienti', icon: CalendarIcon, to: 'Clients', condition: () => agencyEnabled.value },
+  { label: 'Projekty', icon: CalendarIcon, to: 'Projects', condition: () => agencyEnabled.value },
   {
     label: 'Call Logs',
     icon: PhoneIcon,
@@ -457,6 +464,7 @@ function getIcon(routeName, icon) {
 function currentRouteKey() {
   // GrowUp: tabulka kontaktů patří pod položku Kontakty (karty)
   if (route.name === 'Contacts' && !route.query.view) return 'ContactsCards'
+  if (route.name === 'Project') return 'Projects'
   return route.query.view || route.name
 }
 

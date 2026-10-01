@@ -77,6 +77,23 @@ const routes = [
     name: 'Tasks',
     component: () => import('@/pages/Tasks.vue'),
   },
+  // GrowUp: agenturní moduly (stránky samy ověří zapnutí přes API)
+  {
+    path: '/clients',
+    name: 'Clients',
+    component: () => import('@/pages/GlClients.vue'),
+  },
+  {
+    path: '/projects',
+    name: 'Projects',
+    component: () => import('@/pages/GlProjects.vue'),
+  },
+  {
+    path: '/projects/:projectId',
+    name: 'Project',
+    component: () => import('@/pages/GlProject.vue'),
+    props: true,
+  },
   {
     // GrowUp: Kontakty podle designu (seznam + karta); tabulka CRM zůstává na /contacts/view/list
     path: '/contacts',
