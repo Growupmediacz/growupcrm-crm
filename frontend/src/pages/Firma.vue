@@ -48,6 +48,15 @@
         </div>
       </div>
       <!-- GrowUp (oprava 13): Údaje o firmě jen ke čtení; celý formulář CRM až pod „Všechna pole“ -->
+      <!-- P3: stav vztahu klienta -->
+      <div v-if="showClient && client.data && !allFields" class="px-5 pb-1">
+        <div class="mb-1.5 text-[13px] font-semibold text-[#3D4466]">{{ __('Stav vztahu') }}</div>
+        <div class="gl-seg flex w-full">
+          <button v-for="h in HEALTH" :key="h.key" class="gl-seg-btn flex-1 justify-center !px-2 text-[13px]" :class="client.data.health === h.key && 'gl-seg-on'" @click="setHealth(h.key)">
+            <span class="size-2 rounded-full" :style="{ background: h.color }" />{{ h.label }}
+          </button>
+        </div>
+      </div>
       <div v-if="!allFields" class="flex-1 overflow-y-auto px-3 pb-3">
         <GlOrgInfoCard :doc="organization.doc" :branches="branches" @saved="reload" @allFields="allFields = true" />
       </div>
@@ -65,7 +74,9 @@
       </div>
     </Resizer>
 
-    <div class="gl-card flex flex-1 flex-col overflow-hidden">
+    <div class="flex min-w-0 flex-1 flex-col gap-3" :class="showClient ? 'overflow-y-auto' : 'overflow-hidden'">
+    <GlClientBlocks v-if="showClient" :data="client.data" />
+    <div class="gl-card flex flex-1 flex-col overflow-hidden" :class="showClient && 'min-h-[520px]'">
       <!-- mobil (design „Mobil – Detail firmy“): logo, stav, rychlé akce a čísla -->
       <div v-if="isMobileView" class="flex flex-col items-center px-4 pt-5 text-center">
         <Avatar size="3xl" class="h-16 w-16" :label="organization.doc.organization_name" :image="organization.doc.organization_logo" />
@@ -249,6 +260,7 @@
         </div>
       </div>
     </div>
+    </div>
   </div>
   <ErrorPage v-else-if="errorTitle" :errorTitle="errorTitle" :errorMessage="errorMessage" />
 
@@ -276,6 +288,8 @@ import LeadModal from '@/components/Modals/GlNewLeadModal.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlOrgInfoCard from '@/components/Firma/GlOrgInfoCard.vue'
+import GlClientBlocks from '@/components/Firma/GlClientBlocks.vue'
+import { agencyEnabled } from '@/composables/agency'
 import { sessionStore } from '@/stores/session'
 import BranchDialog from '@/components/Firma/BranchDialog.vue'
 import ContactDialog from '@/components/Firma/ContactDialog.vue'
@@ -285,7 +299,7 @@ import { statusesStore } from '@/stores/statuses'
 import { isMobileView } from '@/composables/settings'
 import { htmlToText } from '@/utils'
 import { Avatar, Badge, Breadcrumbs, Button, call, createResource, toast, usePageMeta } from 'frappe-ui'
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 // GrowUp: přehled firmy (Zakázky, kontakty, pobočky, aktivita). Data dodává growupcrm.firmy.get_overview.
@@ -324,6 +338,20 @@ function reload() {
 
 const summary = computed(() => overview.data?.summary)
 const allFields = ref(false)
+
+// P3: firma ve stavu Klient (jen agenturní moduly): spolupráce, projekty, stav vztahu
+const showClient = computed(() => agencyEnabled.value && organization.doc?.relationship === 'Klient')
+const client = createResource({ url: 'growupcrm.clients.get_client', params: { organization: props.organizationId } })
+watch(showClient, (on) => on && client.fetch(), { immediate: true })
+const HEALTH = [
+  { key: 'V pořádku', label: __('V pořádku'), color: '#22b35e' },
+  { key: 'Potřebuje pozornost', label: __('Pozornost'), color: '#e0a100' },
+  { key: 'Ohrožený', label: __('Ohrožený'), color: '#c8321f' },
+]
+async function setHealth(health) {
+  await call('growupcrm.clients.set_health', { organization: props.organizationId, health })
+  client.reload()
+}
 
 // mobil: rychlé akce přes první kontakt firmy s telefonem / e-mailem
 const REL_COLORS = { Klient: '#22b35e', Prospekt: '#3b82f6', 'Bývalý klient': '#9ca3af' }

@@ -5,6 +5,9 @@
       <span class="text-lg-medium text-ink-gray-9">{{ __('Projekty') }}</span>
     </template>
     <template #right-header>
+      <router-link :to="{ name: 'ProjectTemplates' }" class="hidden sm:inline-flex">
+        <Button iconLeft="layout-template" :label="__('Šablony')" />
+      </router-link>
       <Popover placement="bottom-end">
         <template #target="{ togglePopover }">
           <Button iconLeft="filter" :class="activeFilters && '!bg-[rgba(79,70,229,.12)] !text-[#4338ca]'" @click="togglePopover()">
