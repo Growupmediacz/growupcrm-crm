@@ -13,7 +13,7 @@
       </Dropdown>
     </header>
   </LayoutHeader>
-  <div v-if="doc.name" class="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pb-28">
+  <div v-if="doc.name" class="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pb-24">
     <LeadHero :key="heroKey" :doc="doc" :stageOptions="mobileStages" compact @changed="afterChange" @fill="openDetails(true)" />
 
     <!-- Hodnota a Kontakt -->
@@ -62,15 +62,17 @@
   <ErrorPage v-else-if="errorTitle" :errorTitle="errorTitle" :errorMessage="errorMessage" />
 
   <!-- pevná spodní lišta akcí -->
-  <nav v-if="doc.name" class="gl-tabbar fixed inset-x-3 bottom-3 z-30 flex h-[72px] items-stretch gap-1 rounded-[26px] px-2 py-2">
+  <nav v-if="doc.name" class="gl-tabbar fixed inset-x-3 bottom-3 z-30 flex h-16 items-stretch gap-1 rounded-[26px] px-2 py-2" :aria-label="__('Akce zakázky')">
     <button
       v-for="a in actions"
       :key="a.label"
-      class="gl-round flex flex-1 flex-col items-center justify-center gap-1 rounded-2xl text-[12px] font-bold text-ink-gray-9 disabled:opacity-40"
+      class="gl-round flex flex-1 items-center justify-center rounded-2xl text-ink-gray-9 disabled:opacity-40"
+      :aria-label="a.label"
+      :title="a.label"
       :disabled="a.disabled"
       @click="a.onClick"
     >
-      <GlIcon :name="a.icon" :size="20" :class="a.primary ? 'text-[#4F46E5]' : ''" />{{ a.label }}
+      <GlIcon :name="a.icon" :size="24" :class="a.primary ? 'text-[#4F46E5]' : ''" />
     </button>
   </nav>
 
