@@ -25,7 +25,7 @@ export default defineConfig(async ({ mode }) => {
           short_name: 'GrowUpCRM',
           lang: 'cs',
           start_url: '/crm',
-          theme_color: '#16a34a',
+          theme_color: '#4f46e5',
           background_color: '#ffffff',
           description: 'GrowUpCRM: zakázky, úkoly a kalendář na jednom místě',
           icons: [
