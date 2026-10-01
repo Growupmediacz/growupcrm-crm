@@ -75,13 +75,13 @@ const routes = [
     alias: '/notes',
     path: '/notes/view/:viewType?',
     name: 'Notes',
-    component: () => import('@/pages/Notes.vue'),
+    component: () => import('@/pages/GlNotes.vue'),
   },
   {
     alias: '/tasks',
     path: '/tasks/view/:viewType?',
     name: 'Tasks',
-    component: () => import('@/pages/Tasks.vue'),
+    component: () => import('@/pages/GlTasks.vue'),
   },
   // GrowUp: agenturní moduly (stránky samy ověří zapnutí přes API)
   {
@@ -153,7 +153,7 @@ const routes = [
     alias: '/call-logs',
     path: '/call-logs/view/:viewType?',
     name: 'Call Logs',
-    component: () => import('@/pages/CallLogs.vue'),
+    component: () => import('@/pages/GlCalls.vue'),
   },
   {
     path: '/calendar',
