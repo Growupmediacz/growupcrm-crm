@@ -67,13 +67,17 @@ import AppsIcon from '@/components/Icons/AppsIcon.vue'
 import { sessionStore } from '@/stores/session'
 import { usersStore } from '@/stores/users'
 import { getSettings } from '@/stores/settings'
-import { showSettings, isMobileView } from '@/composables/settings'
+import {
+  showSettings,
+  activeSettingsPage,
+  isMobileView,
+} from '@/composables/settings'
 import { showAboutModal } from '@/composables/modals'
 import { confirmLoginToFrappeCloud } from '@/composables/frappecloud'
 import { createResource, Dropdown } from 'frappe-ui'
 import { computed, h, markRaw } from 'vue'
 
-defineProps({
+const props = defineProps({
   isCollapsed: { type: Boolean, default: false },
   footer: { type: Boolean, default: false },
 })
@@ -105,7 +109,39 @@ const apps = createResource({
   transform: (data) => [deskApp(), ...crmSiblingApps(data)],
 })
 
+// GrowUp: menu profilu v patičce postranního menu (design 2. kolo, oprava 1):
+// Nastavení, Nápověda a Odhlásit se jsou tady, ne v seznamu sekcí.
+function openSettingsPage(page) {
+  activeSettingsPage.value = page || ''
+  showSettings.value = true
+}
+const footerItems = computed(() => [
+  {
+    group: 'profile',
+    hideLabel: true,
+    items: [
+      { icon: 'user', label: __('Můj profil'), onClick: () => openSettingsPage(__('Profile')) },
+      { icon: 'settings', label: __('Nastavení'), onClick: () => openSettingsPage() },
+      {
+        icon: 'users',
+        label: __('Tým a role'),
+        onClick: () => openSettingsPage(__('Users')),
+        condition: () => ['System Manager', 'Sales Manager'].includes(user.value.role),
+      },
+    ].filter((i) => !i.condition || i.condition()),
+  },
+  {
+    group: 'session',
+    hideLabel: true,
+    items: [
+      { icon: 'help-circle', label: __('Nápověda a podpora'), onClick: () => (showAboutModal.value = true) },
+      { icon: 'log-out', label: __('Odhlásit se'), onClick: () => logout.submit() },
+    ],
+  },
+])
+
 const dropdownItems = computed(() => {
+  if (props.footer && !isMobileView.value) return footerItems.value
   if (!settings.value?.dropdown_items) return []
 
   let items = settings.value.dropdown_items

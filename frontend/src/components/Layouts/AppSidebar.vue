@@ -17,21 +17,25 @@
     >
       <div class="flex h-full flex-col p-2">
         <!-- GrowUp: značka nahoře, uživatel dole (design) -->
+        <!-- GrowUp: značka (design 2. kolo): ikona 32 px, wordmark 17 px, mezera 10 px; sbalené menu = jen ikona -->
         <router-link
           :to="{ name: 'Today' }"
-          class="flex h-12 items-center gap-2.5 rounded-2xl px-1.5"
+          class="flex h-11 items-center gap-2.5 rounded-2xl"
+          :class="isCollapsed ? 'justify-center' : 'px-2'"
           :aria-label="brand.name || 'GrowUpCRM'"
         >
-          <BrandLogo v-model="brand" class="size-9 shrink-0 overflow-hidden rounded-xl" />
-          <span v-if="!isCollapsed" class="truncate text-[19px] tracking-tight text-ink-gray-9">
-            <b class="font-bold">{{ brandParts[0] }}</b><span class="font-normal text-ink-gray-5">{{ brandParts[1] }}</span>
-          </span>
+          <CRMLogo class="size-8 shrink-0" />
+          <span
+            v-if="!isCollapsed"
+            class="truncate text-[17px] font-bold tracking-[-0.02em] text-ink-gray-9"
+            >{{ brandParts[0] }}<span class="font-semibold text-[#4F46E5]">{{ brandParts[1] }}</span></span
+          >
         </router-link>
 
         <!-- overflow-y-auto forces overflow-x to clip too, which would slice the
              active row's shadow. Widen the scroll box to the sidebar edges and
              pad the content back in so the shadow has room. -->
-        <div class="-mx-2 mt-2 flex flex-1 flex-col gap-1 overflow-y-auto px-2">
+        <div class="-mx-2 mt-1 flex flex-1 flex-col gap-0.5 overflow-y-auto px-2">
           <SidebarItem
             v-if="mobile"
             id="notifications-btn"
@@ -70,9 +74,9 @@
               <SidebarLabel
                 v-if="!hide"
                 :divider="false"
-                class="gl-navh mb-1 mt-4 select-none"
-                :class="!isCollapsed && 'cursor-pointer'"
-                @click="toggle()"
+                class="gl-navh select-none"
+                :class="section.collapsible && !isCollapsed && 'cursor-pointer'"
+                @click="section.collapsible && toggle()"
               >
                 <span class="flex items-center gap-1.5">
                   <span
@@ -84,7 +88,7 @@
                 </span>
               </SidebarLabel>
             </template>
-            <nav class="flex flex-col gap-1">
+            <nav class="flex flex-col gap-0.5">
               <SidebarItem
                 v-for="link in section.views"
                 :key="link.key"
@@ -104,6 +108,13 @@
                 >
                   <span class="truncate text-sm">{{ __(link.label) }}</span>
                 </Tooltip>
+                <template v-if="navCount(link.key)" #suffix>
+                  <span
+                    class="mr-1 text-[13px] font-semibold tabular-nums"
+                    :class="link.key === 'Tasks' ? 'text-[#C8321F]' : 'text-ink-gray-5'"
+                    >{{ navCount(link.key) }}</span
+                  >
+                </template>
               </SidebarItem>
             </nav>
           </CollapsibleSection>
@@ -209,7 +220,6 @@ import StepsIcon from '@/components/Icons/StepsIcon.vue'
 import CollapsibleSection from '@/components/CollapsibleSection.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import { agencyEnabled, analyticsEnabled } from '@/composables/agency'
-import BrandLogo from '@/components/BrandLogo.vue'
 import { getSettings } from '@/stores/settings'
 import Icon from '@/components/Icon.vue'
 import PinIcon from '@/components/Icons/PinIcon.vue'
@@ -243,7 +253,14 @@ import {
 } from '@/composables/settings'
 import { showChangePasswordModal } from '@/composables/modals'
 import { useBroadcast } from '@/composables/useBroadcast.js'
-import { call, Sidebar, SidebarItem, SidebarLabel, Tooltip } from 'frappe-ui'
+import {
+  call,
+  createResource,
+  Sidebar,
+  SidebarItem,
+  SidebarLabel,
+  Tooltip,
+} from 'frappe-ui'
 import {
   SignupBanner,
   TrialBanner,
@@ -281,6 +298,22 @@ const brandParts = computed(() => {
   const name = brand.name || 'GrowUpCRM'
   return name.endsWith('CRM') && name.length > 3 ? [name.slice(0, -3), 'CRM'] : [name, '']
 })
+// Čísla v menu: nové zakázky, které mám, a moje úkoly po termínu (červeně).
+const navCounts = createResource({
+  url: 'growupcrm.today.get_nav_counts',
+  cache: 'growupcrm-nav-counts',
+  auto: true,
+})
+const NAV_COUNT_KEYS = { Leads: 'leads', Tasks: 'overdue_tasks' }
+function navCount(key) {
+  return navCounts.data?.[NAV_COUNT_KEYS[key]] || 0
+}
+// přepočítat po přechodu na jinou stránku (zakázka přiřazena, úkol dokončen…)
+watch(
+  () => route.name,
+  () => navCounts.reload(),
+)
+
 function openSettings() {
   showSettings.value = true
 }
@@ -318,13 +351,14 @@ const GL_ICONS = {
   Calendar: gl('cal'),
   'Call Logs': gl('phone'),
 }
-// Skupiny menu podle designu: Dnes · Prodej · Práce · Organizace
+// Skupiny menu podle designu (2. kolo, oprava 1): Dnes · Prodej · Práce · Dodání.
+// Přehled (Dashboard) se slučuje do Analytiky a z menu odchází (stránka /dashboard zůstává).
+// Outreach přibude do Prodeje s modulem M3. Klientská verze nemá Dodání (podmínka agencyEnabled).
 const GROUPS = [
   { name: 'Dnes', hideLabel: true, keys: ['Today'] },
   { name: 'Prodej', keys: ['Leads', 'Deals', 'Organizations', 'ContactsCards'] },
-  { name: 'Práce', keys: ['Tasks', 'Notes', 'Call Logs'] },
+  { name: 'Práce', keys: ['Tasks', 'Calendar', 'Notes', 'Call Logs'] },
   { name: 'Dodání', keys: ['Clients', 'Projects', 'Plans', 'Analytics'] },
-  { name: 'Organizace', keys: ['Calendar', 'Dashboard'] },
 ]
 
 const links = [
@@ -332,12 +366,6 @@ const links = [
     label: 'Today',
     icon: LucideLayoutDashboard,
     to: 'Today',
-    condition: () => !props.mobile,
-  },
-  {
-    label: 'Dashboard',
-    icon: LucideLayoutDashboard,
-    to: 'Dashboard',
     condition: () => !props.mobile,
   },
   {
@@ -361,7 +389,7 @@ const links = [
     to: 'Organizations',
   },
   {
-    label: 'Notes',
+    label: 'Zápisy',
     icon: NoteIcon,
     to: 'Notes',
   },
@@ -381,7 +409,7 @@ const links = [
   { label: 'Plány', icon: CalendarIcon, to: 'Plans', condition: () => agencyEnabled.value },
   { label: 'Analytika', icon: CalendarIcon, to: 'Analytics', condition: () => analyticsEnabled.value },
   {
-    label: 'Call Logs',
+    label: 'Hovory',
     icon: PhoneIcon,
     to: 'Call Logs',
   },
@@ -408,12 +436,14 @@ const allViews = computed(() => {
     name: g.name,
     hideLabel: g.hideLabel,
     opened: true,
+    collapsible: false,
     views: g.keys.map((k) => visible.find((v) => v.key === k)).filter(Boolean),
   })).filter((g) => g.views.length)
   if (getPublicViews().length) {
     _views.push({
       name: 'Uložené pohledy',
       opened: false,
+      collapsible: true,
       views: parseView(getPublicViews()),
     })
   }
@@ -422,6 +452,7 @@ const allViews = computed(() => {
     _views.push({
       name: 'Připnuté pohledy',
       opened: true,
+      collapsible: true,
       views: parseView(getPinnedViews()),
     })
   }

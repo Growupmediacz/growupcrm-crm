@@ -59,6 +59,25 @@
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
   --sidebar-w: 264px;
+  /* 2. kolo – doplňky (design/growupcrm-design-2kolo/tokens) */
+  --brand-grad: linear-gradient(145deg, #6e6af6 0%, #4f46e5 55%, #3b32c4 100%);
+  --brand-media-text: #15803d;
+  --cst-waiting: #9ca3af;
+  --cst-sent: #3b82f6;
+  --cst-opened: #8b5cf6;
+  --cst-replied: #22b35e;
+  --cst-unsub: #c8321f;
+  --cst-done: #4338ca;
+  --nav-item-h: 36px;
+  --nav-item-fs: 14.5px;
+  --nav-head-fs: 12px;
+  --empty-color: #5b6285;
+  --empty-fs: 13px;
+  --row-selected: rgba(79, 70, 229, 0.07);
+  --check-square-radius: 6px;
+  --skeleton: rgba(110, 120, 200, 0.12);
+  --skeleton-shine: rgba(255, 255, 255, 0.55);
+  --dur-skeleton: 1.4s;
 
   --font-gl: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'InterVar', Inter, system-ui, sans-serif;
 
@@ -351,16 +370,19 @@ button.relative.flex.h-7.w-full {
   display: none !important;
 }
 .gl-navh {
-  font-size: 12px !important;
+  /* design 2. kolo: nadpis skupiny 12 px, padding 14px 12px 4px (celé menu ~700 px, vejde se do 1280 × 800) */
+  font-size: var(--nav-head-fs, 12px) !important;
   font-weight: 600 !important;
   color: var(--text-3) !important;
   letter-spacing: 0 !important;
   text-transform: none !important;
+  height: auto !important;
+  padding: 14px 12px 4px !important;
 }
 [class*='group/sidebar-item'] {
-  height: 40px;
-  border-radius: 12px;
-  font-size: 15px;
+  height: var(--nav-item-h, 36px);
+  border-radius: 11px;
+  font-size: var(--nav-item-fs, 14.5px);
   color: var(--text-2);
 }
 [class*='group/sidebar-item']:hover {
@@ -374,7 +396,7 @@ button.relative.flex.h-7.w-full {
   box-shadow: 0 2px 10px -3px rgba(64, 72, 160, 0.25);
 }
 [class*='group/sidebar-item'] .truncate.text-sm {
-  font-size: 15px;
+  font-size: var(--nav-item-fs, 14.5px);
 }
 
 /* ---------- hlavička stránky ---------- */
