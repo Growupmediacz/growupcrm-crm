@@ -825,3 +825,15 @@ button.inline-flex.bg-surface-red-7:hover {
   font-weight: 700 !important;
   color: var(--text-1) !important;
 }
+
+/* Vyskakovací panely (Filtr, Řadit, Sloupce, Přiřadit…): CRM v nich nechává vlastní stín, rámeček a odsazení,
+   které by se na našem skle vykreslily jako druhé pozadí. Vnitřní obal je průhledný, vzhled drží jen vnější sklo. */
+[data-slot='content'][class*='origin-'] > div[class*='shadow-2xl'],
+[data-slot='content'][class*='origin-'] > div[class*='ring-1'] {
+  margin: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-shadow: 0 0 #0000 !important;
+  border-radius: inherit !important;
+}
