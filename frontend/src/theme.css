@@ -943,3 +943,13 @@ button[role='switch'] > span {
 @media (prefers-reduced-motion: reduce) {
   .gl-seg-on { animation: none; }
 }
+
+/* záložky aktivity: výška podle obsahu (CRM jí dává pevnou výšku, čipy se pak ořezávaly) */
+.gl-chiptabs-d [role='tablist'] {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-items: center;
+  flex-shrink: 0;
+}
+.gl-chiptabs-d [role='tablist'] > button[role='tab'] { flex-shrink: 0; }
