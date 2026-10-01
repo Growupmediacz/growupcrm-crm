@@ -1,7 +1,8 @@
 <template>
   <div
     v-if="isMobileView"
-    class="flex flex-col justify-between gap-2 sm:px-5 px-3 py-4"
+    class="flex-col justify-between gap-2 sm:px-5 px-3 py-4"
+    :class="hideMobileBar ? 'hidden' : 'flex'"
   >
     <div class="flex flex-col gap-2">
       <div class="flex items-center justify-between gap-2">
@@ -364,6 +365,8 @@ import _ from 'lodash'
 import ImportIcon from '~icons/lucide/import'
 
 const props = defineProps({
+  // GrowUp: mobilní Zakázky mají vlastní přepínač a čipy fází, lišta filtrů CRM se schová
+  hideMobileBar: { type: Boolean, default: false },
   doctype: { type: String, required: true },
   filters: { type: Object, default: () => ({}) },
   options: {

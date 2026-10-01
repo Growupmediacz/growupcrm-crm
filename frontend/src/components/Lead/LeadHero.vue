@@ -59,9 +59,11 @@
       </div>
       <button
         class="inline-flex h-9 items-center gap-2 rounded-full bg-white/80 px-4 text-[14px] font-semibold text-ink-gray-9 shadow-[0_2px_10px_-4px_rgba(64,72,160,.3)] hover:bg-white"
+        :class="compact && '!size-9 !justify-center !px-0'"
+        :aria-label="__('Hotovo')"
         @click="done"
       >
-        <GlIcon name="check" :size="16" />{{ __('Hotovo') }}
+        <GlIcon name="check" :size="16" /><template v-if="!compact">{{ __('Hotovo') }}</template>
       </button>
     </div>
   </div>

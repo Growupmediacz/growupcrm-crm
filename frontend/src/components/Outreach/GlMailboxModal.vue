@@ -101,7 +101,7 @@ const data = ref(null)
 watch(() => res.data, (d) => {
   if (!d) return
   data.value = d
-  Object.assign(f, d, { smtp_password: '', imap_password: '' })
+  Object.assign(f, Object.fromEntries(Object.entries(d).filter(([, v]) => v !== null && v !== undefined)), { smtp_password: '', imap_password: '' })
 }, { immediate: true })
 
 const payload = () => ({ ...f })

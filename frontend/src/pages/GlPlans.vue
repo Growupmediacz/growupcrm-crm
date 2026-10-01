@@ -10,9 +10,8 @@
           {{ o.label }}
         </button>
       </div>
-      <Button v-if="plan.data?.can_edit" :icon="isMobileView ? 'edit-2' : undefined" iconLeft="edit-2" :aria-label="__('Upravit cíle')" @click="showTargets = true">
-        <span class="hidden sm:inline">{{ __('Upravit cíle') }}</span>
-      </Button>
+      <Button v-if="plan.data?.can_edit && isMobileView" icon="edit-2" :aria-label="__('Upravit cíle')" @click="showTargets = true" />
+      <Button v-else-if="plan.data?.can_edit" iconLeft="edit-2" :label="__('Upravit cíle')" @click="showTargets = true" />
     </template>
   </LayoutHeader>
 
