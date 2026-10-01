@@ -272,6 +272,7 @@
     name="Leads"
     :icon="LeadsIcon"
   />
+  <GlLostModal v-if="showLost" v-model="showLost" :lead="lostLead" :status="lostStatus" @saved="leads.reload()" @cancel="leads.reload()" />
   <GlWonModal v-if="wonLead" v-model="showWon" :lead="wonLead" :onConfirm="confirmWon" />
   <LeadModal
     v-if="showLeadModal"
@@ -282,6 +283,7 @@
 
 <script setup>
 import GlWonModal from '@/components/Modals/GlWonModal.vue'
+import GlLostModal from '@/components/Modals/GlLostModal.vue'
 import GlMobileLeads from '@/components/Kanban/GlMobileLeads.vue'
 import { isMobileView } from '@/composables/settings'
 import GlViewHeader from '@/components/GlViewHeader.vue'
@@ -567,12 +569,22 @@ function parseRows(rows, columns = []) {
 // GrowUp: přetažení do „Vyhráno“ otevře dialog Zakázka vyhrána (datum podpisu, finální hodnota)
 const showWon = ref(false)
 const wonLead = ref(null)
+const showLost = ref(false)
+const lostLead = ref(null)
+const lostStatus = ref('')
 function onKanbanUpdate(data) {
   viewControls.value.updateKanbanSettings(data)
   const field = leads.value?.params?.column_field
   if (!data?.item || !data?.to || field !== 'status') return
-  if (getLeadStatus(data.to)?.type !== 'Won') return
   const card = (leads.value.data?.data || []).flatMap((c) => c.data || []).find((d) => d.name === data.item)
+  // Prohráno: server chce důvod, ukážeme dialog; po zrušení se karta vrátí na původní místo
+  if (getLeadStatus(data.to)?.type === 'Lost') {
+    lostLead.value = { name: data.item, order_title: card?.order_title, lead_name: card?.lead_name }
+    lostStatus.value = data.to
+    showLost.value = true
+    return
+  }
+  if (getLeadStatus(data.to)?.type !== 'Won') return
   wonLead.value = { name: data.item, order_value: card?.order_value, order_title: card?.order_title, organization: card?.organization }
   showWon.value = true
 }

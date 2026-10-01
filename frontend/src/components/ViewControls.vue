@@ -342,6 +342,7 @@ import FadedScrollableDiv from '@/components/FadedScrollableDiv.vue'
 import ColumnSettings from '@/components/ColumnSettings.vue'
 import KanbanSettings from '@/components/Kanban/KanbanSettings.vue'
 import { getSettings } from '@/stores/settings'
+import { statusesStore } from '@/stores/statuses'
 import { globalStore } from '@/stores/global'
 import { viewsStore } from '@/stores/views'
 import { usersStore } from '@/stores/users'
@@ -363,6 +364,9 @@ import { isMobileView } from '@/composables/settings'
 import Draggable from 'vuedraggable'
 import _ from 'lodash'
 import ImportIcon from '~icons/lucide/import'
+
+const { getLeadStatus } = statusesStore()
+const leadStatusType = (name) => getLeadStatus(name)?.type
 
 const props = defineProps({
   // GrowUp: mobilní Zakázky mají vlastní přepínač a čipy fází, lišta filtrů CRM se schová
@@ -1017,11 +1021,16 @@ function persistCustomView() {
 
 function updateKanbanSettings(data) {
   if (data.item && data.to) {
+    // GrowUp: přesun do „Prohráno“ vyžaduje důvod, uložení řeší stránka Zakázek dialogem (server by bez důvodu změnu odmítl)
+    if (props.doctype === 'CRM Lead' && view.value.column_field === 'status' && leadStatusType(data.to) === 'Lost') return
     call('frappe.client.set_value', {
       doctype: props.doctype,
       name: data.item,
       fieldname: view.value.column_field,
       value: data.to,
+    }).catch((e) => {
+      toast.error(e.messages?.[0] || e.message || __('Změnu se nepodařilo uložit'))
+      list.value.reload()
     })
     return
   }
