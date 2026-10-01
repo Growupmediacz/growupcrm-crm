@@ -50,6 +50,7 @@
 </template>
 <script setup>
 import AgencySettings from '@/components/Settings/AgencySettings.vue'
+import PlanSettings from '@/components/Settings/PlanSettings.vue'
 import { agencyEnabled, outreachEnabled } from '@/composables/agency'
 import { useLeadsOnlyMode } from '@/composables/leadsOnlyMode'
 
@@ -103,174 +104,61 @@ const { isManager, getUser } = usersStore()
 const user = computed(() => getUser() || {})
 
 const tabs = computed(() => {
+  // GrowUp (design 2. kolo, C6): skupiny Účet · Tým · Komunikace · Práce · Systém.
+  // Popisky položek zůstávají (podle nich se otevírá deep link, např. Profile, Users).
+  const item = {
+    profile: {
+      label: __('Profile'),
+      icon: () => h(Avatar, { size: 'xs', label: user.value.full_name, image: user.value.user_image }),
+      component: markRaw(ProfilePage),
+    },
+    preferences: { label: __('Preferences'), icon: SlidersIcon, component: markRaw(PreferencesSettings) },
+    users: { label: __('Users'), icon: 'user', component: markRaw(Users), condition: () => isManager() },
+    plan: {
+      label: __('Tarif'),
+      icon: 'credit-card',
+      component: markRaw(PlanSettings),
+      condition: () => isManager(),
+    },
+    invite: { label: __('Invite User'), icon: 'user-plus', component: markRaw(InviteUserPage), condition: () => isManager() },
+    hierarchy: { label: __('Sales Hierarchy'), icon: LucideNetwork, component: markRaw(Hierarchy), condition: () => isManager() },
+    mailbox: {
+      label: __('Schránka'),
+      icon: Email2Icon,
+      component: markRaw(defineComponent({ render: () => h(AgencySettings, { kind: 'mailbox' }) })),
+      condition: () => outreachEnabled.value,
+    },
+    templates: { label: __('Templates'), icon: EmailTemplateIcon, component: markRaw(EmailTemplatePage) },
+    accounts: { label: __('Accounts'), icon: Email2Icon, component: markRaw(EmailConfig), condition: () => isManager() },
+    projectTemplates: {
+      label: __('Šablony projektů'),
+      icon: 'folder',
+      component: markRaw(defineComponent({ render: () => h(AgencySettings, { kind: 'templates' }) })),
+      condition: () => agencyEnabled.value,
+    },
+    assignment: {
+      label: __('Assignment Rules'),
+      icon: markRaw(h(SettingsIcon2, { class: 'rotate-90' })),
+      component: markRaw(AssignmentRulePage),
+    },
+    sla: { label: __('SLA Policies'), icon: markRaw(h(ShieldCheck)), component: markRaw(SlaConfig), condition: () => !leadsOnlyMode.value },
+    forms: { label: __('Forms'), component: markRaw(FormsSettings), icon: markRaw(LucideTextCursorInput) },
+    general: { label: __('General'), component: markRaw(GeneralSettings), icon: SettingsIcon },
+    dashboard: { label: __('Dashboard'), component: markRaw(DashboardSettings), icon: LucideLayoutDashboard },
+    defaults: { label: __('Defaults'), component: markRaw(DefaultsSettings), icon: MonitorCogIcon },
+    brand: { label: __('Brand'), icon: SparkleIcon, component: markRaw(BrandSettings) },
+    home: { label: __('Home Actions'), component: markRaw(HomeActions), icon: 'house' },
+    telephony: { label: __('Telephony'), icon: PhoneIcon, component: markRaw(TelephonyPage), condition: () => !leadsOnlyMode.value },
+    whatsapp: { label: __('WhatsApp'), icon: WhatsAppIcon, component: markRaw(WhatsAppSettings), condition: () => isWhatsappInstalled.value && isManager() },
+    erp: { label: __('ERPNext'), icon: ERPNextIcon, component: markRaw(ERPNextSettings), condition: () => isManager() && !leadsOnlyMode.value },
+    sync: { label: __('Lead Syncing'), icon: 'refresh-cw', component: markRaw(LeadSyncSourcePage), condition: () => isManager() },
+  }
   let _tabs = [
-    {
-      label: __('User Configuration'),
-      items: [
-        {
-          label: __('Profile'),
-          icon: () =>
-            h(Avatar, {
-              size: 'xs',
-              label: user.value.full_name,
-              image: user.value.user_image,
-            }),
-          component: markRaw(ProfilePage),
-        },
-        {
-          label: __('Preferences'),
-          icon: SlidersIcon,
-          component: markRaw(PreferencesSettings),
-        },
-      ],
-    },
-    {
-      label: __('System Configuration'),
-      items: [
-        {
-          label: __('General'),
-          component: markRaw(GeneralSettings),
-          icon: SettingsIcon,
-        },
-        {
-          label: __('Dashboard'),
-          component: markRaw(DashboardSettings),
-          icon: LucideLayoutDashboard,
-        },
-        {
-          label: __('Defaults'),
-          component: markRaw(DefaultsSettings),
-          icon: MonitorCogIcon,
-        },
-        {
-          label: __('Brand'),
-          icon: SparkleIcon,
-          component: markRaw(BrandSettings),
-        },
-      ],
-      condition: () => isManager(),
-    },
-    {
-      label: __('User Management'),
-      items: [
-        {
-          label: __('Users'),
-          icon: 'user',
-          component: markRaw(Users),
-          condition: () => isManager(),
-        },
-        {
-          label: __('Invite User'),
-          icon: 'user-plus',
-          component: markRaw(InviteUserPage),
-          condition: () => isManager(),
-        },
-        {
-          label: __('Sales Hierarchy'),
-          icon: LucideNetwork,
-          component: markRaw(Hierarchy),
-          condition: () => isManager(),
-        },
-      ],
-      condition: () => isManager(),
-    },
-    {
-      label: __('Email'),
-      items: [
-        {
-          label: __('Accounts'),
-          icon: Email2Icon,
-          component: markRaw(EmailConfig),
-          condition: () => isManager(),
-        },
-        {
-          label: __('Templates'),
-          icon: EmailTemplateIcon,
-          component: markRaw(EmailTemplatePage),
-        },
-      ],
-    },
-    {
-      // GrowUp: agenturní moduly (jen správci se zapnutým growupcrm_agency)
-      label: __('Agentura'),
-      items: [
-        {
-          label: __('Schránka'),
-          icon: Email2Icon,
-          component: markRaw(defineComponent({ render: () => h(AgencySettings, { kind: 'mailbox' }) })),
-          condition: () => outreachEnabled.value,
-        },
-        {
-          label: __('Šablony projektů'),
-          icon: EmailTemplateIcon,
-          component: markRaw(defineComponent({ render: () => h(AgencySettings, { kind: 'templates' }) })),
-          condition: () => agencyEnabled.value,
-        },
-      ],
-      condition: () => isManager() && agencyEnabled.value,
-    },
-    {
-      label: __('Automation & Rules'),
-      items: [
-        {
-          label: __('Assignment Rules'),
-          icon: markRaw(h(SettingsIcon2, { class: 'rotate-90' })),
-          component: markRaw(AssignmentRulePage),
-        },
-        {
-          label: __('SLA Policies'),
-          icon: markRaw(h(ShieldCheck)),
-          component: markRaw(SlaConfig),
-          condition: () => !leadsOnlyMode.value,
-        },
-        {
-          label: __('Forms'),
-          component: markRaw(FormsSettings),
-          icon: markRaw(LucideTextCursorInput),
-        },
-      ],
-      condition: () => isManager(),
-    },
-    {
-      label: __('Customization'),
-      items: [
-        {
-          label: __('Home Actions'),
-          component: markRaw(HomeActions),
-          icon: 'house',
-        },
-      ],
-      condition: () => isManager(),
-    },
-    {
-      label: __('Integrations', null, 'FCRM'),
-      items: [
-        {
-          label: __('Telephony'),
-          icon: PhoneIcon,
-          component: markRaw(TelephonyPage),
-          condition: () => !leadsOnlyMode.value,
-        },
-        {
-          label: __('WhatsApp'),
-          icon: WhatsAppIcon,
-          component: markRaw(WhatsAppSettings),
-          condition: () => isWhatsappInstalled.value && isManager(),
-        },
-        {
-          label: __('ERPNext'),
-          icon: ERPNextIcon,
-          component: markRaw(ERPNextSettings),
-          condition: () => isManager() && !leadsOnlyMode.value,
-        },
-        {
-          label: __('Lead Syncing'),
-          icon: 'refresh-cw',
-          component: markRaw(LeadSyncSourcePage),
-          condition: () => isManager(),
-        },
-      ],
-    },
+    { label: __('Účet'), items: [item.profile, item.preferences] },
+    { label: __('Tým'), items: [item.users, item.plan, item.invite, item.hierarchy], condition: () => isManager() },
+    { label: __('Komunikace'), items: [item.mailbox, item.templates, item.accounts] },
+    { label: __('Práce'), items: [item.projectTemplates, item.assignment, item.sla, item.forms, item.sync], condition: () => isManager() },
+    { label: __('Systém'), items: [item.general, item.brand, item.dashboard, item.defaults, item.home, item.telephony, item.whatsapp, item.erp], condition: () => isManager() },
   ]
 
   return _tabs.filter((tab) => {

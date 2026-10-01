@@ -926,3 +926,20 @@ button[role='switch'] > span {
   transition: background 0.12s;
 }
 .gl-menu-item:hover { background: rgba(255, 255, 255, 0.75); }
+
+/* ---------- animace z designu (stisk a pružina) ---------- */
+@keyframes gl-pop {
+  0% { transform: scale(0.92); }
+  60% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+.gl-seg-btn { transition: background 0.25s ease, box-shadow 0.25s ease, color 0.2s ease, transform 0.15s ease; }
+.gl-seg-on { animation: gl-pop 0.45s var(--spring, cubic-bezier(0.34, 1.56, 0.64, 1)); }
+.gl-quick:active,
+.gl-chip:active,
+.gl-seg-btn:active,
+.gl-menu-item:active { transform: scale(0.96); }
+.gl-quick, .gl-chip { transition: transform 0.18s var(--spring, cubic-bezier(0.34, 1.56, 0.64, 1)), background 0.15s ease, box-shadow 0.2s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .gl-seg-on { animation: none; }
+}

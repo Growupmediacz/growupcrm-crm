@@ -83,7 +83,7 @@
       v-if="!allFields"
       v-model:editing="editing"
       :doc="doc"
-      @email="openEmailBox"
+      @email="showEmail = true"
       @call="(p) => ((callPerson = p), (showCall = true))"
       @saved="afterAsideSave"
       @allFields="(editing = false), (allFields = true)"
@@ -263,6 +263,7 @@
     :users="calendarUsers.data || []"
     @saved="() => activities?.all_activities?.reload()"
   />
+  <GlEmailModal v-if="showEmail" v-model="showEmail" :lead="doc" :toName="[doc.first_name, doc.last_name].filter(Boolean).join(' ')" @sent="() => activities?.all_activities?.reload()" />
   <GlWonModal v-if="showWon" v-model="showWon" :lead="doc" :onConfirm="confirmWon" />
   <GlCallModal
     v-if="showCall"
@@ -304,6 +305,7 @@ import LayoutHeader from '@/components/LayoutHeader.vue'
 import LeadHero from '@/components/Lead/LeadHero.vue'
 import LeadAside from '@/components/Lead/LeadAside.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import GlEmailModal from '@/components/Modals/GlEmailModal.vue'
 import GlCallModal from '@/components/Modals/GlCallModal.vue'
 import GlWonModal from '@/components/Modals/GlWonModal.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
@@ -394,6 +396,7 @@ function afterCall() {
   heroKey.value++
 }
 const showSchedule = ref(false)
+const showEmail = ref(false)
 const sessionUser = sessionStore().user
 const calendarUsers = createResource({ url: 'growupcrm.calendar.get_users', auto: true })
 const scheduleStart = computed(() => {
@@ -544,7 +547,7 @@ const extraTabs = computed(() =>
 const quickActions = computed(() => [
   { label: __('Zapsat hovor'), icon: 'phone', onClick: () => ((callPerson.value = {}), (showCall.value = true)) },
   { label: __('Zápis'), icon: 'doc', onClick: () => activities.value?.modalRef?.showNote() },
-  { label: __('E-mail'), icon: 'mail', onClick: () => openEmailBox() },
+  { label: __('E-mail'), icon: 'mail', onClick: () => (showEmail.value = true) },
   { label: __('Úkol'), icon: 'check', onClick: () => activities.value?.modalRef?.showTask() },
   { label: __('Naplánovat'), icon: 'cal', onClick: () => (showSchedule.value = true) },
 ])

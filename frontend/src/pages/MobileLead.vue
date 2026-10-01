@@ -94,6 +94,7 @@
     :users="calendarUsers.data || []"
     @saved="afterChange"
   />
+  <GlEmailModal v-if="showEmail" v-model="showEmail" :lead="doc" :toName="personName" @sent="afterChange" />
   <GlWonModal v-if="showWon" v-model="showWon" :lead="doc" :onConfirm="confirmWon" />
   <ConvertToDealModal v-if="showConvertToDealModal" v-model="showConvertToDealModal" :lead="doc" />
   <DeleteLinkedDocModal
@@ -128,6 +129,7 @@ import LayoutHeader from '@/components/LayoutHeader.vue'
 import LeadHero from '@/components/Lead/LeadHero.vue'
 import LeadAside from '@/components/Lead/LeadAside.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import GlEmailModal from '@/components/Modals/GlEmailModal.vue'
 import GlCallModal from '@/components/Modals/GlCallModal.vue'
 import GlWonModal from '@/components/Modals/GlWonModal.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
@@ -370,6 +372,7 @@ const editingDetails = ref(false)
 const showCall = ref(false)
 const callPerson = ref({})
 const showSchedule = ref(false)
+const showEmail = ref(false)
 const showWon = ref(false)
 const wonStatus = ref('')
 const sessionUser = sessionStore().user
@@ -403,8 +406,7 @@ function openContact() {
 }
 function openEmail() {
   showDetails.value = false
-  activities.value?.changeTabTo('emails')
-  setTimeout(() => activities.value?.emailBox && (activities.value.emailBox.show = true), 150)
+  showEmail.value = true
 }
 
 const nextStage = computed(() => {

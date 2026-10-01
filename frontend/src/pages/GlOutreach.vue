@@ -157,6 +157,7 @@
 
   <GlMailboxModal v-if="showMailbox" v-model="showMailbox" @changed="overview.reload()" />
   <GlCampaignModal v-if="showNew" v-model="showNew" @saved="(n) => router.push({ name: 'OutreachCampaign', params: { name: n } })" />
+  <GlLinkedInModal v-if="linkedInOpen" v-model="linkedInOpen" :item="currentProcess" @done="finishProcess()" @skip="skipProcess" />
   <GlProcessCallModal v-if="callOpen" v-model="callOpen" :item="currentProcess" @done="finishProcess" />
 </template>
 
@@ -170,6 +171,7 @@ import CampaignsTable from '@/components/Outreach/CampaignsTable.vue'
 import RepliesTab from '@/components/Outreach/RepliesTab.vue'
 import GlMailboxModal from '@/components/Outreach/GlMailboxModal.vue'
 import GlCampaignModal from '@/components/Outreach/GlCampaignModal.vue'
+import GlLinkedInModal from '@/components/Outreach/GlLinkedInModal.vue'
 import GlProcessCallModal from '@/components/Outreach/GlProcessCallModal.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import { api, avatarTone, initials, plain, REPLY_LABEL } from '@/composables/outreach'
@@ -207,6 +209,7 @@ const preview = (m) => plain(m.body).replace(/^Dobrý den,[^,]*,\s*/, '').slice(
 
 // Ke zpracování: hovor otevře „Zapsat hovor“, LinkedIn jen označí hotovo po ruční zprávě
 const callOpen = ref(false)
+const linkedInOpen = ref(false)
 const currentProcess = ref(null)
 async function openProcess(m) {
   currentProcess.value = m
@@ -214,12 +217,15 @@ async function openProcess(m) {
     callOpen.value = true
     return
   }
-  // LinkedIn: zpráva ke zkopírování, pak potvrdit
-  try {
-    await navigator.clipboard?.writeText(plain(m.body))
-    toast.success(__('Zpráva je zkopírovaná. Odešlete ji na LinkedInu a pak potvrďte.'))
-  } catch {}
-  if (window.confirm(__('Odeslali jste zprávu na LinkedInu?'))) finishProcess()
+  // LinkedIn: dialog se zprávou ke zkopírování (design O9)
+  linkedInOpen.value = true
+}
+async function skipProcess() {
+  const m = currentProcess.value
+  if (!m) return
+  await api('skip', { name: m.name })
+  currentProcess.value = null
+  overview.reload()
 }
 async function finishProcess(extra = {}) {
   const m = currentProcess.value
