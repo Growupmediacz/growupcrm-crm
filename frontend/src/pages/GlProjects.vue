@@ -40,7 +40,9 @@
     </template>
   </LayoutHeader>
 
-  <div v-if="board.error" class="px-4 py-10 text-center text-ink-gray-5">{{ board.error.messages?.[0] || __('Projekty se nepodařilo načíst.') }}</div>
+  <GlForbidden v-if="board.error && isForbidden(board.error)" :message="board.error.messages?.[0]" />
+  <div v-else-if="board.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Projekty se nepodařilo načíst')" :text="board.error.messages?.[0]" @retry="board.reload()" /></div>
+  <div v-else-if="!board.data" class="px-3 md:px-2"><GlSkeleton :rows="5" /></div>
   <div v-else class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
     <div class="gl-seg self-start">
       <button v-for="t in TABS" :key="t.value" class="gl-seg-btn" :class="tab === t.value && 'gl-seg-on'" @click="tab = t.value">
@@ -104,7 +106,7 @@
     <div class="grid gap-4 lg:grid-cols-3">
       <div class="gl-card p-5">
         <h2 class="mb-3 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Tento týden') }}</h2>
-        <div v-if="!board.data?.week?.length" class="text-[14px] text-ink-gray-5">{{ __('Na tento týden nic.') }}</div>
+        <GlEmptyState v-if="!board.data?.week?.length" icon="cal" :title="__('Na tento týden nic')" :text="__('Úkoly s termínem v tomto týdnu se ukážou tady.')" />
         <div v-for="(w, i) in board.data?.week || []" :key="i" class="flex items-center gap-3 py-2">
           <span class="w-7 text-[14px] font-bold text-ink-gray-9">{{ dayShort(w.at) }}</span>
           <span class="flex size-10 shrink-0 items-center justify-center rounded-xl" :class="w.kind === 'task' ? 'bg-[rgba(224,161,0,.16)] text-[#915200]' : 'bg-[rgba(59,110,246,.14)] text-[#2e5bd8]'">
@@ -120,7 +122,7 @@
 
       <div class="gl-card p-5">
         <h2 class="mb-3 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Vytížení týmu') }}</h2>
-        <div v-if="!board.data?.load?.length" class="text-[14px] text-ink-gray-5">{{ __('Žádné otevřené úkoly.') }}</div>
+        <GlEmptyState v-if="!board.data?.load?.length" icon="check" :title="__('Žádné otevřené úkoly')" :text="__('Tým nemá žádnou rozdělanou práci.')" />
         <div v-for="l in board.data?.load || []" :key="l.user" class="flex items-center gap-3 py-2">
           <span class="flex size-9 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2e4bb8]">{{ initials(userName(l.user)) }}</span>
           <span class="w-32 truncate text-[14px] text-ink-gray-9">{{ userName(l.user) }}</span>
@@ -149,6 +151,11 @@
   <GlNewProjectModal v-if="showNew" v-model="showNew" @saved="(p) => router.push({ name: 'Project', params: { projectId: p } })" />
 </template>
 <script setup>
+import GlSkeleton from '@/components/GlSkeleton.vue'
+import GlEmptyState from '@/components/GlEmptyState.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
+import { isForbidden } from '@/utils/glErrors'
+import GlForbidden from '@/components/GlForbidden.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlNewProjectModal from '@/components/Modals/GlNewProjectModal.vue'

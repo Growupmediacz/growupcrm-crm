@@ -29,6 +29,7 @@
       allowedViews: ['list', 'group_by', 'kanban'],
     }"
   />
+  <div v-if="leads.loading && !leads.data" class="px-4 pt-2"><GlSkeleton :rows="6" /></div>
   <!-- GrowUp (design 2. kolo, opravy 22, 23, 28): mobil = karty a pipeline po fázích -->
   <GlMobileLeads
     v-if="isMobileView && leads.data && ['kanban', 'list'].includes(route.params.viewType || 'list')"
@@ -282,6 +283,7 @@
 </template>
 
 <script setup>
+import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlWonModal from '@/components/Modals/GlWonModal.vue'
 import GlLostModal from '@/components/Modals/GlLostModal.vue'
 import GlMobileLeads from '@/components/Kanban/GlMobileLeads.vue'

@@ -19,7 +19,9 @@
     </template>
   </LayoutHeader>
 
-  <div v-if="overview.error" class="px-4 py-10 text-center text-ink-gray-5">{{ errorText }}</div>
+  <GlForbidden v-if="overview.error && isForbidden(overview.error)" :message="errorText" />
+  <div v-else-if="overview.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Klienty se nepodařilo načíst')" :text="errorText" @retry="overview.reload()" /></div>
+  <div v-else-if="!overview.data" class="px-3 md:px-2"><GlSkeleton :rows="5" /></div>
   <div v-else class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
     <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
       <div v-for="k in cards" :key="k.label" class="gl-card flex flex-col gap-1.5 p-4 md:p-5">
@@ -142,6 +144,11 @@
   </Dialog>
 </template>
 <script setup>
+import GlSkeleton from '@/components/GlSkeleton.vue'
+import GlEmptyState from '@/components/GlEmptyState.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
+import { isForbidden } from '@/utils/glErrors'
+import GlForbidden from '@/components/GlForbidden.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'

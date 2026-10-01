@@ -165,7 +165,7 @@
           <div class="mb-3 flex justify-end">
             <Button :label="__('Nová zakázka')" iconLeft="plus" @click="showLeadModal = true" />
           </div>
-          <div v-if="!leads.length" class="py-16 text-center text-sm text-ink-gray-5">{{ __('Firma zatím nemá žádnou zakázku.') }}</div>
+          <GlEmptyState v-if="!leads.length" class="my-6" icon="brief" :title="__('Zatím žádná zakázka')" :text="__('Firma zatím nemá žádnou zakázku.')" :action="__('Nová zakázka')" primary @action="showLeadModal = true" />
           <table v-else class="w-full text-left text-sm">
             <thead class="text-xs text-ink-gray-5">
               <tr>
@@ -280,6 +280,7 @@
 </template>
 
 <script setup>
+import GlEmptyState from '@/components/GlEmptyState.vue'
 import ErrorPage from '@/components/ErrorPage.vue'
 import Resizer from '@/components/Resizer.vue'
 import SidePanelLayout from '@/components/SidePanelLayout.vue'

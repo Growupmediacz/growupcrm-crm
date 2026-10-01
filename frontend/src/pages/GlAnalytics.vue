@@ -14,7 +14,9 @@
     </template>
   </LayoutHeader>
 
-  <GlForbidden v-if="res.error" :message="res.error.messages?.[0]" />
+  <GlForbidden v-if="res.error && isForbidden(res.error)" :message="res.error.messages?.[0]" />
+  <div v-else-if="res.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Analytiku se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" /></div>
+  <div v-else-if="!res.data" class="px-3 md:px-2"><GlSkeleton :rows="5" /></div>
   <div v-else class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
     <!-- oprava 26: na mobilu přepínač Měsíc / Čtvrtletí / Rok na celou šířku pod nadpisem -->
     <div v-if="isMobileView" class="gl-seg flex w-full">
@@ -109,7 +111,7 @@
     <div class="grid gap-4 lg:grid-cols-2">
       <div class="gl-card p-6">
         <h2 class="mb-4 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Zdroje vyhraných a otevřených zakázek') }}</h2>
-        <div v-if="!data?.sources?.length" class="text-[14px] text-ink-gray-5">{{ __('Žádné zakázky v období.') }}</div>
+        <GlEmptyState v-if="!data?.sources?.length" icon="brief" :title="__('Žádné zakázky v období')" :text="__('Zkuste delší období.')" />
         <div v-for="s in data?.sources || []" :key="s.source" class="flex items-center gap-3 py-1.5" :title="`${__(s.source)}: ${s.count}`">
           <span class="w-32 shrink-0 truncate text-[14px] text-ink-gray-9">{{ __(s.source) }}</span>
           <span class="h-2 flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.14)]">
@@ -120,7 +122,7 @@
       </div>
       <div class="gl-card p-6">
         <h2 class="mb-3 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Nejlepší klienti') }}</h2>
-        <div v-if="!data?.clients?.length" class="text-[14px] text-ink-gray-5">{{ __('Zatím žádná vyhraná zakázka v období.') }}</div>
+        <GlEmptyState v-if="!data?.clients?.length" icon="star" :title="__('Zatím žádná výhra')" :text="__('Nejlepší klienti se ukážou po první vyhrané zakázce v období.')" />
         <component
           :is="c.organization ? 'router-link' : 'div'"
           v-for="c in data?.clients || []"
@@ -140,6 +142,10 @@
   </div>
 </template>
 <script setup>
+import GlSkeleton from '@/components/GlSkeleton.vue'
+import GlEmptyState from '@/components/GlEmptyState.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
+import { isForbidden } from '@/utils/glErrors'
 import GlForbidden from '@/components/GlForbidden.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'

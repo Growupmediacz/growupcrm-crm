@@ -107,7 +107,7 @@
 
         <div class="gl-card min-w-0 p-6">
           <h2 class="mb-3 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Poslední aktivita') }}</h2>
-          <div v-if="!card.data.activity.length" class="text-[14px] text-ink-gray-5">{{ __('Zatím žádná aktivita.') }}</div>
+          <GlEmptyState v-if="!card.data.activity.length" icon="clock" :title="__('Zatím žádná aktivita')" :text="__('Hovory, schůzky a zápisy s tímto kontaktem se ukážou tady.')" />
           <component
             :is="a.lead ? 'router-link' : 'div'"
             v-for="(a, i) in card.data.activity"
@@ -178,6 +178,7 @@
   </Dialog>
 </template>
 <script setup>
+import GlEmptyState from '@/components/GlEmptyState.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'

@@ -44,9 +44,7 @@
           <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Dnešní program') }}</h2>
           <router-link :to="{ name: 'Calendar' }" class="text-[14px] font-semibold text-[#4338ca]">{{ __('Kalendář') }}</router-link>
         </div>
-        <div v-if="!data?.program.length" class="py-10 text-center text-[14px] text-ink-gray-5">
-          {{ __('Na dnešek nemáte nic naplánováno.') }}
-        </div>
+        <GlEmptyState v-if="!data?.program.length" icon="cal" :title="__('Dnes nic v programu')" :text="__('Naplánujte schůzku nebo úkol, ať se tu ukáže.')" />
         <component
           :is="programLink(item) ? 'router-link' : 'div'"
           v-for="item in data?.program"
@@ -75,7 +73,7 @@
             <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('K vyřízení') }}</h2>
             <span v-if="overdueCount" class="text-[13px] font-semibold text-[#c8321f]">{{ __('{0} po termínu', [overdueCount]) }}</span>
           </div>
-          <div v-if="!data?.todo.length" class="py-6 text-center text-[14px] text-ink-gray-5">{{ __('Vše hotovo.') }}</div>
+          <GlEmptyState v-if="!data?.todo.length" icon="check" :title="__('Všechno hotovo')" :text="__('Na dnešek nemáte žádné úkoly. Pěkná práce.')" />
           <div v-for="t in data?.todo" :key="t.name" class="flex items-center gap-3 rounded-2xl px-1 py-2.5">
             <button
               class="gl-check flex size-6 shrink-0 items-center justify-center rounded-full border-[1.75px] transition"
@@ -123,6 +121,7 @@
   <LeadModal v-if="showLeadModal" v-model="showLeadModal" :defaults="leadDefaults" />
 </template>
 <script setup>
+import GlEmptyState from '@/components/GlEmptyState.vue'
 function programLink(item) {
   if (item.lead) return { name: 'Lead', params: { leadId: item.lead }, hash: item.kind === 'task' ? '#tasks' : '#activity' }
   if (item.org) return { name: 'Organization', params: { organizationId: item.org } }

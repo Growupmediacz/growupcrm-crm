@@ -15,7 +15,9 @@
     </template>
   </LayoutHeader>
 
-  <GlForbidden v-if="plan.error" :message="plan.error.messages?.[0]" />
+  <GlForbidden v-if="plan.error && isForbidden(plan.error)" :message="plan.error.messages?.[0]" />
+  <div v-else-if="plan.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Plány se nepodařilo načíst')" :text="plan.error.messages?.[0]" @retry="plan.reload()" /></div>
+  <div v-else-if="!plan.data" class="px-3 md:px-2"><GlSkeleton :rows="5" /></div>
   <div v-else-if="p" class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
     <!-- oprava 25: na mobilu přepínač období pod nadpisem na celou šířku -->
     <div v-if="isMobileView" class="gl-seg flex w-full">
@@ -145,6 +147,9 @@
   <GlTargetsModal v-if="showTargets" v-model="showTargets" :months="monthOptions" :initial="editMonth" @saved="plan.reload()" />
 </template>
 <script setup>
+import GlSkeleton from '@/components/GlSkeleton.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
+import { isForbidden } from '@/utils/glErrors'
 import GlForbidden from '@/components/GlForbidden.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import { isMobileView } from '@/composables/settings'
