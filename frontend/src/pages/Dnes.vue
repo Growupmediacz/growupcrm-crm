@@ -3,7 +3,7 @@
     <template #left-header>
       <div class="flex flex-col leading-tight">
         <span class="text-[13px] font-semibold text-ink-gray-5">{{ dateLabel }}</span>
-        <h1 class="text-[34px] font-bold tracking-tight text-ink-gray-9">{{ greeting }}</h1>
+        <h1 class="text-[22px] font-bold tracking-tight text-ink-gray-9 md:text-[34px]">{{ greeting }}</h1>
       </div>
     </template>
     <template #right-header>
@@ -11,21 +11,23 @@
         <button
           v-for="o in scopes"
           :key="o.value"
-          class="h-8 rounded-full px-4 text-[14px] font-semibold transition"
+          class="h-8 whitespace-nowrap rounded-full px-3 text-[13px] md:px-4 md:text-[14px] font-semibold transition"
           :class="scope === o.value ? 'bg-white text-ink-gray-9 shadow-[0_2px_10px_-2px_rgba(64,72,160,.28)]' : 'text-ink-gray-5'"
           @click="scope = o.value"
         >
           {{ o.label }}
         </button>
       </div>
-      <Button variant="solid" :label="__('Nová zakázka')" iconLeft="plus" @click="showLeadModal = true" />
+      <Button variant="solid" iconLeft="plus" @click="showLeadModal = true"
+        ><span class="hidden md:inline">{{ __('Nová zakázka') }}</span></Button
+      >
     </template>
   </LayoutHeader>
 
-  <div class="flex flex-col gap-4 px-2 pb-6">
+  <div class="flex flex-col gap-4 px-3 pb-6 md:px-2">
     <!-- karty -->
-    <div class="grid grid-cols-4 gap-4">
-      <div v-for="k in cards" :key="k.label" class="gl-card gl-lift flex flex-col gap-1.5 p-5">
+    <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+      <div v-for="k in cards" :key="k.label" class="gl-card gl-lift flex flex-col gap-1.5 p-4 md:p-5">
         <div class="flex items-center gap-2 text-[14px] text-ink-gray-7">
           {{ k.label }}
           <span v-if="k.delta" class="rounded-full bg-[rgba(79,70,229,.12)] px-2 py-0.5 text-[12px] font-semibold text-[#4338ca]">{{ k.delta }}</span>
@@ -35,9 +37,9 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-12 gap-4">
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
       <!-- program -->
-      <div class="gl-card col-span-7 p-6">
+      <div class="gl-card p-4 lg:col-span-7 lg:p-6">
         <div class="mb-3 flex items-center justify-between">
           <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Dnešní program') }}</h2>
           <router-link :to="{ name: 'Calendar' }" class="text-[14px] font-semibold text-[#4338ca]">{{ __('Kalendář') }}</router-link>
@@ -65,7 +67,7 @@
         </component>
       </div>
 
-      <div class="col-span-5 flex flex-col gap-4">
+      <div class="flex flex-col gap-4 lg:col-span-5">
         <!-- k vyřízení -->
         <div class="gl-card p-6">
           <div class="mb-3 flex items-center justify-between">

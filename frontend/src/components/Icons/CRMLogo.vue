@@ -9,7 +9,7 @@
     role="img"
     aria-label="GrowUpCRM"
   >
-    <rect width="64" height="64" rx="14" fill="#16a34a" />
+    <rect width="64" height="64" rx="14" fill="#4f46e5" />
     <path
       d="M18 42 L30 30 L37 37 L48 24"
       stroke="#fff"
