@@ -14,7 +14,7 @@
     </div>
     <div class="rounded-[20px] bg-[rgba(110,120,200,.09)] p-5">
       <div class="text-[12px] font-semibold text-ink-gray-5">{{ __('Uživatelé') }}</div>
-      <div class="num text-[28px] font-bold leading-tight text-ink-gray-9" :class="full && '!text-[#c8321f]'">
+      <div class="num text-[28px] font-bold leading-tight text-ink-gray-9" :class="full && '!text-[#a82614]'">
         {{ usage.data.used }}<span v-if="usage.data.max_users" class="text-[18px] font-medium text-ink-gray-5"> / {{ usage.data.max_users }}</span>
       </div>
       <div v-if="usage.data.max_users" class="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[rgba(110,120,200,.2)]">

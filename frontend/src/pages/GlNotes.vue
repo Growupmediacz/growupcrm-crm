@@ -33,7 +33,7 @@
             <span v-if="n.ref" class="max-w-full truncate rounded-full px-2.5 py-0.5 text-[12px] font-bold" :class="REF_TONE[n.ref.kind]">{{ n.ref.label }}</span>
             <span v-if="n.org && n.ref?.kind !== 'org'" class="max-w-full truncate rounded-full bg-[rgba(110,120,200,.14)] px-2.5 py-0.5 text-[12px] font-semibold text-[#4a5173]">{{ n.org }}</span>
           </div>
-          <div class="flex items-center gap-2 text-[13px] text-ink-gray-5"><span class="flex size-6 items-center justify-center rounded-full bg-[#dde6ff] text-[9px] font-bold text-[#2e4bb8]">{{ initials(userName(n.owner)) }}</span>{{ whenLabel(n.modified) }}</div>
+          <div class="flex items-center gap-2 text-[13px] text-ink-gray-5"><span class="flex size-6 items-center justify-center rounded-full bg-[#dde6ff] text-[9px] font-bold text-[#2440a6]">{{ initials(userName(n.owner)) }}</span>{{ whenLabel(n.modified) }}</div>
         </div>
       </div>
       <div v-if="res.data && res.data.items.length < res.data.total" class="flex justify-center"><button class="gl-quick !h-11 !px-6 !text-[15px]" @click="limit += 12">{{ __('Načíst další') }}</button></div>
@@ -71,7 +71,7 @@ let timer
 watch([filter, linked, q, limit], () => { clearTimeout(timer); timer = setTimeout(() => res.fetch(params()), 200) })
 
 const REF_TONE = {
-  lead: 'bg-[rgba(139,92,246,.14)] text-[#6d3fd6]', project: 'bg-[rgba(59,110,246,.13)] text-[#2e5bd8]',
+  lead: 'bg-[rgba(139,92,246,.14)] text-[#5a2fc0]', project: 'bg-[rgba(59,110,246,.13)] text-[#1f48b8]',
   org: 'bg-[rgba(110,120,200,.14)] text-[#4a5173]', contact: 'bg-[rgba(110,120,200,.14)] text-[#4a5173]',
 }
 const userName = (u) => getUser(u)?.full_name || u

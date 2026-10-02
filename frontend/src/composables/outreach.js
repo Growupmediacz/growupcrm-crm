@@ -7,20 +7,20 @@ export const CONTACT_STATUS = {
   'Odesláno': '#3B82F6',
   'Otevřeno': '#8B5CF6',
   'Odpověděl': '#22B35E',
-  'Odhlášen': '#C8321F',
-  'Dokončeno': '#4338CA',
+  'Odhlášen': '#a82614',
+  'Dokončeno': '#3b30b8',
 }
 
 // Třídění odpovědí: štítek + barvy
 export const REPLY_LABEL = {
-  'Zájem': 'bg-[rgba(34,179,94,.16)] text-[#15803d]',
-  'Později': 'bg-[rgba(224,161,0,.2)] text-[#915200]',
-  'Automatická odpověď': 'bg-[rgba(20,160,190,.15)] text-[#0b7488]',
-  'Odmítnutí': 'bg-[rgba(200,50,31,.13)] text-[#c8321f]',
+  'Zájem': 'bg-[rgba(34,179,94,.16)] text-[#0f6b32]',
+  'Později': 'bg-[rgba(224,161,0,.2)] text-[#7a4400]',
+  'Automatická odpověď': 'bg-[rgba(20,160,190,.15)] text-[#08626f]',
+  'Odmítnutí': 'bg-[rgba(200,50,31,.13)] text-[#a82614]',
 }
 
 const TONES = [
-  ['#dde6ff', '#2e4bb8'], ['#dcf5e6', '#15803d'], ['#ffe8d6', '#b45309'], ['#eadcff', '#6d3fd6'], ['#d9f1f6', '#0b7488'],
+  ['#dde6ff', '#2440a6'], ['#dcf5e6', '#0f6b32'], ['#ffe8d6', '#8a3b0a'], ['#eadcff', '#5a2fc0'], ['#d9f1f6', '#08626f'],
 ]
 export function avatarTone(name = '') {
   let h = 0

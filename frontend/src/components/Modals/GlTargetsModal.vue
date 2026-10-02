@@ -20,7 +20,7 @@
               <tr v-for="r in rows" :key="r.user">
                 <td class="py-2 pr-3">
                   <span class="flex items-center gap-2.5">
-                    <span class="flex size-8 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2e4bb8]">{{ initials(r.full_name) }}</span>
+                    <span class="flex size-8 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2440a6]">{{ initials(r.full_name) }}</span>
                     <span class="font-semibold text-ink-gray-9">{{ r.full_name }}</span>
                   </span>
                 </td>

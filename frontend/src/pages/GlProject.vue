@@ -29,7 +29,7 @@
           </div>
           <div class="shrink-0 text-right">
             <div class="text-[13px] text-ink-gray-5">{{ __('Termín') }}</div>
-            <div class="num text-[22px] font-bold md:text-[30px]" :class="p.display_status === 'Zpožděno' ? 'text-[#c8321f]' : 'text-ink-gray-9'">{{ p.deadline ? fullDate(p.deadline) : __('Bez termínu') }}</div>
+            <div class="num text-[22px] font-bold md:text-[30px]" :class="p.display_status === 'Zpožděno' ? 'text-[#a82614]' : 'text-ink-gray-9'">{{ p.deadline ? fullDate(p.deadline) : __('Bez termínu') }}</div>
             <div v-if="p.days_left !== null" class="text-[13px] text-ink-gray-5">{{ daysLeft }}</div>
           </div>
         </div>
@@ -39,7 +39,7 @@
           <span class="num text-[13px] text-ink-gray-5">{{ __('{0} z {1} úkolů', [doneCount, p.tasks.length]) }}</span>
         </div>
         <!-- čekání na klienta -->
-        <div v-if="p.status === 'Čeká' || p.waiting" class="mt-4 flex flex-wrap items-center gap-3 rounded-[18px] bg-[rgba(224,161,0,.14)] px-4 py-3 text-[#915200]">
+        <div v-if="p.status === 'Čeká' || p.waiting" class="mt-4 flex flex-wrap items-center gap-3 rounded-[18px] bg-[rgba(224,161,0,.14)] px-4 py-3 text-[#7a4400]">
           <GlIcon name="clock" :size="22" />
           <div class="min-w-0 flex-1">
             <div class="truncate text-[15px] font-bold">{{ __('Čeká na klienta') }}: {{ p.waiting?.title || p.waiting_note }}</div>
@@ -74,9 +74,9 @@
               @click="toggleTask(t)"
             ><GlIcon v-if="t.status === 'Done'" name="check" :size="14" /></button>
             <span class="min-w-0 flex-1 truncate text-[15px]" :class="t.status === 'Done' ? 'text-ink-gray-5 line-through' : 'font-medium text-ink-gray-9'">{{ t.title }}</span>
-            <span v-if="t.waiting_on_client && t.status !== 'Done'" class="shrink-0 rounded-full bg-[rgba(224,161,0,.22)] px-2.5 py-0.5 text-[11px] font-bold text-[#915200]">{{ __('čeká na klienta') }}</span>
-            <span v-if="t.due_date" class="num shrink-0 text-[13px]" :class="isOverdue(t) ? 'font-semibold text-[#c8321f]' : 'text-ink-gray-5'">{{ shortDate(t.due_date) }}</span>
-            <span v-if="t.assigned_to" class="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2e4bb8]" :title="userName(t.assigned_to)">{{ initials(userName(t.assigned_to)) }}</span>
+            <span v-if="t.waiting_on_client && t.status !== 'Done'" class="shrink-0 rounded-full bg-[rgba(224,161,0,.22)] px-2.5 py-0.5 text-[11px] font-bold text-[#7a4400]">{{ __('čeká na klienta') }}</span>
+            <span v-if="t.due_date" class="num shrink-0 text-[13px]" :class="isOverdue(t) ? 'font-semibold text-[#a82614]' : 'text-ink-gray-5'">{{ shortDate(t.due_date) }}</span>
+            <span v-if="t.assigned_to" class="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" :title="userName(t.assigned_to)">{{ initials(userName(t.assigned_to)) }}</span>
             <span v-else class="size-7 shrink-0" />
           </div>
           <button v-if="view === 'phase'" class="flex items-center gap-2 px-1 py-2 text-[14px] font-medium text-ink-gray-7 hover:text-[#4F46E5]" @click="focusNew(g.phase)"><GlIcon name="plus" :size="15" />{{ __('Přidat úkol') }}</button>
@@ -107,7 +107,7 @@
       <div class="gl-card p-6">
         <div class="mb-2 flex items-baseline justify-between"><h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Tým') }}</h2><button class="gl-fill" @click="openEdit">{{ __('Upravit') }}</button></div>
         <div v-for="m in p.team_load" :key="m.user" class="flex items-center gap-3 py-1.5">
-          <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2e4bb8]">{{ initials(userName(m.user)) }}</span>
+          <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2440a6]">{{ initials(userName(m.user)) }}</span>
           <span class="min-w-0 flex-1"><span class="block truncate text-[15px] font-semibold text-ink-gray-9">{{ userName(m.user) }}</span><span v-if="m.owner" class="block text-[12px] text-ink-gray-5">{{ __('vlastník') }}</span></span>
           <span class="num text-[13px] text-ink-gray-5">{{ tasksWord(m.tasks) }}</span>
         </div>
@@ -117,7 +117,7 @@
         <div v-for="m in p.milestones" :key="m.title" class="flex items-center gap-3 py-1.5">
           <span class="size-2.5 shrink-0 rounded-full" :style="{ background: m.done ? '#22b35e' : m.client ? '#e0a100' : '#c7c9f6' }" />
           <span class="min-w-0 flex-1"><span class="block truncate text-[15px] text-ink-gray-9" :class="m.done && 'line-through opacity-60'">{{ m.title }}</span><span v-if="m.client && !m.done" class="block text-[12px] text-ink-gray-5">{{ __('čeká se') }}</span></span>
-          <span v-if="m.date" class="num text-[13px]" :class="!m.done && m.date < today ? 'font-semibold text-[#c8321f]' : 'text-ink-gray-5'">{{ shortDate(m.date) }}</span>
+          <span v-if="m.date" class="num text-[13px]" :class="!m.done && m.date < today ? 'font-semibold text-[#a82614]' : 'text-ink-gray-5'">{{ shortDate(m.date) }}</span>
         </div>
       </div>
     </div>

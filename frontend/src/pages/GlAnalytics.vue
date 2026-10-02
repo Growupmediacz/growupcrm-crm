@@ -46,7 +46,7 @@
       <div v-for="k in kpis" :key="k.label" class="gl-card flex flex-col gap-1.5 p-4 md:p-5">
         <div class="flex items-center gap-2 text-[14px] text-ink-gray-7">
           {{ k.label }}
-          <span v-if="k.badge" class="rounded-full px-2 py-0.5 text-[12px] font-bold" :class="k.badgeUp ? 'bg-[rgba(79,70,229,.12)] text-[#4338ca]' : 'bg-[rgba(229,72,77,.12)] text-[#c8321f]'">{{ k.badge }}</span>
+          <span v-if="k.badge" class="rounded-full px-2 py-0.5 text-[12px] font-bold" :class="k.badgeUp ? 'bg-[rgba(79,70,229,.12)] text-[#3b30b8]' : 'bg-[rgba(229,72,77,.12)] text-[#a82614]'">{{ k.badge }}</span>
         </div>
         <div class="num text-[30px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[40px]">{{ k.value }}</div>
         <div class="truncate text-[13px] text-ink-gray-5">{{ k.sub }}</div>

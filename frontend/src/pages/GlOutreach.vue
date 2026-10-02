@@ -27,7 +27,7 @@
         </div>
         <div class="gl-card flex flex-col gap-1 p-4 md:p-5">
           <div class="flex items-center justify-between text-[14px] text-ink-gray-7">{{ __('Odpovědi') }}
-            <span v-if="ov.kpis.replies_new" class="rounded-full bg-[rgba(79,70,229,.12)] px-2 py-0.5 text-[12px] font-bold text-[#4338ca]">{{ ov.kpis.replies_new }} {{ __('nové') }}</span>
+            <span v-if="ov.kpis.replies_new" class="rounded-full bg-[rgba(79,70,229,.12)] px-2 py-0.5 text-[12px] font-bold text-[#3b30b8]">{{ ov.kpis.replies_new }} {{ __('nové') }}</span>
           </div>
           <div class="num text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[42px]">{{ ov.kpis.replies_week }}</div>
           <div class="text-[13px] text-ink-gray-5">{{ __('tento týden') }}<template v-if="ov.kpis.sent"> · {{ ov.kpis.reply_pct }} % {{ __('z odeslaných') }}</template></div>
@@ -56,7 +56,7 @@
             <span class="flex size-10 shrink-0 items-center justify-center rounded-full text-[12px] font-bold" :style="avatarTone(m.contact_name)">{{ initials(m.contact_name) }}</span>
             <div class="min-w-0 flex-1">
               <div class="truncate"><b class="text-[15px] text-ink-gray-9">{{ m.contact_name }}</b> <span class="text-[13px] text-ink-gray-5">{{ m.organization }} · {{ __('krok {0}', [m.step_index + 1]) }} · {{ __('e-mail') }}</span></div>
-              <div class="flex items-center gap-1.5 truncate text-[13px] text-ink-gray-5"><GlIcon name="sparkles" :size="13" class="shrink-0 text-[#6d3fd6]" /><span class="truncate">{{ preview(m) }}</span></div>
+              <div class="flex items-center gap-1.5 truncate text-[13px] text-ink-gray-5"><GlIcon name="sparkles" :size="13" class="shrink-0 text-[#5a2fc0]" /><span class="truncate">{{ preview(m) }}</span></div>
             </div>
             <router-link :to="{ name: 'OutreachReview', params: { name: m.name } }" class="gl-quick shrink-0">{{ __('Zkontrolovat') }}</router-link>
           </div>
@@ -77,7 +77,7 @@
             </div>
             <GlEmptyState v-if="!ov.process.length" icon="phone" :title="__('Nic ke zpracování')" :text="__('Hovory a zprávy na LinkedIn se objeví podle sekvence kampaně.')" />
             <div v-for="m in ov.process" :key="m.name" class="flex items-center gap-3 py-2">
-              <span class="flex size-10 shrink-0 items-center justify-center rounded-xl" :class="m.step_type === 'Hovor' ? 'bg-[rgba(249,115,22,.14)] text-[#c2410c]' : 'bg-[rgba(79,70,229,.12)] text-[#4338ca]'">
+              <span class="flex size-10 shrink-0 items-center justify-center rounded-xl" :class="m.step_type === 'Hovor' ? 'bg-[rgba(249,115,22,.14)] text-[#a3360a]' : 'bg-[rgba(79,70,229,.12)] text-[#3b30b8]'">
                 <GlIcon :name="m.step_type === 'Hovor' ? 'phone' : 'link'" :size="18" />
               </span>
               <div class="min-w-0 flex-1">
@@ -127,7 +127,7 @@
           <div class="truncate"><b class="text-[15px] text-ink-gray-9">{{ m.contact_name }}</b> <span class="text-[13px] text-ink-gray-5">{{ m.organization }} · {{ m.campaign_name }}</span></div>
           <div class="truncate text-[13px] text-ink-gray-7">{{ m.subject }}</div>
         </div>
-        <span v-if="m.status === 'Odloženo'" class="rounded-full bg-[rgba(224,161,0,.2)] px-2.5 py-0.5 text-[12px] font-bold text-[#915200]">{{ __('Odloženo') }}</span>
+        <span v-if="m.status === 'Odloženo'" class="rounded-full bg-[rgba(224,161,0,.2)] px-2.5 py-0.5 text-[12px] font-bold text-[#7a4400]">{{ __('Odloženo') }}</span>
         <GlIcon name="right" :size="16" class="text-ink-gray-4" />
       </router-link>
     </div>

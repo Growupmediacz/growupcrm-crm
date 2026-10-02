@@ -14,10 +14,10 @@
     >
       {{ __('Načíst další') }}
     </button>
-    <span class="text-[13px] text-[var(--text-3,#5B6285)]">{{ shownLabel }}</span>
+    <span class="text-[13px] text-[var(--text-3,#464c70)]">{{ shownLabel }}</span>
   </div>
   <div v-else class="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-    <span class="text-[13px] text-[var(--text-3,#5B6285)]">{{ shownLabel }}</span>
+    <span class="text-[13px] text-[var(--text-3,#464c70)]">{{ shownLabel }}</span>
     <button
       v-if="showLoadMore"
       class="h-9 rounded-full bg-white/85 px-4 text-[14px] font-semibold text-ink-gray-9 shadow-[0_2px_10px_-3px_rgba(64,72,160,0.25)] transition hover:bg-white active:scale-[0.97]"
@@ -26,7 +26,7 @@
       {{ __('Načíst další') }}
     </button>
     <span v-else />
-    <span class="flex items-center justify-end gap-1 text-[13px] text-[var(--text-3,#5B6285)]">
+    <span class="flex items-center justify-end gap-1 text-[13px] text-[var(--text-3,#464c70)]">
       {{ __('Na stránku') }}
       <template v-for="(n, i) in pageLengthOptions" :key="n">
         <span v-if="i" aria-hidden="true">·</span>

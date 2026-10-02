@@ -6,7 +6,7 @@
       <ol class="mb-5 flex items-center gap-2 text-[13px] font-semibold">
         <template v-for="(s, i) in STEPS" :key="s">
           <li class="flex items-center gap-2" :class="step === i ? 'text-ink-gray-9' : 'text-ink-gray-5'">
-            <span class="flex size-7 items-center justify-center rounded-full text-[12px]" :class="step === i ? 'bg-[#4F46E5] text-white' : step > i ? 'bg-[rgba(34,179,94,.18)] text-[#15803d]' : 'bg-[rgba(110,120,200,.14)]'">{{ step > i ? '✓' : i + 1 }}</span>{{ s }}
+            <span class="flex size-7 items-center justify-center rounded-full text-[12px]" :class="step === i ? 'bg-[#4F46E5] text-white' : step > i ? 'bg-[rgba(34,179,94,.18)] text-[#0f6b32]' : 'bg-[rgba(110,120,200,.14)]'">{{ step > i ? '✓' : i + 1 }}</span>{{ s }}
           </li>
           <span v-if="i < STEPS.length - 1" class="h-px flex-1 bg-[rgba(110,120,200,.25)]" />
         </template>
@@ -33,8 +33,8 @@
           <span class="text-[13px] text-ink-gray-5">{{ __('Pošleme testovací e-mail sami sobě') }}</span>
         </div>
         <div v-if="result" class="flex items-start gap-3 rounded-2xl px-4 py-3" :class="result.ok ? 'bg-[rgba(34,179,94,.14)]' : 'bg-[rgba(200,50,31,.1)]'">
-          <GlIcon :name="result.ok ? 'check' : 'alert'" :size="18" :class="result.ok ? 'text-[#15803d]' : 'text-[#c8321f]'" />
-          <div class="text-[14px]"><b :class="result.ok ? 'text-[#15803d]' : 'text-[#c8321f]'">{{ result.ok ? __('Spojení funguje') : __('Spojení se nepodařilo') }}</b><br /><span class="text-ink-gray-7">{{ result.ok ? __('Testovací e-mail odešel za {0} s', [String(result.seconds).replace('.', ',')]) : result.message }}</span></div>
+          <GlIcon :name="result.ok ? 'check' : 'alert'" :size="18" :class="result.ok ? 'text-[#0f6b32]' : 'text-[#a82614]'" />
+          <div class="text-[14px]"><b :class="result.ok ? 'text-[#0f6b32]' : 'text-[#a82614]'">{{ result.ok ? __('Spojení funguje') : __('Spojení se nepodařilo') }}</b><br /><span class="text-ink-gray-7">{{ result.ok ? __('Testovací e-mail odešel za {0} s', [String(result.seconds).replace('.', ',')]) : result.message }}</span></div>
         </div>
         <p class="text-[13px] text-ink-gray-5">{{ __('Heslo ukládáme šifrovaně. U Gmailu a Microsoft 365 použijte heslo aplikace.') }}</p>
       </div>

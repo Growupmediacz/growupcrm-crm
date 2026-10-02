@@ -12,7 +12,7 @@
     </div>
     <div class="rounded-[20px] bg-[rgba(110,120,200,.07)] p-2">
       <div v-for="u in people" :key="u.name" class="flex items-center gap-3 rounded-2xl px-3 py-2.5">
-        <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2e4bb8]">{{ initials(u.full_name) }}</span>
+        <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2440a6]">{{ initials(u.full_name) }}</span>
         <span class="min-w-0 flex-1"><span class="block truncate text-[15px] font-bold text-ink-gray-9">{{ u.full_name }}</span><span class="block truncate text-[12px] text-ink-gray-5">{{ u.name }}</span></span>
         <span class="rounded-full bg-white/80 px-3 py-1 text-[13px] font-semibold text-ink-gray-8">{{ ROLES[u.role] || u.role }}</span>
         <span class="flex items-center gap-1.5 text-[13px] text-ink-gray-7"><span class="size-2 rounded-full bg-[#22b35e]" />{{ __('Aktivní') }}</span>

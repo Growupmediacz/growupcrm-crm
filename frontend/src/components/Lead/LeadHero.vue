@@ -26,7 +26,7 @@
         <div v-if="doc.order_value" class="num font-bold leading-tight tracking-tight text-ink-gray-9" :class="compact ? 'text-[22px]' : 'text-[38px]'">{{ money }}</div>
         <!-- oprava 7: prázdná hodnota = tlumené „Bez hodnoty“ + „Doplnit“ -->
         <template v-else>
-          <div class="font-semibold leading-tight text-[var(--empty-color,#5B6285)]" :class="compact ? 'text-[16px]' : 'text-[20px]'">{{ __('Bez hodnoty') }}</div>
+          <div class="font-semibold leading-tight text-[var(--empty-color,#464c70)]" :class="compact ? 'text-[16px]' : 'text-[20px]'">{{ __('Bez hodnoty') }}</div>
           <button class="gl-fill" @click="emit('fill')">{{ __('Doplnit') }}</button>
         </template>
       </div>
@@ -50,9 +50,9 @@
       class="mt-5 flex items-center gap-4 rounded-[18px] px-4 py-3"
       :class="overdue ? 'bg-[rgba(200,50,31,.09)]' : 'bg-[rgba(224,161,0,.14)]'"
     >
-      <GlIcon name="clock" :size="22" :class="overdue ? 'text-[#c8321f]' : 'text-[#915200]'" />
+      <GlIcon name="clock" :size="22" :class="overdue ? 'text-[#a82614]' : 'text-[#7a4400]'" />
       <div class="min-w-0 flex-1">
-        <div class="truncate text-[16px] font-bold" :class="overdue ? 'text-[#c8321f]' : 'text-[#915200]'">
+        <div class="truncate text-[16px] font-bold" :class="overdue ? 'text-[#a82614]' : 'text-[#7a4400]'">
           {{ __('Další krok') }}: {{ next.title }}
         </div>
         <div class="truncate text-[13px] text-ink-gray-7">{{ nextSub }}</div>

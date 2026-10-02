@@ -58,10 +58,10 @@
       <!-- obchodníci -->
       <!-- mobil: obchodníci jako karty -->
       <template v-if="isMobileView">
-        <div class="-mb-2 px-1 text-[13px] font-semibold text-[var(--text-3,#5B6285)]">{{ __('Obchodníci') }}</div>
+        <div class="-mb-2 px-1 text-[13px] font-semibold text-[var(--text-3,#464c70)]">{{ __('Obchodníci') }}</div>
         <div class="gl-card !rounded-[22px] px-4">
           <div v-for="(r, i) in p.people" :key="r.user" class="flex items-center gap-3 py-3" :class="i && 'border-t border-[rgba(110,120,200,.12)]'">
-            <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2e4bb8]">{{ initials(r.full_name) }}</span>
+            <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2440a6]">{{ initials(r.full_name) }}</span>
             <span class="min-w-0 flex-1">
               <span class="block truncate text-[17px] font-bold text-ink-gray-9">{{ r.full_name }}</span>
               <span class="num block text-[13px] text-ink-gray-5">
@@ -92,7 +92,7 @@
             <tr v-for="r in p.people" :key="r.user">
               <td class="py-2.5">
                 <span class="flex items-center gap-2.5">
-                  <span class="flex size-8 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2e4bb8]">{{ initials(r.full_name) }}</span>
+                  <span class="flex size-8 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2440a6]">{{ initials(r.full_name) }}</span>
                   <span class="font-semibold text-ink-gray-9">{{ r.full_name }}</span>
                 </span>
               </td>
@@ -118,7 +118,7 @@
       <div class="gl-card p-5">
         <div class="flex items-center justify-between gap-2 text-[14px] text-ink-gray-7">
           {{ __('Předpoklad do konce období') }}
-          <span v-if="p.projection !== null && p.team.target.won" class="rounded-full px-2 py-0.5 text-[12px] font-bold" :class="p.on_track ? 'bg-[rgba(79,70,229,.12)] text-[#4338ca]' : 'bg-[rgba(224,161,0,.16)] text-[#915200]'">
+          <span v-if="p.projection !== null && p.team.target.won" class="rounded-full px-2 py-0.5 text-[12px] font-bold" :class="p.on_track ? 'bg-[rgba(79,70,229,.12)] text-[#3b30b8]' : 'bg-[rgba(224,161,0,.16)] text-[#7a4400]'">
             {{ p.on_track ? __('na dobré cestě') : __('pod plánem') }}
           </span>
         </div>

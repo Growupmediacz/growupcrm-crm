@@ -121,8 +121,8 @@
             <span class="min-w-0 flex-1">
               <span class="flex items-center gap-2">
                 <span class="truncate text-[15px] font-semibold text-ink-gray-9">{{ a.title }}</span>
-                <span v-if="a.badge" class="rounded-full bg-[rgba(224,161,0,.18)] px-2 py-0.5 text-[11px] font-bold text-[#915200]">{{ a.badge }}</span>
-                <span v-if="a.upcoming" class="rounded-full bg-[rgba(79,70,229,.12)] px-2 py-0.5 text-[11px] font-bold text-[#4338ca]">{{ __('Naplánováno') }}</span>
+                <span v-if="a.badge" class="rounded-full bg-[rgba(224,161,0,.18)] px-2 py-0.5 text-[11px] font-bold text-[#7a4400]">{{ a.badge }}</span>
+                <span v-if="a.upcoming" class="rounded-full bg-[rgba(79,70,229,.12)] px-2 py-0.5 text-[11px] font-bold text-[#3b30b8]">{{ __('Naplánováno') }}</span>
               </span>
               <span class="block truncate text-[12.5px] text-ink-gray-5">{{ a.text || when(a.date) }}</span>
             </span>
@@ -280,11 +280,11 @@ function openImport() {
 }
 
 const KIND = {
-  call: { icon: 'phone', tone: 'bg-[#fde8dc] text-[#c2410c]' },
-  event: { icon: 'cal', tone: 'bg-[#e6ecff] text-[#2e5bd8]' },
+  call: { icon: 'phone', tone: 'bg-[#fde8dc] text-[#a3360a]' },
+  event: { icon: 'cal', tone: 'bg-[#e6ecff] text-[#1f48b8]' },
   note: { icon: 'doc', tone: 'bg-[#efe7ff] text-[#6d3fd0]' },
 }
-const TONES = ['bg-[#dde6ff] text-[#2e4bb8]', 'bg-[#ffe9d6] text-[#b4560f]', 'bg-[#efe7ff] text-[#6d3fd0]', 'bg-[#dcf5e6] text-[#15803d]']
+const TONES = ['bg-[#dde6ff] text-[#2440a6]', 'bg-[#ffe9d6] text-[#b4560f]', 'bg-[#efe7ff] text-[#6d3fd0]', 'bg-[#dcf5e6] text-[#0f6b32]']
 const tone = (s) => TONES[[...(s || '')].reduce((a, ch) => a + ch.charCodeAt(0), 0) % TONES.length]
 const initials = (s) =>
   (s || '?')

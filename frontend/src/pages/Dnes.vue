@@ -30,7 +30,7 @@
       <div v-for="k in cards" :key="k.label" class="gl-card gl-lift flex flex-col gap-1.5 p-4 md:p-5">
         <div class="flex items-center gap-2 text-[14px] text-ink-gray-7">
           {{ k.label }}
-          <span v-if="k.delta" class="rounded-full bg-[rgba(79,70,229,.12)] px-2 py-0.5 text-[12px] font-semibold text-[#4338ca]">{{ k.delta }}</span>
+          <span v-if="k.delta" class="rounded-full bg-[rgba(79,70,229,.12)] px-2 py-0.5 text-[12px] font-semibold text-[#3b30b8]">{{ k.delta }}</span>
         </div>
         <div class="num text-[40px] font-bold leading-none tracking-tight text-ink-gray-9">{{ k.value }}</div>
         <div class="text-[13px] text-ink-gray-5">{{ k.sub }}</div>
@@ -42,7 +42,7 @@
       <div class="gl-card p-4 lg:col-span-7 lg:p-6">
         <div class="mb-3 flex items-center justify-between">
           <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Dnešní program') }}</h2>
-          <router-link :to="{ name: 'Calendar' }" class="text-[14px] font-semibold text-[#4338ca]">{{ __('Kalendář') }}</router-link>
+          <router-link :to="{ name: 'Calendar' }" class="text-[14px] font-semibold text-[#3b30b8]">{{ __('Kalendář') }}</router-link>
         </div>
         <GlEmptyState v-if="!data?.program.length" icon="cal" :title="__('Dnes nic v programu')" :text="__('Naplánujte schůzku nebo úkol, ať se tu ukáže.')" />
         <component
@@ -61,7 +61,7 @@
             <div class="truncate text-[16px] font-semibold text-ink-gray-9" :class="item.status === 'Done' ? 'line-through' : ''">{{ item.title }}</div>
             <div class="truncate text-[13px] text-ink-gray-5">{{ item.sub }}</div>
           </div>
-          <span v-if="soon(item)" class="rounded-full bg-[rgba(79,70,229,.12)] px-3 py-1 text-[13px] font-semibold text-[#4338ca]">{{ soon(item) }}</span>
+          <span v-if="soon(item)" class="rounded-full bg-[rgba(79,70,229,.12)] px-3 py-1 text-[13px] font-semibold text-[#3b30b8]">{{ soon(item) }}</span>
           <span class="w-14 text-right text-[13px] text-ink-gray-5">{{ item.kind === 'event' ? __('Schůzka') : __('Úkol') }}</span>
         </component>
       </div>
@@ -71,13 +71,13 @@
         <div class="gl-card p-6">
           <div class="mb-3 flex items-center justify-between">
             <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('K vyřízení') }}</h2>
-            <span v-if="overdueCount" class="text-[13px] font-semibold text-[#c8321f]">{{ __('{0} po termínu', [overdueCount]) }}</span>
+            <span v-if="overdueCount" class="text-[13px] font-semibold text-[#a82614]">{{ __('{0} po termínu', [overdueCount]) }}</span>
           </div>
           <GlEmptyState v-if="!data?.todo.length" icon="check" :title="__('Všechno hotovo')" :text="__('Na dnešek nemáte žádné úkoly. Pěkná práce.')" />
           <div v-for="t in data?.todo" :key="t.name" class="flex items-center gap-3 rounded-2xl px-1 py-2.5">
             <button
               class="gl-check flex size-6 shrink-0 items-center justify-center rounded-full border-[1.75px] transition"
-              :class="doneIds.has(t.name) ? 'gl-check-done border-[#4f46e5] bg-[#4f46e5] text-white' : 'border-[#a5aac6] bg-white/60'"
+              :class="doneIds.has(t.name) ? 'gl-check-done border-[#4f46e5] bg-[#4f46e5] text-white' : 'border-[#8a90ae] bg-white/60'"
               :aria-label="__('Označit jako hotové')"
               @click="markDone(t)"
             >
@@ -90,7 +90,7 @@
             >
               {{ t.title }}
             </router-link>
-            <span class="text-[13px] font-semibold" :class="t.overdue ? 'text-[#c8321f]' : 'text-ink-gray-5'">{{ dueShort(t) }}</span>
+            <span class="text-[13px] font-semibold" :class="t.overdue ? 'text-[#a82614]' : 'text-ink-gray-5'">{{ dueShort(t) }}</span>
           </div>
         </div>
 
@@ -98,7 +98,7 @@
         <div class="gl-card p-6">
           <div class="mb-3 flex items-center justify-between">
             <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Nové zakázky') }}</h2>
-            <router-link :to="{ name: 'Leads', params: { viewType: 'kanban' } }" class="text-[14px] font-semibold text-[#4338ca]">{{ __('Kanban') }}</router-link>
+            <router-link :to="{ name: 'Leads', params: { viewType: 'kanban' } }" class="text-[14px] font-semibold text-[#3b30b8]">{{ __('Kanban') }}</router-link>
           </div>
           <router-link
             v-for="l in data?.newest"
@@ -106,7 +106,7 @@
             :to="{ name: 'Lead', params: { leadId: l.name } }"
             class="flex items-center gap-3 rounded-2xl px-1 py-2.5 transition hover:bg-white/65"
           >
-            <div class="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2e4bb8]">{{ initials(l.organization || l.lead_name) }}</div>
+            <div class="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2440a6]">{{ initials(l.organization || l.lead_name) }}</div>
             <div class="min-w-0 flex-1">
               <div class="truncate text-[15px] font-semibold text-ink-gray-9">{{ l.order_title || l.lead_name }}</div>
               <div class="truncate text-[13px] text-ink-gray-5">{{ [l.organization, l.territory].filter(Boolean).join(' · ') }}</div>
@@ -184,8 +184,8 @@ const cards = computed(() => {
 })
 
 const tone = {
-  event: 'bg-[rgba(59,110,246,.13)] text-[#2e5bd8]',
-  task: 'bg-[rgba(234,170,8,.18)] text-[#915200]',
+  event: 'bg-[rgba(59,110,246,.13)] text-[#1f48b8]',
+  task: 'bg-[rgba(234,170,8,.18)] text-[#7a4400]',
 }
 const d = (iso) => new Date(String(iso).replace(' ', 'T'))
 const hhmm = (iso) => `${d(iso).getHours()}:${String(d(iso).getMinutes()).padStart(2, '0')}`

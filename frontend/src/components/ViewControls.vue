@@ -1091,6 +1091,31 @@ function loadMoreKanban(columnName) {
   list.value.reload()
 }
 
+// GrowUp: mobilní filtr běží nad načtenými zakázkami, proto se při jeho použití načte všechno
+function loadAllRows() {
+  if (!list.value?.data || list.value.loading) return
+  const d = list.value.data
+  if (route.params.viewType === 'kanban') {
+    let columns = d.kanban_columns || '[]'
+    if (typeof columns === 'string') columns = JSON.parse(columns)
+    let changed = false
+    for (const c of d.data || []) {
+      const all = c.column?.all_count || 0
+      const col = columns.find((x) => x.name == c.column?.name)
+      if (col && all > (col.page_length || c.column?.count || 0)) {
+        col.page_length = all
+        changed = true
+      }
+    }
+    if (!changed) return
+    list.value.params.kanban_columns = columns
+    view.value.kanban_columns = columns
+    list.value.reload()
+  } else if (d.total_count > d.row_count) {
+    updatePageLength(d.total_count)
+  }
+}
+
 function createOrUpdateStandardView() {
   if (route.query.view) return
   view.value.doctype = props.doctype
@@ -1415,6 +1440,7 @@ defineExpose({
   updateKanbanSettings,
   fetchAndUpdateKanbanColumns,
   loadMoreKanban,
+  loadAllRows,
   viewActions,
   viewsDropdownOptions,
   currentView,

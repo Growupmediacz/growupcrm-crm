@@ -39,7 +39,7 @@
           <!-- mobil: karta řádku – jméno a čas, firma, výsledek s délkou, poznámka -->
           <div v-if="isMobileView" class="flex flex-col">
             <component :is="c.lead ? 'router-link' : 'div'" v-for="c in res.data.items" :key="c.name" :to="c.lead ? { name: 'Lead', params: { leadId: c.lead } } : undefined" class="flex gap-3 border-t border-[rgba(110,120,200,.12)] py-3.5 first:border-0">
-              <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2e4bb8]">{{ initials(c.person || c.org) }}</span>
+              <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2440a6]">{{ initials(c.person || c.org) }}</span>
               <span class="min-w-0 flex-1">
                 <span class="flex items-baseline justify-between gap-2"><b class="truncate text-[18px] text-ink-gray-9">{{ c.person || c.org }}</b><span class="num shrink-0 text-[13px] text-ink-gray-5">{{ whenLabel(c.when) }}</span></span>
                 <span class="block truncate text-[14px] text-ink-gray-5">{{ c.org }}</span>
@@ -51,12 +51,12 @@
           <div v-else class="hidden grid-cols-[110px_1.4fr_50px_130px_70px_1.6fr_40px] gap-3 pb-2 text-[12px] font-semibold text-ink-gray-5 md:grid"><span>{{ __('Kdy') }}</span><span>{{ __('Kontakt') }}</span><span>{{ __('Směr') }}</span><span>{{ __('Výsledek') }}</span><span>{{ __('Délka') }}</span><span>{{ __('Poznámka') }}</span><span>{{ __('Kdo') }}</span></div>
           <component v-if="!isMobileView" :is="c.lead ? 'router-link' : 'div'" v-for="c in res.data.items" :key="c.name" :to="c.lead ? { name: 'Lead', params: { leadId: c.lead } } : undefined" class="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 border-t border-[rgba(110,120,200,.12)] py-3 md:grid-cols-[110px_1.4fr_50px_130px_70px_1.6fr_40px]">
             <span class="num hidden text-[13px] text-ink-gray-5 md:block">{{ whenLabel(c.when) }}</span>
-            <span class="flex min-w-0 items-center gap-3"><span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2e4bb8]">{{ initials(c.person || c.org) }}</span><span class="min-w-0"><span class="block truncate text-[15px] font-bold text-ink-gray-9">{{ c.person || c.org }}</span><span class="block truncate text-[13px] text-ink-gray-5">{{ c.org }}</span></span></span>
+            <span class="flex min-w-0 items-center gap-3"><span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2440a6]">{{ initials(c.person || c.org) }}</span><span class="min-w-0"><span class="block truncate text-[15px] font-bold text-ink-gray-9">{{ c.person || c.org }}</span><span class="block truncate text-[13px] text-ink-gray-5">{{ c.org }}</span></span></span>
             <span class="hidden text-ink-gray-5 md:block"><GlIcon :name="c.incoming ? 'down' : 'up'" :size="15" class="[transform:rotate(-45deg)]" /></span>
             <span><span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[12px] font-bold" :class="TONE[c.kind]">{{ LABEL[c.kind] }}</span></span>
             <span class="num hidden text-[14px] text-ink-gray-9 md:block">{{ c.duration ? mmss(c.duration) : '' }}</span>
             <span class="gl-text col-span-2 truncate text-[13px] text-ink-gray-7 md:col-span-1">{{ c.note || __('Bez poznámky') }}</span>
-            <span class="hidden size-8 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2e4bb8] md:flex" :title="userName(c.caller)">{{ initials(userName(c.caller)) }}</span>
+            <span class="hidden size-8 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2440a6] md:flex" :title="userName(c.caller)">{{ initials(userName(c.caller)) }}</span>
           </component>
         </div>
         <GlListFooter v-if="res.data.items.length" class="mt-3" :modelValue="limit" :options="{ rowCount: res.data.items.length, totalCount: res.data.total }" @update:modelValue="(v) => (limit = v)" @loadMore="limit += 20" />
@@ -92,7 +92,7 @@ const legacy = computed(() => (route.params.viewType && route.params.viewType !=
 const { getUser } = usersStore()
 
 const OUTCOMES = [{ key: '', label: __('Vše') }, { key: 'reached', label: __('Dovolal') }, { key: 'no_answer', label: __('Nebral') }, { key: 'callback', label: __('Zavolat zpět') }]
-const TONE = { reached: 'bg-[rgba(34,179,94,.16)] text-[#15803d]', no_answer: 'bg-[rgba(249,115,22,.15)] text-[#c2410c]', callback: 'bg-[rgba(224,161,0,.2)] text-[#915200]', other: 'bg-[rgba(110,120,200,.14)] text-[#4a5173]' }
+const TONE = { reached: 'bg-[rgba(34,179,94,.16)] text-[#0f6b32]', no_answer: 'bg-[rgba(249,115,22,.15)] text-[#a3360a]', callback: 'bg-[rgba(224,161,0,.2)] text-[#7a4400]', other: 'bg-[rgba(110,120,200,.14)] text-[#4a5173]' }
 const LABEL = { reached: __('Dovolal'), no_answer: __('Nebral'), callback: __('Zavolat zpět'), other: __('Jiné') }
 const scope = ref('mine')
 const outcome = ref('')

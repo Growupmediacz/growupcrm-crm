@@ -68,7 +68,7 @@
           <!-- výběr tažením myší (jako v Google kalendáři) -->
           <div
             v-if="drag && sameDay(drag.day, d)"
-            class="pointer-events-none absolute inset-x-1 z-30 overflow-hidden rounded-[10px] bg-[rgba(79,70,229,.18)] px-2 py-1 text-[12px] font-semibold text-[#4338ca]"
+            class="pointer-events-none absolute inset-x-1 z-30 overflow-hidden rounded-[10px] bg-[rgba(79,70,229,.18)] px-2 py-1 text-[12px] font-semibold text-[#3b30b8]"
             :style="dragStyle"
           >
             {{ dragLabel }}
@@ -139,10 +139,10 @@ function topItems(d) {
   return itemsOnDay(props.items, d).filter((i) => i.allDay || i.kind === 'task')
 }
 function topClasses(item) {
-  if (item.kind === 'event') return 'bg-[rgba(59,110,246,.14)] text-[#2e5bd8]'
+  if (item.kind === 'event') return 'bg-[rgba(59,110,246,.14)] text-[#1f48b8]'
   if (item.done) return 'bg-[rgba(110,120,200,.1)] text-ink-gray-5'
-  if (item.priority === 'High') return 'bg-[rgba(200,50,31,.12)] text-[#c8321f]'
-  return 'bg-[rgba(234,170,8,.2)] text-[#915200]'
+  if (item.priority === 'High') return 'bg-[rgba(200,50,31,.12)] text-[#a82614]'
+  return 'bg-[rgba(234,170,8,.2)] text-[#7a4400]'
 }
 
 function layout(d) {

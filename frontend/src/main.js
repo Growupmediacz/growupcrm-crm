@@ -1,6 +1,7 @@
 import './index.css'
 
 import { createApp } from 'vue'
+import { initTabPill } from './composables/glPill'
 import { createPinia } from 'pinia'
 import { createDialog } from './utils/dialogs'
 import { initSocket } from './socket'
@@ -43,6 +44,7 @@ let globalComponents = {
 // create a pinia instance
 let pinia = createPinia()
 
+initTabPill()
 let app = createApp(App)
 
 setConfig('resourceFetcher', frappeRequest)

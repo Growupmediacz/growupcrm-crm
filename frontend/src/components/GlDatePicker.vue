@@ -11,7 +11,7 @@
         @click="togglePopover()"
       >
         <GlIcon name="cal" :size="17" class="shrink-0 text-ink-gray-5" />
-        <span class="min-w-0 flex-1 truncate" :class="!model && 'text-[var(--empty-color,#5B6285)]'">
+        <span class="min-w-0 flex-1 truncate" :class="!model && 'text-[var(--empty-color,#464c70)]'">
           {{ model ? display : placeholder || __('Vyberte datum') }}
         </span>
         <span

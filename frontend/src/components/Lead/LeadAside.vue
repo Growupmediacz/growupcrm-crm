@@ -25,7 +25,7 @@
     <form v-else class="gl-card flex flex-col gap-4 p-6 ring-2 ring-[rgba(79,70,229,.35)]" @submit.prevent="save">
       <div class="flex items-center justify-between">
         <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Detaily') }}</h2>
-        <span class="rounded-full bg-[rgba(79,70,229,.1)] px-2.5 py-0.5 text-[12px] font-semibold text-[#4338ca]">{{ __('Úpravy') }}</span>
+        <span class="rounded-full bg-[rgba(79,70,229,.1)] px-2.5 py-0.5 text-[12px] font-semibold text-[#3b30b8]">{{ __('Úpravy') }}</span>
       </div>
       <label>
         <span class="gl-label">{{ __('Hodnota') }}</span>
@@ -87,7 +87,7 @@
     <div class="gl-card p-6">
       <h2 class="mb-3 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Kontakt') }}</h2>
       <div v-if="person.name" class="flex items-center gap-3">
-        <div class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2e4bb8]">
+        <div class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2440a6]">
           {{ initials(person.name) }}
         </div>
         <div class="min-w-0 flex-1">
@@ -127,7 +127,7 @@
         </p>
         <ul v-if="suggestions.length" class="mt-2 flex flex-col">
           <li v-for="c in suggestions" :key="c.name" class="flex items-center gap-3 py-1.5">
-            <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2e4bb8]">
+            <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2440a6]">
               {{ initials(c.full_name) }}
             </span>
             <span class="min-w-0 flex-1">

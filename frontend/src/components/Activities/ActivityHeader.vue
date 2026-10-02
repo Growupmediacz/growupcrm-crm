@@ -3,7 +3,7 @@
     v-if="title !== 'Data'"
     class="flex items-center justify-between text-lg-medium sm:mx-10 sm:mb-4 sm:mt-8"
   >
-    <div class="flex h-8 items-center text-2xl-semibold text-ink-gray-8">
+    <div class="flex h-8 items-center text-2xl-semibold text-ink-gray-8" :data-act-title="title">
       {{ __(title) }}
     </div>
     <Button

@@ -6,7 +6,7 @@
       <div class="mb-4 grid grid-cols-2 gap-2 md:grid-cols-4">
         <button v-for="s in SOURCES" :key="s.key" type="button" class="flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition" :class="[source === s.key ? 'border-[#4F46E5] bg-[rgba(79,70,229,.08)]' : 'border-white/90 bg-white/70 hover:bg-white', s.soon && 'opacity-60']" :disabled="s.soon" @click="source = s.key">
           <span class="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[rgba(110,120,200,.12)]"><GlIcon :name="s.icon" :size="17" /></span>
-          <span class="min-w-0"><span class="block text-[14px] font-bold" :class="source === s.key ? 'text-[#4338ca]' : 'text-ink-gray-9'">{{ s.label }}</span><span class="block truncate text-[12px] text-ink-gray-5">{{ s.soon ? __('brzy') : s.hint }}</span></span>
+          <span class="min-w-0"><span class="block text-[14px] font-bold" :class="source === s.key ? 'text-[#3b30b8]' : 'text-ink-gray-9'">{{ s.label }}</span><span class="block truncate text-[12px] text-ink-gray-5">{{ s.soon ? __('brzy') : s.hint }}</span></span>
         </button>
       </div>
 
@@ -26,7 +26,7 @@
             <span class="min-w-0 flex-1"><span class="block truncate text-[15px] font-bold text-ink-gray-9">{{ r.organization_name || r.full_name }}</span><span class="block truncate text-[13px] text-ink-gray-5">{{ r.full_name }}<template v-if="r.designation"> · {{ r.designation }}</template></span></span>
             <span class="hidden w-28 truncate text-[13px] text-ink-gray-7 sm:block">{{ r.territory }}</span>
             <span class="hidden w-28 truncate text-[13px] text-ink-gray-7 md:block">{{ r.industry }}</span>
-            <span class="w-24 text-right text-[13px] font-semibold" :class="r.flag ? 'text-[#c8321f]' : 'text-ink-gray-7'">{{ r.flag || r.relationship }}</span>
+            <span class="w-24 text-right text-[13px] font-semibold" :class="r.flag ? 'text-[#a82614]' : 'text-ink-gray-7'">{{ r.flag || r.relationship }}</span>
           </label>
         </div>
       </template>
@@ -60,9 +60,9 @@
       </template>
 
       <div class="mt-4 flex flex-wrap items-center gap-2">
-        <span v-if="source === 'crm'" class="rounded-full bg-[rgba(79,70,229,.12)] px-3 py-1 text-[13px] font-bold text-[#4338ca]">{{ __('{0} vybrané', [picked.size]) }}</span>
-        <span v-if="flagCount('duplicita')" class="rounded-full bg-[rgba(224,161,0,.2)] px-3 py-1 text-[13px] font-bold text-[#915200]">{{ __('{0} duplicita vynechána', [flagCount('duplicita')]) }}</span>
-        <span v-if="flagCount('odhlášen')" class="rounded-full bg-[rgba(200,50,31,.12)] px-3 py-1 text-[13px] font-bold text-[#c8321f]">{{ __('{0} odhlášený vynechán', [flagCount('odhlášen')]) }}</span>
+        <span v-if="source === 'crm'" class="rounded-full bg-[rgba(79,70,229,.12)] px-3 py-1 text-[13px] font-bold text-[#3b30b8]">{{ __('{0} vybrané', [picked.size]) }}</span>
+        <span v-if="flagCount('duplicita')" class="rounded-full bg-[rgba(224,161,0,.2)] px-3 py-1 text-[13px] font-bold text-[#7a4400]">{{ __('{0} duplicita vynechána', [flagCount('duplicita')]) }}</span>
+        <span v-if="flagCount('odhlášen')" class="rounded-full bg-[rgba(200,50,31,.12)] px-3 py-1 text-[13px] font-bold text-[#a82614]">{{ __('{0} odhlášený vynechán', [flagCount('odhlášen')]) }}</span>
       </div>
       <ErrorMessage class="mt-2" :message="error" />
     </template>

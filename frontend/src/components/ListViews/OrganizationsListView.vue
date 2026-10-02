@@ -173,10 +173,10 @@
 import ListFooter from '@/components/GlListFooter.vue'
 const REL_COLORS = { Klient: '#22b35e', Prospekt: '#3b82f6', 'Bývalý klient': '#9ca3af' }
 const TONES = [
-  'bg-[#dde6ff] text-[#2e4bb8]',
+  'bg-[#dde6ff] text-[#2440a6]',
   'bg-[#efe7ff] text-[#6d3fd0]',
   'bg-[#ffe9d6] text-[#b4560f]',
-  'bg-[#dcf5e6] text-[#15803d]',
+  'bg-[#dcf5e6] text-[#0f6b32]',
 ]
 const tone = (s) => TONES[[...(s || '')].reduce((a, c) => a + c.charCodeAt(0), 0) % TONES.length]
 const initials = (s) =>

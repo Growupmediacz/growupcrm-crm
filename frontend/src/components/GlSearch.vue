@@ -99,10 +99,10 @@ const leadDefaults = computed(() => ({ status: leadStatuses.data?.[0]?.name || '
 const ICON = { organization: 'building', contact: 'user', lead: 'brief', action: 'plus', calendar: 'cal' }
 const TONE = {
   organization: 'bg-[rgba(110,120,200,.12)] text-[#4b5280]',
-  contact: 'bg-[#e6ecff] text-[#2e4bb8]',
+  contact: 'bg-[#e6ecff] text-[#2440a6]',
   lead: 'bg-[#efe7ff] text-[#6d3fd0]',
-  action: 'bg-[#dcf5e6] text-[#15803d]',
-  calendar: 'bg-[#e6ecff] text-[#2e5bd8]',
+  action: 'bg-[#dcf5e6] text-[#0f6b32]',
+  calendar: 'bg-[#e6ecff] text-[#1f48b8]',
 }
 
 const ACTIONS = [

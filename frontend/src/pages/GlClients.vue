@@ -27,7 +27,7 @@
       <div v-for="k in cards" :key="k.label" class="gl-card flex flex-col gap-1.5 p-4 md:p-5">
         <div class="flex items-center gap-2 text-[14px] text-ink-gray-7">
           {{ k.label }}
-          <span v-if="k.badge" class="rounded-full bg-[rgba(79,70,229,.12)] px-2 py-0.5 text-[12px] font-bold text-[#4338ca]">{{ k.badge }}</span>
+          <span v-if="k.badge" class="rounded-full bg-[rgba(79,70,229,.12)] px-2 py-0.5 text-[12px] font-bold text-[#3b30b8]">{{ k.badge }}</span>
         </div>
         <div class="num text-[30px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[38px]">{{ k.value }}</div>
         <div class="truncate text-[13px] text-ink-gray-5">{{ k.sub }}</div>
@@ -75,7 +75,7 @@
           <GlIcon name="cal" :size="16" class="shrink-0 text-ink-gray-5" />
           <span class="min-w-0 flex-1 truncate">{{ c.next_event ? `${c.next_event.title} · ${shortDate(c.next_event.at)}` : __('Nic naplánovaného') }}</span>
           <span class="flex -space-x-1.5">
-            <span v-for="u in c.team" :key="u" class="flex size-7 items-center justify-center rounded-full border-2 border-white bg-[#dde6ff] text-[10px] font-bold text-[#2e4bb8]" :title="userName(u)">
+            <span v-for="u in c.team" :key="u" class="flex size-7 items-center justify-center rounded-full border-2 border-white bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" :title="userName(u)">
               {{ initials(userName(u)) }}
             </span>
           </span>
@@ -264,7 +264,7 @@ async function endCooperation(c) {
 }
 
 const userName = (u) => getUser(u)?.full_name || u
-const TONES = ['bg-[#dde6ff] text-[#2e4bb8]', 'bg-[#ffe9d6] text-[#b4560f]', 'bg-[#dcf5e6] text-[#15803d]', 'bg-[#efe7ff] text-[#6d3fd0]']
+const TONES = ['bg-[#dde6ff] text-[#2440a6]', 'bg-[#ffe9d6] text-[#b4560f]', 'bg-[#dcf5e6] text-[#0f6b32]', 'bg-[#efe7ff] text-[#6d3fd0]']
 const tone = (s) => TONES[[...(s || '')].reduce((a, ch) => a + ch.charCodeAt(0), 0) % TONES.length]
 const initials = (s) =>
   (s || '?')

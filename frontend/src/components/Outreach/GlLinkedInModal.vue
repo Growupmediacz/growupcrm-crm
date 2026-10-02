@@ -4,7 +4,7 @@
   <Dialog v-model:open="show" :options="{ size: 'lg' }">
     <template #body-title>
       <div class="flex items-center gap-3">
-        <span class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[rgba(79,70,229,.12)] text-[#4338ca]"><GlIcon name="link" :size="22" /></span>
+        <span class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[rgba(79,70,229,.12)] text-[#3b30b8]"><GlIcon name="link" :size="22" /></span>
         <div class="min-w-0">
           <h3 class="text-2xl font-semibold leading-6 text-ink-gray-9">{{ __('LinkedIn zpráva') }}</h3>
           <span class="mt-1 block truncate text-[13px] text-ink-gray-5">{{ item?.campaign_name }} · {{ __('krok {0}', [(item?.step_index ?? 0) + 1]) }}</span>
@@ -24,7 +24,7 @@
         </label>
         <div class="flex items-center gap-3">
           <button class="gl-quick !h-11 !px-5 !text-[15px]" @click="copy"><GlIcon name="copy" :size="16" />{{ __('Zkopírovat zprávu') }}</button>
-          <span v-if="copied" class="flex items-center gap-1 text-[13px] font-semibold text-[#15803d]"><GlIcon name="check" :size="14" />{{ __('Zkopírováno') }}</span>
+          <span v-if="copied" class="flex items-center gap-1 text-[13px] font-semibold text-[#0f6b32]"><GlIcon name="check" :size="14" />{{ __('Zkopírováno') }}</span>
         </div>
         <p class="text-[13px] text-ink-gray-5">{{ __('LinkedIn neumíme odeslat za vás. Zprávu vložte do LinkedInu a pak krok označte jako hotový.') }}</p>
       </div>

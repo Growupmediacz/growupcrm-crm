@@ -4,7 +4,7 @@
   <Teleport to="body">
     <div v-if="menu" class="fixed inset-0 z-[95]" @click="close" @contextmenu.prevent="close">
       <div ref="box" class="gl-sheet absolute w-[260px] rounded-[18px] p-1.5 text-[14px]" :style="{ left: `${pos.x}px`, top: `${pos.y}px` }" role="menu" @click.stop>
-        <button v-for="it in items" :key="it.key" class="gl-menu-item" :class="[it.danger && '!text-[#c8321f]', it.sub && sub && 'bg-white/70']" role="menuitem" @click="it.sub ? (sub = !sub) : run(it)" @mouseenter="it.sub ? (sub = true) : (sub = false)">
+        <button v-for="it in items" :key="it.key" class="gl-menu-item" :class="[it.danger && '!text-[#a82614]', it.sub && sub && 'bg-white/70']" role="menuitem" @click="it.sub ? (sub = !sub) : run(it)" @mouseenter="it.sub ? (sub = true) : (sub = false)">
           <GlIcon :name="it.icon" :size="16" class="shrink-0 opacity-70" />
           <span class="flex-1 truncate text-left">{{ it.label }}</span>
           <span v-if="it.hint" class="text-[12px] text-ink-gray-5">{{ it.hint }}</span>
@@ -12,7 +12,7 @@
         </button>
         <hr class="my-1 border-[rgba(110,120,200,.16)]" />
         <button class="gl-menu-item" role="menuitem" @click="run({ key: 'duplicate' })"><GlIcon name="copy" :size="16" class="opacity-70" /><span class="flex-1 text-left">{{ __('Duplikovat') }}</span><span class="text-[12px] text-ink-gray-5">⌘D</span></button>
-        <button class="gl-menu-item !text-[#c8321f]" role="menuitem" @click="run({ key: 'delete' })"><GlIcon name="trash" :size="16" /><span class="flex-1 text-left">{{ __('Smazat') }}</span></button>
+        <button class="gl-menu-item !text-[#a82614]" role="menuitem" @click="run({ key: 'delete' })"><GlIcon name="trash" :size="16" /><span class="flex-1 text-left">{{ __('Smazat') }}</span></button>
 
         <!-- podmenu Posunout do -->
         <div v-if="sub" class="gl-sheet absolute top-[88px] w-[210px] rounded-[16px] p-1.5" :class="flip ? 'right-full mr-1' : 'left-full ml-1'" role="menu" @mouseleave="sub = false">

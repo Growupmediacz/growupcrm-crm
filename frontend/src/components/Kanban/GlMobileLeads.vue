@@ -70,7 +70,7 @@
             <div class="mb-1.5 text-[13px] font-semibold text-ink-gray-7">{{ __('Vlastník') }}</div>
             <div class="mb-4 flex flex-wrap gap-2">
               <button v-for="u in owners" :key="u.name" class="gl-chip flex h-10 items-center gap-2 rounded-full pl-1.5 pr-3.5 text-[14px]" :class="draft.owners.includes(u.name) && '!border-[#0e1330] !bg-[#0e1330] !text-white'" @click="toggle(draft.owners, u.name)">
-                <span class="flex size-7 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2e4bb8]">{{ (u.full_name || '?').split(' ').map((w) => w[0]).slice(0, 2).join('') }}</span>{{ (u.full_name || '').split(' ')[0] }}
+                <span class="flex size-7 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]">{{ (u.full_name || '?').split(' ').map((w) => w[0]).slice(0, 2).join('') }}</span>{{ (u.full_name || '').split(' ')[0] }}
               </button>
             </div>
             <div class="mb-1.5 text-[13px] font-semibold text-ink-gray-7">{{ __('Fáze') }}</div>
@@ -82,7 +82,7 @@
             <div class="gl-card !rounded-[18px] px-4">
               <label class="flex min-h-[56px] items-center gap-3"><span class="flex size-9 items-center justify-center rounded-[11px] bg-[rgba(110,120,200,.12)]"><GlIcon name="pin" :size="17" /></span><span class="flex-1 text-[16px] text-ink-gray-9">{{ __('Kraj') }}</span>
                 <select v-model="draft.territory" class="max-w-[170px] appearance-none border-0 bg-transparent text-right text-[15px] text-ink-gray-7 shadow-none outline-none"><option value="">{{ __('Vše') }}</option><option v-for="t in territories" :key="t" :value="t">{{ t }}</option></select></label>
-              <div class="flex min-h-[56px] items-center gap-3 border-t border-[rgba(110,120,200,.14)]"><span class="flex size-9 items-center justify-center rounded-[11px] bg-[rgba(224,161,0,.16)] text-[#915200]"><GlIcon name="clock" :size="17" /></span><span class="flex-1 text-[16px] text-ink-gray-9">{{ __('Jen po termínu') }}</span><Switch v-model="draft.overdue" /></div>
+              <div class="flex min-h-[56px] items-center gap-3 border-t border-[rgba(110,120,200,.14)]"><span class="flex size-9 items-center justify-center rounded-[11px] bg-[rgba(224,161,0,.16)] text-[#7a4400]"><GlIcon name="clock" :size="17" /></span><span class="flex-1 text-[16px] text-ink-gray-9">{{ __('Jen po termínu') }}</span><Switch v-model="draft.overdue" /></div>
             </div>
           </div>
           <button class="mt-4 h-14 w-full rounded-full bg-[#4F46E5] text-[17px] font-bold text-white shadow-[0_10px_24px_-10px_rgba(79,70,229,.7)]" @click="applyFilter">{{ __('Zobrazit {0}', [zakazkyWord(draftCount)]) }}</button>
@@ -126,7 +126,7 @@ const props = defineProps({
   leads: { type: Object, required: true },
   mode: { type: String, default: 'list' },
 })
-const emit = defineEmits(['loadMore', 'won'])
+const emit = defineEmits(['loadMore', 'loadAll', 'won'])
 
 const router = useRouter()
 const { users } = usersStore()
@@ -176,6 +176,7 @@ function clearDraft() {
 function applyFilter() {
   Object.assign(filter, { owners: [...draft.owners], stages: [...draft.stages], territory: draft.territory, overdue: draft.overdue })
   showFilter.value = false
+  if (activeCount.value) emit('loadAll')
 }
 const pageLength = computed(() => data.value?.page_length_count || 20)
 const statusList = computed(() => leadStatuses.data || [])

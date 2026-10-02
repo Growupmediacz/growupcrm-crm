@@ -111,7 +111,7 @@
                 <template v-if="navCount(link.key)" #suffix>
                   <span
                     class="mr-1 text-[13px] font-semibold tabular-nums"
-                    :class="link.key === 'Tasks' ? 'text-[#C8321F]' : 'text-ink-gray-5'"
+                    :class="link.key === 'Tasks' ? 'text-[#a82614]' : 'text-ink-gray-5'"
                     >{{ navCount(link.key) }}</span
                   >
                 </template>

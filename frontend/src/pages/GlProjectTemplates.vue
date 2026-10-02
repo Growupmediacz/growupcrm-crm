@@ -57,7 +57,7 @@ import { Breadcrumbs, Button, Dropdown, ErrorMessage, call, createResource, toas
 import { computed, ref } from 'vue'
 
 const ICONS = { globe: 'globe', send: 'send', play: 'play', edit: 'edit' }
-const TONES = { globe: 'bg-[rgba(79,70,229,.12)] text-[#4338ca]', send: 'bg-[rgba(20,160,190,.14)] text-[#0b7488]', play: 'bg-[rgba(249,115,22,.14)] text-[#c2410c]' }
+const TONES = { globe: 'bg-[rgba(79,70,229,.12)] text-[#3b30b8]', send: 'bg-[rgba(20,160,190,.14)] text-[#08626f]', play: 'bg-[rgba(249,115,22,.14)] text-[#a3360a]' }
 const ROLES = ['Vlastník projektu', 'Člen týmu', 'Klient']
 const phaseWord = (n) => (n === 1 ? 'fáze' : n >= 2 && n <= 4 ? 'fáze' : 'fází')
 

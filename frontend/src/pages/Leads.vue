@@ -36,6 +36,7 @@
     :leads="leads"
     :mode="route.params.viewType === 'kanban' ? 'kanban' : 'list'"
     @loadMore="() => loadMore++"
+    @loadAll="() => viewControls.loadAllRows()"
     @won="(d, status) => ((wonStatus = status), (wonConfirmed = false), (wonLead = { name: d.name, order_value: d.order_value, order_title: d.order_title, organization: d.organization }), (showWon = true))"
   />
   <KanbanView

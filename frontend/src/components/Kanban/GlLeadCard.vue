@@ -58,6 +58,6 @@ const nextText = computed(() =>
     : `${next.value.label} – ${dayLabel(next.value.at)}`,
 )
 const nextClass = computed(() =>
-  next.value.overdue ? 'text-[#c8321f]' : next.value.kind === 'event' ? 'text-[#2e5bd8]' : 'text-[#915200]',
+  next.value.overdue ? 'text-[#a82614]' : next.value.kind === 'event' ? 'text-[#1f48b8]' : 'text-[#7a4400]',
 )
 </script>

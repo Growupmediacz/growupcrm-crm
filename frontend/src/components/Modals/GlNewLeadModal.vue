@@ -52,7 +52,7 @@
             >
               <span
                 class="flex size-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold"
-                :class="item.ares ? 'bg-[rgba(110,120,200,.12)] text-ink-gray-5' : 'bg-[#dde6ff] text-[#2e4bb8]'"
+                :class="item.ares ? 'bg-[rgba(110,120,200,.12)] text-ink-gray-5' : 'bg-[#dde6ff] text-[#2440a6]'"
               >
                 <GlIcon v-if="item.ares" name="refresh" :size="14" />
                 <template v-else>{{ initials(item.label) }}</template>

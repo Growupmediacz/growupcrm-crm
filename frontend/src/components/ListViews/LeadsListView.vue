@@ -262,8 +262,8 @@ const dayDiff = (row) => {
 const nextTone = (row) => {
   const x = dayDiff(row)
   if (!row.next_step || !x) return 'text-ink-gray-4 font-normal'
-  if (x.d < new Date()) return 'text-[#c8321f]'
-  return x.diff <= 1 ? 'text-[#915200]' : 'text-[#2e5bd8]'
+  if (x.d < new Date()) return 'text-[#a82614]'
+  return x.diff <= 1 ? 'text-[#7a4400]' : 'text-[#1f48b8]'
 }
 const nextWhen = (row) => {
   const x = dayDiff(row)

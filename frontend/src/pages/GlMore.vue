@@ -18,7 +18,7 @@
         </router-link>
         <Dropdown :options="profileOptions" placement="right">
           <button
-            class="flex size-11 items-center justify-center rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2e4bb8] shadow-[0_2px_10px_-3px_rgba(64,72,160,.35)]"
+            class="flex size-11 items-center justify-center rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2440a6] shadow-[0_2px_10px_-3px_rgba(64,72,160,.35)]"
             :aria-label="__('Profil')"
           >
             {{ initials }}
@@ -28,7 +28,7 @@
     </div>
 
     <template v-for="g in groups" :key="g.name">
-      <div class="mt-2 px-1 text-[13px] font-semibold text-[var(--text-3,#5B6285)]">{{ g.name }}</div>
+      <div class="mt-2 px-1 text-[13px] font-semibold text-[var(--text-3,#464c70)]">{{ g.name }}</div>
       <nav class="gl-card overflow-hidden !rounded-[22px]">
         <router-link
           v-for="(item, i) in g.items"
@@ -44,7 +44,7 @@
           <span
             v-if="item.count"
             class="num text-[15px] font-semibold"
-            :class="item.hot ? 'text-[#C8321F]' : 'text-ink-gray-5'"
+            :class="item.hot ? 'text-[#a82614]' : 'text-ink-gray-5'"
             >{{ item.count }}</span
           >
           <GlIcon name="right" :size="16" class="text-ink-gray-4" />

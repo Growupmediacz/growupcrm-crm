@@ -5,7 +5,7 @@
       <ol class="mb-5 flex flex-wrap items-center gap-2 text-[13px] font-semibold">
         <template v-for="(s, i) in STEPS" :key="s">
           <li class="flex items-center gap-2" :class="step === i ? 'text-ink-gray-9' : 'text-ink-gray-5'">
-            <span class="flex size-7 items-center justify-center rounded-full text-[12px]" :class="step === i ? 'bg-[#4F46E5] text-white' : step > i ? 'bg-[rgba(34,179,94,.18)] text-[#15803d]' : 'bg-[rgba(110,120,200,.14)]'">{{ step > i ? '✓' : i + 1 }}</span>{{ s }}
+            <span class="flex size-7 items-center justify-center rounded-full text-[12px]" :class="step === i ? 'bg-[#4F46E5] text-white' : step > i ? 'bg-[rgba(34,179,94,.18)] text-[#0f6b32]' : 'bg-[rgba(110,120,200,.14)]'">{{ step > i ? '✓' : i + 1 }}</span>{{ s }}
           </li>
           <span v-if="i < STEPS.length - 1" class="hidden h-px w-8 bg-[rgba(110,120,200,.25)] sm:block" />
         </template>
@@ -30,16 +30,16 @@
       <!-- 3 Kontrola -->
       <div v-else-if="step === 2 && preview">
         <div class="grid grid-cols-3 gap-3">
-          <div class="rounded-2xl bg-[rgba(110,120,200,.1)] px-4 py-3"><div class="num text-[30px] font-bold text-[#15803d]">{{ preview.counts['nový'] }}</div><div class="text-[13px] text-ink-gray-5">{{ __('nových kontaktů') }}</div></div>
-          <div class="rounded-2xl bg-[rgba(110,120,200,.1)] px-4 py-3"><div class="num text-[30px] font-bold text-[#915200]">{{ preview.counts['sloučit'] }}</div><div class="text-[13px] text-ink-gray-5">{{ __('sloučíme s existujícími') }}</div></div>
-          <div class="rounded-2xl bg-[rgba(110,120,200,.1)] px-4 py-3"><div class="num text-[30px] font-bold text-[#c8321f]">{{ preview.counts['chyba'] }}</div><div class="text-[13px] text-ink-gray-5">{{ __('chyba – přeskočíme') }}</div></div>
+          <div class="rounded-2xl bg-[rgba(110,120,200,.1)] px-4 py-3"><div class="num text-[30px] font-bold text-[#0f6b32]">{{ preview.counts['nový'] }}</div><div class="text-[13px] text-ink-gray-5">{{ __('nových kontaktů') }}</div></div>
+          <div class="rounded-2xl bg-[rgba(110,120,200,.1)] px-4 py-3"><div class="num text-[30px] font-bold text-[#7a4400]">{{ preview.counts['sloučit'] }}</div><div class="text-[13px] text-ink-gray-5">{{ __('sloučíme s existujícími') }}</div></div>
+          <div class="rounded-2xl bg-[rgba(110,120,200,.1)] px-4 py-3"><div class="num text-[30px] font-bold text-[#a82614]">{{ preview.counts['chyba'] }}</div><div class="text-[13px] text-ink-gray-5">{{ __('chyba – přeskočíme') }}</div></div>
         </div>
         <div class="mt-3 max-h-[240px] overflow-y-auto rounded-2xl bg-[rgba(110,120,200,.06)] p-2">
           <div class="hidden grid-cols-[60px_1.4fr_90px_1.4fr] gap-3 px-2 pb-1 text-[12px] font-semibold text-ink-gray-5 sm:grid"><span>{{ __('Řádek') }}</span><span>{{ __('Kontakt') }}</span><span>{{ __('Výsledek') }}</span><span>{{ __('Poznámka') }}</span></div>
           <div v-for="i in preview.items" :key="i.row" class="grid grid-cols-[50px_1fr_auto] items-center gap-x-3 rounded-xl px-2 py-1.5 sm:grid-cols-[60px_1.4fr_90px_1.4fr]">
             <span class="num text-[13px] text-ink-gray-5">{{ i.row }}</span>
             <span class="min-w-0"><span class="block truncate text-[14px] font-bold text-ink-gray-9">{{ i.name || __('(bez jména)') }}</span><span class="block truncate text-[12px] text-ink-gray-5">{{ i.company || i.email }}</span></span>
-            <span class="text-[13px] font-bold" :class="{ 'text-[#15803d]': i.status === 'nový', 'text-[#915200]': i.status === 'sloučit', 'text-[#c8321f]': i.status === 'chyba' }">{{ __(i.status) }}</span>
+            <span class="text-[13px] font-bold" :class="{ 'text-[#0f6b32]': i.status === 'nový', 'text-[#7a4400]': i.status === 'sloučit', 'text-[#a82614]': i.status === 'chyba' }">{{ __(i.status) }}</span>
             <span class="col-span-3 truncate text-[13px] text-ink-gray-7 sm:col-span-1">{{ i.note }}</span>
           </div>
         </div>
@@ -53,7 +53,7 @@
 
       <!-- 4 Výsledek -->
       <div v-else-if="step === 3 && result" class="flex flex-col items-center gap-2 py-6 text-center">
-        <span class="flex size-14 items-center justify-center rounded-full bg-[rgba(34,179,94,.16)] text-[#15803d]"><GlIcon name="check" :size="26" /></span>
+        <span class="flex size-14 items-center justify-center rounded-full bg-[rgba(34,179,94,.16)] text-[#0f6b32]"><GlIcon name="check" :size="26" /></span>
         <div class="text-[22px] font-bold text-ink-gray-9">{{ __('Import dokončen') }}</div>
         <p class="text-[14px] text-ink-gray-7">{{ __('Nových kontaktů: {0} · sloučených: {1} · přeskočených: {2}', [result.created, result.merged, result.failed]) }}</p>
         <p v-if="result.campaign" class="text-[13px] text-ink-gray-5">{{ __('Do kampaně přidáno {0}.', [result.campaign.added]) }}</p>

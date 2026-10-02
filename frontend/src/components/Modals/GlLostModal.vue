@@ -5,13 +5,13 @@
       <p class="-mt-3 mb-4 text-[14px] text-ink-gray-6">{{ lead?.order_title || lead?.lead_name || lead?.name }}</p>
       <div class="flex flex-col gap-4">
         <div>
-          <span class="gl-label">{{ __('Důvod prohry') }} <span class="text-[#c8321f]">*</span></span>
+          <span class="gl-label">{{ __('Důvod prohry') }} <span class="text-[#a82614]">*</span></span>
           <div class="flex flex-wrap gap-2">
             <button v-for="r in reasons.data || []" :key="r.name" type="button" class="gl-chip h-9 rounded-full px-3.5 text-[14px]" :class="reason === r.name && 'gl-chip-on'" @click="reason = r.name">{{ __(r.name) }}</button>
           </div>
         </div>
         <label>
-          <span class="gl-label">{{ __('Poznámka') }} <span v-if="needsNote" class="text-[#c8321f]">*</span></span>
+          <span class="gl-label">{{ __('Poznámka') }} <span v-if="needsNote" class="text-[#a82614]">*</span></span>
           <textarea v-model="notes" class="gl-field gl-text w-full" rows="3" lang="cs" />
         </label>
         <ErrorMessage :message="error" />

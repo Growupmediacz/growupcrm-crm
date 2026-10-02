@@ -60,7 +60,7 @@
       <div class="gl-card p-5">
         <h3 class="mb-2 text-[16px] font-bold text-ink-gray-9">{{ __('Proměnné') }}</h3>
         <div v-for="v in VARS" :key="v.key" class="flex items-center justify-between gap-3 py-1.5 text-[13px]">
-          <button class="rounded-md bg-[rgba(79,70,229,.1)] px-1.5 font-mono font-semibold text-[#4338ca]" @click="insert(v.key)">{{ '{' + v.key + '}' }}</button>
+          <button class="rounded-md bg-[rgba(79,70,229,.1)] px-1.5 font-mono font-semibold text-[#3b30b8]" @click="insert(v.key)">{{ '{' + v.key + '}' }}</button>
           <span class="truncate text-ink-gray-5">{{ preview.variables?.[v.key] || v.hint }}</span>
         </div>
       </div>

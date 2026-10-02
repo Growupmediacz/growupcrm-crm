@@ -11,7 +11,7 @@
       <div class="flex-1 overflow-y-auto">
         <div class="flex items-center gap-3 border-b border-[rgba(110,120,200,.12)] px-5 py-2.5">
           <span class="w-14 shrink-0 text-[14px] text-ink-gray-5">{{ __('Komu') }}</span>
-          <span v-if="toName" class="flex shrink-0 items-center gap-2 rounded-full bg-white/80 py-0.5 pl-0.5 pr-3 text-[14px] font-medium text-ink-gray-9"><span class="flex size-6 items-center justify-center rounded-full bg-[#dde6ff] text-[9px] font-bold text-[#2e4bb8]">{{ initials(toName) }}</span>{{ toName }}</span>
+          <span v-if="toName" class="flex shrink-0 items-center gap-2 rounded-full bg-white/80 py-0.5 pl-0.5 pr-3 text-[14px] font-medium text-ink-gray-9"><span class="flex size-6 items-center justify-center rounded-full bg-[#dde6ff] text-[9px] font-bold text-[#2440a6]">{{ initials(toName) }}</span>{{ toName }}</span>
           <input v-model="to" class="min-w-0 flex-1 bg-transparent text-[14px] outline-none" :placeholder="__('e-mail příjemce')" />
           <button class="shrink-0 text-[13px] text-ink-gray-5 hover:text-ink-gray-9" @click="showCc = !showCc">{{ __('Kopie') }}</button>
         </div>
@@ -19,7 +19,7 @@
         <div class="flex items-center gap-3 border-b border-[rgba(110,120,200,.12)] px-5 py-2.5"><span class="w-14 shrink-0 text-[14px] text-ink-gray-5">{{ __('Předmět') }}</span><input v-model="subject" class="min-w-0 flex-1 bg-transparent text-[15px] font-semibold text-ink-gray-9 outline-none" /></div>
         <div v-if="templates.data?.length" class="flex items-center gap-3 border-b border-[rgba(110,120,200,.12)] px-5 py-2.5">
           <span class="w-14 shrink-0 text-[14px] text-ink-gray-5">{{ __('Šablona') }}</span>
-          <div class="flex flex-wrap gap-1.5"><button v-for="t in templates.data" :key="t.name" class="rounded-full px-3 py-1 text-[13px] font-semibold" :class="template === t.name ? 'bg-[#0e1330] text-white' : 'bg-[rgba(79,70,229,.1)] text-[#4338ca]'" @click="applyTemplate(t)">{{ t.name }}</button></div>
+          <div class="flex flex-wrap gap-1.5"><button v-for="t in templates.data" :key="t.name" class="rounded-full px-3 py-1 text-[13px] font-semibold" :class="template === t.name ? 'bg-[#0e1330] text-white' : 'bg-[rgba(79,70,229,.1)] text-[#3b30b8]'" @click="applyTemplate(t)">{{ t.name }}</button></div>
         </div>
         <textarea v-model="body" class="gl-text block min-h-[200px] w-full resize-none bg-transparent px-5 py-4 text-[15px] leading-relaxed text-ink-gray-9 outline-none" lang="cs" :placeholder="__('Napište zprávu…')" />
         <ErrorMessage class="px-5 pb-2" :message="error" />

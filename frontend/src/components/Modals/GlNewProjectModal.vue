@@ -19,7 +19,7 @@
               :key="t.name"
               type="button"
               class="flex flex-col items-center gap-1.5 rounded-2xl border px-2 py-3 text-[14px] font-bold transition"
-              :class="template === t.name ? 'border-[#4f46e5] bg-[rgba(79,70,229,.08)] text-[#4338ca]' : 'border-white/90 bg-white/70 text-ink-gray-9 hover:bg-white'"
+              :class="template === t.name ? 'border-[#4f46e5] bg-[rgba(79,70,229,.08)] text-[#3b30b8]' : 'border-white/90 bg-white/70 text-ink-gray-9 hover:bg-white'"
               @click="pickTemplate(t)"
             >
               <GlIcon :name="ICONS[t.icon] || 'edit'" :size="20" />{{ __(t.name) }}
@@ -42,7 +42,7 @@
               :class="team.includes(u.name) && '!bg-[#0e1330] !text-white'"
               @click="toggle(u.name)"
             >
-              <span class="flex size-7 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2e4bb8]">{{ initials(u.full_name || u.name) }}</span>
+              <span class="flex size-7 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]">{{ initials(u.full_name || u.name) }}</span>
               {{ (u.full_name || u.name).split(' ')[0] }}
             </button>
           </div>

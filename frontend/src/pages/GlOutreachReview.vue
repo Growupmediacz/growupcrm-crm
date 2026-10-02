@@ -38,7 +38,7 @@
         <div class="mt-5 flex items-center gap-2.5 rounded-2xl bg-[rgba(110,120,200,.1)] px-4 py-3 text-[13px] text-ink-gray-7">
           <GlIcon name="lock" :size="15" class="shrink-0 text-ink-gray-5" /><span>{{ m.footer }}</span>
         </div>
-        <p v-if="m.unresolved.length" class="mt-3 text-[13px] font-semibold text-[#c8321f]">{{ unresolvedLabel }}</p>
+        <p v-if="m.unresolved.length" class="mt-3 text-[13px] font-semibold text-[#a82614]">{{ unresolvedLabel }}</p>
       </div>
 
       <div class="flex flex-col gap-4">
@@ -54,14 +54,14 @@
           </dl>
         </div>
         <div class="gl-card p-5">
-          <h3 class="flex items-center gap-2 text-[16px] font-bold text-ink-gray-9"><GlIcon name="sparkles" :size="16" class="text-[#6d3fd6]" />{{ __('Personalizace') }}</h3>
+          <h3 class="flex items-center gap-2 text-[16px] font-bold text-ink-gray-9"><GlIcon name="sparkles" :size="16" class="text-[#5a2fc0]" />{{ __('Personalizace') }}</h3>
           <p class="mt-1 text-[13px] text-ink-gray-5">{{ __('Zvýrazněné proměnné doplňte nebo upravte přímo v textu e-mailu. Automatický výzkum webu (první věta) přibude později.') }}</p>
         </div>
         <div class="gl-card p-5">
           <h3 class="text-[16px] font-bold text-ink-gray-9">{{ __('Kontroly před odesláním') }}</h3>
           <ul class="mt-2 flex flex-col gap-1.5">
-            <li v-for="c in m.checks" :key="c.label" class="flex items-start gap-2 text-[14px]" :class="c.ok ? 'text-ink-gray-9' : 'font-semibold text-[#c8321f]'">
-              <GlIcon :name="c.ok ? 'check' : 'alert'" :size="16" class="mt-0.5 shrink-0" :class="c.ok ? 'text-[#15803d]' : ''" />{{ c.label }}
+            <li v-for="c in m.checks" :key="c.label" class="flex items-start gap-2 text-[14px]" :class="c.ok ? 'text-ink-gray-9' : 'font-semibold text-[#a82614]'">
+              <GlIcon :name="c.ok ? 'check' : 'alert'" :size="16" class="mt-0.5 shrink-0" :class="c.ok ? 'text-[#0f6b32]' : ''" />{{ c.label }}
             </li>
           </ul>
         </div>

@@ -7,7 +7,7 @@
         class="flex h-12 min-w-0 items-center gap-2.5 rounded-2xl px-1.5 text-left transition hover:bg-white/55"
         :class="[isCollapsed ? 'w-auto' : 'w-full', open && 'bg-white/70']"
       >
-        <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2e4bb8]">
+        <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2440a6]">
           {{ initials }}
         </span>
         <span v-if="!isCollapsed" class="flex min-w-0 flex-col leading-tight">

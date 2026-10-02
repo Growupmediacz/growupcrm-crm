@@ -10,14 +10,14 @@
     <template #default>
       <div class="flex flex-col gap-4">
         <div class="flex items-center gap-3 rounded-2xl bg-[rgba(110,120,200,.08)] px-4 py-3">
-          <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2e4bb8]">
+          <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2440a6]">
             {{ initials(person.name || leadTitle) }}
           </span>
           <div class="min-w-0 flex-1">
             <div class="truncate text-[15px] font-semibold text-ink-gray-9">{{ person.name || leadTitle }}</div>
             <div class="truncate text-[12.5px] text-ink-gray-5">{{ [person.phone, person.role].filter(Boolean).join(' · ') }}</div>
           </div>
-          <span class="num flex items-center gap-1 rounded-full bg-[rgba(79,70,229,.12)] px-2.5 py-1 text-[13px] font-bold text-[#4338ca]">
+          <span class="num flex items-center gap-1 rounded-full bg-[rgba(79,70,229,.12)] px-2.5 py-1 text-[13px] font-bold text-[#3b30b8]">
             <GlIcon name="clock" :size="14" />{{ timer }}
           </span>
         </div>

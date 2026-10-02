@@ -3,7 +3,7 @@
   <Dialog v-model:open="show" :options="{ size: 'md' }">
     <template #body-title>
       <div class="flex items-center gap-3">
-        <span class="flex size-11 items-center justify-center rounded-2xl bg-[#dcf5e6] text-[#15803d]">
+        <span class="flex size-11 items-center justify-center rounded-2xl bg-[#dcf5e6] text-[#0f6b32]">
           <GlIcon name="star" :size="20" />
         </span>
         <div class="flex flex-col">

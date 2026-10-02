@@ -35,7 +35,7 @@
         @mouseenter="active = i"
         @click="pick(o)"
       >
-        <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#dde6ff] text-[11px] font-bold text-[#2e4bb8]">{{ initials(o.organization_name) }}</span>
+        <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#dde6ff] text-[11px] font-bold text-[#2440a6]">{{ initials(o.organization_name) }}</span>
         <span class="min-w-0 flex-1">
           <span class="block truncate text-[14px] font-semibold text-ink-gray-9">{{ o.organization_name || o.name }}</span>
           <span class="block truncate text-[12px] text-ink-gray-5">{{ [o.ico && `IČO ${o.ico}`, o.city].filter(Boolean).join(' · ') }}</span>

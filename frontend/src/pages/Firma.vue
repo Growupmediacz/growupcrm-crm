@@ -39,7 +39,7 @@
             <div class="text-xs text-ink-gray-5">{{ s.label }}</div>
           </div>
         </div>
-        <div v-if="summary?.last_call" class="mt-3 flex items-start gap-2 rounded-2xl bg-[rgba(224,161,0,.14)] px-3 py-2 text-sm text-[#915200]">
+        <div v-if="summary?.last_call" class="mt-3 flex items-start gap-2 rounded-2xl bg-[rgba(224,161,0,.14)] px-3 py-2 text-sm text-[#7a4400]">
           <span class="lucide-phone mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <span>
             {{ __('Poslední hovor') }}: <b>{{ summary.last_call.title }}</b>
@@ -347,7 +347,7 @@ watch(showClient, (on) => on && client.fetch(), { immediate: true })
 const HEALTH = [
   { key: 'V pořádku', label: __('V pořádku'), color: '#22b35e' },
   { key: 'Potřebuje pozornost', label: __('Pozornost'), color: '#e0a100' },
-  { key: 'Ohrožený', label: __('Ohrožený'), color: '#c8321f' },
+  { key: 'Ohrožený', label: __('Ohrožený'), color: '#a82614' },
 ]
 async function setHealth(health) {
   await call('growupcrm.clients.set_health', { organization: props.organizationId, health })
@@ -409,12 +409,12 @@ const kindLabel = computed(() => ({
   event: __('Schůzka'), note: __('Zápis'), call: __('Hovor'), task: __('Úkol'), comment: __('Komentář'), email: __('E-mail'),
 }))
 const kindTone = {
-  event: 'bg-[rgba(59,110,246,.13)] text-[#2e5bd8]',
-  note: 'bg-[rgba(139,92,246,.14)] text-[#6d3fd6]',
-  call: 'bg-[rgba(249,115,22,.14)] text-[#c2410c]',
-  task: 'bg-[rgba(234,170,8,.18)] text-[#915200]',
+  event: 'bg-[rgba(59,110,246,.13)] text-[#1f48b8]',
+  note: 'bg-[rgba(139,92,246,.14)] text-[#5a2fc0]',
+  call: 'bg-[rgba(249,115,22,.14)] text-[#a3360a]',
+  task: 'bg-[rgba(234,170,8,.18)] text-[#7a4400]',
   comment: 'bg-[rgba(100,110,150,.12)] text-[#4a5173]',
-  email: 'bg-[rgba(20,160,190,.13)] text-[#0b7488]',
+  email: 'bg-[rgba(20,160,190,.13)] text-[#08626f]',
 }
 const kindIcon = {
   event: 'lucide-calendar', note: 'lucide-notebook-pen', call: 'lucide-phone', task: 'lucide-check-square',

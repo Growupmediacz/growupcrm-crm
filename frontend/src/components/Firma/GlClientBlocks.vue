@@ -17,7 +17,7 @@
           <div class="text-[12px] text-ink-gray-5">{{ __('další fakturace') }}</div>
         </div>
       </div>
-      <div v-if="d.services.length" class="mt-3 flex flex-wrap gap-2"><span v-for="s in d.services" :key="s" class="rounded-full bg-[rgba(79,70,229,.1)] px-3 py-1 text-[13px] font-semibold text-[#4338ca]">{{ s }}</span></div>
+      <div v-if="d.services.length" class="mt-3 flex flex-wrap gap-2"><span v-for="s in d.services" :key="s" class="rounded-full bg-[rgba(79,70,229,.1)] px-3 py-1 text-[13px] font-semibold text-[#3b30b8]">{{ s }}</span></div>
     </div>
 
     <div class="gl-card p-5 md:p-6">
@@ -30,7 +30,7 @@
         <span class="min-w-0"><span class="block truncate text-[16px] font-bold text-ink-gray-9">{{ p.project_name }}</span><span v-if="p.next_step" class="block truncate text-[12px] text-ink-gray-5">{{ p.next_step }}</span></span>
         <span class="flex items-center gap-1.5 text-[14px] text-ink-gray-9"><span class="size-2 rounded-full" :style="{ background: COLORS[p.display_status] }" />{{ __(p.display_status) }}</span>
         <span class="hidden items-center gap-2 md:flex"><span class="h-1.5 flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><span class="block h-full rounded-full bg-[#4F46E5]" :style="{ width: `${p.progress || 0}%` }" /></span><span class="num w-9 text-right text-[12px] text-ink-gray-5">{{ Math.round(p.progress || 0) }} %</span></span>
-        <span class="num hidden text-right text-[13px] md:block" :class="p.display_status === 'Zpožděno' ? 'font-semibold text-[#c8321f]' : 'text-ink-gray-5'">{{ p.deadline ? shortDateCz(p.deadline) : '' }}</span>
+        <span class="num hidden text-right text-[13px] md:block" :class="p.display_status === 'Zpožděno' ? 'font-semibold text-[#a82614]' : 'text-ink-gray-5'">{{ p.deadline ? shortDateCz(p.deadline) : '' }}</span>
       </router-link>
     </div>
   </template>

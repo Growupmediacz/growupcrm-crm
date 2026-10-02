@@ -3,7 +3,7 @@
        karta Hodnota / Kontakt, čipy aktivity a pevná spodní lišta akcí. -->
   <LayoutHeader>
     <header class="flex min-w-0 items-center justify-between gap-2 py-2.5 pl-2">
-      <router-link :to="{ name: 'Leads' }" class="gl-round inline-flex h-11 items-center gap-1 rounded-full pl-2.5 pr-4 text-[16px] font-semibold text-[#4338ca]">
+      <router-link :to="{ name: 'Leads' }" class="gl-round inline-flex h-11 items-center gap-1 rounded-full pl-2.5 pr-4 text-[16px] font-semibold text-[#3b30b8]">
         <GlIcon name="left" :size="17" />{{ __('Zakázky') }}
       </router-link>
       <Dropdown v-if="doc.name" :options="moreOptions" placement="right">
@@ -22,7 +22,7 @@
         <span class="text-[15px] text-ink-gray-5">{{ __('Hodnota') }}</span>
         <span v-if="doc.order_value" class="num text-[17px] font-bold text-ink-gray-9">{{ valueText }}</span>
         <span v-else class="flex flex-col items-start">
-          <span class="text-[20px] font-semibold text-[var(--empty-color,#5B6285)]">{{ __('Bez hodnoty') }}</span>
+          <span class="text-[20px] font-semibold text-[var(--empty-color,#464c70)]">{{ __('Bez hodnoty') }}</span>
         </span>
       </div>
       <button v-if="!doc.order_value" class="gl-fill -mt-2 mb-2 block text-[14px]" @click="openDetails(true)">{{ __('Doplnit') }}</button>

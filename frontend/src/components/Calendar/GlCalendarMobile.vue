@@ -103,9 +103,9 @@ const countLabel = computed(() => {
 
 function tone(it) {
   if (it.done) return 'bg-[rgba(110,120,200,.10)] text-ink-gray-5'
-  if (it.kind === 'event') return 'bg-[rgba(59,110,246,.14)] text-[#2e5bd8]'
-  if (it.priority === 'High') return 'bg-[rgba(229,72,77,.13)] text-[#c8321f]'
-  return 'bg-[rgba(224,161,0,.16)] text-[#915200]'
+  if (it.kind === 'event') return 'bg-[rgba(59,110,246,.14)] text-[#1f48b8]'
+  if (it.priority === 'High') return 'bg-[rgba(229,72,77,.13)] text-[#a82614]'
+  return 'bg-[rgba(224,161,0,.16)] text-[#7a4400]'
 }
 
 // přejetí prstem doleva/doprava = další/předchozí týden

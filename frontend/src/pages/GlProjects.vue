@@ -10,7 +10,7 @@
       </router-link>
       <Popover placement="bottom-end">
         <template #target="{ togglePopover }">
-          <Button iconLeft="filter" :class="activeFilters && '!bg-[rgba(79,70,229,.12)] !text-[#4338ca]'" @click="togglePopover()">
+          <Button iconLeft="filter" :class="activeFilters && '!bg-[rgba(79,70,229,.12)] !text-[#3b30b8]'" @click="togglePopover()">
             <span class="hidden sm:inline">{{ __('Filtr') }}</span><span v-if="activeFilters"> · {{ activeFilters }}</span>
           </Button>
         </template>
@@ -85,12 +85,12 @@
                 <span class="num w-10 text-right text-[13px] font-bold text-ink-gray-9">{{ Math.round(p.progress || 0) }} %</span>
               </div>
             </td>
-            <td class="num whitespace-nowrap px-3 py-3" :class="p.display_status === 'Zpožděno' ? 'font-semibold text-[#c8321f]' : 'text-ink-gray-7'">
+            <td class="num whitespace-nowrap px-3 py-3" :class="p.display_status === 'Zpožděno' ? 'font-semibold text-[#a82614]' : 'text-ink-gray-7'">
               {{ p.deadline ? shortDate(p.deadline) : '' }}
             </td>
             <td class="px-3 py-3">
               <span class="flex -space-x-1.5">
-                <span v-for="u in p.team.slice(0, 4)" :key="u" class="flex size-7 items-center justify-center rounded-full border-2 border-white bg-[#dde6ff] text-[10px] font-bold text-[#2e4bb8]" :title="userName(u)">
+                <span v-for="u in p.team.slice(0, 4)" :key="u" class="flex size-7 items-center justify-center rounded-full border-2 border-white bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" :title="userName(u)">
                   {{ initials(userName(u)) }}
                 </span>
               </span>
@@ -109,7 +109,7 @@
         <GlEmptyState v-if="!board.data?.week?.length" icon="cal" :title="__('Na tento týden nic')" :text="__('Úkoly s termínem v tomto týdnu se ukážou tady.')" />
         <div v-for="(w, i) in board.data?.week || []" :key="i" class="flex items-center gap-3 py-2">
           <span class="w-7 text-[14px] font-bold text-ink-gray-9">{{ dayShort(w.at) }}</span>
-          <span class="flex size-10 shrink-0 items-center justify-center rounded-xl" :class="w.kind === 'task' ? 'bg-[rgba(224,161,0,.16)] text-[#915200]' : 'bg-[rgba(59,110,246,.14)] text-[#2e5bd8]'">
+          <span class="flex size-10 shrink-0 items-center justify-center rounded-xl" :class="w.kind === 'task' ? 'bg-[rgba(224,161,0,.16)] text-[#7a4400]' : 'bg-[rgba(59,110,246,.14)] text-[#1f48b8]'">
             <GlIcon :name="w.kind === 'task' ? 'check' : 'cal'" :size="18" />
           </span>
           <span class="min-w-0 flex-1">
@@ -124,7 +124,7 @@
         <h2 class="mb-3 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Vytížení týmu') }}</h2>
         <GlEmptyState v-if="!board.data?.load?.length" icon="check" :title="__('Žádné otevřené úkoly')" :text="__('Tým nemá žádnou rozdělanou práci.')" />
         <div v-for="l in board.data?.load || []" :key="l.user" class="flex items-center gap-3 py-2">
-          <span class="flex size-9 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2e4bb8]">{{ initials(userName(l.user)) }}</span>
+          <span class="flex size-9 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2440a6]">{{ initials(userName(l.user)) }}</span>
           <span class="w-32 truncate text-[14px] text-ink-gray-9">{{ userName(l.user) }}</span>
           <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]">
             <div class="h-full rounded-full" :class="l.percent > 100 ? 'bg-[#e5484d]' : 'bg-[#4f46e5]'" :style="{ width: `${Math.min(l.percent, 100)}%` }" />
@@ -137,7 +137,7 @@
       <div class="gl-card p-5">
         <h2 class="mb-2 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Po termínu') }}</h2>
         <template v-if="board.data?.overdue?.length">
-          <div class="text-[34px] font-bold tracking-tight text-[#c8321f]">{{ overdueLabel }}</div>
+          <div class="text-[34px] font-bold tracking-tight text-[#a82614]">{{ overdueLabel }}</div>
           <div v-for="p in board.data.overdue.slice(0, 2)" :key="p.name" class="mt-1 text-[14px] text-ink-gray-7">
             <router-link :to="{ name: 'Project', params: { projectId: p.name } }" class="font-semibold hover:text-[#4f46e5]">{{ p.project_name }}</router-link>
             – {{ p.organization_name }}<template v-if="p.waiting_note">. {{ p.waiting_note }}</template>

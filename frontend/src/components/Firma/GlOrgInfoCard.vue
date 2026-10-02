@@ -20,7 +20,7 @@
   <form v-else class="gl-card flex flex-col gap-3.5 p-6 ring-2 ring-[rgba(79,70,229,.35)]" @submit.prevent="save">
     <div class="flex items-center justify-between">
       <h2 class="text-[18px] font-bold tracking-tight text-ink-gray-9">{{ __('Údaje o firmě') }}</h2>
-      <span class="rounded-full bg-[rgba(79,70,229,.1)] px-2.5 py-0.5 text-[12px] font-semibold text-[#4338ca]">{{ __('Úpravy') }}</span>
+      <span class="rounded-full bg-[rgba(79,70,229,.1)] px-2.5 py-0.5 text-[12px] font-semibold text-[#3b30b8]">{{ __('Úpravy') }}</span>
     </div>
     <label>
       <span class="gl-label">{{ __('Web') }}</span>

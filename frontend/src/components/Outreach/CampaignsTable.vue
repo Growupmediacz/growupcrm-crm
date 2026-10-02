@@ -36,5 +36,5 @@
 <script setup>
 defineProps({ rows: { type: Array, default: () => [] } })
 defineEmits(['new'])
-const STATUS = { 'Běží': '#22b35e', Pozastaveno: '#e0a100', Koncept: '#9ca3af', 'Dokončeno': '#4338ca' }
+const STATUS = { 'Běží': '#22b35e', Pozastaveno: '#e0a100', Koncept: '#9ca3af', 'Dokončeno': '#3b30b8' }
 </script>

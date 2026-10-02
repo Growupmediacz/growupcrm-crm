@@ -10,7 +10,7 @@
         :aria-label="item.title"
       >
         <div class="flex items-start justify-between gap-3">
-          <span class="rounded-full bg-[rgba(59,110,246,.14)] px-2.5 py-0.5 text-[12px] font-bold text-[#2e5bd8]">{{ __('Schůzka') }}</span>
+          <span class="rounded-full bg-[rgba(59,110,246,.14)] px-2.5 py-0.5 text-[12px] font-bold text-[#1f48b8]">{{ __('Schůzka') }}</span>
           <button class="flex size-8 items-center justify-center rounded-full bg-[rgba(110,120,200,.12)]" :aria-label="__('Zavřít')" @click="close">
             <GlIcon name="x" :size="14" />
           </button>
@@ -36,7 +36,7 @@
             <GlIcon name="building" :size="16" />{{ item.organization }}
           </router-link>
           <div v-if="item.assignedTo" class="flex items-center gap-2 text-ink-gray-7">
-            <span class="flex size-7 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2e4bb8]">
+            <span class="flex size-7 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2440a6]">
               {{ initials(userName) }}
             </span>
             {{ userName }}
@@ -51,7 +51,7 @@
           <div class="flex-1" />
           <button
             v-if="item.canEdit"
-            class="flex size-9 items-center justify-center rounded-full bg-[rgba(200,50,31,.09)] text-[#c8321f] hover:bg-[rgba(200,50,31,.16)]"
+            class="flex size-9 items-center justify-center rounded-full bg-[rgba(200,50,31,.09)] text-[#a82614] hover:bg-[rgba(200,50,31,.16)]"
             :aria-label="__('Smazat událost')"
             @click="remove"
           >

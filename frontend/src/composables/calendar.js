@@ -90,10 +90,10 @@ export function daysBetween(start, end) {
 // Barvy: Eventy modře, úkoly podle priority, hotové úkoly šedě.
 export function itemClasses(item) {
   if (item.kind === 'event')
-    return 'bg-[rgba(59,110,246,.14)] text-[#2e5bd8] border-transparent hover:bg-[rgba(59,110,246,.22)]'
+    return 'bg-[rgba(59,110,246,.14)] text-[#1f48b8] border-transparent hover:bg-[rgba(59,110,246,.22)]'
   if (item.done) return 'bg-[rgba(110,120,200,.08)] text-ink-gray-4 border-transparent line-through'
-  if (item.priority === 'High') return 'bg-[rgba(200,50,31,.12)] text-[#c8321f] border-transparent hover:bg-[rgba(200,50,31,.2)]'
-  if (item.priority === 'Medium') return 'bg-[rgba(234,170,8,.18)] text-[#915200] border-transparent hover:bg-[rgba(234,170,8,.28)]'
+  if (item.priority === 'High') return 'bg-[rgba(200,50,31,.12)] text-[#a82614] border-transparent hover:bg-[rgba(200,50,31,.2)]'
+  if (item.priority === 'Medium') return 'bg-[rgba(234,170,8,.18)] text-[#7a4400] border-transparent hover:bg-[rgba(234,170,8,.28)]'
   return 'bg-[rgba(110,120,200,.12)] text-ink-gray-7 border-transparent hover:bg-[rgba(110,120,200,.2)]'
 }
 
