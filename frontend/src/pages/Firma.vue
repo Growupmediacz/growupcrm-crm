@@ -59,6 +59,7 @@
       </div>
       <div v-if="!allFields" class="flex-1 overflow-y-auto px-3 pb-3">
         <GlOrgInfoCard :doc="organization.doc" :branches="branches" @saved="reload" @allFields="allFields = true" />
+        <GlOrgWebCard :organization="organizationId" @updated="reload" />
       </div>
       <div v-else-if="sections.data" class="flex flex-1 flex-col justify-between overflow-hidden">
         <button class="mx-5 mb-2 self-start text-[13px] font-semibold text-[#4F46E5] hover:underline" @click="allFields = false">
@@ -289,6 +290,7 @@ import LeadModal from '@/components/Modals/GlNewLeadModal.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlOrgInfoCard from '@/components/Firma/GlOrgInfoCard.vue'
+import GlOrgWebCard from '@/components/Firma/GlOrgWebCard.vue'
 import GlClientBlocks from '@/components/Firma/GlClientBlocks.vue'
 import { agencyEnabled } from '@/composables/agency'
 import { sessionStore } from '@/stores/session'

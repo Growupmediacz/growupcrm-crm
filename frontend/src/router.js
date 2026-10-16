@@ -110,6 +110,8 @@ const routes = [
     name: 'Outreach',
     component: () => import('@/pages/GlOutreach.vue'),
   },
+  // GrowUp: Agent (Firecrawl) – výzkum firem, jen správci se zapnutým modulem
+  { path: '/agent', name: 'Agent', component: () => import('@/pages/GlAgent.vue') },
   { path: '/outreach/review/:name', name: 'OutreachReview', component: () => import('@/pages/GlOutreachReview.vue'), props: true },
   { path: '/outreach/campaigns/:name', name: 'OutreachCampaign', component: () => import('@/pages/GlOutreachCampaign.vue'), props: true },
   { path: '/outreach/templates/:name', name: 'OutreachTemplate', component: () => import('@/pages/GlOutreachTemplate.vue'), props: true },

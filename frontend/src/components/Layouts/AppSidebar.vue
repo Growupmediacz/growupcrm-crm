@@ -346,6 +346,7 @@ const GL_ICONS = {
   Plans: gl('target'),
   Analytics: gl('chart'),
   Outreach: gl('send'),
+  Agent: gl('sparkles'),
   Organizations: gl('building'),
   Notes: gl('doc'),
   Tasks: gl('check'),
@@ -357,7 +358,7 @@ const GL_ICONS = {
 // Outreach přibude do Prodeje s modulem M3. Klientská verze nemá Dodání (podmínka agencyEnabled).
 const GROUPS = [
   { name: 'Dnes', hideLabel: true, keys: ['Today'] },
-  { name: 'Prodej', keys: ['Leads', 'Deals', 'Organizations', 'ContactsCards', 'Outreach'] },
+  { name: 'Prodej', keys: ['Leads', 'Deals', 'Organizations', 'ContactsCards', 'Outreach', 'Agent'] },
   { name: 'Práce', keys: ['Tasks', 'Calendar', 'Notes', 'Call Logs'] },
   { name: 'Dodání', keys: ['Clients', 'Projects', 'Plans', 'Analytics'] },
 ]
@@ -406,6 +407,7 @@ const links = [
   },
   // GrowUp: agenturní moduly jen se zapnutým growupcrm_agency
   { label: 'Outreach', icon: CalendarIcon, to: 'Outreach', condition: () => outreachEnabled.value },
+  { label: 'Agent', icon: CalendarIcon, to: 'Agent', condition: () => outreachEnabled.value },
   { label: 'Klienti', icon: CalendarIcon, to: 'Clients', condition: () => agencyEnabled.value },
   { label: 'Projekty', icon: CalendarIcon, to: 'Projects', condition: () => agencyEnabled.value },
   { label: 'Plány', icon: CalendarIcon, to: 'Plans', condition: () => agencyEnabled.value },
