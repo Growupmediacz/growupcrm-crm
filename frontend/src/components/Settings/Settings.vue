@@ -50,6 +50,7 @@
 </template>
 <script setup>
 import AgencySettings from '@/components/Settings/AgencySettings.vue'
+import GlMyMailbox from '@/components/Settings/GlMyMailbox.vue'
 import PlanSettings from '@/components/Settings/PlanSettings.vue'
 import { agencyEnabled, outreachEnabled } from '@/composables/agency'
 import { useLeadsOnlyMode } from '@/composables/leadsOnlyMode'
@@ -128,6 +129,7 @@ const tabs = computed(() => {
       component: markRaw(defineComponent({ render: () => h(AgencySettings, { kind: 'mailbox' }) })),
       condition: () => outreachEnabled.value,
     },
+    myMail: { label: __('Můj e-mail'), icon: Email2Icon, component: markRaw(GlMyMailbox) },
     templates: { label: __('Templates'), icon: EmailTemplateIcon, component: markRaw(EmailTemplatePage) },
     accounts: { label: __('Accounts'), icon: Email2Icon, component: markRaw(EmailConfig), condition: () => isManager() },
     projectTemplates: {
@@ -156,7 +158,7 @@ const tabs = computed(() => {
   let _tabs = [
     { label: __('Účet'), items: [item.profile, item.preferences] },
     { label: __('Tým'), items: [item.users, item.plan, item.invite, item.hierarchy], condition: () => isManager() },
-    { label: __('Komunikace'), items: [item.mailbox, item.templates, item.accounts] },
+    { label: __('Komunikace'), items: [item.myMail, item.mailbox, item.templates, item.accounts] },
     { label: __('Práce'), items: [item.projectTemplates, item.assignment, item.sla, item.forms, item.sync], condition: () => isManager() },
     { label: __('Systém'), items: [item.general, item.brand, item.dashboard, item.defaults, item.home, item.telephony, item.whatsapp, item.erp], condition: () => isManager() },
   ]

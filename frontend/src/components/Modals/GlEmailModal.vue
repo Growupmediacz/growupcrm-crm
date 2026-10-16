@@ -10,6 +10,11 @@
       </div>
       <div class="flex-1 overflow-y-auto">
         <div class="flex items-center gap-3 border-b border-[rgba(110,120,200,.12)] px-5 py-2.5">
+          <span class="w-14 shrink-0 text-[14px] text-ink-gray-5">{{ __('Od') }}</span>
+          <span class="min-w-0 flex-1 truncate text-[14px] text-ink-gray-8">{{ getUser()?.email }}</span>
+          <button v-if="mailboxStatus.data && !mailboxStatus.data.connected" class="shrink-0 rounded-full bg-[rgba(214,130,20,.12)] px-3 py-1 text-[12px] font-semibold text-[#8a4b00]" :title="__('Odpovědi klienta se do CRM nedostanou, dokud nepřipojíte svou schránku.')" @click="openMailboxSettings">{{ __('Připojit schránku') }}</button>
+        </div>
+        <div class="flex items-center gap-3 border-b border-[rgba(110,120,200,.12)] px-5 py-2.5">
           <span class="w-14 shrink-0 text-[14px] text-ink-gray-5">{{ __('Komu') }}</span>
           <span v-if="toName" class="flex shrink-0 items-center gap-2 rounded-full bg-white/80 py-0.5 pl-0.5 pr-3 text-[14px] font-medium text-ink-gray-9"><span class="flex size-6 items-center justify-center rounded-full bg-[#dde6ff] text-[9px] font-bold text-[#2440a6]">{{ initials(toName) }}</span>{{ toName }}</span>
           <input v-model="to" class="min-w-0 flex-1 bg-transparent text-[14px] outline-none" :placeholder="__('e-mail příjemce')" />
@@ -37,6 +42,7 @@
 <script setup>
 import GlIcon from '@/components/GlIcon.vue'
 import { usersStore } from '@/stores/users'
+import { mailboxStatus, openMailboxSettings } from '@/composables/gmail'
 import { ErrorMessage, call, createListResource, toast } from 'frappe-ui'
 import { computed, ref, watch } from 'vue'
 
@@ -44,6 +50,7 @@ const props = defineProps({ lead: { type: Object, required: true }, toName: { ty
 const emit = defineEmits(['sent'])
 const show = defineModel({ type: Boolean })
 const { getUser } = usersStore()
+watch(show, (v) => v && mailboxStatus.fetch(), { immediate: true })
 
 const to = ref(props.lead.email || '')
 const cc = ref('')

@@ -17,9 +17,13 @@ import { Dialogs } from '@/utils/dialogs'
 import { sessionStore } from '@/stores/session'
 import { FrappeUIProvider, setConfig, useTheme } from 'frappe-ui'
 import { computed, defineAsyncComponent, provide } from 'vue'
+import { handleMailboxReturn } from '@/composables/gmail'
 
 const session = sessionStore()
 provide('session', session)
+
+// GrowUp: návrat z přihlášení Googlem (Můj e-mail)
+handleMailboxReturn()
 
 const { setTheme } = useTheme()
 if (!localStorage.getItem('theme')) {
