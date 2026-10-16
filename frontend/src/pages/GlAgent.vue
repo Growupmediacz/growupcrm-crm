@@ -64,6 +64,46 @@
       </div>
     </div>
 
+    <!-- Etapa 2: návrhy kontaktů -->
+    <div class="gl-card flex flex-col gap-3 p-5">
+      <div class="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h3 class="text-[18px] font-bold text-ink-gray-9">{{ __('Návrhy kontaktů') }}</h3>
+          <p class="mt-1 text-[14px] text-ink-gray-6">{{ __('Lidé nalezení na webech firem. Po přijetí se z nich stanou kontakty u firmy, u jednatelů z ARES se jen doplní e-mail.') }}</p>
+        </div>
+        <Button v-if="sg?.counts?.['Vysoká']" variant="solid" :label="__('Přijmout všechny s vysokou prioritou')" :loading="busy" @click="acceptHigh" />
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="gl-seg">
+          <button v-for="o in PRIORITIES" :key="o.value" class="gl-seg-btn" :class="sgPriority === o.value && 'gl-seg-on'" @click="sgPriority = o.value">
+            {{ o.label }}<span v-if="o.value && sg?.counts?.[o.value]" class="ml-1 text-ink-gray-5">{{ sg.counts[o.value] }}</span>
+          </button>
+        </div>
+        <label class="flex items-center gap-2 text-[14px] text-ink-gray-7"><input v-model="sgEmail" type="checkbox" class="rounded" />{{ __('jen s e-mailem') }}</label>
+        <span class="ml-auto text-[13px] text-ink-gray-5">{{ __('přijato celkem {0}', [sg?.accepted || 0]) }}</span>
+      </div>
+      <GlEmptyState v-if="sg && !sg.rows.length" icon="users" :title="__('Žádné návrhy')" :text="__('Návrhy vznikají z obohacení firem.')" />
+      <div v-for="r in sg?.rows || []" :key="r.name" class="flex items-center gap-3 border-t border-[rgba(110,120,200,.12)] py-2 first:border-0">
+        <input v-model="selected" type="checkbox" :value="r.name" class="rounded" />
+        <span class="size-2 shrink-0 rounded-full" :style="{ background: PRIORITY_COLOR[r.priority] }" :title="r.priority" />
+        <div class="min-w-0 flex-1">
+          <div class="truncate text-[14px] text-ink-gray-9"><b>{{ r.full_name }}</b><span v-if="r.role" class="text-ink-gray-6"> · {{ r.role }}</span></div>
+          <div class="truncate text-[12px] text-ink-gray-5">
+            <router-link :to="{ name: 'Organization', params: { organizationId: r.organization } }" class="hover:underline">{{ r.organization }}</router-link>
+            <template v-if="r.email"> · {{ r.email }}</template><template v-if="r.phone"> · {{ r.phone }}</template>
+          </div>
+        </div>
+        <span v-if="r.action === 'Doplnit kontakt'" class="rounded-full bg-[rgba(34,179,94,.12)] px-2 py-0.5 text-[11px] font-bold text-[#178a4a]">{{ __('doplní e-mail') }}</span>
+      </div>
+      <div v-if="sg?.rows?.length" class="flex flex-wrap items-center gap-2 border-t border-[rgba(110,120,200,.12)] pt-3">
+        <Button :label="__('Vybrat vše')" @click="selected = sg.rows.map((r) => r.name)" />
+        <Button variant="solid" :label="__('Přijmout vybrané ({0})', [selected.length])" :disabled="!selected.length" :loading="busy" @click="decide('accept')" />
+        <Button :label="__('Zamítnout vybrané')" :disabled="!selected.length" :loading="busy" @click="decide('reject')" />
+        <span class="ml-auto text-[13px] text-ink-gray-5">{{ __('{0} z {1}', [sg.rows.length, sg.total]) }}</span>
+        <Button v-if="sg.rows.length < sg.total" :label="__('Načíst další')" @click="pageLength += 50" />
+      </div>
+    </div>
+
     <!-- Průběh -->
     <div class="gl-card flex flex-col p-5">
       <h3 class="mb-3 text-[18px] font-bold text-ink-gray-9">{{ __('Poslední úlohy') }}</h3>
@@ -103,7 +143,7 @@ usePageMeta(() => ({ title: __('Agent') }))
 
 const STATUS_COLOR = { 'Čeká': '#a3a8c3', 'Probíhá': '#4F46E5', 'Hotovo': '#22b35e', 'Chyba': '#d0362a', 'Přeskočeno': '#d6a01d' }
 const NEXT = [
-  { icon: 'users', title: __('Dohledání kontaktů'), text: __('Osoby z webu a jednatelé → ověřené e-maily (Firecrawl, Anymailfinder).') },
+  { icon: 'star', title: __('Naše firma'), text: __('Obory, služby a ukázky z našeho webu jako podklad pro oslovování.') },
   { icon: 'cal', title: __('Automatické kampaně'), text: __('Oslovení naplánované v kalendáři, personalizované e-maily odchází samy.') },
   { icon: 'search', title: __('Hledání podobných firem'), text: __('Podle vzorku vašich klientů najde nové firmy na webu.') },
 ]
@@ -116,6 +156,48 @@ const industries = createListResource({ doctype: 'CRM Industry', fields: ['name'
 const territories = createListResource({ doctype: 'CRM Territory', fields: ['name'], pageLength: 100, auto: true, transform: (d) => d.map((x) => x.name) })
 const opt = (list) => [{ label: __('Vše'), value: '' }, ...(list || []).map((v) => ({ label: v, value: v }))]
 const starting = ref(false)
+
+// návrhy kontaktů (etapa 2)
+const PRIORITIES = [{ label: __('Vše'), value: '' }, { label: __('Vysoká'), value: 'Vysoká' }, { label: __('Střední'), value: 'Střední' }, { label: __('Nízká'), value: 'Nízká' }]
+const PRIORITY_COLOR = { 'Vysoká': '#4F46E5', 'Střední': '#0ea5e9', 'Nízká': '#a3a8c3' }
+const sgPriority = ref('Vysoká')
+const sgEmail = ref(true)
+const pageLength = ref(50)
+const selected = ref([])
+const busy = ref(false)
+const suggestions = createResource({ url: 'growupcrm.prospects.get_suggestions' })
+const sg = computed(() => suggestions.data)
+function loadSuggestions() {
+  suggestions.submit({ priority: sgPriority.value || null, with_email: sgEmail.value ? 1 : 0, page_length: pageLength.value })
+}
+watch([sgPriority, sgEmail, pageLength], () => { selected.value = []; loadSuggestions() }, { immediate: true })
+
+async function decide(kind) {
+  busy.value = true
+  try {
+    const res = await call(`growupcrm.prospects.${kind}`, { names: JSON.stringify(selected.value) })
+    if (kind === 'accept') toast.success(__('Přijato {0} kontaktů', [res.accepted]) + (res.duplicate ? ` · ${__('{0} už v CRM bylo', [res.duplicate])}` : ''))
+    selected.value = []
+    loadSuggestions()
+  } catch (e) {
+    saveFailed(e, () => decide(kind))
+  } finally {
+    busy.value = false
+  }
+}
+
+async function acceptHigh() {
+  busy.value = true
+  try {
+    const res = await call('growupcrm.prospects.accept_high')
+    toast.success(__('Přijato {0} kontaktů s vysokou prioritou', [res.accepted]))
+    loadSuggestions()
+  } catch (e) {
+    saveFailed(e, acceptHigh)
+  } finally {
+    busy.value = false
+  }
+}
 
 watch(filters, () => est.submit({ filters: JSON.stringify({ ...filters, include_done: filters.include_done ? 1 : 0 }) }), { immediate: true, deep: true })
 
