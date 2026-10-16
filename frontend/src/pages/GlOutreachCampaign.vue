@@ -21,6 +21,8 @@
       <span>· {{ __('{0} kontaktů', [d.total]) }} · {{ __('odesílá se z vaší schránky po schválení') }}</span>
     </div>
 
+    <GlCampaignAgent :campaign="name" @changed="res.reload()" />
+
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
       <div v-for="s in d.steps" :key="s.index" class="gl-card p-4">
         <div class="flex items-center gap-3">
@@ -76,6 +78,7 @@ import GlIcon from '@/components/GlIcon.vue'
 import GlListFooter from '@/components/GlListFooter.vue'
 import GlAddContactsModal from '@/components/Outreach/GlAddContactsModal.vue'
 import GlCampaignModal from '@/components/Outreach/GlCampaignModal.vue'
+import GlCampaignAgent from '@/components/Outreach/GlCampaignAgent.vue'
 import { api, avatarTone, CONTACT_STATUS, initials } from '@/composables/outreach'
 import { formatDateCz } from '@/utils/glDate'
 import { Breadcrumbs, Button, createResource, toast } from 'frappe-ui'

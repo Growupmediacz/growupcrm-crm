@@ -6,6 +6,7 @@ export const CONTACT_STATUS = {
   'Čeká': '#9CA3AF',
   'Odesláno': '#3B82F6',
   'Otevřeno': '#8B5CF6',
+  'Klikl': '#0ea5e9',
   'Odpověděl': '#22B35E',
   'Odhlášen': '#a82614',
   'Dokončeno': '#3b30b8',
