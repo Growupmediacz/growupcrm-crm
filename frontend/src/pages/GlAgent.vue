@@ -105,6 +105,9 @@
       </div>
     </div>
 
+    <!-- Etapa 5: hledání nových firem -->
+    <GlDiscovery />
+
     <!-- Etapa 3: naše firma -->
     <GlOwnCompany />
 
@@ -115,7 +118,7 @@
       <div v-for="r in ov.runs" :key="r.name" class="flex items-center gap-3 border-t border-[rgba(110,120,200,.12)] py-2.5 first:border-0">
         <span class="size-2 shrink-0 rounded-full" :style="{ background: STATUS_COLOR[r.status] }" />
         <router-link v-if="r.organization" :to="{ name: 'Organization', params: { organizationId: r.organization } }" class="min-w-0 flex-1 truncate text-[14px] font-semibold text-ink-gray-9 hover:underline">{{ r.organization }}</router-link>
-        <span v-else class="min-w-0 flex-1 truncate text-[14px] font-semibold text-ink-gray-9">{{ __('GrowUpMedia (náš web)') }}</span>
+        <span v-else class="min-w-0 flex-1 truncate text-[14px] font-semibold text-ink-gray-9">{{ r.kind === 'Hledání firem' ? __('Hledání nových firem') : __('GrowUpMedia (náš web)') }}</span>
         <span class="hidden text-[13px] text-ink-gray-5 sm:inline">{{ r.kind }}</span>
         <span class="text-[13px] text-ink-gray-7" :title="r.error">{{ r.status }}<template v-if="r.error"> · {{ r.error.slice(0, 60) }}</template></span>
         <span class="w-16 text-right text-[13px] text-ink-gray-5">{{ r.credits ? `${r.credits} kr.` : '' }}</span>
@@ -128,10 +131,6 @@
         <div class="flex items-center gap-2 text-[15px] font-bold text-ink-gray-9"><GlIcon name="cal" :size="18" />{{ __('Automatické kampaně') }}</div>
         <div class="text-[13px] text-ink-gray-6">{{ __('V Outreach → kampaň → Agent kampaně: texty, schválení, plán v kalendáři, odesílání z Gmailu.') }}</div>
       </router-link>
-      <div v-for="s in NEXT" :key="s.title" class="gl-card flex flex-col gap-1 p-4 opacity-70">
-        <div class="flex items-center gap-2 text-[15px] font-bold text-ink-gray-9"><GlIcon :name="s.icon" :size="18" />{{ s.title }}<span class="rounded-full bg-[rgba(79,70,229,.1)] px-2 py-0.5 text-[11px] font-bold text-[#3b30b8]">{{ __('brzy') }}</span></div>
-        <div class="text-[13px] text-ink-gray-6">{{ s.text }}</div>
-      </div>
     </div>
   </div>
 </template>
@@ -143,6 +142,7 @@ import GlEmptyState from '@/components/GlEmptyState.vue'
 import GlForbidden from '@/components/GlForbidden.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlOwnCompany from '@/components/Agent/GlOwnCompany.vue'
+import GlDiscovery from '@/components/Agent/GlDiscovery.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import { isForbidden } from '@/utils/glErrors'
 import { saveFailed } from '@/composables/glToast'
@@ -152,9 +152,6 @@ import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 usePageMeta(() => ({ title: __('Agent') }))
 
 const STATUS_COLOR = { 'Čeká': '#a3a8c3', 'Probíhá': '#4F46E5', 'Hotovo': '#22b35e', 'Chyba': '#d0362a', 'Přeskočeno': '#d6a01d' }
-const NEXT = [
-  { icon: 'search', title: __('Hledání podobných firem'), text: __('Podle vzorku vašich klientů najde nové firmy na webu.') },
-]
 
 const overview = createResource({ url: 'growupcrm.research.get_overview', auto: true })
 const ov = computed(() => overview.data)
