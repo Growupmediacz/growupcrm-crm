@@ -10,7 +10,10 @@
         :aria-label="item.title"
       >
         <div class="flex items-start justify-between gap-3">
-          <span class="rounded-full bg-[rgba(59,110,246,.14)] px-2.5 py-0.5 text-[12px] font-bold text-[#1f48b8]">{{ __('Schůzka') }}</span>
+          <span v-if="item.outreach" class="flex items-center gap-1 rounded-full bg-[rgba(8,145,178,.14)] px-2.5 py-0.5 text-[12px] font-bold text-[#0b5f73]">
+            <GlIcon name="mail" :size="13" />{{ __('Oslovení e-mailem') }}
+          </span>
+          <span v-else class="rounded-full bg-[rgba(59,110,246,.14)] px-2.5 py-0.5 text-[12px] font-bold text-[#1f48b8]">{{ __('Schůzka') }}</span>
           <button class="flex size-8 items-center justify-center rounded-full bg-[rgba(110,120,200,.12)]" :aria-label="__('Zavřít')" @click="close">
             <GlIcon name="x" :size="14" />
           </button>
@@ -44,7 +47,13 @@
           <div v-if="plain" class="line-clamp-3 text-[13px] text-ink-gray-5">{{ plain }}</div>
         </div>
 
-        <div class="mt-4 flex items-center gap-2">
+        <div v-if="item.outreach" class="mt-4 flex items-center gap-2">
+          <router-link :to="{ name: 'OutreachCampaign', params: { name: item.campaign } }" @click="close">
+            <Button variant="solid" iconLeft="send" :label="__('Otevřít kampaň')" />
+          </router-link>
+          <span class="text-[12px] text-ink-gray-5">{{ __('Plán odesílání, mění se v kampani.') }}</span>
+        </div>
+        <div v-else class="mt-4 flex items-center gap-2">
           <Button v-if="item.leadName" variant="solid" iconLeft="file-text" :label="__('Zapsat zápis')" @click="showNote = true" />
           <Button v-if="item.canEdit" iconLeft="clock" :label="__('Přesunout')" @click="emit('edit', item)" />
           <Button v-else iconLeft="eye" :label="__('Detail')" @click="emit('edit', item)" />

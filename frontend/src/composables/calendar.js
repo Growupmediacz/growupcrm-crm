@@ -89,6 +89,8 @@ export function daysBetween(start, end) {
 
 // Barvy: Eventy modře, úkoly podle priority, hotové úkoly šedě.
 export function itemClasses(item) {
+  // GrowUp: plán odesílání kampaně (Outreach) – vlastní barva, ať se nesplete se schůzkou
+  if (item.outreach) return 'bg-[rgba(8,145,178,.14)] text-[#0b5f73] border-transparent hover:bg-[rgba(8,145,178,.22)]'
   if (item.kind === 'event')
     return 'bg-[rgba(59,110,246,.14)] text-[#1f48b8] border-transparent hover:bg-[rgba(59,110,246,.22)]'
   if (item.done) return 'bg-[rgba(110,120,200,.08)] text-ink-gray-4 border-transparent line-through'
@@ -113,6 +115,8 @@ export function toItems({ events = [], tasks = [] }) {
       assignedTo: e.assigned_to,
       leadName: e.reference_doctype === 'CRM Lead' ? e.reference_docname : null,
       leadTitle: e.lead_title,
+      outreach: e.reference_doctype === 'GrowUp Campaign',
+      campaign: e.reference_doctype === 'GrowUp Campaign' ? e.reference_docname : null,
       organization: e.organization,
       description: e.description,
       canEdit: Boolean(e.can_edit),
