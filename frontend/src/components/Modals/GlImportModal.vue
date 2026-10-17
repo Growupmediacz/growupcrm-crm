@@ -15,15 +15,23 @@
       <!-- 1 Soubor -->
       <div v-if="step === 0" class="flex flex-col gap-3">
         <label class="flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-[rgba(110,120,200,.35)] px-4 py-10 text-center hover:bg-white/50" @dragover.prevent @drop.prevent="onDrop">
-          <GlIcon name="upload" :size="24" /><span class="text-[16px] font-semibold text-ink-gray-9">{{ fileName || __('Přetáhněte soubor CSV nebo klikněte') }}</span>
-          <span class="text-[13px] text-ink-gray-5">{{ __('Čárka nebo středník, první řádek je záhlaví.') }} {{ K.required }}</span>
-          <input type="file" accept=".csv,text/csv" class="hidden" @change="(e) => read(e.target.files?.[0])" />
+          <GlIcon name="upload" :size="24" /><span class="text-[16px] font-semibold text-ink-gray-9">{{ fileName || __('Přetáhněte soubor Excel nebo CSV, nebo klikněte') }}</span>
+          <span class="text-[13px] text-ink-gray-5">{{ __('Excel (.xlsx) nebo CSV, první řádek je záhlaví.') }} {{ K.required }}</span>
+          <input type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="hidden" @change="(e) => read(e.target.files?.[0])" />
         </label>
         <p class="text-[13px] text-ink-gray-5">
-          {{ __('Z Excelu nebo Google Tabulek uložte list jako CSV.') }}
+          {{ __('Z Google Tabulek: Soubor → Stáhnout → Microsoft Excel.') }}
           <button class="font-semibold text-[#4F46E5] hover:underline" @click="downloadSample">{{ __('Stáhnout vzorový soubor') }}</button>
         </p>
-        <p v-if="rows.length" class="text-[14px] text-ink-gray-7">{{ __('Načteno {0} řádků.', [rows.length]) }}</p>
+        <label v-if="sheets.length > 1" class="flex items-center gap-3 text-[14px] text-ink-gray-7">
+          <span>{{ __('List sešitu') }}</span>
+          <select v-model="sheet" class="gl-field !h-10 !w-auto" @change="loadSheet">
+            <option v-for="s in sheets" :key="s" :value="s">{{ s }}</option>
+          </select>
+        </label>
+        <p v-if="loading" class="text-[14px] text-ink-gray-5">{{ __('Načítám soubor…') }}</p>
+        <p v-else-if="rows.length" class="text-[14px] text-ink-gray-7">{{ __('Načteno {0} řádků.', [rows.length]) }}</p>
+        <p v-else-if="fileName && header.length" class="text-[14px] font-semibold text-[#a82614]">{{ __('Ve vybraném listu je jen záhlaví, žádné řádky s daty.') }}</p>
       </div>
 
       <!-- 2 Mapování -->
@@ -161,7 +169,7 @@ const campaign = ref('')
 const campaigns = createResource({ url: 'growupcrm.outreach.get_campaigns', onSuccess: (d) => (campaign.value = d?.[0]?.name || '') })
 
 const rows = computed(() => raw.value.map((r) => Object.fromEntries(FIELDS.map((f) => [f.key, map[f.key] === '' ? '' : (r[Number(map[f.key])] || '').trim()]))))
-const canNext = computed(() => (step.value === 0 ? raw.value.length > 0 : K.value.ready(map)))
+const canNext = computed(() => (step.value === 0 ? raw.value.length > 0 && !loading.value : K.value.ready(map)))
 const args = (extra = {}) => ({ rows: JSON.stringify(rows.value), ...(props.kind === 'contact' ? {} : { kind: props.kind }), ...extra })
 
 function downloadSample() {
@@ -173,16 +181,52 @@ function downloadSample() {
   URL.revokeObjectURL(a.href)
 }
 
+const sheets = ref([])
+const sheet = ref('')
+const loading = ref(false)
+let xlsxContent = ''
+
+function setRows(all) {
+  header.value = all[0] || []
+  raw.value = all.slice(1)
+  for (const f of FIELDS) map[f.key] = guessColumn(header.value, f.re)
+}
+async function loadSheet() {
+  loading.value = true
+  error.value = ''
+  try {
+    const res = await call('growupcrm.data_import.read_xlsx', { content: xlsxContent, sheet: sheet.value || undefined })
+    sheets.value = res.sheets
+    sheet.value = res.sheet
+    setRows(res.rows)
+  } catch (e) {
+    error.value = e.messages?.[0] || e.message
+    setRows([])
+  } finally {
+    loading.value = false
+  }
+}
 function read(file) {
   if (!file) return
   fileName.value = file.name
+  sheets.value = []
+  sheet.value = ''
+  error.value = ''
   const reader = new FileReader()
-  reader.onload = () => {
-    const all = parseCsv(reader.result)
-    header.value = all[0] || []
-    raw.value = all.slice(1)
-    for (const f of FIELDS) map[f.key] = guessColumn(header.value, f.re)
+  if (/\.xlsx$/i.test(file.name)) {
+    // Excel čte server (openpyxl), prohlížeč pošle soubor v base64
+    reader.onload = () => {
+      xlsxContent = reader.result
+      loadSheet()
+    }
+    reader.readAsDataURL(file)
+    return
   }
+  if (/\.xls$/i.test(file.name)) {
+    error.value = __('Starší formát .xls neumíme, uložte soubor v Excelu jako .xlsx.')
+    return
+  }
+  reader.onload = () => setRows(parseCsv(reader.result))
   reader.readAsText(file)
 }
 const onDrop = (e) => read(e.dataTransfer?.files?.[0])
