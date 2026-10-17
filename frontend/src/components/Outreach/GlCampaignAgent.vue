@@ -27,6 +27,17 @@
         <FormControl type="number" :label="__('Odesílat od (hodina)')" v-model="form.window_start" />
         <FormControl type="number" :label="__('Odesílat do (hodina)')" v-model="form.window_end" />
       </div>
+      <div class="flex flex-wrap items-end gap-4">
+        <div>
+          <div class="mb-1.5 text-xs text-ink-gray-5">{{ __('Styl textů') }}</div>
+          <div class="gl-seg">
+            <button v-for="st in ['Mluvené', 'Věcné']" :key="st" class="gl-seg-btn" :class="form.text_style === st && 'gl-seg-on'" @click="form.text_style = st">
+              {{ st === 'Mluvené' ? __('Jako mluvené slovo') : __('Věcný') }}
+            </button>
+          </div>
+        </div>
+        <label class="flex items-center gap-2 pb-1.5 text-[14px] text-ink-gray-7"><input v-model="form.add_footer" type="checkbox" class="rounded" />{{ __('Patička s odhlášením a adresou') }}</label>
+      </div>
       <FormControl type="textarea" :label="__('Pokyny pro agenta (nepovinné)')" v-model="form.ai_notes" :placeholder="__('Např. zmiň jarní sezónu, piš kratší e-maily…')" />
       <div class="flex flex-wrap items-center gap-2">
         <Button :label="__('Uložit nastavení')" :disabled="!dirty" :loading="busy === 'save'" @click="save" />
@@ -93,7 +104,7 @@ const KPIS = [
 
 const state = createResource({ url: 'growupcrm.campaign_agent.get_agent_state', params: { campaign: props.campaign }, auto: true })
 const s = computed(() => state.data)
-const form = reactive({ sender: '', daily_limit: 30, window_start: 8, window_end: 16, ai_notes: '' })
+const form = reactive({ sender: '', daily_limit: 30, window_start: 8, window_end: 16, ai_notes: '', text_style: 'Mluvené', add_footer: false })
 const dirty = ref(false)
 const busy = ref('')
 let loading = false
@@ -102,7 +113,8 @@ watch(s, (v) => {
   if (!v) return
   loading = true
   Object.assign(form, { sender: v.settings.sender || '', daily_limit: v.settings.daily_limit || 30, window_start: v.settings.window_start || 8,
-    window_end: v.settings.window_end || 16, ai_notes: v.settings.ai_notes || '' })
+    window_end: v.settings.window_end || 16, ai_notes: v.settings.ai_notes || '', text_style: v.settings.text_style || 'Mluvené',
+    add_footer: !!v.settings.add_footer })
   dirty.value = false
   setTimeout(() => (loading = false))
 })
@@ -124,7 +136,7 @@ async function run(kind, method, params, ok) {
   }
 }
 
-const save = () => run('save', 'save_settings', { data: JSON.stringify(form) }, () => __('Uloženo'))
+const save = () => run('save', 'save_settings', { data: JSON.stringify({ ...form, add_footer: form.add_footer ? 1 : 0 }) }, () => __('Uloženo'))
 async function prepare(redo) {
   if (dirty.value) await save()
   run('prepare', 'prepare', { redo }, (r) => __('Agent píše e-maily pro {0} kontaktů', [r.queued]))
