@@ -53,7 +53,7 @@
           <div class="gl-mail mt-1 text-[14px] leading-relaxed text-ink-gray-8" v-html="m.body" />
           <details v-if="m.followups.length" class="mt-2 text-[13px] text-ink-gray-7">
             <summary class="cursor-pointer text-ink-gray-5">{{ __('Navazující e-maily') }}</summary>
-            <div v-for="(f, i) in m.followups" :key="i" class="mt-2 whitespace-pre-line"><b>{{ f[0] }}</b><br />{{ f[1] }}</div>
+            <div v-for="(f, i) in m.followups" :key="i" class="mt-3 rounded-[12px] bg-[rgba(110,120,200,.05)] p-3"><b class="text-ink-gray-9">{{ f[0] }}</b><div class="mt-1" v-html="f[1]" /></div>
           </details>
         </div>
       </div>
