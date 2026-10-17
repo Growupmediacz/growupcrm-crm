@@ -1,7 +1,7 @@
 <template>
   <!-- GrowUp (design 2. kolo, oprava 21, varianta A „Více“ ve spodní liště):
        sekce, které nejsou v liště, ve skupinách jako na desktopu; oznámení a profil vpravo nahoře. -->
-  <div class="flex flex-col gap-2 px-5 pb-6 pt-6">
+  <div class="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-5 pb-6 pt-6 [&>*]:shrink-0">
     <div class="mb-2 flex items-center justify-between">
       <h1 class="text-[32px] font-bold tracking-tight text-ink-gray-9">{{ __('Více') }}</h1>
       <div class="flex items-center gap-2">
@@ -92,6 +92,7 @@ const groups = computed(() => {
       items: [
         { label: __('Kontakty'), icon: 'users', route: 'ContactsCards' },
         outreachEnabled.value && { label: __('Outreach'), icon: 'send', route: 'Outreach', count: counts.data?.outreach },
+        outreachEnabled.value && { label: __('Agent'), icon: 'sparkles', route: 'Agent' },
       ].filter(Boolean),
     },
     {

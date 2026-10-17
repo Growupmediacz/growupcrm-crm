@@ -12,8 +12,8 @@
   </LayoutHeader>
 
   <div v-if="msg.error" class="px-4 py-10 text-center text-ink-gray-5">{{ msg.error.messages?.[0] || __('Zprávu se nepodařilo načíst.') }}</div>
-  <div v-else-if="m" class="flex min-h-0 flex-1 flex-col gap-3 px-3 pb-24 md:px-2 md:pb-2">
-    <div class="grid min-h-0 gap-4 lg:grid-cols-[1fr_340px]">
+  <div v-else-if="m" class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-3 pb-24 md:px-2 md:pb-2">
+    <div class="grid shrink-0 gap-4 lg:grid-cols-[1fr_340px]">
       <div class="gl-card p-5 md:p-7">
         <dl class="text-[15px]">
           <div class="flex items-center gap-4 border-b border-[rgba(110,120,200,.14)] py-3"><dt class="w-16 shrink-0 text-ink-gray-5">{{ __('Od') }}</dt><dd class="min-w-0 truncate text-ink-gray-9">{{ m.from }}</dd></div>
