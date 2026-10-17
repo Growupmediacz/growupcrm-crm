@@ -1,25 +1,12 @@
 <template>
-  <div class="flex justify-between gap-3 border-t px-4 py-2.5">
-    <div class="flex gap-1.5">
-      <Button
-        variant="ghost"
-        :class="[
-          showEmailBox ? '!bg-surface-gray-4 hover:!bg-surface-gray-3' : '',
-        ]"
-        :label="__('Reply')"
-        :iconLeft="Email2Icon"
-        @click="toggleEmailBox()"
-      />
-      <Button
-        variant="ghost"
-        :label="__('Comment')"
-        :class="[
-          showCommentBox ? '!bg-surface-gray-4 hover:!bg-surface-gray-3' : '',
-        ]"
-        :iconLeft="CommentIcon"
-        @click="toggleCommentBox()"
-      />
-    </div>
+  <!-- GrowUp: lišta v novém designu – pilulky, aktivní tmavá jako čipy záložek -->
+  <div class="flex gap-2 border-t border-[rgba(110,120,200,.14)] px-4 py-2.5">
+    <button class="gl-quick !h-9" :class="showEmailBox && '!bg-[#0e1330] !text-white'" @click="toggleEmailBox()">
+      <GlIcon name="reply" :size="15" />{{ __('Odpovědět e-mailem') }}
+    </button>
+    <button class="gl-quick !h-9" :class="showCommentBox && '!bg-[#0e1330] !text-white'" @click="toggleCommentBox()">
+      <GlIcon name="edit" :size="15" />{{ __('Interní komentář') }}
+    </button>
   </div>
   <div
     v-show="showEmailBox"
@@ -81,16 +68,15 @@
       }"
       :editable="showCommentBox"
       :doctype="doctype"
-      :placeholder="__('@John, can you please check this?')"
+      :placeholder="__('Napište komentář pro tým… Kolegu označíte přes @')"
     />
   </div>
 </template>
 
 <script setup>
 import EmailEditor from '@/components/EmailEditor.vue'
+import GlIcon from '@/components/GlIcon.vue'
 import CommentBox from '@/components/CommentBox.vue'
-import CommentIcon from '@/components/Icons/CommentIcon.vue'
-import Email2Icon from '@/components/Icons/Email2Icon.vue'
 import { isContentEmpty } from '@/utils'
 import { usersStore } from '@/stores/users'
 import { useStorage } from '@vueuse/core'

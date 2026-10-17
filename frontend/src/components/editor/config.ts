@@ -81,6 +81,9 @@ export const fullToolbar: MenuItem[] = [
   InsertTable,
 ]
 
+/** GrowUp: komentář v novém designu – jen základní formátování (bez nadpisů, tabulek, zarovnání). */
+export const commentToolbar: MenuItem[] = [Bold, Italic, Separator, BulletList, OrderedList, Separator, InsertLink]
+
 /** Compact toolbar for inline/ghost fields (generic form fields, grid rows) —
  *  shown in a floating bubble on text selection rather than a fixed bar. */
 export const bubbleToolbar: MenuItem[] = [Bold, Italic, Strike, InsertLink]
