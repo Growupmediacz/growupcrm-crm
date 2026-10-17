@@ -224,14 +224,12 @@
                 {
                   label: __('Import'),
                   icon: () => h(ImportIcon, { class: 'h-4 w-4' }),
-                  onClick: () =>
-                    router.push({
-                      name: 'NewDataImport',
-                      params: { doctype: doctype },
-                    }),
+                  // GrowUp: český import s kontrolou duplicit místo anglického Data Importu z frappe-ui
+                  onClick: () => (showImport = true),
                   condition: () =>
                     !options.hideColumnsButton &&
-                    route.params.viewType !== 'kanban',
+                    route.params.viewType !== 'kanban' &&
+                    Boolean(IMPORT_KIND[doctype]),
                 },
                 {
                   label: __('Export'),
@@ -281,6 +279,12 @@
         list.reload()
       },
     }"
+  />
+  <GlImportModal
+    v-if="showImport"
+    v-model="showImport"
+    :kind="IMPORT_KIND[doctype]"
+    @done="reload()"
   />
   <Dialog
     v-model:open="showExportDialog"
@@ -335,6 +339,7 @@ import UnpinIcon from '@/components/Icons/UnpinIcon.vue'
 import ExportIcon from '@/components/Icons/ExportIcon.vue'
 import QuickFilterIcon from '@/components/Icons/QuickFilterIcon.vue'
 import ViewModal from '@/components/Modals/ViewModal.vue'
+import GlImportModal from '@/components/Modals/GlImportModal.vue'
 import SortBy from '@/components/SortBy.vue'
 import Filter from '@/components/Filter.vue'
 import GroupBy from '@/components/GroupBy.vue'
@@ -590,6 +595,8 @@ function reload() {
 }
 
 const showExportDialog = ref(false)
+const showImport = ref(false)
+const IMPORT_KIND = { 'CRM Lead': 'lead', 'CRM Organization': 'organization', Contact: 'contact' }
 const export_type = ref('Excel')
 const export_all = ref(false)
 const selectedRows = ref([])

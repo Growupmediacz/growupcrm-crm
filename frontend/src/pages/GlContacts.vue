@@ -147,7 +147,7 @@
     </div>
   </div>
 
-  <GlImportContactsModal v-if="showImport" v-model="showImport" @done="directory.reload()" />
+  <GlImportModal v-if="showImport" v-model="showImport" @done="directory.reload()" />
   <ContactModal
     v-if="showContactModal"
     v-model="showContactModal"
@@ -183,7 +183,7 @@ import GlIcon from '@/components/GlIcon.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
 import ContactModal from '@/components/Modals/ContactModal.vue'
-import GlImportContactsModal from '@/components/Modals/GlImportContactsModal.vue'
+import GlImportModal from '@/components/Modals/GlImportModal.vue'
 import { isMobileView } from '@/composables/settings'
 import { sessionStore } from '@/stores/session'
 import { Button, Dialog, FormControl, call, createResource, toast, usePageMeta } from 'frappe-ui'
