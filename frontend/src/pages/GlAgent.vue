@@ -124,6 +124,10 @@
 
     <!-- Další etapy -->
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+      <router-link :to="{ name: 'Outreach', params: { tab: 'campaigns' } }" class="gl-card flex flex-col gap-1 p-4 hover:bg-white/60">
+        <div class="flex items-center gap-2 text-[15px] font-bold text-ink-gray-9"><GlIcon name="cal" :size="18" />{{ __('Automatické kampaně') }}</div>
+        <div class="text-[13px] text-ink-gray-6">{{ __('V Outreach → kampaň → Agent kampaně: texty, schválení, plán v kalendáři, odesílání z Gmailu.') }}</div>
+      </router-link>
       <div v-for="s in NEXT" :key="s.title" class="gl-card flex flex-col gap-1 p-4 opacity-70">
         <div class="flex items-center gap-2 text-[15px] font-bold text-ink-gray-9"><GlIcon :name="s.icon" :size="18" />{{ s.title }}<span class="rounded-full bg-[rgba(79,70,229,.1)] px-2 py-0.5 text-[11px] font-bold text-[#3b30b8]">{{ __('brzy') }}</span></div>
         <div class="text-[13px] text-ink-gray-6">{{ s.text }}</div>
@@ -149,7 +153,6 @@ usePageMeta(() => ({ title: __('Agent') }))
 
 const STATUS_COLOR = { 'Čeká': '#a3a8c3', 'Probíhá': '#4F46E5', 'Hotovo': '#22b35e', 'Chyba': '#d0362a', 'Přeskočeno': '#d6a01d' }
 const NEXT = [
-  { icon: 'cal', title: __('Automatické kampaně'), text: __('Oslovení naplánované v kalendáři, personalizované e-maily odchází samy.') },
   { icon: 'search', title: __('Hledání podobných firem'), text: __('Podle vzorku vašich klientů najde nové firmy na webu.') },
 ]
 

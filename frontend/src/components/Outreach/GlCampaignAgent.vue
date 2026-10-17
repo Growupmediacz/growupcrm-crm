@@ -93,7 +93,7 @@ const KPIS = [
 
 const state = createResource({ url: 'growupcrm.campaign_agent.get_agent_state', params: { campaign: props.campaign }, auto: true })
 const s = computed(() => state.data)
-const form = reactive({ sender: '', daily_limit: 20, window_start: 8, window_end: 16, ai_notes: '' })
+const form = reactive({ sender: '', daily_limit: 30, window_start: 8, window_end: 16, ai_notes: '' })
 const dirty = ref(false)
 const busy = ref('')
 let loading = false
@@ -101,7 +101,7 @@ let loading = false
 watch(s, (v) => {
   if (!v) return
   loading = true
-  Object.assign(form, { sender: v.settings.sender || '', daily_limit: v.settings.daily_limit || 20, window_start: v.settings.window_start || 8,
+  Object.assign(form, { sender: v.settings.sender || '', daily_limit: v.settings.daily_limit || 30, window_start: v.settings.window_start || 8,
     window_end: v.settings.window_end || 16, ai_notes: v.settings.ai_notes || '' })
   dirty.value = false
   setTimeout(() => (loading = false))
