@@ -1,7 +1,7 @@
 <template>
   <!-- GrowUp: modul Outreach (design 2. kolo O1, O5): přehled, ke schválení, odpovědi, kampaně, šablony.
        Data: growupcrm.outreach.* (jen správci, jen se zapnutým growupcrm_agency). -->
-  <OutreachHeader :active="tab" :connected="!!ov?.connected" :counts="ov?.counts || {}" @mailbox="showMailbox = true" @newCampaign="showNew = true" />
+  <OutreachHeader :active="tab" :connected="!!ov?.connected" :counts="ov?.counts || {}" @mailbox="openMailboxSettings" @newCampaign="showNew = true" />
 
   <GlForbidden v-if="overview.error && isForbidden(overview.error)" :message="overview.error.messages?.[0]" />
   <div v-else-if="overview.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Outreach se nepodařilo načíst')" :text="overview.error.messages?.[0]" @retry="overview.reload()" /></div>
@@ -13,7 +13,7 @@
         <b class="text-ink-gray-9">{{ __('Schránka zatím není připojená.') }}</b>
         {{ __('E-maily odcházejí z vaší adresy a odpovědi chodí zpět do CRM. Bez schránky nic neodešleme.') }}
       </div>
-      <Button variant="solid" :label="__('Připojit schránku')" @click="showMailbox = true" />
+      <Button variant="solid" :label="__('Připojit Gmail')" @click="openMailboxSettings" />
     </div>
 
     <!-- Přehled -->
@@ -170,6 +170,7 @@ import OutreachHeader from '@/components/Outreach/OutreachHeader.vue'
 import CampaignsTable from '@/components/Outreach/CampaignsTable.vue'
 import RepliesTab from '@/components/Outreach/RepliesTab.vue'
 import GlMailboxModal from '@/components/Outreach/GlMailboxModal.vue'
+import { openMailboxSettings } from '@/composables/gmail'
 import GlCampaignModal from '@/components/Outreach/GlCampaignModal.vue'
 import GlLinkedInModal from '@/components/Outreach/GlLinkedInModal.vue'
 import GlProcessCallModal from '@/components/Outreach/GlProcessCallModal.vue'
