@@ -14,7 +14,7 @@
     </header>
   </LayoutHeader>
   <div v-if="doc.name" class="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pb-24">
-    <LeadHero :key="heroKey" :doc="doc" :stageOptions="mobileStages" compact @changed="afterChange" @fill="openDetails(true)" />
+    <LeadHero :key="heroKey" :doc="doc" :stageOptions="mobileStages" compact @changed="afterChange" @fill="openDetails(true)" @plan="activities?.modalRef?.showTask()" />
 
     <!-- Hodnota a Kontakt -->
     <div class="gl-card mt-3 !rounded-[20px] px-4">

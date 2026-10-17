@@ -101,6 +101,10 @@
             </span>
             <span v-if="orgLabel(row)" class="truncate text-[12.5px] text-ink-gray-5">{{ orgLabel(row) }}</span>
           </div>
+          <GlTemperature v-else-if="column.key === 'temperature'" :value="plain(row.temperature)" />
+          <div v-else-if="column.key === 'next_step' && !row.next_step && plain(row.no_next_step)" class="flex items-center gap-1.5 truncate text-[13.5px] font-semibold text-[#9a5b00]">
+            <GlIcon name="alert" :size="15" class="shrink-0" />{{ __('Bez dalšího kroku') }}
+          </div>
           <div v-else-if="column.key === 'next_step'" class="truncate text-[13.5px] font-semibold" :class="nextTone(row)">
             {{ row.next_step ? `${row.next_step} – ${nextWhen(row)}` : '' }}
           </div>
@@ -252,6 +256,10 @@
 
 <script setup>
 import ListFooter from '@/components/GlListFooter.vue'
+import GlIcon from '@/components/GlIcon.vue'
+import GlTemperature from '@/components/GlTemperature.vue'
+// hodnoty řádku chodí někdy jako {label, value}
+const plain = (v) => (v && typeof v === 'object' ? v.value ?? v.label : v)
 // Další krok: po termínu červeně, dnes/zítra jantarově, později modře (design)
 const dayDiff = (row) => {
   if (!row.next_step_at) return null

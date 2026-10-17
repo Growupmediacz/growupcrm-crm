@@ -1,6 +1,9 @@
 <template>
   <div class="flex flex-col gap-2">
-    <div class="text-[15px] font-bold leading-snug text-ink-gray-9">{{ title }}</div>
+    <div class="flex items-start justify-between gap-2">
+      <div class="text-[15px] font-bold leading-snug text-ink-gray-9">{{ title }}</div>
+      <GlTemperature :value="lead.temperature" class="mt-0.5" />
+    </div>
     <div v-if="lead.organization && lead.organization !== title" class="truncate text-[13px] text-ink-gray-5">
       {{ lead.organization }}
     </div>
@@ -11,6 +14,10 @@
     <div v-if="next" class="flex items-center gap-1.5 text-[13px] font-semibold" :class="nextClass">
       <GlIcon name="clock" :size="14" />
       <span class="truncate">{{ nextText }}</span>
+    </div>
+    <div v-else-if="lead.no_next_step" class="flex items-center gap-1.5 text-[13px] font-semibold text-[#9a5b00]">
+      <GlIcon name="alert" :size="14" />
+      <span class="truncate">{{ __('Bez dalšího kroku') }}</span>
     </div>
     <div class="mt-1 flex items-center justify-between gap-2">
       <div v-if="lead.order_value" class="num text-[15px] font-bold text-ink-gray-9">{{ money }}</div>
@@ -23,6 +30,7 @@
 <script setup>
 // GrowUp: karta zakázky v Kanbanu (design Liquid Glass). Data dodává growupcrm.overrides.list_data.get_data.
 import GlIcon from '@/components/GlIcon.vue'
+import GlTemperature from '@/components/GlTemperature.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'

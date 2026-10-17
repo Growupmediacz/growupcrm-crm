@@ -40,7 +40,7 @@
   </LayoutHeader>
   <div v-if="doc.name" class="flex h-full gap-3 overflow-hidden px-2 pb-2">
     <div class="flex min-w-0 flex-1 flex-col gap-3 overflow-hidden">
-      <LeadHero :key="heroKey" :doc="doc" :stageOptions="statuses" @changed="reloadResources" @fill="editing = true" />
+      <LeadHero :key="heroKey" :doc="doc" :stageOptions="statuses" @changed="reloadResources" @fill="editing = true" @plan="activities?.modalRef?.showTask()" />
       <div class="gl-card gl-chiptabs gl-chiptabs-d relative flex min-h-0 flex-1 flex-col overflow-hidden" :class="moreTab && 'gl-chiptabs-more'">
         <h2 class="pointer-events-none absolute left-0 top-[16px] z-[2] bg-gradient-to-r from-[#fbf9ff] from-80% to-transparent py-1 pl-6 pr-5 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Aktivita') }}</h2>
         <!-- oprava 10: 5 čipů (Vše, Zápisy, Hovory, E-maily, Úkoly), ostatní záložky v nabídce „Více“ -->

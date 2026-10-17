@@ -5,6 +5,7 @@
         <div class="flex items-center gap-2 text-[13px] font-medium text-ink-gray-7">
           <span class="dot size-2 rounded-full" :style="{ background: stageColor }" />
           {{ __(doc.status) }}
+          <GlTemperature :value="doc.temperature" :lead="doc.name" editable class="ml-1" @changed="(v) => ((doc.temperature = v), emit('changed'))" />
         </div>
         <h1 class="mt-1 truncate font-bold leading-tight tracking-tight text-ink-gray-9" :class="compact ? 'text-[24px]' : 'text-[34px]'">
           {{ doc.order_title || doc.lead_name || doc.name }}
@@ -45,6 +46,25 @@
       </button>
     </div>
 
+    <!-- Pipedrive „No activity“: otevřená zakázka bez úkolu i schůzky -->
+    <div
+      v-if="!next && !doc.next_step && isOpen && tasks.data"
+      class="mt-5 flex items-center gap-4 rounded-[18px] bg-[rgba(224,161,0,.14)] px-4 py-3"
+    >
+      <GlIcon name="alert" :size="22" class="text-[#9a5b00]" />
+      <div class="min-w-0 flex-1">
+        <div class="truncate text-[16px] font-bold text-[#7a4400]">{{ __('Bez dalšího kroku') }}</div>
+        <div class="truncate text-[13px] text-ink-gray-7">{{ __('Naplánujte úkol nebo schůzku, ať zakázka nevychladne.') }}</div>
+      </div>
+      <button
+        class="inline-flex h-9 items-center gap-2 rounded-full bg-white/80 px-4 text-[14px] font-semibold text-ink-gray-9 shadow-[0_2px_10px_-4px_rgba(64,72,160,.3)] hover:bg-white"
+        :class="compact && '!size-9 !justify-center !px-0'"
+        :aria-label="__('Přidat úkol')"
+        @click="emit('plan')"
+      >
+        <GlIcon name="plus" :size="16" /><template v-if="!compact">{{ __('Přidat úkol') }}</template>
+      </button>
+    </div>
     <div
       v-if="next"
       class="mt-5 flex items-center gap-4 rounded-[18px] px-4 py-3"
@@ -71,6 +91,7 @@
 <script setup>
 // GrowUp: hlavička detailu zakázky (design Liquid Glass): název, hodnota, průběh fázemi a další krok.
 import GlIcon from '@/components/GlIcon.vue'
+import GlTemperature from '@/components/GlTemperature.vue'
 import { statusesStore } from '@/stores/statuses'
 import { htmlToText } from '@/utils'
 import { formatDateCz, formatTimeCz } from '@/utils/glDate'
@@ -84,7 +105,7 @@ const props = defineProps({
   stageOptions: { type: Array, default: () => [] },
   compact: { type: Boolean, default: false },
 })
-const emit = defineEmits(['changed', 'fill'])
+const emit = defineEmits(['changed', 'fill', 'plan'])
 
 const { leadStatuses } = statusesStore()
 
@@ -93,6 +114,10 @@ const stages = computed(() =>
   (leadStatuses.data || []).filter((s) => s.type !== 'Lost' && !/prohr/i.test(s.name)),
 )
 const currentIndex = computed(() => stages.value.findIndex((s) => s.name === props.doc.status))
+const isOpen = computed(() => {
+  const s = (leadStatuses.data || []).find((x) => x.name === props.doc.status)
+  return !!s && !['Won', 'Lost'].includes(s.type)
+})
 const STAGE_COLORS = {
   'Nová': '#3b82f6',
   'Kontaktováno': '#8b5cf6',

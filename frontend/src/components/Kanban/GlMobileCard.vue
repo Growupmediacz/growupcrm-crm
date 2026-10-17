@@ -11,7 +11,7 @@
     @click="onClick"
   >
     <div class="flex items-baseline justify-between gap-3">
-      <div lang="cs" class="gl-text min-w-0 flex-1 text-[19px] font-bold leading-snug text-ink-gray-9">{{ title }}</div>
+      <div lang="cs" class="gl-text min-w-0 flex-1 text-[19px] font-bold leading-snug text-ink-gray-9">{{ title }} <GlTemperature :value="plain(lead.temperature)" class="relative -top-0.5 ml-1 align-middle" /></div>
       <div v-if="lead.order_value" class="num shrink-0 text-[17px] font-bold text-ink-gray-9">{{ money }}</div>
     </div>
     <div class="mt-0.5 flex items-center justify-between gap-3">
@@ -23,11 +23,16 @@
     <div v-if="nextText" class="mt-1.5 flex items-center gap-1.5 text-[14px] font-semibold" :class="nextClass">
       <GlIcon name="clock" :size="15" /><span class="truncate">{{ nextText }}</span>
     </div>
+    <div v-else-if="plain(lead.no_next_step)" class="mt-1.5 flex items-center gap-1.5 text-[14px] font-semibold text-[#9a5b00]">
+      <GlIcon name="alert" :size="15" /><span class="truncate">{{ __('Bez dalšího kroku') }}</span>
+    </div>
   </router-link>
 </template>
 
 <script setup>
 import GlIcon from '@/components/GlIcon.vue'
+import GlTemperature from '@/components/GlTemperature.vue'
+const plain = (v) => (v && typeof v === 'object' ? v.value ?? v.label : v)
 import { computed } from 'vue'
 
 const props = defineProps({
