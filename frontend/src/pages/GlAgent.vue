@@ -71,7 +71,7 @@
           <h3 class="text-[18px] font-bold text-ink-gray-9">{{ __('Návrhy kontaktů') }}</h3>
           <p class="mt-1 text-[14px] text-ink-gray-6">{{ __('Lidé nalezení na webech firem. Po přijetí se z nich stanou kontakty u firmy, u jednatelů z ARES se jen doplní e-mail.') }}</p>
         </div>
-        <Button v-if="sg?.counts?.['Vysoká']" variant="solid" :label="__('Přijmout všechny s vysokou prioritou')" :loading="busy" @click="acceptHigh" />
+        <Button v-if="sg?.counts_email?.['Vysoká']" variant="solid" :label="__('Přijmout všechny s vysokou prioritou ({0})', [sg.counts_email['Vysoká']])" :loading="busy" @click="acceptHigh" />
       </div>
       <div class="flex flex-wrap items-center gap-2">
         <div class="gl-seg">
@@ -82,7 +82,8 @@
         <label class="flex items-center gap-2 text-[14px] text-ink-gray-7"><input v-model="sgEmail" type="checkbox" class="rounded" />{{ __('jen s e-mailem') }}</label>
         <span class="ml-auto text-[13px] text-ink-gray-5">{{ __('přijato celkem {0}', [sg?.accepted || 0]) }}</span>
       </div>
-      <GlEmptyState v-if="sg && !sg.rows.length" icon="users" :title="__('Žádné návrhy')" :text="__('Návrhy vznikají z obohacení firem.')" />
+      <GlEmptyState v-if="sg && !sg.rows.length" icon="users" :title="sgEmail && sg.without_email ? __('Všechny návrhy s e-mailem jsou vyřízené') : __('Žádné návrhy')"
+        :text="sgEmail && sg.without_email ? __('Zbývá {0} lidí bez e-mailu. E-maily jim později dohledá Anymailfinder; jako kontakty (jméno a role) je přidáte po vypnutí filtru „jen s e-mailem“.', [sg.without_email]) : __('Návrhy vznikají z obohacení firem.')" />
       <div v-for="r in sg?.rows || []" :key="r.name" class="flex items-center gap-3 border-t border-[rgba(110,120,200,.12)] py-2 first:border-0">
         <input v-model="selected" type="checkbox" :value="r.name" class="rounded" />
         <span class="size-2 shrink-0 rounded-full" :style="{ background: PRIORITY_COLOR[r.priority] }" :title="r.priority" />
