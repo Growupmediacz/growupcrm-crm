@@ -9,7 +9,7 @@
           <div>
             <h3 class="text-3xl-semibold leading-6 text-ink-gray-9">
               {{
-                linkedDocs?.length == 0
+                checkingLinks || linkedDocs?.length == 0
                   ? __('Delete')
                   : __('Delete or unlink linked documents')
               }}
@@ -24,7 +24,7 @@
             <span class="text-ink-gray-5 text-base">
               {{
                 __(
-                  'Delete or unlink these linked documents before deleting this document',
+                  'Na tento záznam navazují další. Před smazáním je smažte, nebo je odpojte (zůstanou, jen už nebudou propojené).',
                 )
               }}
             </span>
@@ -33,12 +33,12 @@
               :rows="linkedDocs"
               :columns="[
                 {
-                  label: 'Document',
+                  label: __('Záznam'),
                   key: 'title',
                   width: '19rem',
                 },
                 {
-                  label: 'Master',
+                  label: __('Typ'),
                   key: 'reference_doctype',
                   width: '12rem',
                 },
@@ -50,10 +50,13 @@
               "
             />
           </div>
-          <div v-if="linkedDocs?.length == 0" class="text-ink-gray-5 text-base">
+          <div v-if="checkingLinks" class="text-ink-gray-5 text-base">
+            {{ __('Kontroluji propojené záznamy…') }}
+          </div>
+          <div v-else-if="linkedDocs?.length == 0" class="text-ink-gray-5 text-base">
             {{
-              __('Are you sure you want to delete {0} - {1}?', [
-                props.doctype,
+              __('Opravdu chcete smazat {0} „{1}“? Smazání nejde vrátit.', [
+                doctypeAccusative(props.doctype),
                 props.docname,
               ])
             }}
@@ -87,7 +90,7 @@
             @click="confirmUnlink()"
           />
           <Button
-            v-if="linkedDocs?.length == 0"
+            v-if="!checkingLinks && linkedDocs?.length == 0"
             variant="solid"
             icon-left="lucide-trash-2"
             :label="__('Delete')"
@@ -131,6 +134,7 @@
 </template>
 
 <script setup>
+import { doctypeAccusative, showDeleteFailures } from '@/utils/glDoctype'
 import { createResource, call, toast } from 'frappe-ui'
 import { useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
@@ -175,6 +179,9 @@ const linkedDocsResource = createResource({
   },
 })
 
+// growup: dokud se propojené záznamy nenačtou, nenabízet „Smazat“ (smazání by selhalo a dialog problikl)
+const checkingLinks = computed(() => !linkedDocsResource.data && !linkedDocsResource.error)
+
 const linkedDocs = computed(() => {
   return (
     linkedDocsResource.data?.map((doc) => ({
@@ -210,7 +217,10 @@ const unlinkLinkedDoc = (doc) => {
     items: selectedDocs,
     remove_contact: props.doctype == 'Contact',
     delete: doc.delete,
-  }).then(() => {
+    parent_doctype: props.doctype, // growup: odpojení podle všech polí (growupcrm.deletion)
+    parent_name: props.docname,
+  }).then((res) => {
+    showDeleteFailures(res)
     linkedDocsResource.reload()
     confirmDeleteInfo.value = {
       show: false,
@@ -220,27 +230,21 @@ const unlinkLinkedDoc = (doc) => {
 }
 
 const confirmDelete = () => {
-  const items =
-    viewControls.value.selections.length == 0
-      ? 'all'
-      : viewControls.value.selections.length
+  const items = viewControls.value.selections.length || linkedDocs.value.length
   confirmDeleteInfo.value = {
     show: true,
-    title: __('Delete Linked Item'),
-    message: __('Are you sure you want to delete {0} linked item(s)?', [items]),
+    title: __('Smazat propojené záznamy'),
+    message: __('Propojené záznamy ({0}) se smažou i s jejich úkoly, zápisy a hovory. Smazání nejde vrátit. Potom smažete i samotný záznam.', [items]),
     delete: true,
   }
 }
 
 const confirmUnlink = () => {
-  const items =
-    viewControls.value.selections.length == 0
-      ? 'all'
-      : viewControls.value.selections.length
+  const items = viewControls.value.selections.length || linkedDocs.value.length
   confirmDeleteInfo.value = {
     show: true,
-    title: __('Unlink Linked Item'),
-    message: __('Are you sure you want to unlink {0} linked item(s)?', [items]),
+    title: __('Odpojit propojené záznamy'),
+    message: __('Propojené záznamy ({0}) se odpojí. Zůstanou v CRM, jen už nebudou propojené. Potom smažete samotný záznam.', [items]),
     delete: false,
   }
 }

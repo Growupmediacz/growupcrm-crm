@@ -141,15 +141,7 @@
         </template>
       </ListRowItem>
     </ListRows>
-    <ListSelectBanner>
-      <template #actions="{ selections, unselectAll }">
-        <Dropdown
-          :options="listBulkActionsRef.bulkActions(selections, unselectAll)"
-        >
-          <Button icon="lucide-more-horizontal" variant="ghost" />
-        </Dropdown>
-      </template>
-    </ListSelectBanner>
+    <GlSelectBanner :bulk-actions="(s, u) => listBulkActionsRef?.bulkActions(s, u) || []" />
   </ListView>
   <ListFooter
     v-model="pageLengthCount"
@@ -170,6 +162,7 @@
   />
 </template>
 <script setup>
+import GlSelectBanner from '@/components/GlSelectBanner.vue'
 import ListFooter from '@/components/GlListFooter.vue'
 const REL_COLORS = { Klient: '#22b35e', Prospekt: '#3b82f6', 'Bývalý klient': '#9ca3af' }
 const TONES = [

@@ -235,15 +235,7 @@
         </template>
       </ListRowItem>
     </ListRows>
-    <ListSelectBanner>
-      <template #actions="{ selections, unselectAll }">
-        <Dropdown
-          :options="listBulkActionsRef.bulkActions(selections, unselectAll)"
-        >
-          <Button icon="lucide-more-horizontal" variant="ghost" />
-        </Dropdown>
-      </template>
-    </ListSelectBanner>
+    <GlSelectBanner :bulk-actions="(s, u) => listBulkActionsRef?.bulkActions(s, u) || []" />
   </ListView>
   <ListFooter
     v-if="pageLengthCount"
@@ -259,6 +251,7 @@
 </template>
 
 <script setup>
+import GlSelectBanner from '@/components/GlSelectBanner.vue'
 import ListFooter from '@/components/GlListFooter.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlTemperature from '@/components/GlTemperature.vue'

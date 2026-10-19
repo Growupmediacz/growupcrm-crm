@@ -90,6 +90,7 @@
 </template>
 
 <script setup>
+import { showDeleteFailures } from '@/utils/glDoctype'
 import { call } from 'frappe-ui'
 import { ref } from 'vue'
 
@@ -134,7 +135,8 @@ const deleteDocs = () => {
     items: props.items,
     doctype: props.doctype,
     delete_linked: confirmDeleteInfo.value.delete,
-  }).then(() => {
+  }).then((res) => {
+    showDeleteFailures(res) // growup: chyby ukázat, ne spolknout (growupcrm.deletion)
     confirmDeleteInfo.value = {
       show: false,
       title: '',

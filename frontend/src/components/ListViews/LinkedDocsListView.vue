@@ -56,6 +56,7 @@
 </template>
 
 <script setup>
+import { doctypeName } from '@/utils/glDoctype'
 import ListRows from '@/components/ListViews/ListRows.vue'
 import { ListView, ListHeader, ListHeaderItem, ListRowItem } from 'frappe-ui'
 import { ref } from 'vue'
@@ -137,7 +138,5 @@ const viewLinkedDoc = (doc) => {
   window.open(`${base}/${page}/${id}`)
 }
 
-const getDoctypeName = (doctype) => {
-  return doctype.replace(/^(CRM|FCRM)\s*/, '')
-}
+const getDoctypeName = (doctype) => doctypeName(doctype) // growup: česky
 </script>

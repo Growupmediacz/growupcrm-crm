@@ -781,11 +781,16 @@ button.inline-flex.bg-surface-red-7:hover {
 
 /* ---------- 2. kolo: hromadné akce a výběr řádků (oprava 15) ----------
    Plovoucí pilulka dole („2 vybrané · akce · ×“), vybraný řádek jemně podbarvený. */
+.absolute.inset-x-0.bottom-6.mx-auto.w-max {
+  z-index: 30; /* nad řádky seznamu (na mobilu jinak pod nimi) */
+}
 .absolute.inset-x-0.bottom-6.mx-auto.w-max > div {
   min-width: 0 !important;
-  border-radius: 999px !important;
-  padding: 8px 10px 8px 20px !important;
-  background: var(--mat-sheet-bg, rgba(255, 255, 255, 0.82)) !important;
+  max-width: calc(100vw - 24px);
+  border-radius: 18px !important;
+  padding: 8px 10px 8px 16px !important;
+  /* plné pozadí: panel leží přes seznam a musí být čitelný (GlSelectBanner) */
+  background: rgba(255, 255, 255, 0.97) !important;
   -webkit-backdrop-filter: blur(24px) saturate(170%);
   backdrop-filter: blur(24px) saturate(170%);
   border: 1px solid rgba(255, 255, 255, 0.9);
