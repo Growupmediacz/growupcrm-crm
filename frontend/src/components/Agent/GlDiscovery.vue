@@ -5,7 +5,7 @@
       <div>
         <h3 class="flex items-center gap-2 text-[18px] font-bold text-ink-gray-9"><GlIcon name="search" :size="18" />{{ __('Hledání nových firem') }}</h3>
         <p class="mt-1 max-w-[640px] text-[14px] text-ink-gray-6">
-          {{ __('Agent prohledá web podle oboru a měst, ověří, že jde o firmu z oboru, doplní IČO a adresu z ARES a nové firmy rovnou obohatí a připraví návrhy kontaktů. Firmy, které už v CRM jsou, přeskočí.') }}
+          {{ __('Agent prohledá web podle oboru a měst, ověří, že jde o firmu z oboru, doplní IČO a adresu z ARES (OSVČ a firmy, které v ARES nejde ověřit, vynechá) a nové firmy rovnou obohatí a připraví návrhy kontaktů. Firmy, které už v CRM jsou, přeskočí.') }}
         </p>
       </div>
       <div v-if="st" class="text-right">
@@ -39,7 +39,7 @@
       <div v-if="r.result.stats" class="mt-2 grid grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2">
         <div v-for="(v, seg) in r.result.stats" :key="seg" class="flex items-center justify-between gap-3 text-[13px]">
           <span class="truncate text-ink-gray-7">{{ seg }}</span>
-          <span class="num shrink-0 font-semibold text-ink-gray-9">{{ v.found }} / {{ v.target }} <span class="font-normal text-ink-gray-5">· {{ __('ověřeno {0}', [v.checked]) }}</span></span>
+          <span class="num shrink-0 font-semibold text-ink-gray-9">{{ v.found }} / {{ v.target }} <span class="font-normal text-ink-gray-5">· {{ __('ověřeno {0}', [v.checked]) }}<template v-if="v.osvc || v.unverified"> · {{ __('vyřazeno OSVČ {0}, neověřeno {1}', [v.osvc || 0, v.unverified || 0]) }}</template></span></span>
         </div>
       </div>
       <p v-if="r.error" class="mt-2 text-[13px] text-[#a82614]">{{ r.error }}</p>
