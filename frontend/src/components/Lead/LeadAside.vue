@@ -221,7 +221,7 @@ const rows = computed(() => {
     out.push({ label: __('Pobočka'), value: b.branch_name || '', sub: addr })
   }
   out.push(
-    { label: __('Zdroj'), value: d.source ? __(d.source) : '' },
+    { label: __('Zdroj'), value: d.source ? __(d.source) : '', sub: d.channel || '' },
     { label: __('Pravděpodobnost'), value: d.probability ? `${Math.round(d.probability)} %` : '' },
     { label: __('Očekávané uzavření'), value: formatDateCz(d.expected_closure_date) },
   )

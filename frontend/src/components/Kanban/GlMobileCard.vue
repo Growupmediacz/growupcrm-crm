@@ -20,6 +20,9 @@
         <span class="size-2 rounded-full" :style="{ background: color }" />{{ __(lead.status) }}
       </div>
     </div>
+    <div v-if="plain(lead.source)" class="mt-1 truncate text-[13px] text-ink-gray-5">
+      {{ __(plain(lead.source)) }}<template v-if="plain(lead.channel)"> · {{ plain(lead.channel) }}</template>
+    </div>
     <div v-if="nextText" class="mt-1.5 flex items-center gap-1.5 text-[14px] font-semibold" :class="nextClass">
       <GlIcon name="clock" :size="15" /><span class="truncate">{{ nextText }}</span>
     </div>

@@ -102,6 +102,10 @@
             <span v-if="orgLabel(row)" class="truncate text-[12.5px] text-ink-gray-5">{{ orgLabel(row) }}</span>
           </div>
           <GlTemperature v-else-if="column.key === 'temperature'" :value="plain(row.temperature)" />
+          <div v-else-if="column.key === 'source' && plain(row.source)" class="flex min-w-0 flex-col leading-tight">
+            <span class="truncate text-[13.5px] text-ink-gray-9">{{ __(plain(row.source)) }}</span>
+            <span v-if="plain(row.channel)" class="truncate text-[12px] text-ink-gray-5">{{ plain(row.channel) }}</span>
+          </div>
           <div v-else-if="column.key === 'next_step' && !row.next_step && plain(row.no_next_step)" class="flex items-center gap-1.5 truncate text-[13.5px] font-semibold text-[#9a5b00]">
             <GlIcon name="alert" :size="15" class="shrink-0" />{{ __('Bez dalšího kroku') }}
           </div>

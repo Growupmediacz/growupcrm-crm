@@ -7,6 +7,11 @@
     <div v-if="lead.organization && lead.organization !== title" class="truncate text-[13px] text-ink-gray-5">
       {{ lead.organization }}
     </div>
+    <!-- zdroj zakázky a u poptávek z webu kanál (Google Ads, vyhledávání…) -->
+    <div v-if="lead.source" class="flex items-center gap-1.5 text-[13px] text-ink-gray-5" :title="lead.channel || ''">
+      <GlIcon name="inbox" :size="14" />
+      <span class="truncate">{{ __(lead.source) }}<template v-if="lead.channel"> · {{ lead.channel }}</template></span>
+    </div>
     <div v-if="lead.territory" class="flex items-center gap-1.5 text-[13px] text-ink-gray-5">
       <GlIcon name="pin" :size="14" />
       <span class="truncate">{{ lead.territory }}</span>
