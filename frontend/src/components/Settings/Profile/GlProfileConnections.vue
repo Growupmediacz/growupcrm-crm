@@ -25,14 +25,14 @@
 
       <div v-if="outreachEnabled" class="flex items-center justify-between gap-3 py-3.5">
         <div class="flex min-w-0 flex-col gap-0.5">
-          <span class="text-base-medium text-ink-gray-8">{{ __('Schránka pro Outreach') }}</span>
-          <span class="flex items-center gap-1.5 truncate text-p-sm" :class="mailbox.data?.enabled ? 'text-[#178a4a]' : 'text-ink-gray-6'">
-            <span class="size-2 shrink-0 rounded-full" :class="mailbox.data?.enabled ? 'bg-[#22b35e]' : 'bg-[#e0a100]'" />
-            <template v-if="mailbox.data?.enabled">{{ __('Připojeno') }} · {{ mailbox.data.from_email || mailbox.data.smtp_user }}</template>
+          <span class="text-base-medium text-ink-gray-8">{{ __('Outreach odesílá z') }}</span>
+          <span class="flex items-center gap-1.5 truncate text-p-sm" :class="outreachFrom ? 'text-[#178a4a]' : 'text-ink-gray-6'">
+            <span class="size-2 shrink-0 rounded-full" :class="outreachFrom ? 'bg-[#22b35e]' : 'bg-[#e0a100]'" />
+            <template v-if="outreachFrom">{{ __('Připojeno') }} · {{ outreachFrom }}</template>
             <template v-else>{{ __('Nepřipojeno') }}</template>
           </span>
         </div>
-        <Button :label="mailbox.data?.enabled ? __('Spravovat') : __('Připojit')" @click="openEmail" />
+        <Button :label="outreachFrom ? __('Spravovat') : __('Připojit')" @click="openEmail" />
       </div>
     </div>
   </div>
@@ -59,6 +59,13 @@ const roleHint = computed(() => ROLE_HINTS[role.value] || '')
 const gmail = createResource({ url: 'growupcrm.gmail.get_status', auto: true })
 const mailbox = createResource({ url: 'growupcrm.outreach.get_mailbox' })
 watch(outreachEnabled, (on) => on && !mailbox.data && mailbox.fetch(), { immediate: true })
+
+// Outreach odesílá přednostně z Gmailu uživatele (outreach.sender_for), schránka Outreach je jen záloha
+const outreachFrom = computed(() =>
+  gmail.data?.connected
+    ? __('přes Můj e-mail ({0})', [gmail.data.email])
+    : mailbox.data?.enabled ? mailbox.data.from_email || mailbox.data.smtp_user : '',
+)
 
 function openEmail() {
   activeSettingsPage.value = __('E-mail')
