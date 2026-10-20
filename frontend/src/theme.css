@@ -951,6 +951,13 @@ button[role='switch'] > span {
   .gl-chiptabs [data-act-title='Activity'] { display: none; }
 }
 
+/* detail Zakázky (desktop): aktivita má víc místa – bez druhého nadpisu s „Nový“ (Vše, Zápisy, Hovory, E-maily, Úkoly
+   zakládají rychlé akce pod aktivitou) a bez lišty „Odpovědět e-mailem / Interní komentář“ (E-mail a Komentář jsou
+   v rychlých akcích, odpověď na e-mail z karty e-mailu otevře editor jako dřív) */
+.gl-chiptabs-d .gl-act-header:is([data-act-header='Activity'], [data-act-header='Emails'], [data-act-header='Notes'], [data-act-header='Calls'], [data-act-header='Tasks']) { display: none; }
+.gl-chiptabs-d .gl-comm-bar { display: none; }
+.gl-chiptabs-d .activity:first-child { margin-top: 1rem; }
+
 /* posuvná pilulka záložek aktivity (composables/glPill.js); bez JS zůstává plná výplň vybraného čipu */
 .gl-chiptabs [role='tablist'] { position: relative; }
 .gl-chiptabs [role='tablist'] > [role='tab'] { position: relative; z-index: 1; }
@@ -1012,3 +1019,15 @@ button[role='switch'] > span {
     display: none;
   }
 }
+
+/* GrowUp (2026-10-20): čistší hlavička na desktopu – bez názvu sekce a bez drobečkové navigace
+   (název je v menu, u detailu v obsahu stránky). Mobil je beze změny. */
+@media (min-width: 768px) {
+  .gl-page-title,
+  .gl-crumbs { display: none !important; }
+}
+
+/* postranní menu: bez posuvníku (posouvat jde dál kolečkem / gestem) */
+.gl-nav-scroll { scrollbar-width: none; }
+.gl-nav-scroll::-webkit-scrollbar { display: none; }
+

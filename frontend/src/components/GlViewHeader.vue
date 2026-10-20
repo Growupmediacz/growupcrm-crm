@@ -1,7 +1,7 @@
 <template>
   <!-- GrowUp: hlavička seznamu (design): nadpis, přepínač Kanban/Seznam, uložené pohledy. -->
   <div class="flex min-w-0 items-center gap-3">
-    <router-link :to="{ name: routeName }" class="text-lg-medium shrink-0 text-ink-gray-9">
+    <router-link :to="{ name: routeName }" class="gl-page-title text-lg-medium shrink-0 text-ink-gray-9">
       {{ title }}
     </router-link>
     <div v-if="!savedView && segments.length > 1" class="gl-seg hidden shrink-0 sm:inline-flex">

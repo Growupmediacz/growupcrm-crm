@@ -5,7 +5,7 @@
     <LayoutHeader>
       <template #left-header>
         <div class="flex min-w-0 items-center gap-3">
-          <h1 class="text-lg-medium shrink-0">{{ __('Úkoly') }}</h1>
+          <h1 class="gl-page-title text-lg-medium shrink-0">{{ __('Úkoly') }}</h1>
           <div class="gl-seg hidden sm:inline-flex">
             <button class="gl-seg-btn gl-seg-on">{{ __('Seznam') }}</button>
             <router-link class="gl-seg-btn" :to="{ name: 'Tasks', params: { viewType: 'kanban' } }">{{ __('Kanban') }}</router-link>

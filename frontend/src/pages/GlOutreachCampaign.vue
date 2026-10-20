@@ -2,7 +2,7 @@
   <!-- GrowUp (design 2. kolo, O3): detail kampaně – kroky sekvence se statistikami a kontakty ve stavech -->
   <LayoutHeader>
     <template #left-header>
-      <Breadcrumbs :items="[{ label: __('Outreach'), route: { name: 'Outreach' } }, { label: __('Kampaně'), route: { name: 'Outreach', params: { tab: 'campaigns' } } }, { label: d?.campaign_name || '…' }]" />
+      <Breadcrumbs class="gl-crumbs" :items="[{ label: __('Outreach'), route: { name: 'Outreach' } }, { label: __('Kampaně'), route: { name: 'Outreach', params: { tab: 'campaigns' } } }, { label: d?.campaign_name || '…' }]" />
     </template>
     <template #right-header>
       <Button iconLeft="edit-2" class="hidden sm:inline-flex" :label="__('Upravit sekvenci')" @click="showEdit = true" />

@@ -1,7 +1,7 @@
 <template>
   <LayoutHeader v-if="contact.doc">
     <template #left-header>
-      <Breadcrumbs :items="breadcrumbs">
+      <Breadcrumbs class="gl-crumbs" :items="breadcrumbs">
         <template #prefix="{ item }">
           <Icon v-if="item.icon" :icon="item.icon" class="mr-2 h-4" />
         </template>

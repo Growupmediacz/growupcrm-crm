@@ -2,7 +2,7 @@
   <!-- GrowUp (design 2. kolo, O6): editor šablony – typ kroku, název, předmět, text s proměnnými, živý náhled -->
   <LayoutHeader>
     <template #left-header>
-      <Breadcrumbs :items="[{ label: __('Outreach'), route: { name: 'Outreach' } }, { label: __('Šablony'), route: { name: 'Outreach', params: { tab: 'templates' } } }, { label: form.template_name || __('Nová šablona') }]" />
+      <Breadcrumbs class="gl-crumbs" :items="[{ label: __('Outreach'), route: { name: 'Outreach' } }, { label: __('Šablony'), route: { name: 'Outreach', params: { tab: 'templates' } } }, { label: form.template_name || __('Nová šablona') }]" />
     </template>
     <template #right-header>
       <Button v-if="!isNew" variant="subtle" theme="red" iconLeft="trash-2" :label="__('Smazat')" @click="remove" />

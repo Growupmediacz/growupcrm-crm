@@ -2,7 +2,7 @@
   <!-- GrowUp: modul Analytika (design „Analytika“), jen pro správce. Data: growupcrm.insights.get_analytics -->
   <LayoutHeader>
     <template #left-header>
-      <span class="text-lg-medium text-ink-gray-9">{{ __('Analytika') }}</span>
+      <span class="gl-page-title text-lg-medium text-ink-gray-9">{{ __('Analytika') }}</span>
     </template>
     <template #right-header>
       <div v-if="!isMobileView" class="gl-seg inline-flex">

@@ -1,7 +1,7 @@
 <template>
   <LayoutHeader>
     <template #left-header>
-      <Breadcrumbs :items="breadcrumbs">
+      <Breadcrumbs class="gl-crumbs" :items="breadcrumbs">
         <template #prefix="{ item }">
           <Icon v-if="item.icon" :icon="item.icon" class="mr-2 h-4" />
         </template>
@@ -544,11 +544,21 @@ const extraTabs = computed(() =>
     onClick: () => (tabIndex.value = VISIBLE_TABS + i),
   })),
 )
+// interní komentář: editor je v CommunicationArea (záložky Vše / E-maily / Komentáře), jinak přepnout na Vše
+async function openComment() {
+  if (!activities.value?.emailBox) {
+    tabIndex.value = 0
+    await nextTick()
+    await nextTick()
+  }
+  if (activities.value?.emailBox) activities.value.emailBox.showComment = true
+}
 const quickActions = computed(() => [
   { label: __('Zapsat hovor'), icon: 'phone', onClick: () => ((callPerson.value = {}), (showCall.value = true)) },
   { label: __('Zápis'), icon: 'doc', onClick: () => activities.value?.modalRef?.showNote() },
   { label: __('E-mail'), icon: 'mail', onClick: () => (showEmail.value = true) },
   { label: __('Úkol'), icon: 'check', onClick: () => activities.value?.modalRef?.showTask() },
+  { label: __('Komentář'), icon: 'edit', onClick: openComment },
   { label: __('Naplánovat'), icon: 'cal', onClick: () => (showSchedule.value = true) },
 ])
 const moreTab = computed(() => (tabIndex.value >= VISIBLE_TABS ? tabs.value[tabIndex.value] : null))

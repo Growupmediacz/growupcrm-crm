@@ -3,7 +3,7 @@
   <LayoutHeader>
     <template #left-header>
       <div class="flex min-w-0 items-center gap-3">
-        <h1 class="text-lg-medium shrink-0">{{ __('Outreach') }}</h1>
+        <h1 class="gl-page-title text-lg-medium shrink-0">{{ __('Outreach') }}</h1>
         <div class="gl-seg hidden max-w-full overflow-x-auto md:inline-flex">
           <router-link
             v-for="t in tabs"

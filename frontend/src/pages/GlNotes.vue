@@ -3,7 +3,7 @@
   <CrmNotes v-if="legacy" />
   <template v-else>
     <LayoutHeader>
-      <template #left-header><h1 class="text-lg-medium">{{ __('Zápisy') }}</h1></template>
+      <template #left-header><h1 class="gl-page-title text-lg-medium">{{ __('Zápisy') }}</h1></template>
       <template #right-header>
         <label class="gl-chip hidden h-11 w-[300px] items-center gap-2 rounded-full px-4 md:flex"><GlIcon name="search" :size="16" class="opacity-60" /><input v-model="q" class="gl-chip-input w-full bg-transparent text-[14px]" :placeholder="__('Hledat v zápisech')" /></label>
         <Button variant="solid" iconLeft="plus" @click="createNote"><span class="hidden sm:inline">{{ __('Nový zápis') }}</span></Button>

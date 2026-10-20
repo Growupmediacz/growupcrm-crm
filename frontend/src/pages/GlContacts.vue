@@ -4,7 +4,7 @@
   <LayoutHeader>
     <template #left-header>
       <div class="flex min-w-0 items-center gap-3">
-        <span class="text-lg-medium shrink-0 text-ink-gray-9">{{ __('Kontakty') }}</span>
+        <span class="gl-page-title text-lg-medium shrink-0 text-ink-gray-9">{{ __('Kontakty') }}</span>
         <div class="gl-seg hidden shrink-0 sm:inline-flex">
           <button class="gl-seg-btn gl-seg-on"><GlIcon name="grid" :size="15" />{{ __('Karty') }}</button>
           <router-link class="gl-seg-btn" :to="{ name: 'Contacts', params: { viewType: 'list' } }">

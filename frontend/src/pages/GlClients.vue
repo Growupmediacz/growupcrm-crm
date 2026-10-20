@@ -2,7 +2,7 @@
   <!-- GrowUp: modul Klienti (design „Klienti“). Data: growupcrm.clients.get_overview -->
   <LayoutHeader>
     <template #left-header>
-      <span class="text-lg-medium text-ink-gray-9">{{ __('Klienti') }}</span>
+      <span class="gl-page-title text-lg-medium text-ink-gray-9">{{ __('Klienti') }}</span>
     </template>
     <template #right-header>
       <div class="gl-seg hidden sm:inline-flex">

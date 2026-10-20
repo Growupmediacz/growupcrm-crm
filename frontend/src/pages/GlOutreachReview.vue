@@ -2,7 +2,7 @@
   <!-- GrowUp (design 2. kolo, O2): schválení e-mailu – náhled, personalizace, kontroly, Schválit a odeslat (⌘↵), J / K -->
   <LayoutHeader>
     <template #left-header>
-      <Breadcrumbs :items="[{ label: __('Outreach'), route: { name: 'Outreach' } }, { label: __('Ke schválení'), route: { name: 'Outreach', params: { tab: 'approve' } } }]" />
+      <Breadcrumbs class="gl-crumbs" :items="[{ label: __('Outreach'), route: { name: 'Outreach' } }, { label: __('Ke schválení'), route: { name: 'Outreach', params: { tab: 'approve' } } }]" />
     </template>
     <template #right-header>
       <span v-if="m" class="num mr-1 text-[14px] text-ink-gray-5">{{ position }}</span>

@@ -2,10 +2,11 @@
   <LayoutHeader v-if="organization.doc">
     <template #left-header>
       <router-link v-if="isMobileView" :to="{ name: 'Organizations' }" class="text-[17px] font-bold text-ink-gray-9">‹ {{ __('Firmy') }}</router-link>
-      <Breadcrumbs v-else :items="breadcrumbs" />
+      <Breadcrumbs class="gl-crumbs" v-else :items="breadcrumbs" />
     </template>
     <template #right-header>
-      <Button v-if="isMobileView" variant="solid" icon="plus" :aria-label="__('Nová zakázka')" @click="showLeadModal = true" />
+      <!-- GrowUp: přidává se v sekci (Aktivita → typ, Zakázky, Kontakty, Pobočky), horní „Nová zakázka“ není -->
+      <Button v-if="isMobileView && headerAdd" variant="solid" icon="plus" :aria-label="headerAdd.label" @click="headerAdd.onClick" />
       <template v-else>
       <Button
         v-if="organization.doc.ico"
@@ -14,7 +15,6 @@
         :loading="aresLoading"
         @click="refreshFromAres"
       />
-      <Button variant="solid" :label="__('Nová zakázka')" iconLeft="plus" @click="showLeadModal = true" />
       </template>
     </template>
   </LayoutHeader>
@@ -125,7 +125,7 @@
       <div class="flex-1 overflow-y-auto p-5">
         <!-- Aktivita -->
         <div v-if="tab === 'activity'">
-          <div class="mb-4 flex flex-wrap gap-1.5">
+          <div class="mb-4 flex flex-wrap items-center gap-1.5">
             <button
               v-for="f in kindFilters"
               :key="f.key"
@@ -135,6 +135,12 @@
             >
               {{ f.label }}
             </button>
+            <div v-if="!isMobileView" class="ml-auto">
+              <Dropdown v-if="kind === 'all'" :options="addOptions" placement="right">
+                <Button variant="solid" iconLeft="plus" :label="__('Přidat')" />
+              </Dropdown>
+              <Button v-else-if="addByKind[kind]" variant="solid" iconLeft="plus" :label="addByKind[kind].label" @click="addByKind[kind].onClick" />
+            </div>
           </div>
           <div v-if="!timeline.length" class="py-16 text-center text-sm text-ink-gray-5">
             {{ __('Zatím tu není žádná aktivita. Zápisy, hovory, schůzky a úkoly u zakázek této firmy se zobrazí tady.') }}
@@ -146,7 +152,18 @@
             <div class="min-w-0 flex-1 pb-2">
               <div class="flex flex-wrap items-baseline gap-x-2 text-sm">
                 <span class="font-medium text-ink-gray-9">{{ kindLabel[item.kind] }}</span>
-                <span v-if="item.title" class="text-ink-gray-8">{{ item.title }}</span>
+                <router-link
+                  v-if="item.kind === 'email' && item.lead"
+                  :to="{ name: 'Lead', params: { leadId: item.lead }, hash: '#emails' }"
+                  class="text-ink-gray-8 hover:underline"
+                  :title="__('Otevřít e-mail v zakázce')"
+                >
+                  {{ item.title }}
+                </router-link>
+                <span v-else-if="item.title" class="text-ink-gray-8">{{ item.title }}</span>
+                <span v-if="item.kind === 'email'" class="rounded-full px-1.5 text-[11px] font-semibold" :class="item.direction === 'Received' ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[rgba(79,70,229,.1)] text-[#4338ca]'">
+                  {{ item.direction === 'Received' ? __('Přijatý') : __('Odeslaný') }}
+                </span>
                 <span v-if="item.kind === 'task'" class="text-ink-gray-5">({{ __(item.status) }})</span>
               </div>
               <div v-if="item.text" class="mt-1 line-clamp-4 whitespace-pre-line text-sm text-ink-gray-7">{{ plain(item.text) }}</div>
@@ -268,6 +285,7 @@
   <CalendarEventModal
     v-if="showEvent"
     v-model="showEvent"
+    :lead="defaultLead || null"
     :organization="organization.doc?.name"
     :subject="__('Schůzka: {0}', [organization.doc?.organization_name])"
     :start="tomorrowTen"
@@ -276,6 +294,27 @@
     @saved="overview.reload()"
   />
   <LeadModal v-if="showLeadModal" v-model="showLeadModal" :defaults="leadDefaults" />
+  <GlOrgActivityModal
+    v-if="activityKind"
+    :key="activityKind"
+    :modelValue="true"
+    :kind="activityKind"
+    :organization="organization.doc?.name"
+    :organizationName="organization.doc?.organization_name"
+    :leads="leads"
+    :defaultLead="defaultLead"
+    @update:modelValue="(v) => !v && (activityKind = '')"
+    @saved="overview.reload()"
+  />
+  <GlCallModal
+    v-if="showCall"
+    v-model="showCall"
+    :organization="organization.doc?.name"
+    :organizationName="organization.doc?.organization_name"
+    :leads="leads"
+    :defaultLead="defaultLead"
+    @saved="overview.reload()"
+  />
   <BranchDialog v-model="showBranchDialog" :organization="props.organizationId" :branch="activeBranch" @saved="reload" />
   <ContactDialog v-model="showContactDialog" :organization="props.organizationId" :branches="branches" @saved="reload" />
 </template>
@@ -288,6 +327,8 @@ import SidePanelLayout from '@/components/SidePanelLayout.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import LeadModal from '@/components/Modals/GlNewLeadModal.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
+import GlCallModal from '@/components/Modals/GlCallModal.vue'
+import GlOrgActivityModal from '@/components/Firma/GlOrgActivityModal.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlOrgInfoCard from '@/components/Firma/GlOrgInfoCard.vue'
 import GlOrgWebCard from '@/components/Firma/GlOrgWebCard.vue'
@@ -301,7 +342,7 @@ import { getSettings } from '@/stores/settings'
 import { statusesStore } from '@/stores/statuses'
 import { isMobileView } from '@/composables/settings'
 import { htmlToText } from '@/utils'
-import { Avatar, Badge, Breadcrumbs, Button, call, createResource, toast, usePageMeta } from 'frappe-ui'
+import { Avatar, Badge, Breadcrumbs, Button, Dropdown, call, createResource, toast, usePageMeta } from 'frappe-ui'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -422,6 +463,33 @@ const kindIcon = {
   event: 'lucide-calendar', note: 'lucide-notebook-pen', call: 'lucide-phone', task: 'lucide-check-square',
   comment: 'lucide-message-square', email: 'lucide-mail',
 }
+// GrowUp: přidání aktivity přímo z Firmy, v sekci podle typu (schůzka → kalendář, ostatní → Zakázka nebo firma)
+const showCall = ref(false)
+const activityKind = ref('')
+const openLeads = computed(() => {
+  const closed = new Set((leadStatuses.data || []).filter((st) => ['Won', 'Lost'].includes(st.type)).map((st) => st.name))
+  return leads.value.filter((l) => !closed.has(l.status))
+})
+// jediná otevřená Zakázka firmy se předvybere, jinak „jen k firmě“
+const defaultLead = computed(() => (openLeads.value.length === 1 ? openLeads.value[0].name : ''))
+const addByKind = computed(() => ({
+  event: { label: __('Nová schůzka'), onClick: () => (showEvent.value = true) },
+  note: { label: __('Nový zápis'), onClick: () => (activityKind.value = 'note') },
+  call: { label: __('Zapsat hovor'), onClick: () => (showCall.value = true) },
+  task: { label: __('Nový úkol'), onClick: () => (activityKind.value = 'task') },
+  comment: { label: __('Nový komentář'), onClick: () => (activityKind.value = 'comment') },
+}))
+const addOptions = computed(() =>
+  ['event', 'note', 'call', 'task', 'comment'].map((k) => ({ label: addByKind.value[k].label, onClick: addByKind.value[k].onClick })),
+)
+// mobil: tlačítko + v hlavičce dělá to, co je v aktuální sekci
+const headerAdd = computed(() => {
+  if (tab.value === 'activity') return addByKind.value[kind.value] || addByKind.value.note
+  if (tab.value === 'leads') return { label: __('Nová zakázka'), onClick: () => (showLeadModal.value = true) }
+  if (tab.value === 'contacts') return { label: __('Přidat kontakt'), onClick: () => (showContactDialog.value = true) }
+  if (tab.value === 'branches') return { label: __('Přidat pobočku'), onClick: () => editBranch(null) }
+  return null
+})
 const timeline = computed(() =>
   (overview.data?.timeline || []).filter((t) => kind.value === 'all' || t.kind === kind.value),
 )

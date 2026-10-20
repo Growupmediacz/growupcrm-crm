@@ -2,7 +2,7 @@
   <!-- GrowUp (design 2. kolo, P1): detail projektu. Data: growupcrm.projects.get_project; úkoly = CRM Task s polem project -->
   <LayoutHeader>
     <template #left-header>
-      <Breadcrumbs :items="[{ label: __('Projekty'), route: { name: 'Projects' } }, { label: p?.project_name || '…' }]" />
+      <Breadcrumbs class="gl-crumbs" :items="[{ label: __('Projekty'), route: { name: 'Projects' } }, { label: p?.project_name || '…' }]" />
     </template>
     <template #right-header>
       <Button class="hidden sm:inline-flex" iconLeft="edit-2" :label="__('Upravit')" @click="openEdit" />

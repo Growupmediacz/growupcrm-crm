@@ -1,6 +1,6 @@
 <template>
   <!-- GrowUp: lišta v novém designu – pilulky, aktivní tmavá jako čipy záložek -->
-  <div class="flex gap-2 border-t border-[rgba(110,120,200,.14)] px-4 py-2.5">
+  <div class="gl-comm-bar flex gap-2 border-t border-[rgba(110,120,200,.14)] px-4 py-2.5">
     <button class="gl-quick !h-9" :class="showEmailBox && '!bg-[#0e1330] !text-white'" @click="toggleEmailBox()">
       <GlIcon name="reply" :size="15" />{{ __('Odpovědět e-mailem') }}
     </button>

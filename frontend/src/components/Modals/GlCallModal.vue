@@ -9,6 +9,8 @@
     </template>
     <template #default>
       <div class="flex flex-col gap-4">
+        <!-- z Firmy: k Zakázce firmy, nebo jen k firmě -->
+        <GlLeadPicker v-if="organization" v-model="pickedLead" :leads="leads" />
         <div class="flex items-center gap-3 rounded-2xl bg-[rgba(110,120,200,.08)] px-4 py-3">
           <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2440a6]">
             {{ initials(person.name || leadTitle) }}
@@ -78,14 +80,21 @@
 </template>
 <script setup>
 import GlIcon from '@/components/GlIcon.vue'
+import GlLeadPicker from '@/components/Firma/GlLeadPicker.vue'
 import { usersStore } from '@/stores/users'
 import { Button, Dialog, ErrorMessage, FormControl, Switch, call, toast } from 'frappe-ui'
 import { computed, onBeforeUnmount, ref } from 'vue'
 
 const props = defineProps({
-  lead: { type: Object, required: true },
+  lead: { type: Object, default: () => ({}) },
   person: { type: Object, default: () => ({}) },
+  // z Firmy: název firmy, její Zakázky pro výběr a předvybraná Zakázka
+  organization: { type: String, default: '' },
+  organizationName: { type: String, default: '' },
+  leads: { type: Array, default: () => [] },
+  defaultLead: { type: String, default: '' },
 })
+const pickedLead = ref(props.defaultLead)
 const emit = defineEmits(['saved'])
 const show = defineModel({ type: Boolean })
 
@@ -111,7 +120,7 @@ const createTask = ref(true)
 const saving = ref(false)
 const error = ref('')
 
-const leadTitle = computed(() => props.lead.order_title || props.lead.lead_name || props.lead.organization || '')
+const leadTitle = computed(() => props.lead.order_title || props.lead.lead_name || props.lead.organization || props.organizationName || '')
 
 // běžící čas hovoru (dialog se otevírá při volání)
 const started = Date.now()
@@ -153,7 +162,8 @@ async function save() {
   saving.value = true
   try {
     await call('growupcrm.calls.log_call', {
-      lead: props.lead.name,
+      lead: props.organization ? pickedLead.value || null : props.lead.name,
+      organization: props.organization || null,
       outcome: outcome.value,
       phone: props.person.phone,
       note: note.value,

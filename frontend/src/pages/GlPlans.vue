@@ -2,7 +2,7 @@
   <!-- GrowUp: modul Plány (design „Plány“). Data: growupcrm.goals.get_plan -->
   <LayoutHeader>
     <template #left-header>
-      <span class="text-lg-medium text-ink-gray-9">{{ __('Plány') }}</span>
+      <span class="gl-page-title text-lg-medium text-ink-gray-9">{{ __('Plány') }}</span>
     </template>
     <template #right-header>
       <div v-if="!isMobileView" class="gl-seg">

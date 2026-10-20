@@ -3,7 +3,7 @@
   <CrmCalls v-if="legacy" />
   <template v-else>
     <LayoutHeader>
-      <template #left-header><h1 class="text-lg-medium">{{ __('Hovory') }}</h1></template>
+      <template #left-header><h1 class="gl-page-title text-lg-medium">{{ __('Hovory') }}</h1></template>
       <template #right-header>
         <div v-if="res.data?.is_manager && !isMobileView" class="gl-seg">
           <button class="gl-seg-btn" :class="scope === 'mine' && 'gl-seg-on'" @click="scope = 'mine'">{{ __('Moje') }}</button>

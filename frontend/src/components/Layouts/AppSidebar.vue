@@ -13,7 +13,8 @@
       v-model:collapsed="isSidebarCollapsed"
       :disable-collapse="mobile"
       :width="mobile ? '260px' : '264px'"
-      class="gl-nav rounded-[26px] !bg-transparent"
+      :class="isCollapsed ? 'rounded-[var(--r-card-m)]' : 'rounded-[26px]'"
+      class="gl-nav !bg-transparent"
     >
       <div class="flex h-full flex-col p-2">
         <!-- GrowUp: značka nahoře, uživatel dole (design) -->
@@ -35,7 +36,7 @@
         <!-- overflow-y-auto forces overflow-x to clip too, which would slice the
              active row's shadow. Widen the scroll box to the sidebar edges and
              pad the content back in so the shadow has room. -->
-        <div class="-mx-2 mt-1 flex flex-1 flex-col gap-0.5 overflow-y-auto px-2">
+        <div class="gl-nav-scroll -mx-2 mt-1 flex flex-1 flex-col gap-0.5 overflow-y-auto px-2">
           <SidebarItem
             v-if="mobile"
             id="notifications-btn"
@@ -65,14 +66,16 @@
 
           <CollapsibleSection
             v-for="section in allViews"
-            :key="section.name"
+            :key="section.name + (isCollapsed ? '-c' : '')"
             :label="section.name"
             :hideLabel="section.hideLabel"
-            :opened="section.opened"
+            :opened="isCollapsed || section.opened"
           >
             <template #header="{ opened, hide, toggle }">
+              <!-- GrowUp: v úzkém menu místo nadpisu skupiny jen tenká čára, ikony jdou těsně pod sebou -->
+              <div v-if="!hide && isCollapsed" class="mx-auto my-1.5 h-px w-6 rounded-full bg-[rgba(110,120,200,.28)]" aria-hidden="true" />
               <SidebarLabel
-                v-if="!hide"
+                v-else-if="!hide"
                 :divider="false"
                 class="gl-navh select-none"
                 :class="section.collapsible && !isCollapsed && 'cursor-pointer'"
@@ -159,6 +162,25 @@
               <HelpIcon class="size-4 text-ink-gray-7" />
             </template>
           </SidebarItem>
+          <!-- GrowUp: oznámení v menu místo zvonku v horní liště -->
+          <SidebarItem
+            id="notifications-btn"
+            :label="__('Oznámení')"
+            @click="onNotificationsClick"
+          >
+            <template #prefix>
+              <span class="relative grid size-4 place-items-center">
+                <GlIcon name="bell" :size="16" class="text-ink-gray-7" />
+                <span
+                  v-if="unreadNotificationsCount"
+                  class="absolute -right-1 -top-1 size-2 rounded-full border border-white bg-[#e5484d]"
+                />
+              </span>
+            </template>
+            <template v-if="unreadNotificationsCount && !isCollapsed" #suffix>
+              <span class="mr-1 text-[13px] font-semibold tabular-nums text-[#a82614]">{{ unreadNotificationsCount }}</span>
+            </template>
+          </SidebarItem>
           <div class="flex items-center gap-1" :class="isCollapsed && 'flex-col'">
             <UserDropdown footer :isCollapsed="isCollapsed" class="min-w-0 flex-1" />
             <button
@@ -170,7 +192,7 @@
               <GlIcon name="gear" :size="18" />
             </button>
             <button
-              class="flex size-9 shrink-0 items-center justify-center rounded-full text-ink-gray-5 transition hover:bg-white/60 hover:text-ink-gray-9"
+              class="flex size-9 shrink-0 items-center justify-center rounded-full text-ink-gray-5 outline-none transition hover:bg-white/60 hover:text-ink-gray-9 focus-visible:ring-2 focus-visible:ring-[#4F46E5]/40"
               :aria-label="isCollapsed ? __('Expand') : __('Collapse')"
               :title="isCollapsed ? __('Expand') : __('Collapse')"
               @click="isSidebarCollapsed = !isSidebarCollapsed"
@@ -290,7 +312,8 @@ const { capture } = useTelemetry()
 const { clearDemoData, isDemoDataCreated } = useDemoData()
 const { send } = useBroadcast()
 
-const isSidebarCollapsed = useStorage('isSidebarCollapsed', false)
+// GrowUp: výchozí je úzké menu (jen ikony), rozbalení si uživatel přepne tlačítkem dole
+const isSidebarCollapsed = useStorage('isSidebarCollapsed', true)
 
 const { brand } = getSettings()
 // „GrowUpCRM“ → tučně „GrowUp“, světle „CRM“ (jako v návrhu)

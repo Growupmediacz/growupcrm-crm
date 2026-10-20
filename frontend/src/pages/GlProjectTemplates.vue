@@ -2,7 +2,7 @@
   <!-- GrowUp (design 2. kolo, P2): šablony projektů – seznam vlevo, fáze a úkoly s termínem od začátku a rolí vpravo -->
   <LayoutHeader>
     <template #left-header>
-      <Breadcrumbs :items="[{ label: __('Projekty'), route: { name: 'Projects' } }, { label: __('Šablony projektů') }]" />
+      <Breadcrumbs class="gl-crumbs" :items="[{ label: __('Projekty'), route: { name: 'Projects' } }, { label: __('Šablony projektů') }]" />
     </template>
     <template #right-header>
       <Button iconLeft="plus" :label="__('Nová šablona')" @click="newTemplate" />

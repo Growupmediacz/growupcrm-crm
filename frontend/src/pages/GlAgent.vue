@@ -3,7 +3,7 @@
        Data: growupcrm.research.* (jen správci, jen se zapnutým growupcrm_agency). -->
   <LayoutHeader>
     <template #left-header>
-      <span class="text-lg-medium text-ink-gray-9">{{ __('Agent') }}</span>
+      <span class="gl-page-title text-lg-medium text-ink-gray-9">{{ __('Agent') }}</span>
     </template>
   </LayoutHeader>
 

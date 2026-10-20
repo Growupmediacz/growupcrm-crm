@@ -2,7 +2,7 @@
   <!-- GrowUp: modul Projekty (design „Projekty“). Data: growupcrm.projects.get_board -->
   <LayoutHeader>
     <template #left-header>
-      <span class="text-lg-medium text-ink-gray-9">{{ __('Projekty') }}</span>
+      <span class="gl-page-title text-lg-medium text-ink-gray-9">{{ __('Projekty') }}</span>
     </template>
     <template #right-header>
       <router-link :to="{ name: 'ProjectTemplates' }" class="hidden sm:inline-flex">
