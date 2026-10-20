@@ -126,14 +126,9 @@
           <Select
             v-model="assignmentRuleData.documentType"
             :options="[
-              {
-                label: 'Lead',
-                value: 'CRM Lead',
-              },
-              {
-                label: 'Deal',
-                value: 'CRM Deal',
-              },
+              // growup: režim jen Zakázky – pravidla platí pro Zakázky
+              { label: __('Zakázky'), value: 'CRM Lead' },
+              ...(leadsOnlyMode ? [] : [{ label: __('Obchody'), value: 'CRM Deal' }]),
             ]"
           />
         </div>
@@ -349,9 +344,12 @@ import AssignmentRulesSection from './AssignmentRulesSection.vue'
 import AssignmentSchedule from './AssignmentSchedule.vue'
 import AssigneeRules from './AssigneeRules.vue'
 import { globalStore } from '@/stores/global'
+import { useLeadsOnlyMode } from '@/composables/leadsOnlyMode'
 import { disableSettingModalOutsideClick } from '@/composables/settings'
 import { useUnsavedChangesWarning } from '@/composables/useUnsavedChangesWarning'
 import { convertToConditions, validateConditions } from '@/utils'
+
+const leadsOnlyMode = useLeadsOnlyMode()
 
 const isDirty = ref(false)
 const initialData = ref(null)
@@ -704,11 +702,11 @@ const createAssignmentRule = () => {
 }
 
 const priorityOptions = [
-  { label: 'Low', value: '0' },
-  { label: 'Low-Medium', value: '1' },
-  { label: 'Medium', value: '2' },
-  { label: 'Medium-High', value: '3' },
-  { label: 'High', value: '4' },
+  { label: __('Nízká'), value: '0' },
+  { label: __('Nižší'), value: '1' },
+  { label: __('Střední'), value: '2' },
+  { label: __('Vyšší'), value: '3' },
+  { label: __('Vysoká'), value: '4' },
 ]
 
 const updateAssignmentRule = async () => {

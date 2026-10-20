@@ -139,10 +139,13 @@
         </component>
       </div>
     </div>
+
+    <GlResponseStats :data="data?.response" />
   </div>
 </template>
 <script setup>
 import GlSkeleton from '@/components/GlSkeleton.vue'
+import GlResponseStats from '@/components/Analytics/GlResponseStats.vue'
 import GlEmptyState from '@/components/GlEmptyState.vue'
 import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import { isForbidden } from '@/utils/glErrors'

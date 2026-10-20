@@ -11,16 +11,32 @@
       <div class="flex flex-col gap-4">
         <GlLeadPicker v-model="lead" :leads="leads" />
         <FormControl v-if="kind !== 'comment'" ref="titleRef" v-model="title" :label="kind === 'task' ? __('Název úkolu') : __('Nadpis')" :placeholder="kind === 'task' ? __('Např. Poslat nabídku') : __('Např. Schůzka s jednatelem')" />
-        <FormControl v-model="content" type="textarea" :rows="kind === 'task' ? 3 : 5" :label="kind === 'task' ? __('Popis') : __('Text')" :placeholder="kind === 'comment' ? __('Interní poznámka pro tým…') : ''" />
+        <div>
+          <div class="mb-1.5 text-xs text-ink-gray-5">
+            {{ kind === 'task' ? __('Popis') : __('Text') }}
+            <span class="text-ink-gray-4">· {{ __('@ označí kolegu, dostane upozornění') }}</span>
+          </div>
+          <TextEditorControl :value="content" :placeholder="kind === 'comment' ? __('Interní poznámka pro tým…') : ''" @change="(v) => (content = v)" />
+        </div>
         <div v-if="kind === 'task'" class="grid grid-cols-2 gap-3">
-          <FormControl v-model="dueDate" type="date" :label="__('Termín')" />
-          <FormControl
-            v-model="priority"
-            type="select"
-            :label="__('Priorita')"
-            :options="[{ label: __('Low'), value: 'Low' }, { label: __('Medium'), value: 'Medium' }, { label: __('High'), value: 'High' }]"
-          />
-          <FormControl v-model="assignedTo" class="col-span-2" type="select" :label="__('Přiřadit')" :options="userOptions" />
+          <div>
+            <div class="mb-1.5 text-xs text-ink-gray-5">{{ __('Termín') }}</div>
+            <GlDatePicker v-model="dueDate" :label="__('Termín')" />
+          </div>
+          <div>
+            <div class="mb-1.5 text-xs text-ink-gray-5">{{ __('Priorita') }}</div>
+            <select v-model="priority" class="gl-field w-full">
+              <option value="Low">{{ __('Nízká') }}</option>
+              <option value="Medium">{{ __('Střední') }}</option>
+              <option value="High">{{ __('Vysoká') }}</option>
+            </select>
+          </div>
+          <div class="col-span-2">
+            <div class="mb-1.5 text-xs text-ink-gray-5">{{ __('Přiřadit') }}</div>
+            <select v-model="assignedTo" class="gl-field w-full">
+              <option v-for="u in userOptions" :key="u.value" :value="u.value">{{ u.label }}</option>
+            </select>
+          </div>
         </div>
         <ErrorMessage :message="error" />
       </div>
@@ -36,6 +52,9 @@
 
 <script setup>
 import GlLeadPicker from '@/components/Firma/GlLeadPicker.vue'
+import GlDatePicker from '@/components/GlDatePicker.vue'
+import TextEditorControl from '@/components/Controls/TextEditorControl.vue'
+import { NOTE_TEMPLATE } from '@/doctypes/fcrm_note/form.js'
 import { usersStore } from '@/stores/users'
 import { Button, Dialog, ErrorMessage, FormControl, call, toast } from 'frappe-ui'
 import { computed, ref } from 'vue'
@@ -51,18 +70,23 @@ const emit = defineEmits(['saved'])
 const show = defineModel({ type: Boolean })
 
 const TITLES = { note: __('Nový zápis'), task: __('Nový úkol'), comment: __('Nový komentář') }
-const { getUser, crmUsers } = usersStore()
+const { getUser, users } = usersStore()
 
 const lead = ref(props.defaultLead)
 const title = ref('')
-const content = ref('')
+const content = ref(props.kind === 'note' ? NOTE_TEMPLATE : '')
 const dueDate = ref('')
 const priority = ref('Medium')
 const assignedTo = ref(getUser().name)
 const saving = ref(false)
 const error = ref('')
 
-const userOptions = computed(() => (crmUsers.value || []).map((u) => ({ label: u.full_name || u.name, value: u.name })))
+const userOptions = computed(() => {
+  const list = (users.data?.crmUsers || []).filter((u) => u.enabled !== 0 && !u.name.endsWith('@growupcrm.local')).map((u) => ({ label: u.full_name?.trim() || u.name, value: u.name }))
+  // přihlášený uživatel vždy v nabídce (výchozí přiřazení), i když není mezi uživateli CRM (Administrator)
+  if (assignedTo.value && !list.some((u) => u.value === assignedTo.value)) list.unshift({ label: getUser().full_name || assignedTo.value, value: assignedTo.value })
+  return list
+})
 
 async function save() {
   error.value = ''

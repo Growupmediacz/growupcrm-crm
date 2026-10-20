@@ -6,6 +6,8 @@
           <span class="dot size-2 rounded-full" :style="{ background: stageColor }" />
           {{ __(doc.status) }}
           <GlTemperature :value="doc.temperature" :lead="doc.name" editable class="ml-1" @changed="(v) => ((doc.temperature = v), emit('changed'))" />
+          <!-- reakční doba na příchozí zakázku (growupcrm.response_time) -->
+          <span v-if="response" class="rounded-full px-2 py-0.5 text-[12px] font-semibold" :class="BADGE_TONE[response.tone]" :title="response.title">{{ response.text }}</span>
         </div>
         <h1 class="mt-1 truncate font-bold leading-tight tracking-tight text-ink-gray-9" :class="compact ? 'text-[24px]' : 'text-[34px]'">
           {{ doc.order_title || doc.lead_name || doc.name }}
@@ -89,6 +91,7 @@
   </div>
 </template>
 <script setup>
+import { BADGE_TONE, responseBadge } from '@/composables/responseTime'
 // GrowUp: hlavička detailu zakázky (design Liquid Glass): název, hodnota, průběh fázemi a další krok.
 import GlIcon from '@/components/GlIcon.vue'
 import GlTemperature from '@/components/GlTemperature.vue'
@@ -105,6 +108,7 @@ const props = defineProps({
   stageOptions: { type: Array, default: () => [] },
   compact: { type: Boolean, default: false },
 })
+const response = computed(() => responseBadge(props.doc))
 const emit = defineEmits(['changed', 'fill', 'plan'])
 
 const { leadStatuses } = statusesStore()

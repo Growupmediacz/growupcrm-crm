@@ -145,7 +145,14 @@
           <div v-if="!timeline.length" class="py-16 text-center text-sm text-ink-gray-5">
             {{ __('Zatím tu není žádná aktivita. Zápisy, hovory, schůzky a úkoly u zakázek této firmy se zobrazí tady.') }}
           </div>
-          <div v-for="item in timeline" :key="item.kind + item.id" class="mb-4 flex gap-3">
+          <div
+            v-for="item in timeline"
+            :key="item.kind + item.id"
+            class="mb-2 flex gap-3 rounded-2xl px-2 py-1.5"
+            :class="EDITABLE[item.kind] && 'cursor-pointer transition hover:bg-white/60'"
+            :title="EDITABLE[item.kind] ? __('Upravit') : ''"
+            @click="EDITABLE[item.kind] && editItem(item)"
+          >
             <div class="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl" :class="kindTone[item.kind]">
               <span :class="kindIcon[item.kind]" class="size-4" aria-hidden="true" />
             </div>
@@ -170,13 +177,16 @@
               <div class="mt-1 flex flex-wrap gap-x-2 text-xs text-ink-gray-5">
                 <span>{{ dateTime(item.date) }}</span>
                 <span v-if="item.user_name">· {{ item.user_name }}</span>
-                <router-link v-if="item.lead" :to="{ name: 'Lead', params: { leadId: item.lead } }" class="text-ink-blue-5 hover:underline">
+                <router-link v-if="item.lead" :to="{ name: 'Lead', params: { leadId: item.lead } }" class="text-ink-blue-5 hover:underline" @click.stop>
                   · {{ item.lead_title }}
                 </router-link>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Dokumenty (smlouvy, nabídky, ceníky, přílohy e-mailů) -->
+        <GlOrgDocuments v-else-if="tab === 'documents'" ref="documentsRef" :organization="props.organizationId" />
 
         <!-- Zakázky -->
         <div v-else-if="tab === 'leads'">
@@ -329,6 +339,7 @@ import LeadModal from '@/components/Modals/GlNewLeadModal.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
 import GlCallModal from '@/components/Modals/GlCallModal.vue'
 import GlOrgActivityModal from '@/components/Firma/GlOrgActivityModal.vue'
+import GlOrgDocuments from '@/components/Firma/GlOrgDocuments.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlOrgInfoCard from '@/components/Firma/GlOrgInfoCard.vue'
 import GlOrgWebCard from '@/components/Firma/GlOrgWebCard.vue'
@@ -338,6 +349,7 @@ import { sessionStore } from '@/stores/session'
 import BranchDialog from '@/components/Firma/BranchDialog.vue'
 import ContactDialog from '@/components/Firma/ContactDialog.vue'
 import { useDocument } from '@/data/document'
+import { useDoctypeModal } from '@/composables/doctypeModal'
 import { getSettings } from '@/stores/settings'
 import { statusesStore } from '@/stores/statuses'
 import { isMobileView } from '@/composables/settings'
@@ -425,9 +437,14 @@ const contacts = computed(() => overview.data?.contacts || [])
 const branches = computed(() => overview.data?.branches || [])
 
 const tab = ref('activity')
+// počet dokumentů pro záložku (seznam si načítá GlOrgDocuments sám)
+const documentsRef = ref(null)
+const documents = createResource({ url: 'growupcrm.documents.get_documents', params: { organization: props.organizationId }, auto: true })
+watch(() => documentsRef.value?.docs?.data, (d) => d && (documents.data = d))
 const tabs = computed(() => [
   { key: 'activity', label: __('Aktivita'), count: overview.data?.timeline?.length ?? 0 },
   { key: 'leads', label: __('Zakázky'), count: leads.value.length },
+  { key: 'documents', label: __('Dokumenty'), count: documents.data?.documents?.length ?? 0 },
   { key: 'contacts', label: __('Kontakty'), count: contacts.value.length },
   { key: 'branches', label: __('Pobočky'), count: branches.value.length },
 ])
@@ -486,10 +503,18 @@ const addOptions = computed(() =>
 const headerAdd = computed(() => {
   if (tab.value === 'activity') return addByKind.value[kind.value] || addByKind.value.note
   if (tab.value === 'leads') return { label: __('Nová zakázka'), onClick: () => (showLeadModal.value = true) }
+  if (tab.value === 'documents') return null
   if (tab.value === 'contacts') return { label: __('Přidat kontakt'), onClick: () => (showContactDialog.value = true) }
   if (tab.value === 'branches') return { label: __('Přidat pobočku'), onClick: () => editBranch(null) }
   return null
 })
+// zápis a úkol z aktivity firmy jdou upravit (stejný dialog jako v zakázce a v Zápisech / Úkolech)
+const EDITABLE = { note: { doctype: 'FCRM Note', title: 'Note' }, task: { doctype: 'CRM Task', title: 'Task' } }
+const { showModal } = useDoctypeModal()
+function editItem(item) {
+  const e = EDITABLE[item.kind]
+  showModal({ name: item.id, doctype: e.doctype, title: e.title, callbacks: { afterUpdate: () => overview.reload() } })
+}
 const timeline = computed(() =>
   (overview.data?.timeline || []).filter((t) => kind.value === 'all' || t.kind === kind.value),
 )

@@ -70,6 +70,7 @@ onMounted(() => $socket.on('crm_notification', () => notifications.reload()))
 function getRoute(n) {
   let params = { leadId: n.reference_name }
   if (n.route_name === 'Deal') params = { dealId: n.reference_name }
-  return { name: n.route_name, params, hash: '#' + (n.comment || n.notification_type_doc) }
+  if (n.route_name === 'Organization') params = { organizationId: n.reference_name }
+  return { name: n.route_name, params, hash: n.hash ?? '#' + (n.comment || n.notification_type_doc) }
 }
 </script>

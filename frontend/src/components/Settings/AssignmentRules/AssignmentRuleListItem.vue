@@ -99,11 +99,11 @@ watch(
 )
 
 const priorityOptions = [
-  { label: 'Low', value: '0' },
-  { label: 'Low-Medium', value: '1' },
-  { label: 'Medium', value: '2' },
-  { label: 'Medium-High', value: '3' },
-  { label: 'High', value: '4' },
+  { label: __('Nízká'), value: '0' },
+  { label: __('Nižší'), value: '1' },
+  { label: __('Střední'), value: '2' },
+  { label: __('Vyšší'), value: '3' },
+  { label: __('Vysoká'), value: '4' },
 ]
 
 const duplicateDialog = ref({

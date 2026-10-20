@@ -31,6 +31,7 @@ import {
   bubbleToolbar,
   uploadFile,
 } from '@/components/editor/config'
+import { usersStore } from '@/stores/users'
 import { computed, ref, watch } from 'vue'
 
 const props = defineProps({
@@ -92,7 +93,15 @@ const editorClasses = computed(() => {
   ]
 })
 
-const extensions = buildEditorExtensions()
+// GrowUp: @ označí kolegu (úkoly, zápisy); upozornění pošle server (growupcrm.mentions)
+const { users: usersList } = usersStore()
+const mentionUsers = computed(
+  () =>
+    usersList.data?.crmUsers
+      ?.filter((u) => u.enabled !== 0 && !u.name.endsWith('@growupcrm.local')) // bez integračního uživatele API
+      .map((u) => ({ id: u.name, label: u.full_name?.trim() || u.name })) || [],
+)
+const extensions = buildEditorExtensions({ mentions: () => mentionUsers.value })
 
 const content = ref(props.value ?? '')
 const isDirty = ref(false)

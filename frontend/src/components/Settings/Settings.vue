@@ -53,6 +53,7 @@ import AgencySettings from '@/components/Settings/AgencySettings.vue'
 import GlEmailSettings from '@/components/Settings/GlEmailSettings.vue'
 import GlLeadSources from '@/components/Settings/GlLeadSources.vue'
 import GlAddons from '@/components/Settings/GlAddons.vue'
+import GlResponseSettings from '@/components/Settings/GlResponseSettings.vue'
 import PlanSettings from '@/components/Settings/PlanSettings.vue'
 import { agencyEnabled } from '@/composables/agency'
 import { useLeadsOnlyMode } from '@/composables/leadsOnlyMode'
@@ -140,6 +141,7 @@ const tabs = computed(() => {
     // GrowUp: Formuláře a Synchronizace zakázek v jedné sekci s přehledem napojení
     sources: { label: __('Zdroje zakázek'), component: markRaw(GlLeadSources), icon: markRaw(LucideTextCursorInput) },
     addons: { label: __('Doplňky'), component: markRaw(GlAddons), icon: SparkleIcon },
+    response: { label: __('Reakční doba'), component: markRaw(GlResponseSettings), icon: 'clock' },
     general: { label: __('General'), component: markRaw(GeneralSettings), icon: SettingsIcon },
     dashboard: { label: __('Dashboard'), component: markRaw(DashboardSettings), icon: LucideLayoutDashboard },
     defaults: { label: __('Defaults'), component: markRaw(DefaultsSettings), icon: MonitorCogIcon },
@@ -153,7 +155,7 @@ const tabs = computed(() => {
     { label: __('Účet'), items: [item.profile, item.preferences] },
     { label: __('Tým'), items: [item.users, item.plan, item.invite, item.hierarchy], condition: () => isManager() },
     { label: __('Komunikace'), items: [item.email, item.templates] },
-    { label: __('Práce'), items: [item.sources, item.projectTemplates, item.assignment, item.sla], condition: () => isManager() },
+    { label: __('Práce'), items: [item.sources, item.assignment, item.response, item.projectTemplates, item.sla], condition: () => isManager() },
     { label: __('Doplňky'), items: [item.addons], condition: () => isManager() },
     { label: __('Systém'), items: [item.general, item.brand, item.dashboard, item.defaults, item.home, item.telephony, item.whatsapp, item.erp], condition: () => isManager() },
   ]
