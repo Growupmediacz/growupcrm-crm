@@ -1,7 +1,7 @@
 <template>
   <!-- GrowUp: osobní schránka Google Workspace (growupcrm.gmail) – odesílání z Zakázky a odpovědi zpět -->
-  <div class="flex h-full flex-col gap-5 overflow-y-auto p-6 text-ink-gray-8">
-    <div>
+  <div class="flex flex-col gap-5 text-ink-gray-8" :class="!embedded && 'h-full overflow-y-auto p-6'">
+    <div v-if="!embedded">
       <h2 class="text-2xl-semibold text-ink-gray-8">{{ __('Můj e-mail') }}</h2>
       <p class="mt-1 text-p-base text-ink-gray-6">
         {{ __('Připojte svůj Google účet. E-maily ze zakázek pak odejdou z vaší adresy a odpovědi klientů se samy objeví u zakázky.') }}
@@ -47,6 +47,8 @@ import { saveFailed } from '@/composables/glToast'
 import { formatDate } from '@/utils'
 import { Button, createResource, call, toast } from 'frappe-ui'
 import { computed, ref } from 'vue'
+
+defineProps({ embedded: { type: Boolean, default: false } })
 
 const status = createResource({ url: 'growupcrm.gmail.get_status', auto: true })
 const s = computed(() => status.data)

@@ -219,7 +219,7 @@ import EmailIcon from '@/components/Icons/EmailIcon.vue'
 import StepsIcon from '@/components/Icons/StepsIcon.vue'
 import CollapsibleSection from '@/components/CollapsibleSection.vue'
 import GlIcon from '@/components/GlIcon.vue'
-import { agencyEnabled, analyticsEnabled, outreachEnabled } from '@/composables/agency'
+import { agencyEnabled, agentEnabled, analyticsEnabled, outreachEnabled } from '@/composables/agency'
 import { getSettings } from '@/stores/settings'
 import Icon from '@/components/Icon.vue'
 import PinIcon from '@/components/Icons/PinIcon.vue'
@@ -407,7 +407,7 @@ const links = [
   },
   // GrowUp: agenturní moduly jen se zapnutým growupcrm_agency
   { label: 'Outreach', icon: CalendarIcon, to: 'Outreach', condition: () => outreachEnabled.value },
-  { label: 'Agent', icon: CalendarIcon, to: 'Agent', condition: () => outreachEnabled.value },
+  { label: 'Agent', icon: CalendarIcon, to: 'Agent', condition: () => agentEnabled.value },
   { label: 'Klienti', icon: CalendarIcon, to: 'Clients', condition: () => agencyEnabled.value },
   { label: 'Projekty', icon: CalendarIcon, to: 'Projects', condition: () => agencyEnabled.value },
   { label: 'Plány', icon: CalendarIcon, to: 'Plans', condition: () => agencyEnabled.value },
@@ -670,7 +670,7 @@ const steps = reactive([
     onClick: () => {
       minimize.value = true
       showSettings.value = true
-      activeSettingsPage.value = 'Forms'
+      activeSettingsPage.value = __('Zdroje zakázek')
       capture('onboarding_step_clicked_create_first_web_form')
     },
     condition: () => isManager(),

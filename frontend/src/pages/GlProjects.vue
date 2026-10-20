@@ -90,9 +90,7 @@
             </td>
             <td class="px-3 py-3">
               <span class="flex -space-x-1.5">
-                <span v-for="u in p.team.slice(0, 4)" :key="u" class="flex size-7 items-center justify-center rounded-full border-2 border-white bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" :title="userName(u)">
-                  {{ initials(userName(u)) }}
-                </span>
+                <GlUserAvatar v-for="u in p.team.slice(0, 4)" :key="u" :user="u" class="size-7 border-2 border-white bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" />
               </span>
             </td>
           </tr>
@@ -124,7 +122,7 @@
         <h2 class="mb-3 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Vytížení týmu') }}</h2>
         <GlEmptyState v-if="!board.data?.load?.length" icon="check" :title="__('Žádné otevřené úkoly')" :text="__('Tým nemá žádnou rozdělanou práci.')" />
         <div v-for="l in board.data?.load || []" :key="l.user" class="flex items-center gap-3 py-2">
-          <span class="flex size-9 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2440a6]">{{ initials(userName(l.user)) }}</span>
+          <GlUserAvatar :user="l.user" class="size-9 bg-[#dde6ff] text-[11px] font-bold text-[#2440a6]" />
           <span class="w-32 truncate text-[14px] text-ink-gray-9">{{ userName(l.user) }}</span>
           <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]">
             <div class="h-full rounded-full" :class="l.percent > 100 ? 'bg-[#e5484d]' : 'bg-[#4f46e5]'" :style="{ width: `${Math.min(l.percent, 100)}%` }" />
@@ -159,6 +157,7 @@ import GlForbidden from '@/components/GlForbidden.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlNewProjectModal from '@/components/Modals/GlNewProjectModal.vue'
+import GlUserAvatar from '@/components/GlUserAvatar.vue'
 import { usersStore } from '@/stores/users'
 import { Button, Popover, createResource, usePageMeta } from 'frappe-ui'
 import { computed, ref, watch } from 'vue'
@@ -226,13 +225,6 @@ const overdueLabel = computed(() => {
   return n === 1 ? __('1 projekt') : n <= 4 ? __('{0} projekty', [n]) : __('{0} projektů', [n])
 })
 const userName = (u) => getUser(u)?.full_name || u
-const initials = (s) =>
-  (s || '?')
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
-    .join('')
 const shortDate = (s) => {
   const d = new Date(String(s).replace(' ', 'T') + (String(s).length === 10 ? 'T00:00' : ''))
   return `${d.getDate()}. ${d.getMonth() + 1}.`

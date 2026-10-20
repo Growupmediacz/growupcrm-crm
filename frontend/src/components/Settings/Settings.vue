@@ -50,9 +50,11 @@
 </template>
 <script setup>
 import AgencySettings from '@/components/Settings/AgencySettings.vue'
-import GlMyMailbox from '@/components/Settings/GlMyMailbox.vue'
+import GlEmailSettings from '@/components/Settings/GlEmailSettings.vue'
+import GlLeadSources from '@/components/Settings/GlLeadSources.vue'
+import GlAddons from '@/components/Settings/GlAddons.vue'
 import PlanSettings from '@/components/Settings/PlanSettings.vue'
-import { agencyEnabled, outreachEnabled } from '@/composables/agency'
+import { agencyEnabled } from '@/composables/agency'
 import { useLeadsOnlyMode } from '@/composables/leadsOnlyMode'
 
 const leadsOnlyMode = useLeadsOnlyMode()
@@ -76,16 +78,13 @@ import ProfilePage from '@/components/Settings/Profile/ProfilePage.vue'
 import PreferencesSettings from '@/components/Settings/PreferencesSettings.vue'
 import WhatsAppSettings from '@/components/Settings/WhatsAppSettings.vue'
 import ERPNextSettings from '@/components/Settings/ERPNextSettings.vue'
-import LeadSyncSourcePage from '@/components/Settings/LeadSyncing/LeadSyncSourcePage.vue'
 import DefaultsSettings from '@/components/Settings/DefaultsSettings.vue'
 import BrandSettings from '@/components/Settings/BrandSettings.vue'
 import HomeActions from '@/components/Settings/HomeActions.vue'
-import FormsSettings from '@/components/Settings/Forms/FormsSettings.vue'
 import GeneralSettings from '@/components/Settings/GeneralSettings.vue'
 import DashboardSettings from '@/components/Settings/DashboardSettings.vue'
 import EmailTemplatePage from '@/components/Settings/EmailTemplate/EmailTemplatePage.vue'
 import TelephonyPage from '@/components/Settings/Telephony/TelephonyPage.vue'
-import EmailConfig from '@/components/Settings/EmailConfig.vue'
 import Icon from '@/components/Icon.vue'
 import { usersStore } from '@/stores/users'
 import {
@@ -123,15 +122,9 @@ const tabs = computed(() => {
     },
     invite: { label: __('Invite User'), icon: 'user-plus', component: markRaw(InviteUserPage), condition: () => isManager() },
     hierarchy: { label: __('Sales Hierarchy'), icon: LucideNetwork, component: markRaw(Hierarchy), condition: () => isManager() },
-    mailbox: {
-      label: __('Schránka'),
-      icon: Email2Icon,
-      component: markRaw(defineComponent({ render: () => h(AgencySettings, { kind: 'mailbox' }) })),
-      condition: () => outreachEnabled.value,
-    },
-    myMail: { label: __('Můj e-mail'), icon: Email2Icon, component: markRaw(GlMyMailbox) },
+    // GrowUp: Můj e-mail, Schránka (Outreach) a Účty sloučené do jedné stránky E-mail
+    email: { label: __('E-mail'), icon: Email2Icon, component: markRaw(GlEmailSettings) },
     templates: { label: __('Templates'), icon: EmailTemplateIcon, component: markRaw(EmailTemplatePage) },
-    accounts: { label: __('Accounts'), icon: Email2Icon, component: markRaw(EmailConfig), condition: () => isManager() },
     projectTemplates: {
       label: __('Šablony projektů'),
       icon: 'folder',
@@ -144,7 +137,9 @@ const tabs = computed(() => {
       component: markRaw(AssignmentRulePage),
     },
     sla: { label: __('SLA Policies'), icon: markRaw(h(ShieldCheck)), component: markRaw(SlaConfig), condition: () => !leadsOnlyMode.value },
-    forms: { label: __('Forms'), component: markRaw(FormsSettings), icon: markRaw(LucideTextCursorInput) },
+    // GrowUp: Formuláře a Synchronizace zakázek v jedné sekci s přehledem napojení
+    sources: { label: __('Zdroje zakázek'), component: markRaw(GlLeadSources), icon: markRaw(LucideTextCursorInput) },
+    addons: { label: __('Doplňky'), component: markRaw(GlAddons), icon: SparkleIcon },
     general: { label: __('General'), component: markRaw(GeneralSettings), icon: SettingsIcon },
     dashboard: { label: __('Dashboard'), component: markRaw(DashboardSettings), icon: LucideLayoutDashboard },
     defaults: { label: __('Defaults'), component: markRaw(DefaultsSettings), icon: MonitorCogIcon },
@@ -153,13 +148,13 @@ const tabs = computed(() => {
     telephony: { label: __('Telephony'), icon: PhoneIcon, component: markRaw(TelephonyPage), condition: () => !leadsOnlyMode.value },
     whatsapp: { label: __('WhatsApp'), icon: WhatsAppIcon, component: markRaw(WhatsAppSettings), condition: () => isWhatsappInstalled.value && isManager() },
     erp: { label: __('ERPNext'), icon: ERPNextIcon, component: markRaw(ERPNextSettings), condition: () => isManager() && !leadsOnlyMode.value },
-    sync: { label: __('Lead Syncing'), icon: 'refresh-cw', component: markRaw(LeadSyncSourcePage), condition: () => isManager() },
   }
   let _tabs = [
     { label: __('Účet'), items: [item.profile, item.preferences] },
     { label: __('Tým'), items: [item.users, item.plan, item.invite, item.hierarchy], condition: () => isManager() },
-    { label: __('Komunikace'), items: [item.myMail, item.mailbox, item.templates, item.accounts] },
-    { label: __('Práce'), items: [item.projectTemplates, item.assignment, item.sla, item.forms, item.sync], condition: () => isManager() },
+    { label: __('Komunikace'), items: [item.email, item.templates] },
+    { label: __('Práce'), items: [item.sources, item.projectTemplates, item.assignment, item.sla], condition: () => isManager() },
+    { label: __('Doplňky'), items: [item.addons], condition: () => isManager() },
     { label: __('Systém'), items: [item.general, item.brand, item.dashboard, item.defaults, item.home, item.telephony, item.whatsapp, item.erp], condition: () => isManager() },
   ]
 

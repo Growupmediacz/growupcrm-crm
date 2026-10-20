@@ -26,7 +26,8 @@ provide('session', session)
 handleMailboxReturn()
 
 const { setTheme } = useTheme()
-if (!localStorage.getItem('theme')) {
+// GrowUp: jen světlý vzhled (tmavý design nemáme, volba v Předvolbách je skrytá)
+if (localStorage.getItem('theme') !== 'light') {
   setTheme('light')
 }
 

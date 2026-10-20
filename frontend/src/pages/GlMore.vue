@@ -56,7 +56,7 @@
 
 <script setup>
 import GlIcon from '@/components/GlIcon.vue'
-import { agencyEnabled, analyticsEnabled, outreachEnabled } from '@/composables/agency'
+import { agencyEnabled, agentEnabled, analyticsEnabled, outreachEnabled } from '@/composables/agency'
 import { useLeadsOnlyMode, LEADS_ONLY_HIDDEN_ROUTES } from '@/composables/leadsOnlyMode'
 import { unreadNotificationsCount } from '@/stores/notifications'
 import { sessionStore } from '@/stores/session'
@@ -92,7 +92,7 @@ const groups = computed(() => {
       items: [
         { label: __('Kontakty'), icon: 'users', route: 'ContactsCards' },
         outreachEnabled.value && { label: __('Outreach'), icon: 'send', route: 'Outreach', count: counts.data?.outreach },
-        outreachEnabled.value && { label: __('Agent'), icon: 'sparkles', route: 'Agent' },
+        agentEnabled.value && { label: __('Agent'), icon: 'sparkles', route: 'Agent' },
       ].filter(Boolean),
     },
     {

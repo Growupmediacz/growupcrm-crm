@@ -1,8 +1,8 @@
 <template>
   <!-- GrowUp (design 2. kolo, C6): položky Nastavení agenturních modulů – Schránka (Outreach) a Šablony projektů -->
-  <div class="flex h-full flex-col gap-5 p-6 text-ink-gray-8">
+  <div class="flex flex-col gap-5 text-ink-gray-8" :class="!embedded && 'h-full p-6'">
     <template v-if="kind === 'mailbox'">
-      <div>
+      <div v-if="!embedded">
         <h2 class="text-2xl-semibold text-ink-gray-8">{{ __('Schránka') }}</h2>
         <p class="mt-1 text-p-base text-ink-gray-6">{{ __('E-maily z Outreach odcházejí z vaší adresy a odpovědi chodí zpět do CRM.') }}</p>
       </div>
@@ -36,7 +36,7 @@ import { showSettings } from '@/composables/settings'
 import { Button, createResource } from 'frappe-ui'
 import { ref } from 'vue'
 
-const props = defineProps({ kind: { type: String, default: 'mailbox' } })
+const props = defineProps({ kind: { type: String, default: 'mailbox' }, embedded: { type: Boolean, default: false } })
 const show = ref(false)
 const mb = createResource({ url: 'growupcrm.outreach.get_mailbox', auto: props.kind === 'mailbox' })
 </script>

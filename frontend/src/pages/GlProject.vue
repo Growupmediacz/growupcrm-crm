@@ -76,7 +76,7 @@
             <span class="min-w-0 flex-1 truncate text-[15px]" :class="t.status === 'Done' ? 'text-ink-gray-5 line-through' : 'font-medium text-ink-gray-9'">{{ t.title }}</span>
             <span v-if="t.waiting_on_client && t.status !== 'Done'" class="shrink-0 rounded-full bg-[rgba(224,161,0,.22)] px-2.5 py-0.5 text-[11px] font-bold text-[#7a4400]">{{ __('čeká na klienta') }}</span>
             <span v-if="t.due_date" class="num shrink-0 text-[13px]" :class="isOverdue(t) ? 'font-semibold text-[#a82614]' : 'text-ink-gray-5'">{{ shortDate(t.due_date) }}</span>
-            <span v-if="t.assigned_to" class="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" :title="userName(t.assigned_to)">{{ initials(userName(t.assigned_to)) }}</span>
+            <GlUserAvatar v-if="t.assigned_to" :user="t.assigned_to" class="size-7 bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" />
             <span v-else class="size-7 shrink-0" />
           </div>
           <button v-if="view === 'phase'" class="flex items-center gap-2 px-1 py-2 text-[14px] font-medium text-ink-gray-7 hover:text-[#4F46E5]" @click="focusNew(g.phase)"><GlIcon name="plus" :size="15" />{{ __('Přidat úkol') }}</button>
@@ -107,7 +107,7 @@
       <div class="gl-card p-6">
         <div class="mb-2 flex items-baseline justify-between"><h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Tým') }}</h2><button class="gl-fill" @click="openEdit">{{ __('Upravit') }}</button></div>
         <div v-for="m in p.team_load" :key="m.user" class="flex items-center gap-3 py-1.5">
-          <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2440a6]">{{ initials(userName(m.user)) }}</span>
+          <GlUserAvatar :user="m.user" class="size-10 bg-[#dde6ff] text-[12px] font-bold text-[#2440a6]" />
           <span class="min-w-0 flex-1"><span class="block truncate text-[15px] font-semibold text-ink-gray-9">{{ userName(m.user) }}</span><span v-if="m.owner" class="block text-[12px] text-ink-gray-5">{{ __('vlastník') }}</span></span>
           <span class="num text-[13px] text-ink-gray-5">{{ tasksWord(m.tasks) }}</span>
         </div>
@@ -170,6 +170,7 @@ import GlDatePicker from '@/components/GlDatePicker.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import { completeTaskWithUndo } from '@/composables/glTaskDone'
 import { sessionStore } from '@/stores/session'
+import GlUserAvatar from '@/components/GlUserAvatar.vue'
 import { usersStore } from '@/stores/users'
 import { formatDateCz, shortDateCz } from '@/utils/glDate'
 import { Breadcrumbs, Button, Dialog, Dropdown, call, createResource, toast, usePageMeta } from 'frappe-ui'
@@ -334,7 +335,6 @@ async function saveEdit() {
 }
 
 const userName = (u) => getUser(u)?.full_name || u
-const initials = (s) => (s || '?').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('')
 const toDate = (s) => new Date(String(s).length === 10 ? `${s}T00:00` : String(s).replace(' ', 'T'))
 const fullDate = formatDateCz
 const shortDate = shortDateCz

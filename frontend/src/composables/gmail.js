@@ -5,11 +5,11 @@ import { createResource, toast } from 'frappe-ui'
 export const mailboxStatus = createResource({ url: 'growupcrm.gmail.get_status', cache: 'gl-mailbox-status' })
 
 export function openMailboxSettings() {
-  activeSettingsPage.value = __('Můj e-mail')
+  activeSettingsPage.value = __('E-mail')
   showSettings.value = true
 }
 
-// Google po přihlášení vrátí uživatele na ?mailbox=connected: potvrdit a otevřít Nastavení → Můj e-mail
+// Google po přihlášení vrátí uživatele na ?mailbox=connected: potvrdit a otevřít Nastavení → E-mail
 export function handleMailboxReturn() {
   const url = new URL(window.location.href)
   if (url.searchParams.get('mailbox') !== 'connected') return
