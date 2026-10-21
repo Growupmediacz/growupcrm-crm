@@ -6,6 +6,7 @@
       <template #left-header>
         <div class="flex min-w-0 items-center gap-3">
           <h1 class="gl-page-title text-lg-medium shrink-0">{{ __('Úkoly') }}</h1>
+          <span v-if="counts.overdue" class="num -ml-1 hidden size-7 shrink-0 items-center justify-center rounded-full bg-[var(--overdue)] text-[13px] font-bold text-white md:inline-flex" :title="__('Po termínu')">{{ counts.overdue }}</span>
           <div class="gl-seg hidden sm:inline-flex">
             <button class="gl-seg-btn gl-seg-on">{{ __('Seznam') }}</button>
             <router-link class="gl-seg-btn" :to="{ name: 'Tasks', params: { viewType: 'kanban' } }">{{ __('Kanban') }}</router-link>

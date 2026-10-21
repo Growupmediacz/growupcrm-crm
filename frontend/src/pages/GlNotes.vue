@@ -20,7 +20,49 @@
       <GlErrorBanner v-if="res.error" :title="__('Zápisy se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" />
       <GlSkeleton v-else-if="!res.data" variant="cards" :rows="3" />
       <GlEmptyState v-else-if="!res.data.items.length" icon="doc" :title="q ? __('Nic nenalezeno') : __('Zatím žádné zápisy')" :text="q ? __('Zkuste jiné slovo nebo zrušte filtr.') : __('Zápisy vznikají u zakázek, firem a kontaktů.')" :action="q ? __('Zrušit hledání') : __('Nový zápis')" :primary="!q" @action="q ? (q = '') : createNote()" />
-      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <!-- design 3. kolo (14): na desktopu seznam vlevo a otevřený zápis vpravo, na mobilu karty -->
+      <div v-if="!isMobileView && res.data?.items.length" class="grid min-h-0 flex-1 grid-cols-12 gap-4">
+        <div class="gl-card col-span-5 flex min-h-0 flex-col overflow-y-auto p-2">
+          <button
+            v-for="n in res.data.items"
+            :key="n.name"
+            class="flex items-start gap-3.5 rounded-[18px] p-3.5 text-left transition"
+            :class="selected === n.name ? 'bg-white shadow-[inset_3px_0_0_var(--accent-600),0_6px_18px_-10px_rgba(40,40,120,.3)]' : 'hover:bg-white/60'"
+            @click="selected = n.name"
+          >
+            <span class="flex size-11 shrink-0 items-center justify-center rounded-[13px] bg-[rgba(139,92,246,.13)] text-[#6d3fd6]"><GlIcon name="doc" :size="20" /></span>
+            <span class="min-w-0 flex-1">
+              <span lang="cs" class="block truncate text-[16px] font-semibold text-ink-gray-9">{{ n.title }}</span>
+              <span lang="cs" class="mt-0.5 line-clamp-2 text-[14px] leading-snug text-ink-gray-7">{{ n.content }}</span>
+              <span class="mt-1 block truncate text-[13px] text-ink-gray-5">{{ [whenLabel(n.modified), userName(n.owner), n.ref?.label?.split(' · ')[1]].filter(Boolean).join(' · ') }}</span>
+            </span>
+          </button>
+        </div>
+        <div class="gl-card col-span-7 flex min-h-0 flex-col overflow-y-auto p-7">
+          <template v-if="current">
+            <div class="flex items-start justify-between gap-4">
+              <h2 lang="cs" class="text-[28px] font-bold leading-tight tracking-[-0.02em] text-ink-gray-9">{{ current.title }}</h2>
+              <div class="flex shrink-0 gap-2">
+                <Button iconLeft="edit-2" :label="__('Upravit')" @click="editNote(current.name)" />
+                <Dropdown :options="[{ label: __('Smazat'), icon: 'trash-2', theme: 'red', onClick: () => remove(current.name) }]" placement="right">
+                  <Button icon="more-horizontal" :aria-label="__('Další akce')" />
+                </Dropdown>
+              </div>
+            </div>
+            <div class="mt-3 flex flex-wrap items-center gap-2">
+              <span v-if="current.ref" class="max-w-full truncate rounded-full px-3 py-1 text-[13px] font-semibold" :class="REF_TONE[current.ref.kind]">{{ current.ref.label }}</span>
+              <span v-if="current.org && current.ref?.kind !== 'org'" class="max-w-full truncate rounded-full bg-[rgba(110,120,200,.12)] px-3 py-1 text-[13px] font-semibold text-[#4a5173]">{{ __('Firma') }} · {{ current.org }}</span>
+              <span class="rounded-full bg-[rgba(110,120,200,.12)] px-3 py-1 text-[13px] font-semibold text-[#4a5173]">{{ whenLabel(current.modified) }}</span>
+              <span class="flex items-center gap-1.5 text-[13px] text-ink-gray-7"><span class="flex size-6 items-center justify-center rounded-full bg-[#dde6ff] text-[9px] font-bold text-[#2440a6]">{{ initials(userName(current.owner)) }}</span>{{ userName(current.owner) }}</span>
+            </div>
+            <div class="mt-5 border-t border-[var(--line)] pt-5">
+              <div v-if="noteDoc.data" lang="cs" class="gl3-note" v-html="noteDoc.data.content" />
+              <GlSkeleton v-else :rows="4" />
+            </div>
+          </template>
+        </div>
+      </div>
+      <div v-else class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         <div v-for="n in res.data?.items || []" :key="n.name" class="gl-card gl-lift flex min-h-[200px] cursor-pointer flex-col gap-2.5 p-5" @click="editNote(n.name)">
           <div class="flex items-start justify-between gap-2">
             <div lang="cs" class="gl-text line-clamp-2 text-[17px] font-bold leading-snug text-ink-gray-9">{{ n.title }}</div>
@@ -53,6 +95,7 @@ import { shortDateCz, formatTimeCz } from '@/utils/glDate'
 import { Button, Dropdown, call, createResource } from 'frappe-ui'
 import { computed, defineAsyncComponent, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { isMobileView } from '@/composables/settings'
 
 const CrmNotes = defineAsyncComponent(() => import('@/pages/Notes.vue'))
 const route = useRoute()
@@ -80,7 +123,18 @@ function whenLabel(v) {
   const d = new Date(String(v).replace(' ', 'T'))
   return d.toDateString() === new Date().toDateString() ? `${__('dnes')} ${formatTimeCz(d)}` : shortDateCz(d)
 }
-const callbacks = { afterInsert: () => res.reload(), afterUpdate: () => res.reload() }
+// otevřený zápis vpravo (desktop): první v seznamu, celý text (HTML) z FCRM Note
+const selected = ref('')
+const current = computed(() => res.data?.items.find((n) => n.name === selected.value) || null)
+const noteDoc = createResource({ url: 'frappe.client.get' })
+watch(
+  () => res.data?.items,
+  (items) => {
+    if (items?.length && !items.some((n) => n.name === selected.value)) selected.value = items[0].name
+  },
+)
+watch(selected, (name) => name && noteDoc.fetch({ doctype: 'FCRM Note', name }))
+const callbacks = { afterInsert: () => res.reload(), afterUpdate: () => (res.reload(), selected.value && noteDoc.fetch({ doctype: 'FCRM Note', name: selected.value })) }
 const createNote = () => showModal({ doctype: 'FCRM Note', title: 'Note', callbacks })
 const editNote = (name) => showModal({ name, doctype: 'FCRM Note', title: 'Note', callbacks })
 async function remove(name) {

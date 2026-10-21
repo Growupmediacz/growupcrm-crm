@@ -1,7 +1,7 @@
 <template>
   <LayoutHeader>
     <template #left-header>
-      <GlViewHeader :title="__('Firmy')" routeName="Organizations" :viewControls="viewControls" :kanban="false" />
+      <GlViewHeader :title="__('Firmy')" routeName="Organizations" :viewControls="viewControls" :kanban="false" :count="organizations.data?.total_count || 0" />
     </template>
     <template #right-header>
       <CustomActions

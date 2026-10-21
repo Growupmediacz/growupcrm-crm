@@ -5,6 +5,7 @@
     <template #left-header>
       <div class="flex min-w-0 items-center gap-3">
         <span class="gl-page-title text-lg-medium shrink-0 text-ink-gray-9">{{ __('Kontakty') }}</span>
+        <span v-if="contactCount.data" class="num gl3-count hidden shrink-0 rounded-full px-3 py-1 text-[15px] font-semibold md:inline">{{ Number(contactCount.data).toLocaleString('cs-CZ') }}</span>
         <div class="gl-seg hidden shrink-0 sm:inline-flex">
           <button class="gl-seg-btn gl-seg-on"><GlIcon name="grid" :size="15" />{{ __('Karty') }}</button>
           <router-link class="gl-seg-btn" :to="{ name: 'Contacts', params: { viewType: 'list' } }">
@@ -36,7 +37,7 @@
           v-for="c in directory.data || []"
           :key="c.name"
           class="flex items-center gap-3 rounded-2xl px-2.5 py-2.5 text-left transition"
-          :class="selected === c.name ? 'bg-white shadow-[0_6px_18px_-10px_rgba(40,40,120,.35)]' : 'hover:bg-white/55'"
+          :class="selected === c.name ? 'bg-white shadow-[inset_3px_0_0_var(--accent-600),0_6px_18px_-10px_rgba(40,40,120,.35)]' : 'hover:bg-white/55'"
           @click="select(c.name)"
         >
           <img v-if="c.image" :src="c.image" class="size-10 shrink-0 rounded-full object-cover" />
@@ -59,18 +60,30 @@
       <button v-if="isMobileView" class="self-start text-[15px] font-semibold text-[#5b5bf6]" @click="selected = ''">
         ‹ {{ __('Kontakty') }}
       </button>
-      <div class="gl-card flex flex-col items-center px-6 py-7 text-center">
-        <img v-if="c.image" :src="c.image" class="size-20 rounded-full object-cover" />
-        <span v-else class="flex size-20 items-center justify-center rounded-full text-[26px] font-bold" :class="tone(c.full_name)">
-          {{ initials(c.full_name) }}
-        </span>
-        <router-link :to="{ name: 'Contact', params: { contactId: c.name } }" class="mt-3 text-[28px] font-bold tracking-tight text-ink-gray-9 hover:text-[#5b5bf6]">
-          {{ c.full_name }}
-        </router-link>
-        <div class="text-[15px] text-ink-gray-7">
-          {{ [c.designation, c.crm_organization || c.company_name].filter(Boolean).join(' · ') }}
+      <!-- design 3. kolo (10): avatar vlevo, jméno, role · firma (odkaz), pod tím 4 akce přes celou šířku -->
+      <div class="gl-card flex flex-col items-center px-6 py-7 text-center md:items-stretch md:p-7 md:text-left">
+        <div class="flex flex-col items-center gap-5 md:flex-row">
+          <img v-if="c.image" :src="c.image" class="size-20 shrink-0 rounded-full object-cover md:size-24" />
+          <span v-else class="flex size-20 shrink-0 items-center justify-center rounded-full text-[26px] font-bold md:size-24 md:text-[30px]" :class="tone(c.full_name)">
+            {{ initials(c.full_name) }}
+          </span>
+          <div class="min-w-0">
+            <router-link :to="{ name: 'Contact', params: { contactId: c.name } }" class="text-[28px] font-bold tracking-tight text-ink-gray-9 hover:text-[var(--accent-600)]">
+              {{ c.full_name }}
+            </router-link>
+            <div class="text-[15px] text-ink-gray-7">
+              <span v-if="c.designation">{{ c.designation }}</span>
+              <span v-if="c.designation && (c.crm_organization || c.company_name)"> · </span>
+              <router-link
+                v-if="c.crm_organization"
+                :to="{ name: 'Organization', params: { organizationId: c.crm_organization } }"
+                class="font-medium text-[var(--accent-700)] hover:underline"
+              >{{ c.crm_organization }}</router-link>
+              <span v-else-if="c.company_name">{{ c.company_name }}</span>
+            </div>
+          </div>
         </div>
-        <div class="mt-5 grid w-full max-w-[460px] grid-cols-4 gap-2.5">
+        <div class="mt-5 grid w-full max-w-[460px] grid-cols-4 gap-2.5 md:max-w-none">
           <a
             v-for="a in actions"
             :key="a.label"
@@ -204,6 +217,11 @@ const showNote = ref(false)
 const noteText = ref('')
 const savingNote = ref(false)
 
+const contactCount = createResource({
+  url: 'frappe.client.get_count',
+  params: { doctype: 'Contact' },
+  auto: true,
+})
 const directory = createResource({
   url: 'growupcrm.contacts.get_directory',
   makeParams: () => ({ q: q.value }),

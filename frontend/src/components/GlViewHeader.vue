@@ -4,6 +4,7 @@
     <router-link :to="{ name: routeName }" class="gl-page-title text-lg-medium shrink-0 text-ink-gray-9">
       {{ title }}
     </router-link>
+    <span v-if="count" class="num gl3-count hidden shrink-0 rounded-full px-3 py-1 text-[15px] font-semibold md:inline">{{ count.toLocaleString('cs-CZ') }}</span>
     <div v-if="!savedView && segments.length > 1" class="gl-seg hidden shrink-0 sm:inline-flex">
       <button
         v-for="o in segments"
@@ -48,6 +49,8 @@ const props = defineProps({
   kanban: { type: Boolean, default: true },
   // GrowUp (oprava 15): stránka s kartami (např. ContactsCards) → přepínač Karty / Tabulka
   cardsRoute: { type: String, default: '' },
+  // design 3. kolo: počet záznamů vedle nadpisu (Firmy 636)
+  count: { type: Number, default: 0 },
 })
 
 const route = useRoute()

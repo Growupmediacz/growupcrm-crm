@@ -11,6 +11,7 @@
       selectable: options.selectable,
       showTooltip: options.showTooltip,
       resizeColumn: options.resizeColumn,
+      rowHeight: 60,
     }"
     row-key="name"
     @update:selections="(selections) => emit('selectionsChanged', selections)"
@@ -48,24 +49,23 @@
         <template #prefix>
           <!-- GrowUp: logo firmy jako v designu (iniciály v barevném čtverci, jinak favicon) -->
           <div v-if="column.key === 'organization_name'" class="mr-1">
-            <img v-if="item.logo" :src="item.logo" class="size-9 rounded-xl bg-white object-contain p-1" />
+            <img v-if="item.logo" :src="item.logo" class="size-10 rounded-[12px] bg-white object-contain p-1" />
             <span
               v-else-if="item.label"
-              class="flex size-9 items-center justify-center rounded-xl text-[12px] font-bold"
+              class="flex size-10 items-center justify-center rounded-[12px] text-[13px] font-bold"
               :class="tone(item.label)"
             >{{ initials(item.label) }}</span>
           </div>
-          <span
-            v-else-if="column.key === 'relationship' && item"
-            class="mr-1.5 size-2 rounded-full"
-            :style="{ background: REL_COLORS[item] || '#9ca3af' }"
-          />
+
         </template>
         <template #default="{ label }">
           <div v-if="column.key === 'organization_name'" class="flex min-w-0 flex-col leading-tight">
             <span class="truncate text-[14px] font-semibold text-ink-gray-9">{{ item.label }}</span>
             <span v-if="row.ico" class="truncate text-[12.5px] text-ink-gray-5">IČO {{ row.ico }}</span>
           </div>
+          <!-- design 3. kolo (09): stav jako čip, vlastník jen avatar -->
+          <span v-else-if="column.key === 'relationship' && label" class="gl3-stage" :style="{ '--stage': REL_COLORS[label] || '#9ca3af' }">{{ __(label) }}</span>
+          <span v-else-if="column.key === 'org_owner' && label" :title="label"><UserAvatar :user="row.org_owner?.value || row.org_owner" size="lg" /></span>
           <div
             v-else-if="['modified', 'creation'].includes(column.key)"
             class="truncate text-base"
@@ -164,6 +164,7 @@
 <script setup>
 import GlSelectBanner from '@/components/GlSelectBanner.vue'
 import ListFooter from '@/components/GlListFooter.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
 const REL_COLORS = { Klient: '#22b35e', Prospekt: '#3b82f6', 'Bývalý klient': '#9ca3af' }
 const TONES = [
   'bg-[#dde6ff] text-[#2440a6]',
