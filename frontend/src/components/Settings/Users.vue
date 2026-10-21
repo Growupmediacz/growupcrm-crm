@@ -1,8 +1,8 @@
 <template>
   <div class="flex h-full flex-col gap-6 p-6 text-ink-gray-8">
     <!-- Header -->
-    <div class="flex justify-between px-2 pt-2">
-      <div class="flex flex-col gap-1 w-9/12">
+    <div class="flex justify-between gap-3 px-2 pt-2 max-sm:flex-col-reverse">
+      <div class="flex w-full flex-col gap-1 sm:w-9/12">
         <h2 class="flex gap-2 text-2xl-semibold leading-none h-5">
           {{ __('Users') }}
         </h2>
@@ -15,7 +15,7 @@
         </p>
         <SeatUsage :refreshKey="users.data?.crmUsers?.length" />
       </div>
-      <div class="flex item-center space-x-2 w-3/12 justify-end">
+      <div class="flex item-center space-x-2 justify-end sm:w-3/12">
         <Dropdown
           :options="[
             {
@@ -91,23 +91,23 @@
       </div>
       <ul class="divide-y divide-outline-elevation-2 overflow-y-auto px-2">
         <template v-for="user in usersList" :key="user.name">
-          <li class="flex items-center justify-between py-2">
-            <div class="flex items-center">
+          <li class="flex items-center justify-between gap-2 py-2">
+            <div class="flex min-w-0 items-center">
               <Avatar
                 :image="user.user_image"
                 :label="user.full_name"
                 size="xl"
               />
-              <div class="flex flex-col ml-3">
-                <div class="flex items-center text-p-base text-ink-gray-8">
+              <div class="ml-3 flex min-w-0 flex-col">
+                <div class="flex items-center truncate text-p-base text-ink-gray-8">
                   {{ user.full_name }}
                 </div>
-                <div class="text-p-sm text-ink-gray-5">
+                <div class="truncate text-p-sm text-ink-gray-5">
                   {{ user.name }}
                 </div>
               </div>
             </div>
-            <div class="flex gap-2 items-center flex-row-reverse">
+            <div class="flex shrink-0 gap-2 items-center flex-row-reverse">
               <Dropdown
                 :options="getMoreOptions(user)"
                 :button="{

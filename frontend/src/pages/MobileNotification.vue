@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <!-- GrowUp (design 1. kolo MOznameni): Oznámení – Vše / Nepřečtené, skupiny Dnes a Včera, ikona podle typu, tečka u nepřečtených -->
-  <div class="flex min-h-0 flex-1 flex-col gap-3 px-4 pb-4 pt-3 text-ink-gray-9">
+  <div class="flex shrink-0 flex-col gap-3 px-4 pb-28 pt-3 text-ink-gray-9">
     <div class="flex items-center justify-between">
       <router-link :to="{ name: 'More' }" class="text-[16px] font-semibold text-[var(--accent-700)]">{{ __('Zrušit') }}</router-link>
       <h1 class="text-[18px] font-bold">{{ __('Oznámení') }}</h1>
@@ -13,10 +13,10 @@
     </div>
     <GlSkeleton v-if="notifications.loading && !notifications.data" :rows="4" />
     <GlEmptyState v-else-if="!shown.length" icon="bell" :title="tab === 'unread' ? __('Vše přečteno') : __('Zatím žádná oznámení')" :text="__('Nové události se ukážou tady.')" />
-    <div v-else class="flex flex-1 flex-col gap-1 overflow-y-auto">
+    <div v-else class="flex flex-col gap-1">
       <template v-for="g in groups" :key="g.label">
-        <div class="mt-2 px-1 text-[13px] font-semibold text-[var(--text-3,#464c70)]">{{ g.label }}</div>
-        <div class="gl-card overflow-hidden !rounded-[20px]">
+        <div class="mt-2 shrink-0 px-1 text-[13px] font-semibold text-[var(--text-3,#464c70)]">{{ g.label }}</div>
+        <div class="gl-card shrink-0 overflow-hidden !rounded-[20px]">
           <RouterLink v-for="(n, i) in g.items" :key="n.comment || n.notification_type_doc" :to="getRoute(n)" class="flex items-start gap-3 px-4 py-3" :class="i && 'border-t border-[rgba(110,120,200,.12)]'" @click="mark_doc_as_read(n.comment || n.notification_type_doc)">
             <WhatsAppIcon v-if="n.type == 'WhatsApp'" class="size-10 shrink-0" />
             <span v-else class="flex size-10 shrink-0 items-center justify-center rounded-xl" :class="kindOf(n).tone"><GlIcon :name="kindOf(n).icon" :size="18" /></span>

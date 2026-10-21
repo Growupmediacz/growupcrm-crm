@@ -5,7 +5,8 @@
     <div class="flex shrink-0 items-end justify-between gap-4 px-1 pt-1">
       <div>
         <button v-if="isMobileView && mobileOpen" class="mb-1 text-[15px] font-semibold text-[var(--accent-600)]" @click="mobileOpen = false">‹ {{ __('Nastavení') }}</button>
-        <h1 class="text-[32px] font-bold leading-tight tracking-[-0.025em] text-ink-gray-9 md:text-[40px]">{{ isMobileView && mobileOpen ? activeTab?.label : __('Nastavení') }}</h1>
+        <!-- mobil v sekci: nadpis nese karta sekce, nahoře jen „‹ Nastavení“ (jinak by byl nadpis dvakrát) -->
+        <h1 v-if="!(isMobileView && mobileOpen)" class="text-[32px] font-bold leading-tight tracking-[-0.025em] text-ink-gray-9 md:text-[40px]">{{ __('Nastavení') }}</h1>
         <div v-if="!(isMobileView && mobileOpen)" class="text-[15px] text-ink-gray-5">{{ subtitle }}</div>
       </div>
       <button v-if="!isMobileView" class="gl-round flex size-10 items-center justify-center rounded-full" :aria-label="__('Zavřít nastavení')" :title="__('Zavřít')" @click="close">

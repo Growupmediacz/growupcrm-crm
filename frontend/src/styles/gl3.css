@@ -436,3 +436,20 @@ body.app-bg::before {
   border: var(--mat-card-border) !important;
   box-shadow: 0 16px 48px rgba(40, 50, 120, 0.14) !important;
 }
+
+/* Nastavení na mobilu: menší vnitřní okraje sekcí (SettingsLayoutBase má p-8) */
+@media (max-width: 767px) {
+  .gl3-settings .p-8 { padding: 20px; }
+  .gl3-settings .p-8.pt-0 { padding-top: 0; }
+  .gl3-settings h2.text-2xl-semibold,
+  .gl3-settings h1.text-2xl-semibold { font-size: 24px; }
+}
+
+/* Nastavení na mobilu: řádek „popis vlevo, přepínač/výběr vpravo“ (upstream sekce CRM).
+   Text se zalomí místo oříznutí a ovládací prvek vpravo se nesmrští mimo obrazovku. */
+@media (max-width: 767px) {
+  .gl3-settings .justify-between > .flex.flex-col:first-child { min-width: 0; flex: 1 1 auto; }
+  .gl3-settings .justify-between > .flex.flex-col:first-child .truncate { white-space: normal; }
+  .gl3-settings .justify-between > :last-child:not(:first-child) { flex-shrink: 0; }
+  .gl3-settings .justify-between > :last-child.w-40 { width: 140px; }
+}
