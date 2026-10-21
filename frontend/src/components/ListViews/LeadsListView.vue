@@ -12,6 +12,7 @@
       selectable: options.selectable,
       showTooltip: options.showTooltip,
       resizeColumn: options.resizeColumn,
+      rowHeight: 60,
     }"
     row-key="name"
     @update:selections="(selections) => emit('selectionsChanged', selections)"
@@ -68,9 +69,6 @@
               "
             />
           </div>
-          <div v-else-if="column.key === 'status'">
-            <IndicatorIcon :class="item.color" />
-          </div>
           <div v-else-if="column.key === 'lead_name'">
             <Avatar
               v-if="item.label"
@@ -80,13 +78,13 @@
               size="sm"
             />
           </div>
-          <div v-else-if="column.key === 'lead_owner'">
+          <div v-else-if="column.key === 'lead_owner'" :title="item.full_name">
             <Avatar
               v-if="item.full_name"
               class="flex items-center"
               :image="item.user_image"
               :label="item.full_name"
-              size="sm"
+              size="lg"
             />
           </div>
           <div v-else-if="column.key === 'mobile_no' && item">
@@ -106,12 +104,19 @@
             <span class="truncate text-[13.5px] text-ink-gray-9">{{ __(plain(row.source)) }}</span>
             <span v-if="plain(row.channel)" class="truncate text-[12px] text-ink-gray-5">{{ plain(row.channel) }}</span>
           </div>
-          <div v-else-if="column.key === 'next_step' && !row.next_step && plain(row.no_next_step)" class="flex items-center gap-1.5 truncate text-[13.5px] font-semibold text-[#9a5b00]">
-            <GlIcon name="alert" :size="15" class="shrink-0" />{{ __('Bez dalšího kroku') }}
-          </div>
-          <div v-else-if="column.key === 'next_step'" class="truncate text-[13.5px] font-semibold" :class="nextTone(row)">
-            {{ row.next_step ? `${row.next_step} – ${nextWhen(row)}` : '' }}
-          </div>
+          <!-- design 3. kolo (03): fáze a další krok jako čipy, vlastník jen avatar -->
+          <span v-else-if="column.key === 'status'" class="gl3-stage" :style="{ '--stage': stageHex(item.color) }">
+            {{ __(label) }}
+          </span>
+          <span v-else-if="column.key === 'lead_owner'" class="sr-only">{{ label }}</span>
+          <span v-else-if="column.key === 'next_step' && !row.next_step && plain(row.no_next_step)" class="gl3-step gl3-step-amber">
+            <GlIcon name="alert" :size="14" class="shrink-0" /><span class="truncate">{{ __('Bez dalšího kroku') }}</span>
+          </span>
+          <span v-else-if="column.key === 'next_step' && row.next_step" class="gl3-step" :class="nextTone(row)">
+            <GlIcon :name="/schůzk/i.test(row.next_step) ? 'cal' : 'clock'" :size="14" class="shrink-0" />
+            <span class="truncate">{{ `${row.next_step} – ${nextWhen(row)}` }}</span>
+          </span>
+          <span v-else-if="column.key === 'next_step'" class="text-ink-gray-4">—</span>
           <div
             v-else-if="
               [
@@ -255,6 +260,7 @@ import GlSelectBanner from '@/components/GlSelectBanner.vue'
 import ListFooter from '@/components/GlListFooter.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlTemperature from '@/components/GlTemperature.vue'
+import { stageHex } from '@/utils/glStage'
 // hodnoty řádku chodí někdy jako {label, value}
 const plain = (v) => (v && typeof v === 'object' ? v.value ?? v.label : v)
 // Další krok: po termínu červeně, dnes/zítra jantarově, později modře (design)
@@ -266,9 +272,9 @@ const dayDiff = (row) => {
 }
 const nextTone = (row) => {
   const x = dayDiff(row)
-  if (!row.next_step || !x) return 'text-ink-gray-4 font-normal'
-  if (x.d < new Date()) return 'text-[#a82614]'
-  return x.diff <= 1 ? 'text-[#7a4400]' : 'text-[#1f48b8]'
+  if (!row.next_step || !x) return 'gl3-step-gray'
+  if (x.d < new Date()) return 'gl3-step-red'
+  return x.diff <= 1 ? 'gl3-step-amber' : 'gl3-step-blue'
 }
 const nextWhen = (row) => {
   const x = dayDiff(row)

@@ -223,11 +223,7 @@ import RefreshIcon from '@/components/Icons/RefreshIcon.vue'
 import IndicatorIcon from '@/components/Icons/IndicatorIcon.vue'
 import { isTouchScreenDevice, colors, parseColor } from '@/utils'
 
-// design 3. kolo: barva fáze (tečka a linka sloupce) podle tokenů, ne podle palety frappe-ui
-const STAGE_HEX = { blue: '#3b82f6', purple: '#8b5cf6', violet: '#8b5cf6', yellow: '#e0a100', amber: '#e0a100', orange: '#f97316', green: '#22b35e', red: '#ef4444', pink: '#ec4899', cyan: '#06b6d4', teal: '#14b8a6', gray: '#9ca3af', black: '#0e1330' }
-function stageHex(color) {
-  return STAGE_HEX[color] || STAGE_HEX.gray
-}
+import { stageHex } from '@/utils/glStage'
 import Draggable from 'vuedraggable'
 import { Combobox, Dropdown, Popover } from 'frappe-ui'
 import GlIcon from '@/components/GlIcon.vue'
