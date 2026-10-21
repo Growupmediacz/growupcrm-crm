@@ -2,8 +2,8 @@
   <LayoutHeader>
     <template #left-header>
       <div class="flex flex-col leading-tight">
-        <span class="text-[13px] font-semibold text-ink-gray-5">{{ dateLabel }}</span>
-        <h1 class="text-[22px] font-bold tracking-tight text-ink-gray-9 md:text-[34px]">{{ greeting }}</h1>
+        <span class="text-[13px] font-semibold text-ink-gray-5 md:text-[16px] md:font-medium">{{ dateLabel }}</span>
+        <h1 class="text-[22px] font-bold tracking-[-0.025em] text-ink-gray-9 md:text-[44px]">{{ greeting }}</h1>
       </div>
     </template>
     <template #right-header>
@@ -32,19 +32,21 @@
           {{ k.label }}
           <span v-if="k.delta" class="rounded-full bg-[rgba(91,91,246,.12)] px-2 py-0.5 text-[12px] font-semibold text-[#4644d9]">{{ k.delta }}</span>
         </div>
-        <div class="num text-[40px] font-bold leading-none tracking-tight text-ink-gray-9">{{ k.value }}</div>
+        <div class="num text-[40px] font-bold leading-none tracking-tight text-ink-gray-9 md:text-[52px]">{{ k.value }}</div>
         <div class="text-[13px] text-ink-gray-5">{{ k.sub }}</div>
       </div>
     </div>
 
     <div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
       <!-- program -->
-      <div class="gl-card p-4 lg:col-span-7 lg:p-6">
+      <!-- design 3. kolo (01): panel programu je vysoký jako pravý sloupec, seznam roluje uvnitř -->
+      <div class="gl-card flex flex-col p-4 lg:col-span-7 lg:min-h-[520px] lg:p-6 lg:[contain:size]">
         <div class="mb-3 flex items-center justify-between">
-          <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Dnešní program') }}</h2>
+          <h2 class="text-[22px] font-bold tracking-tight text-ink-gray-9">{{ __('Dnešní program') }}</h2>
           <router-link :to="{ name: 'Calendar' }" class="text-[14px] font-semibold text-[#4644d9]">{{ __('Kalendář') }}</router-link>
         </div>
         <GlEmptyState v-if="!data?.program.length" icon="cal" :title="__('Dnes nic v programu')" :text="__('Naplánujte schůzku nebo úkol, ať se tu ukáže.')" />
+        <div class="-mx-2 min-h-0 flex-1 overflow-y-auto px-2">
         <component
           :is="programLink(item) ? 'router-link' : 'div'"
           v-for="item in data?.program"
@@ -64,6 +66,7 @@
           <span v-if="soon(item)" class="rounded-full bg-[rgba(91,91,246,.12)] px-3 py-1 text-[13px] font-semibold text-[#4644d9]">{{ soon(item) }}</span>
           <span class="w-14 text-right text-[13px] text-ink-gray-5">{{ item.kind === 'event' ? __('Schůzka') : __('Úkol') }}</span>
         </component>
+        </div>
       </div>
 
       <div class="flex flex-col gap-4 lg:col-span-5">
@@ -74,7 +77,7 @@
             <span v-if="overdueCount" class="text-[13px] font-semibold text-[#a82614]">{{ __('{0} po termínu', [overdueCount]) }}</span>
           </div>
           <GlEmptyState v-if="!data?.todo.length" icon="check" :title="__('Všechno hotovo')" :text="__('Na dnešek nemáte žádné úkoly. Pěkná práce.')" />
-          <div v-for="t in data?.todo" :key="t.name" class="flex items-center gap-3 rounded-2xl px-1 py-2.5">
+          <div v-for="t in (data?.todo || []).slice(0, TODO_LIMIT)" :key="t.name" class="flex items-center gap-3 rounded-2xl px-1 py-2.5">
             <button
               class="gl-check flex size-6 shrink-0 items-center justify-center rounded-full border-[1.75px] transition"
               :class="doneIds.has(t.name) ? 'gl-check-done border-[#5b5bf6] bg-[#5b5bf6] text-white' : 'border-[#8a90ae] bg-white/60'"
@@ -92,6 +95,9 @@
             </router-link>
             <span class="text-[13px] font-semibold" :class="t.overdue ? 'text-[#a82614]' : 'text-ink-gray-5'">{{ dueShort(t) }}</span>
           </div>
+          <router-link v-if="(data?.todo?.length || 0) > TODO_LIMIT" :to="{ name: 'Tasks' }" class="mt-1 inline-block px-1 text-[14px] font-semibold text-[var(--accent-700)]">
+            {{ __('Všechny úkoly ({0})', [data.todo.length]) }}
+          </router-link>
         </div>
 
         <!-- nové zakázky -->
@@ -113,6 +119,32 @@
             </div>
             <div class="num text-[15px] font-bold text-ink-gray-9">{{ money(l.order_value) }}</div>
           </router-link>
+        </div>
+
+        <!-- výhry podle měsíců (design 3. kolo, 01) -->
+        <div class="gl-card p-6">
+          <div class="mb-4 flex items-baseline justify-between gap-3">
+            <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Výhry podle měsíců') }}</h2>
+            <span v-if="wins.data && !winsByMonth.some((m) => m.value)" class="text-[13px] text-ink-gray-5">{{ __('Zatím žádná výhra') }}</span>
+          </div>
+          <div class="flex h-[132px] items-end gap-4 border-b border-[rgba(110,120,200,.18)] px-1">
+            <div v-for="m in winsByMonth" :key="m.key" class="relative flex h-full flex-1 flex-col items-center justify-end">
+              <span
+                v-if="m.current && m.value"
+                class="num absolute z-[1] -translate-y-full whitespace-nowrap rounded-full bg-white px-2.5 py-1 text-[12px] font-semibold text-ink-gray-9 shadow-[0_4px_14px_-6px_rgba(40,50,120,.35)]"
+                :style="{ bottom: `calc(${m.pct}% + 6px)` }"
+              >{{ money(m.value) }}</span>
+              <div
+                class="w-full max-w-[44px] rounded-t-[10px] rounded-b-[4px]"
+                :class="m.current ? 'bg-[var(--accent-600)]' : 'bg-[var(--accent-200)]'"
+                :style="{ height: `max(${m.pct}%, 6px)` }"
+                :title="money(m.value)"
+              />
+            </div>
+          </div>
+          <div class="mt-2 flex gap-4 px-1">
+            <span v-for="m in winsByMonth" :key="m.key" class="flex-1 text-center text-[13px]" :class="m.current ? 'font-semibold text-ink-gray-9' : 'text-ink-gray-5'">{{ m.label }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -142,6 +174,45 @@ const { getUser } = usersStore()
 const { leadStatuses } = statusesStore()
 
 const scope = ref('mine')
+const TODO_LIMIT = 5
+
+// Výhry podle měsíců: vyhrané zakázky za posledních 5 měsíců (datum podpisu, jinak poslední změna)
+const MONTHS = ['Led', 'Úno', 'Bře', 'Dub', 'Kvě', 'Čvn', 'Čvc', 'Srp', 'Zář', 'Říj', 'Lis', 'Pro']
+const winsStart = (() => {
+  const d = new Date()
+  return new Date(d.getFullYear(), d.getMonth() - 4, 1)
+})()
+const wins = createResource({
+  url: 'frappe.client.get_list',
+  makeParams: () => ({
+    doctype: 'CRM Lead',
+    fields: ['signed_date', 'modified', 'order_value'],
+    filters: {
+      status: 'Vyhráno',
+      modified: ['>=', `${winsStart.getFullYear()}-${String(winsStart.getMonth() + 1).padStart(2, '0')}-01`],
+      ...(scope.value === 'mine' ? { lead_owner: sessionUser() } : {}),
+    },
+    limit_page_length: 1000,
+  }),
+  auto: true,
+})
+function sessionUser() {
+  return getUser()?.name || ''
+}
+const winsByMonth = computed(() => {
+  const now = new Date()
+  const months = Array.from({ length: 5 }, (_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth() - 4 + i, 1)
+    return { key: `${d.getFullYear()}-${d.getMonth()}`, label: MONTHS[d.getMonth()], value: 0, current: i === 4 }
+  })
+  for (const r of wins.data || []) {
+    const d = new Date(String(r.signed_date || r.modified).replace(' ', 'T'))
+    const m = months.find((x) => x.key === `${d.getFullYear()}-${d.getMonth()}`)
+    if (m) m.value += Number(r.order_value) || 0
+  }
+  const max = Math.max(...months.map((m) => m.value), 1)
+  return months.map((m) => ({ ...m, pct: Math.round((m.value / max) * 100) }))
+})
 const scopes = [
   { value: 'mine', label: __('Moje') },
   { value: 'team', label: __('Celý tým') },
@@ -153,7 +224,7 @@ const res = createResource({
 })
 const data = computed(() => res.data)
 import { watch } from 'vue'
-watch(scope, () => res.reload())
+watch(scope, () => (res.reload(), wins.reload()))
 
 usePageMeta(() => ({ title: __('Dnes') }))
 
