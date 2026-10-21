@@ -453,3 +453,60 @@ body.app-bg::before {
   .gl3-settings .justify-between > :last-child:not(:first-child) { flex-shrink: 0; }
   .gl3-settings .justify-between > :last-child.w-40 { width: 140px; }
 }
+
+/* ---------- posuvná pilulka navigace (composables/glPill.js, data-gl-pill) ----------
+   Aktivní položka nemá vlastní výplň, místo ní pod ní pruží jedna pilulka. Bez JS zůstává výplň položky. */
+[data-gl-pill]:not(.fixed):not(.absolute) { position: relative; }
+[data-gl-pill] > * { position: relative; z-index: 1; }
+[data-gl-pill].gl-pill-on::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  width: var(--pill-w);
+  height: var(--pill-h);
+  border-radius: var(--pill-r, 999px);
+  background: var(--pill-bg);
+  box-shadow: var(--pill-shadow, none);
+  transform: translate(var(--pill-x), var(--pill-y));
+  pointer-events: none;
+}
+[data-gl-pill].gl-pill-anim::before {
+  transition: transform 0.45s var(--spring, cubic-bezier(0.34, 1.56, 0.64, 1)), width 0.3s ease, height 0.3s ease;
+}
+.gl3-tabbar[data-gl-pill] {
+  --pill-bg: var(--accent-600);
+  --pill-shadow: 0 6px 16px -6px color-mix(in srgb, var(--accent-600) 60%, transparent);
+}
+.gl3-tabbar.gl-pill-on .gl3-tab.is-active { background: transparent; box-shadow: none; }
+.gl3-tab { transition: color 0.25s ease, background-color 0.15s; }
+.gl3-rail[data-gl-pill] { --pill-bg: var(--accent-soft); --pill-r: 14px; }
+.gl3-rail.gl-pill-on .gl3-rail-item.is-active .gl3-rail-icon { background: transparent; }
+.gl-tabbar[data-gl-pill] { --pill-bg: rgba(255, 255, 255, 0.92); --pill-r: 22px; --pill-shadow: 0 2px 10px -3px rgba(64, 72, 160, 0.3); }
+.gl-tabbar.gl-pill-on .gl-tab-on { background: transparent; box-shadow: none; }
+@media (prefers-reduced-motion: reduce) {
+  [data-gl-pill].gl-pill-anim::before { transition: none; }
+}
+
+/* ---------- Kanban: tažení karty (vuedraggable, nativní drag & drop) ----------
+   Vybraná karta se zvedne (prohlížeč ji tak vyfotí jako obrázek tažení), v cílovém sloupci je místo pro vložení
+   a ostatní karty se odsunou (animation 220 ms). */
+.gl3-kchosen {
+  transform: scale(1.02);
+  box-shadow: 0 22px 40px -18px rgba(40, 50, 120, 0.45) !important;
+  transition: transform 0.18s var(--spring, ease), box-shadow 0.18s ease;
+}
+.gl3-kghost {
+  transform: none;
+  box-shadow: none !important;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--accent-600) 7%, transparent) !important;
+  outline: 2px dashed color-mix(in srgb, var(--accent-600) 35%, transparent);
+  outline-offset: -2px;
+}
+.gl3-kghost > * { visibility: hidden; }
+@media (prefers-reduced-motion: reduce) {
+  .gl3-kchosen { transform: none; transition: none; }
+}
+

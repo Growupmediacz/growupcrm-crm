@@ -2,6 +2,8 @@
   <!-- GrowUp (design 3. kolo): spodní plovoucí lišta se stránkami aktivní skupiny a avatarem. -->
   <nav
     v-if="group"
+    :key="group.key"
+    data-gl-pill=".gl3-tab.is-active"
     class="gl3-tabbar pointer-events-auto flex h-[var(--gl-tabbar-h)] items-center gap-1 rounded-full px-2"
     :aria-label="__(group.label)"
   >

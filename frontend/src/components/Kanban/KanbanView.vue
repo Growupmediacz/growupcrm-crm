@@ -78,6 +78,10 @@
               item-key="name"
               class="flex flex-col gap-3.5 flex-1"
               :delay="isTouchScreenDevice() ? 200 : 0"
+              :animation="220"
+              easing="cubic-bezier(0.34, 1.56, 0.64, 1)"
+              ghost-class="gl3-kghost"
+              chosen-class="gl3-kchosen"
               :data-column="column.column.name"
               @end="updateColumn"
             >

@@ -2,6 +2,7 @@
   <!-- GrowUp (design 3. kolo, mobil = web v Safari): Dnes · Prodej · Práce · Dodání · Více.
        Stránky skupiny jsou v záložkách pod nadpisem (GlSectionPills). -->
   <nav
+    data-gl-pill=".gl-tab-on"
     class="gl-tabbar fixed inset-x-3 bottom-[max(12px,env(safe-area-inset-bottom))] z-30 flex h-[68px] items-stretch rounded-[30px] px-2"
   >
     <router-link

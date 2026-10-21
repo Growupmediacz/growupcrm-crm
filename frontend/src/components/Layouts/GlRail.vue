@@ -10,7 +10,7 @@
       <CRMLogo class="size-12" />
     </router-link>
 
-    <nav class="gl3-rail flex w-[var(--gl-rail-w)] flex-col items-center gap-1 rounded-[var(--r-panel)] px-2 py-3">
+    <nav data-gl-pill=".gl3-rail-item.is-active" data-gl-pill-target=".gl3-rail-icon" class="gl3-rail flex w-[var(--gl-rail-w)] flex-col items-center gap-1 rounded-[var(--r-panel)] px-2 py-3">
       <router-link
         v-for="g in mainGroups"
         :key="g.key"
