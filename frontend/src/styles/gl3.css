@@ -379,3 +379,21 @@ body.app-bg::before {
   font-weight: 600;
   color: var(--accent-700);
 }
+
+/* ---------- dlaždice s ikonou (KPI, návrhy 11, 12, 15, 16) ---------- */
+.gl3-kpi-icon {
+  display: flex;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+}
+.gl3-tone-indigo { background: rgba(91, 91, 246, 0.12); color: var(--accent-600); }
+.gl3-tone-green { background: rgba(34, 179, 94, 0.14); color: #15803d; }
+.gl3-tone-blue { background: rgba(46, 107, 230, 0.12); color: #2453c9; }
+.gl3-tone-amber { background: rgba(224, 161, 0, 0.16); color: #8a5300; }
+.gl3-tone-violet { background: rgba(139, 92, 246, 0.14); color: #6d3fd6; }
+.gl3-tone-red { background: rgba(210, 58, 42, 0.12); color: #b42318; }
+.gl3-tone-gray { background: rgba(110, 120, 200, 0.12); color: var(--text-2); }

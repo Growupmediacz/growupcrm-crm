@@ -3,7 +3,14 @@
        Data: growupcrm.research.* (jen správci, jen se zapnutým growupcrm_agency). -->
   <LayoutHeader>
     <template #left-header>
-      <span class="gl-page-title text-lg-medium text-ink-gray-9">{{ __('Agent') }}</span>
+      <!-- design 3. kolo (12): ikona agenta, nadpis a podtitulek -->
+      <div class="flex min-w-0 items-center gap-4">
+        <span class="hidden size-14 shrink-0 items-center justify-center rounded-[18px] bg-[var(--brand-grad)] text-white shadow-[0_8px_20px_-8px_rgba(91,91,246,.6)] md:flex"><GlIcon name="sparkles" :size="26" /></span>
+        <div class="min-w-0">
+          <span class="gl-page-title text-lg-medium text-ink-gray-9">{{ __('Agent') }}</span>
+          <div class="hidden truncate text-[15px] text-ink-gray-5 md:block">{{ __('Obohacuje firmy z webu, hledá rozhodující osoby a nové firmy.') }}</div>
+        </div>
+      </div>
     </template>
   </LayoutHeader>
 
@@ -16,25 +23,33 @@
     </div>
 
     <div class="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
-      <div class="gl-card flex flex-col gap-1 p-4 md:p-5">
+      <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="gl3-kpi-icon gl3-tone-indigo"><GlIcon name="sparkles" :size="22" /></span>
+        <div class="flex min-w-0 flex-1 flex-col gap-1">
         <div class="flex items-baseline justify-between text-[14px] text-ink-gray-7">{{ __('Kredity tento měsíc') }}<span class="text-[12px] text-ink-gray-5">{{ __('strop') }} {{ ov.credits_cap }}</span></div>
         <div class="num text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9">{{ ov.credits_used }}<span class="text-[20px] font-medium text-ink-gray-5"> / {{ ov.credits_cap }}</span></div>
         <div class="h-1.5 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><div class="h-full rounded-full bg-[#5b5bf6]" :style="{ width: `${Math.min(100, (ov.credits_used * 100) / (ov.credits_cap || 1))}%` }" /></div>
+        </div>
       </div>
-      <div class="gl-card flex flex-col gap-1 p-4 md:p-5">
+      <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="gl3-kpi-icon gl3-tone-blue"><GlIcon name="building" :size="22" /></span>
+        <div class="flex min-w-0 flex-1 flex-col gap-1">
         <div class="text-[14px] text-ink-gray-7">{{ __('Obohacené firmy') }}</div>
         <div class="num text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9">{{ ov.enriched }}<span class="text-[20px] font-medium text-ink-gray-5"> / {{ ov.with_web }}</span></div>
         <div class="text-[13px] text-ink-gray-5">{{ __('firem s webem z {0}', [ov.organizations]) }}</div>
+        </div>
       </div>
-      <div class="gl-card flex flex-col gap-1 p-4 md:p-5">
+      <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="gl3-kpi-icon gl3-tone-amber"><GlIcon name="clock" :size="22" /></span>
+        <div class="flex min-w-0 flex-1 flex-col gap-1">
         <div class="text-[14px] text-ink-gray-7">{{ __('Ve frontě') }}</div>
         <div class="num text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9">{{ ov.queued }}</div>
         <div class="text-[13px] text-ink-gray-5">{{ ov.queued ? __('agent pracuje, stránka se obnovuje') : __('nic neběží') }}</div>
+        </div>
       </div>
-      <div class="gl-card flex flex-col gap-1 p-4 md:p-5">
+      <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="gl3-kpi-icon gl3-tone-gray"><GlIcon name="target" :size="22" /></span>
+        <div class="flex min-w-0 flex-1 flex-col gap-1">
         <div class="text-[14px] text-ink-gray-7">{{ __('Cena jedné firmy') }}</div>
         <div class="num text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9">~{{ ov.credits_per_org }}</div>
         <div class="text-[13px] text-ink-gray-5">{{ __('kreditů (mapa webu + 3 stránky)') }}</div>
+        </div>
       </div>
     </div>
 

@@ -19,28 +19,36 @@
     <!-- Přehled -->
     <template v-if="tab === 'overview'">
       <div class="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
-        <div class="gl-card flex flex-col gap-1 p-4 md:p-5">
+        <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="gl3-kpi-icon gl3-tone-indigo"><GlIcon name="send" :size="22" /></span>
+          <div class="flex min-w-0 flex-1 flex-col gap-1">
           <div class="flex items-baseline justify-between text-[14px] text-ink-gray-7">{{ __('Odesláno tento týden') }}<span class="text-[12px] text-ink-gray-5">{{ __('limit') }} {{ ov.kpis.limit }}</span></div>
           <div class="num text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[42px]">{{ ov.kpis.sent }}<span class="text-[20px] font-medium text-ink-gray-5"> / {{ ov.kpis.limit }}</span></div>
           <div class="h-1.5 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><div class="h-full rounded-full bg-[#5b5bf6]" :style="{ width: `${Math.min(100, (ov.kpis.sent * 100) / (ov.kpis.limit || 1))}%` }" /></div>
           <div class="text-[13px] text-ink-gray-5">{{ __('zbývá {0} e-mailů do neděle', [ov.kpis.remaining]) }}</div>
+          </div>
         </div>
-        <div class="gl-card flex flex-col gap-1 p-4 md:p-5">
+        <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="gl3-kpi-icon gl3-tone-green"><GlIcon name="reply" :size="22" /></span>
+          <div class="flex min-w-0 flex-1 flex-col gap-1">
           <div class="flex items-center justify-between text-[14px] text-ink-gray-7">{{ __('Odpovědi') }}
             <span v-if="ov.kpis.replies_new" class="rounded-full bg-[rgba(91,91,246,.12)] px-2 py-0.5 text-[12px] font-bold text-[#4644d9]">{{ ov.kpis.replies_new }} {{ __('nové') }}</span>
           </div>
           <div class="num text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[42px]">{{ ov.kpis.replies_week }}</div>
           <div class="text-[13px] text-ink-gray-5">{{ __('tento týden') }}<template v-if="ov.kpis.sent"> · {{ ov.kpis.reply_pct }} % {{ __('z odeslaných') }}</template></div>
+          </div>
         </div>
-        <div class="gl-card flex flex-col gap-1 p-4 md:p-5">
+        <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="gl3-kpi-icon gl3-tone-blue"><GlIcon name="cal" :size="22" /></span>
+          <div class="flex min-w-0 flex-1 flex-col gap-1">
           <div class="text-[14px] text-ink-gray-7">{{ __('Domluvené schůzky') }}</div>
           <div class="num text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[42px]">{{ ov.kpis.meetings }}</div>
           <div class="text-[13px] text-ink-gray-5">{{ __('z odpovědí tento měsíc') }}</div>
+          </div>
         </div>
-        <div class="gl-card flex flex-col gap-1 p-4 md:p-5">
+        <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="gl3-kpi-icon gl3-tone-gray"><GlIcon name="x" :size="22" /></span>
+          <div class="flex min-w-0 flex-1 flex-col gap-1">
           <div class="text-[14px] text-ink-gray-7">{{ __('Odhlášení') }}</div>
           <div class="num text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[42px]">{{ ov.kpis.unsubs }}</div>
           <div class="text-[13px] text-ink-gray-5">{{ __('celkem {0} · už je neoslovíme', [ov.kpis.unsubs_total]) }}</div>
+          </div>
         </div>
       </div>
 

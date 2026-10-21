@@ -73,9 +73,7 @@
               <div class="truncate text-[12.5px] text-ink-gray-5">{{ subline(p) }}</div>
             </td>
             <td class="px-3 py-3">
-              <span class="flex items-center gap-1.5 whitespace-nowrap">
-                <span class="size-2 rounded-full" :style="{ background: STATUS_COLORS[p.display_status] }" />{{ statusLabel(p) }}
-              </span>
+              <span class="gl3-stage" :style="{ '--stage': STATUS_COLORS[p.display_status] }">{{ statusLabel(p) }}</span>
             </td>
             <td class="px-3 py-3">
               <div class="flex items-center gap-3">
@@ -103,7 +101,7 @@
 
     <div class="grid gap-4 lg:grid-cols-3">
       <div class="gl-card p-5">
-        <h2 class="mb-3 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Tento týden') }}</h2>
+        <h2 class="mb-3 flex items-center gap-2.5 text-[20px] font-bold tracking-tight text-ink-gray-9"><span class="gl3-kpi-icon gl3-tone-blue !size-9 !rounded-[11px]"><GlIcon name="cal" :size="18" /></span>{{ __('Tento týden') }}</h2>
         <GlEmptyState v-if="!board.data?.week?.length" icon="cal" :title="__('Na tento týden nic')" :text="__('Úkoly s termínem v tomto týdnu se ukážou tady.')" />
         <div v-for="(w, i) in board.data?.week || []" :key="i" class="flex items-center gap-3 py-2">
           <span class="w-7 text-[14px] font-bold text-ink-gray-9">{{ dayShort(w.at) }}</span>
@@ -119,7 +117,7 @@
       </div>
 
       <div class="gl-card p-5">
-        <h2 class="mb-3 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Vytížení týmu') }}</h2>
+        <h2 class="mb-3 flex items-center gap-2.5 text-[20px] font-bold tracking-tight text-ink-gray-9"><span class="gl3-kpi-icon gl3-tone-indigo !size-9 !rounded-[11px]"><GlIcon name="users" :size="18" /></span>{{ __('Vytížení týmu') }}</h2>
         <GlEmptyState v-if="!board.data?.load?.length" icon="check" :title="__('Žádné otevřené úkoly')" :text="__('Tým nemá žádnou rozdělanou práci.')" />
         <div v-for="l in board.data?.load || []" :key="l.user" class="flex items-center gap-3 py-2">
           <GlUserAvatar :user="l.user" class="size-9 bg-[#dde6ff] text-[11px] font-bold text-[#2440a6]" />
@@ -133,7 +131,7 @@
       </div>
 
       <div class="gl-card p-5">
-        <h2 class="mb-2 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Po termínu') }}</h2>
+        <h2 class="mb-2 flex items-center gap-2.5 text-[20px] font-bold tracking-tight text-ink-gray-9"><span class="gl3-kpi-icon gl3-tone-red !size-9 !rounded-[11px]"><GlIcon name="alert" :size="18" /></span>{{ __('Po termínu') }}</h2>
         <template v-if="board.data?.overdue?.length">
           <div class="text-[34px] font-bold tracking-tight text-[#a82614]">{{ overdueLabel }}</div>
           <div v-for="p in board.data.overdue.slice(0, 2)" :key="p.name" class="mt-1 text-[14px] text-ink-gray-7">

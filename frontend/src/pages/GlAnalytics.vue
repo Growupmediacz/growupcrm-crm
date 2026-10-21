@@ -43,13 +43,16 @@
     </div>
 
     <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-      <div v-for="k in kpis" :key="k.label" class="gl-card flex flex-col gap-1.5 p-4 md:p-5">
+      <div v-for="(k, i) in kpis" :key="k.label" class="gl-card flex items-start gap-4 p-4 md:p-5">
+        <span class="gl3-kpi-icon" :class="`gl3-tone-${KPI_ICONS[i]?.[1] || 'gray'}`"><GlIcon :name="KPI_ICONS[i]?.[0] || 'chart'" :size="22" /></span>
+        <div class="flex min-w-0 flex-1 flex-col gap-1.5">
         <div class="flex items-center gap-2 text-[14px] text-ink-gray-7">
           {{ k.label }}
           <span v-if="k.badge" class="rounded-full px-2 py-0.5 text-[12px] font-bold" :class="k.badgeUp ? 'bg-[rgba(91,91,246,.12)] text-[#4644d9]' : 'bg-[rgba(229,72,77,.12)] text-[#a82614]'">{{ k.badge }}</span>
         </div>
         <div class="num text-[30px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[40px]">{{ k.value }}</div>
         <div class="truncate text-[13px] text-ink-gray-5">{{ k.sub }}</div>
+        </div>
       </div>
     </div>
 
@@ -99,8 +102,8 @@
         <div class="mt-4 flex flex-col gap-2.5">
           <div v-for="(f, i) in data?.funnel || []" :key="f.stage" class="flex items-center gap-3" :title="`${__(f.stage)}: ${f.count}`">
             <span class="w-36 shrink-0 truncate text-[14px] text-ink-gray-9">{{ __(f.stage) }}</span>
-            <span class="h-6 flex-1">
-              <span class="block h-full rounded-[4px]" :style="{ width: `${funnelWidth(f.count)}%`, background: FUNNEL[i] || FUNNEL[FUNNEL.length - 1], minWidth: f.count ? '4px' : '0' }" />
+            <span class="h-3.5 flex-1 rounded-full bg-[rgba(110,120,200,.1)]">
+              <span class="block h-full rounded-full" :style="{ width: `${funnelWidth(f.count)}%`, background: FUNNEL[i] || FUNNEL[FUNNEL.length - 1], minWidth: f.count ? '4px' : '0' }" />
             </span>
             <span class="num w-8 text-right text-[14px] font-bold text-ink-gray-9">{{ f.count }}</span>
           </div>
@@ -144,6 +147,8 @@
   </div>
 </template>
 <script setup>
+// design 3. kolo: ikona a tón dlaždic KPI podle pořadí
+const KPI_ICONS = [['chart', 'indigo'], ['target', 'green'], ['brief', 'blue'], ['clock', 'amber']]
 import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlResponseStats from '@/components/Analytics/GlResponseStats.vue'
 import GlEmptyState from '@/components/GlEmptyState.vue'
@@ -165,8 +170,8 @@ const GRAINS = [
   { value: 'quarter', label: __('Čtvrtletí') },
   { value: 'year', label: __('Rok') },
 ]
-// trychtýř: jedna řada, odstíny indiga od plného po světlý (fáze = pořadí)
-const FUNNEL = ['#5b5bf6', '#5b55e8', '#6f6aec', '#8580f0', '#a09cf4', '#b9b6f7']
+// design 3. kolo (20): barvy fází podle tokenů (Nová, Kontaktováno, Nabídka, Jednání, Vyhráno)
+const FUNNEL = ['#3b82f6', '#8b5cf6', '#e0a100', '#f97316', '#22b35e']
 
 const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 const today = new Date()

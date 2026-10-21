@@ -24,13 +24,16 @@
   <div v-else-if="!overview.data" class="px-3 md:px-2"><GlSkeleton :rows="5" /></div>
   <div v-else class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
     <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-      <div v-for="k in cards" :key="k.label" class="gl-card flex flex-col gap-1.5 p-4 md:p-5">
+      <div v-for="(k, i) in cards" :key="k.label" class="gl-card flex items-start gap-4 p-4 md:p-5">
+        <span class="gl3-kpi-icon" :class="`gl3-tone-${KPI_ICONS[i]?.[1] || 'gray'}`"><GlIcon :name="KPI_ICONS[i]?.[0] || 'chart'" :size="22" /></span>
+        <div class="flex min-w-0 flex-1 flex-col gap-1.5">
         <div class="flex items-center gap-2 text-[14px] text-ink-gray-7">
           {{ k.label }}
           <span v-if="k.badge" class="rounded-full bg-[rgba(91,91,246,.12)] px-2 py-0.5 text-[12px] font-bold text-[#4644d9]">{{ k.badge }}</span>
         </div>
         <div class="num text-[30px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[38px]">{{ k.value }}</div>
         <div class="truncate text-[13px] text-ink-gray-5">{{ k.sub }}</div>
+        </div>
       </div>
     </div>
 
@@ -144,6 +147,8 @@
   </Dialog>
 </template>
 <script setup>
+// design 3. kolo: ikona a tón dlaždic KPI podle pořadí
+const KPI_ICONS = [['users', 'indigo'], ['card', 'green'], ['folder', 'blue'], ['alert', 'red']]
 import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlEmptyState from '@/components/GlEmptyState.vue'
 import GlErrorBanner from '@/components/GlErrorBanner.vue'

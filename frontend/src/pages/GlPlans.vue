@@ -115,7 +115,8 @@
     </div>
 
     <div class="grid gap-4 md:grid-cols-3">
-      <div class="gl-card p-5">
+      <div class="gl-card flex flex-col gap-2 p-5">
+        <span class="gl3-kpi-icon gl3-tone-green"><GlIcon name="arrow" :size="22" /></span>
         <div class="flex items-center justify-between gap-2 text-[14px] text-ink-gray-7">
           {{ __('Předpoklad do konce období') }}
           <span v-if="p.projection !== null && p.team.target.won" class="rounded-full px-2 py-0.5 text-[12px] font-bold" :class="p.on_track ? 'bg-[rgba(91,91,246,.12)] text-[#4644d9]' : 'bg-[rgba(224,161,0,.16)] text-[#7a4400]'">
@@ -127,13 +128,15 @@
         </div>
         <div class="text-[13px] text-ink-gray-5">{{ p.projection !== null ? __('zakázek při současném tempu') : __('období už skončilo nebo ještě nezačalo') }}</div>
       </div>
-      <div class="gl-card p-5">
+      <div class="gl-card flex flex-col gap-2 p-5">
+        <span class="gl3-kpi-icon gl3-tone-indigo"><GlIcon name="clock" :size="22" /></span>
         <div class="text-[14px] text-ink-gray-7">{{ __('Potřebné tempo') }}</div>
         <div v-if="p.pace" class="num mt-1 text-[38px] font-bold tracking-tight text-ink-gray-9">{{ czNumber(p.pace) }}</div>
         <div v-else class="mt-3 text-[20px] font-semibold text-[var(--empty-color)]">{{ __('Bez dat') }}</div>
         <div class="text-[13px] text-ink-gray-5">{{ p.pace ? __('zakázky týdně navíc') : __('cíl je splněný nebo nenastavený') }}</div>
       </div>
-      <div class="gl-card p-5">
+      <div class="gl-card flex flex-col gap-2 p-5">
+        <span class="gl3-kpi-icon gl3-tone-amber"><GlIcon name="star" :size="22" /></span>
         <div class="text-[14px] text-ink-gray-7">{{ __('Nejlepší zdroj') }}</div>
         <div v-if="p.best_source" class="mt-1 truncate text-[34px] font-bold tracking-tight text-ink-gray-9">{{ __(p.best_source.source) }}</div>
         <div v-else class="mt-3 text-[20px] font-semibold text-[var(--empty-color)]">{{ __('Bez dat') }}</div>
@@ -148,6 +151,7 @@
 </template>
 <script setup>
 import GlSkeleton from '@/components/GlSkeleton.vue'
+import GlIcon from '@/components/GlIcon.vue'
 import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import { isForbidden } from '@/utils/glErrors'
 import GlForbidden from '@/components/GlForbidden.vue'
