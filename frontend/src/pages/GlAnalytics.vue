@@ -2,11 +2,28 @@
   <!-- GrowUp: modul Analytika (design „Analytika“), jen pro správce. Data: growupcrm.insights.get_analytics -->
   <LayoutHeader>
     <template #left-header>
-      <span class="gl-page-title text-lg-medium text-ink-gray-9">{{ __('Analytika') }}</span>
+      <div class="flex min-w-0 items-center gap-3">
+        <span class="gl-page-title text-lg-medium shrink-0 text-ink-gray-9">{{ __('Analytika') }}</span>
+        <!-- design 3. kolo (20): Období a Obchodník vedle nadpisu -->
+        <div v-if="!isMobileView" class="flex items-center gap-2">
+          <Dropdown :options="periodMenu">
+            <button class="gl-chip flex h-11 items-center gap-1.5 rounded-full px-4 text-[15px]">
+              <span class="opacity-75">{{ __('Období') }}:</span><b class="font-semibold">{{ periodLabel }}</b>
+              <span class="lucide-chevron-down size-4 opacity-60" aria-hidden="true" />
+            </button>
+          </Dropdown>
+          <Dropdown :options="userMenu">
+            <button class="gl-chip flex h-11 items-center gap-1.5 rounded-full px-4 text-[15px]" :class="user && 'gl-chip-on'">
+              <span class="opacity-75">{{ __('Obchodník') }}:</span><b class="font-semibold">{{ user ? userName(user) : __('Celý tým') }}</b>
+              <span class="lucide-chevron-down size-4 opacity-60" aria-hidden="true" />
+            </button>
+          </Dropdown>
+        </div>
+      </div>
     </template>
     <template #right-header>
       <div v-if="!isMobileView" class="gl-seg inline-flex">
-        <button v-for="o in GRAINS" :key="o.value" class="gl-seg-btn" :class="grain === o.value && 'gl-seg-on'" @click="setGrain(o.value)">{{ o.label }}</button>
+        <button v-for="o in GRAINS" :key="o.value" class="gl-seg-btn !px-5" :class="grain === o.value && 'gl-seg-on !bg-[var(--accent-600)] !text-white'" @click="setGrain(o.value)">{{ o.label }}</button>
       </div>
       <Button iconLeft="download" :disabled="!data?.won_rows?.length" @click="exportCsv">
         <span class="hidden sm:inline">{{ __('Export') }}</span>
@@ -23,7 +40,8 @@
       <button v-for="o in GRAINS" :key="o.value" class="gl-seg-btn flex-1 justify-center" :class="grain === o.value && 'gl-seg-on'" @click="setGrain(o.value)">{{ o.label }}</button>
     </div>
     <!-- filtry v jedné řadě nad grafy -->
-    <div class="flex flex-wrap items-center gap-2">
+    <div v-if="isMobileView || custom" class="flex flex-wrap items-center gap-2">
+      <template v-if="isMobileView">
       <Dropdown :options="periodMenu">
         <button class="gl-chip flex h-9 items-center gap-1.5 rounded-full px-3.5 text-[14px]">
           <span class="opacity-75">{{ __('Období') }}:</span><b class="font-semibold">{{ periodLabel }}</b>
@@ -36,6 +54,7 @@
           <span class="lucide-chevron-down size-4 opacity-60" aria-hidden="true" />
         </button>
       </Dropdown>
+      </template>
       <span v-if="custom" class="flex items-center gap-2 text-[14px]">
         <input v-model="customStart" type="date" class="h-9 px-3" />–<input v-model="customEnd" type="date" class="h-9 px-3" />
         <Button variant="solid" :label="__('Použít')" @click="applyCustom" />
@@ -43,16 +62,14 @@
     </div>
 
     <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-      <div v-for="(k, i) in kpis" :key="k.label" class="gl-card flex items-start gap-4 p-4 md:p-5">
-        <span class="gl3-kpi-icon" :class="`gl3-tone-${KPI_ICONS[i]?.[1] || 'gray'}`"><GlIcon :name="KPI_ICONS[i]?.[0] || 'chart'" :size="22" /></span>
-        <div class="flex min-w-0 flex-1 flex-col gap-1.5">
-        <div class="flex items-center gap-2 text-[14px] text-ink-gray-7">
-          {{ k.label }}
-          <span v-if="k.badge" class="rounded-full px-2 py-0.5 text-[12px] font-bold" :class="k.badgeUp ? 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]' : 'bg-[rgba(229,72,77,.12)] text-[#a82614]'">{{ k.badge }}</span>
+      <!-- design 3. kolo (20): tučný název, velké číslo, popisek; trend jako štítek vpravo -->
+      <div v-for="k in kpis" :key="k.label" class="gl-card flex min-w-0 flex-col gap-1.5 p-5 md:p-6">
+        <div class="flex items-center justify-between gap-2">
+          <span class="truncate text-[17px] font-semibold text-ink-gray-9">{{ k.label }}</span>
+          <span v-if="k.badge" class="shrink-0 rounded-full px-2.5 py-0.5 text-[13px] font-semibold" :class="k.badgeUp ? 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]' : 'bg-[rgba(229,72,77,.12)] text-[#a82614]'">{{ k.badge }}</span>
         </div>
-        <div class="num text-[30px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[40px]">{{ k.value }}</div>
-        <div class="truncate text-[13px] text-ink-gray-5">{{ k.sub }}</div>
-        </div>
+        <div class="num truncate text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[48px]">{{ k.value }}</div>
+        <div class="truncate text-[15px] text-ink-gray-5">{{ k.sub }}</div>
       </div>
     </div>
 
@@ -111,20 +128,38 @@
       </div>
     </div>
 
-    <div class="grid gap-4 lg:grid-cols-2">
+    <div class="grid gap-4 lg:grid-cols-[1.15fr_1fr_1.2fr]">
+      <!-- design 3. kolo (20): zdroje jako sloupce, nejčastější zvýrazněný -->
       <div class="gl-card p-6">
-        <h2 class="mb-4 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Zdroje vyhraných a otevřených zakázek') }}</h2>
-        <GlEmptyState v-if="!data?.sources?.length" icon="brief" :title="__('Žádné zakázky v období')" :text="__('Zkuste delší období.')" />
-        <div v-for="s in data?.sources || []" :key="s.source" class="flex items-center gap-3 py-1.5" :title="`${__(s.source)}: ${s.count}`">
-          <span class="w-32 shrink-0 truncate text-[14px] text-ink-gray-9">{{ __(s.source) }}</span>
-          <span class="h-2 flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.14)]">
-            <span class="block h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${(s.count * 100) / maxSource}%` }" />
+        <h2 class="text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Zdroje zakázek') }}</h2>
+        <div class="text-[13px] text-ink-gray-5">{{ __('vyhrané a otevřené v období') }}</div>
+        <GlEmptyState v-if="!data?.sources?.length" class="mt-4" icon="brief" :title="__('Žádné zakázky v období')" :text="__('Zkuste delší období.')" />
+        <template v-else>
+          <div class="mt-4 flex h-[150px] items-end gap-3 border-b border-[rgba(110,120,200,.18)] px-1">
+            <div v-for="(s, i) in data.sources.slice(0, 5)" :key="s.source" class="flex h-full flex-1 flex-col items-center justify-end" :title="`${__(s.source)}: ${s.count}`">
+              <span class="num mb-1 text-[14px] font-semibold text-ink-gray-9">{{ s.count }}</span>
+              <div class="w-full max-w-[64px] rounded-t-[6px]" :class="i === 0 ? 'bg-[var(--accent-600)]' : 'bg-[#c7c9f6]'" :style="{ height: `${(s.count * 100) / maxSource}%`, minHeight: '4px' }" />
+            </div>
+          </div>
+          <div class="mt-2 flex gap-3 px-1">
+            <span v-for="s in data.sources.slice(0, 5)" :key="s.source" class="flex-1 truncate text-center text-[13px] text-ink-gray-6">{{ __(s.source) }}</span>
+          </div>
+        </template>
+      </div>
+      <!-- reakční doba: průměr, lhůta a podíl v limitu; podrobnosti níž -->
+      <div class="gl-card flex flex-col p-6">
+        <h2 class="text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Reakční doba') }}</h2>
+        <template v-if="data?.response?.count">
+          <div class="num mt-3 text-[56px] font-bold leading-none tracking-tight text-ink-gray-9">{{ hoursOf(data.response.avg) }}</div>
+          <div class="mt-2 text-[16px] text-ink-gray-5">{{ __('cíl {0} pracovní hodiny', [String(data.response.hours ?? 4).replace('.', ',')]) }}</div>
+          <span v-if="data.response.on_time_pct !== null" class="mt-4 inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-1.5 text-[15px] font-semibold" :class="data.response.on_time_pct >= 80 ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[rgba(224,161,0,.16)] text-[#7a4400]'">
+            <GlIcon :name="data.response.on_time_pct >= 80 ? 'check' : 'alert'" :size="16" />{{ __('V limitu') }} {{ data.response.on_time_pct }} %
           </span>
-          <span class="num w-8 text-right text-[14px] font-bold text-ink-gray-9">{{ s.count }}</span>
-        </div>
+        </template>
+        <GlEmptyState v-else class="mt-2" icon="clock" :title="__('Zatím bez dat')" :text="__('Měří se příchozí zakázky z webu, formulářů a Facebooku.')" />
       </div>
       <div class="gl-card p-6">
-        <h2 class="mb-3 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Nejlepší klienti') }}</h2>
+        <h2 class="mb-3 text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Nejlepší klienti') }}</h2>
         <GlEmptyState v-if="!data?.clients?.length" icon="star" :title="__('Zatím žádná výhra')" :text="__('Nejlepší klienti se ukážou po první vyhrané zakázce v období.')" />
         <component
           :is="c.organization ? 'router-link' : 'div'"
@@ -143,12 +178,11 @@
       </div>
     </div>
 
-    <GlResponseStats :data="data?.response" />
+    <!-- podrobnosti reakční doby (podle obchodníka a zdroje) -->
+    <GlResponseStats v-if="data?.response?.count" :data="data?.response" />
   </div>
 </template>
 <script setup>
-// design 3. kolo: ikona a tón dlaždic KPI podle pořadí
-const KPI_ICONS = [['chart', 'indigo'], ['target', 'green'], ['brief', 'blue'], ['clock', 'amber']]
 import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlResponseStats from '@/components/Analytics/GlResponseStats.vue'
 import GlEmptyState from '@/components/GlEmptyState.vue'
@@ -308,4 +342,7 @@ function exportCsv() {
   a.click()
   URL.revokeObjectURL(a.href)
 }
+
+// průměrná odpověď v hodinách („2,4 h“); pod hodinu v minutách
+const hoursOf = (min) => (min === null || min === undefined ? '—' : min < 60 ? `${Math.round(min)} min` : `${new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 1 }).format(min / 60)} h`)
 </script>
