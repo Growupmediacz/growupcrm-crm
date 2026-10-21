@@ -175,7 +175,7 @@ async function save() {
     assigned_to: form.assigned_to, date: form.date || '', time: form.date ? form.time || '' : '',
   }
   if (refValue.value) Object.assign(data, { reference_doctype: refType.value, reference_docname: refValue.value })
-  else if (!form.reference_docname) Object.assign(data, { reference_doctype: '', reference_docname: '' })
+  else Object.assign(data, { reference_doctype: form.reference_docname ? form.reference_doctype : '', reference_docname: form.reference_docname || '' })
   saving.value = true
   try {
     await call('growupcrm.worklists.save_task', { data: JSON.stringify(data), name: props.task || undefined })

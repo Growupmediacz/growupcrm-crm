@@ -5,17 +5,27 @@
     <LayoutHeader>
       <template #left-header><h1 class="gl-page-title text-lg-medium">{{ __('Zápisy') }}</h1></template>
       <template #right-header>
-        <label class="gl-chip hidden h-11 w-[300px] items-center gap-2 rounded-full px-4 md:flex"><GlIcon name="search" :size="16" class="opacity-60" /><input v-model="q" class="gl-chip-input w-full bg-transparent text-[14px]" :placeholder="__('Hledat v zápisech')" /></label>
+        <div class="gl-seg hidden md:inline-flex">
+          <button class="gl-seg-btn" :class="scope === 'mine' && 'gl-seg-on'" @click="scope = 'mine'">{{ __('Moje') }}</button>
+          <button class="gl-seg-btn" :class="scope === 'all' && 'gl-seg-on'" @click="scope = 'all'">{{ __('Celý tým') }}</button>
+        </div>
         <Button variant="solid" iconLeft="plus" @click="createNote"><span class="hidden sm:inline">{{ __('Nový zápis') }}</span></Button>
       </template>
     </LayoutHeader>
     <div class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
+      <!-- design 3. kolo (14): hledání · Období · Firma -->
       <div class="flex flex-wrap items-center gap-2 px-1">
-        <label class="gl-chip flex h-10 flex-1 items-center gap-2 rounded-full px-4 md:hidden"><GlIcon name="search" :size="15" class="opacity-60" /><input v-model="q" class="gl-chip-input w-full bg-transparent text-[14px]" :placeholder="__('Hledat v zápisech')" /></label>
-        <button v-for="f in FILTERS" :key="f.key" class="gl-chip hidden h-10 rounded-full px-4 text-[14px] font-medium md:inline-flex md:items-center" :class="filter === f.key && '!border-[#0e1330] !bg-[#0e1330] !text-white'" @click="filter = f.key">{{ f.label }}</button>
-        <label class="hidden items-center gap-2 text-[14px] md:flex"><span class="text-ink-gray-5">{{ __('Navázáno na') }}:</span>
-          <select v-model="linked" class="gl-chip h-10 rounded-full px-3 text-[14px] font-semibold"><option value="">{{ __('Vše') }}</option><option value="lead">{{ __('Zakázka') }}</option><option value="org">{{ __('Firma') }}</option><option value="project">{{ __('Projekt') }}</option><option value="contact">{{ __('Kontakt') }}</option></select>
+        <label class="gl-chip flex h-11 w-full items-center gap-2 rounded-full px-4 md:w-[420px]"><GlIcon name="search" :size="16" class="opacity-60" /><input v-model="q" class="gl-chip-input w-full bg-transparent text-[14px]" :placeholder="__('Hledat v zápisech')" /></label>
+        <label class="gl-chip hidden h-11 items-center gap-1.5 rounded-full pl-4 pr-2 text-[14px] md:flex"><span class="text-ink-gray-5">{{ __('Období') }}:</span>
+          <select v-model="period" class="!h-auto cursor-pointer appearance-none !border-0 !bg-transparent !py-0 !pl-0 pr-5 font-semibold text-ink-gray-9 !shadow-none outline-none"><option v-for="o in PERIODS" :key="o.value" :value="o.value">{{ o.label }}</option></select>
         </label>
+        <div class="hidden h-11 w-[300px] items-center md:flex">
+          <Link v-model="organization" class="w-full" doctype="CRM Organization" :placeholder="__('Firma: Vše')" />
+        </div>
+        <div class="gl-seg md:hidden">
+          <button class="gl-seg-btn" :class="scope === 'mine' && 'gl-seg-on'" @click="scope = 'mine'">{{ __('Moje') }}</button>
+          <button class="gl-seg-btn" :class="scope === 'all' && 'gl-seg-on'" @click="scope = 'all'">{{ __('Celý tým') }}</button>
+        </div>
       </div>
       <GlErrorBanner v-if="res.error" :title="__('Zápisy se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" />
       <GlSkeleton v-else-if="!res.data" variant="cards" :rows="3" />
@@ -49,15 +59,33 @@
                 </Dropdown>
               </div>
             </div>
-            <div class="mt-3 flex flex-wrap items-center gap-2">
-              <span v-if="current.ref" class="max-w-full truncate rounded-full px-3 py-1 text-[13px] font-semibold" :class="REF_TONE[current.ref.kind]">{{ current.ref.label }}</span>
-              <span v-if="current.org && current.ref?.kind !== 'org'" class="max-w-full truncate rounded-full bg-[rgba(110,120,200,.12)] px-3 py-1 text-[13px] font-semibold text-[#4a5173]">{{ __('Firma') }} · {{ current.org }}</span>
-              <span class="rounded-full bg-[rgba(110,120,200,.12)] px-3 py-1 text-[13px] font-semibold text-[#4a5173]">{{ whenLabel(current.modified) }}</span>
-              <span class="flex items-center gap-1.5 text-[13px] text-ink-gray-7"><span class="flex size-6 items-center justify-center rounded-full bg-[#dde6ff] text-[9px] font-bold text-[#2440a6]">{{ initials(userName(current.owner)) }}</span>{{ userName(current.owner) }}</span>
+            <div class="mt-4 flex flex-wrap items-center gap-2">
+              <router-link v-if="current.ref" :to="refRoute(current.ref)" class="flex max-w-full items-center gap-1.5 truncate rounded-full border border-[var(--line)] bg-white/70 px-3 py-1.5 text-[13.5px] font-medium text-[var(--accent-700)] hover:bg-white">
+                <GlIcon :name="REF_ICON[current.ref.kind]" :size="15" />{{ current.ref.label }}
+              </router-link>
+              <router-link v-if="current.org && current.ref?.kind !== 'org' && current.org_id" :to="{ name: 'Organization', params: { organizationId: current.org_id } }" class="flex max-w-full items-center gap-1.5 truncate rounded-full border border-[var(--line)] bg-white/70 px-3 py-1.5 text-[13.5px] font-medium text-ink-gray-7 hover:bg-white">
+                <GlIcon name="building" :size="15" />{{ __('Firma') }} · {{ current.org }}
+              </router-link>
+              <span class="flex items-center gap-1.5 rounded-full border border-[var(--line)] bg-white/70 px-3 py-1.5 text-[13.5px] font-medium text-ink-gray-7"><GlIcon name="cal" :size="15" />{{ fullDate(current.modified) }}</span>
+              <span class="ml-1 flex items-center gap-2 text-[14px] text-ink-gray-8">
+                <img v-if="userImage(current.owner)" :src="userImage(current.owner)" class="size-7 rounded-full object-cover" />
+                <span v-else class="flex size-7 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]">{{ initials(userName(current.owner)) }}</span>{{ userName(current.owner) }}
+              </span>
             </div>
-            <div class="mt-5 border-t border-[var(--line)] pt-5">
-              <div v-if="noteDoc.data" lang="cs" class="gl3-note" v-html="noteDoc.data.content" />
-              <GlSkeleton v-else :rows="4" />
+            <div class="mt-5 border-t border-[var(--line)]">
+              <template v-if="noteDoc.data">
+                <!-- Cíl · Průběh · Závěr jako samostatné bloky, Další krok jako pruh s „Vytvořit úkol“ -->
+                <div v-for="(sec, i) in parsed.sections" :key="i" class="border-b border-[var(--line)] py-5 last:border-b-0">
+                  <div v-if="sec.label" class="mb-2 text-[13px] font-bold uppercase tracking-[0.06em] text-ink-gray-5">{{ sec.label }}</div>
+                  <div lang="cs" class="gl3-note" v-html="sec.html" />
+                </div>
+                <div v-if="parsed.next" class="mt-1 flex items-center gap-3 rounded-[18px] border border-[rgba(224,161,0,.35)] bg-[rgba(224,161,0,.1)] px-4 py-3">
+                  <GlIcon name="clock" :size="22" class="shrink-0 text-[#d48a00]" />
+                  <span class="min-w-0 flex-1 text-[15px] text-ink-gray-9"><b class="text-[#b06d00]">{{ __('Další krok') }}:</b> {{ parsed.next }}</span>
+                  <Button variant="solid" iconLeft="check" :label="__('Vytvořit úkol')" @click="taskFromNote" />
+                </div>
+              </template>
+              <GlSkeleton v-else class="pt-5" :rows="4" />
             </div>
           </template>
         </div>
@@ -78,6 +106,7 @@
           <div class="flex items-center gap-2 text-[13px] text-ink-gray-5"><span class="flex size-6 items-center justify-center rounded-full bg-[#dde6ff] text-[9px] font-bold text-[#2440a6]">{{ initials(userName(n.owner)) }}</span>{{ whenLabel(n.modified) }}</div>
         </div>
       </div>
+      <GlTaskModal v-if="showTask" v-model="showTask" :defaults="taskDefaults" @saved="toast.success(__('Úkol je v seznamu Úkoly a v kalendáři.'))" />
       <div v-if="res.data && res.data.items.length < res.data.total" class="flex justify-center"><button class="gl-quick !h-11 !px-6 !text-[15px]" @click="limit += 12">{{ __('Načíst další') }}</button></div>
     </div>
   </template>
@@ -89,10 +118,13 @@ import GlEmptyState from '@/components/GlEmptyState.vue'
 import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import Link from '@/components/Controls/Link.vue'
+import GlTaskModal from '@/components/Modals/GlTaskModal.vue'
+import { parseNote } from '@/utils/glNote'
 import { useDoctypeModal } from '@/composables/doctypeModal'
 import { usersStore } from '@/stores/users'
 import { shortDateCz, formatTimeCz } from '@/utils/glDate'
-import { Button, Dropdown, call, createResource } from 'frappe-ui'
+import { Button, Dropdown, call, createResource, toast } from 'frappe-ui'
 import { computed, defineAsyncComponent, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { isMobileView } from '@/composables/settings'
@@ -103,15 +135,21 @@ const legacy = computed(() => (route.params.viewType && route.params.viewType !=
 const { getUser } = usersStore()
 const { showModal } = useDoctypeModal()
 
-const FILTERS = [{ key: 'all', label: __('Vše') }, { key: 'mine', label: __('Moje') }, { key: 'meeting', label: __('Schůzky') }, { key: 'call', label: __('Hovory') }]
-const filter = ref('all')
-const linked = ref('')
+const PERIODS = [
+  { value: 'week', label: __('Tento týden') },
+  { value: 'month', label: __('Tento měsíc') },
+  { value: 'quarter', label: __('Toto čtvrtletí') },
+  { value: '', label: __('Vše') },
+]
+const scope = ref('mine')
+const period = ref('')
+const organization = ref('')
 const q = ref('')
 const limit = ref(12)
-const params = () => ({ scope: filter.value === 'mine' ? 'mine' : 'all', kind: ['meeting', 'call'].includes(filter.value) ? filter.value : undefined, linked: linked.value || undefined, q: q.value, limit: limit.value })
+const params = () => ({ scope: scope.value, period: period.value || undefined, organization: organization.value || undefined, q: q.value, limit: limit.value })
 const res = createResource({ url: 'growupcrm.worklists.get_notes', params: params(), auto: true })
 let timer
-watch([filter, linked, q, limit], () => { clearTimeout(timer); timer = setTimeout(() => res.fetch(params()), 200) })
+watch([scope, period, organization, q, limit], () => { clearTimeout(timer); timer = setTimeout(() => res.fetch(params()), 200) })
 
 const REF_TONE = {
   lead: 'bg-[rgba(139,92,246,.14)] text-[#5a2fc0]', project: 'bg-[rgba(59,110,246,.13)] text-[#1f48b8]',
@@ -142,4 +180,25 @@ async function remove(name) {
   await call('frappe.client.delete', { doctype: 'FCRM Note', name })
   res.reload()
 }
+
+const REF_ICON = { lead: 'brief', project: 'folder', org: 'building', contact: 'user' }
+const refRoute = (ref) =>
+  ({
+    lead: { name: 'Lead', params: { leadId: ref.to } },
+    org: { name: 'Organization', params: { organizationId: ref.to } },
+    project: { name: 'Project', params: { projectId: ref.to } },
+    contact: { name: 'ContactsCards', query: { contact: ref.to } },
+  })[ref.kind] || {}
+const userImage = (u) => getUser(u)?.user_image || ''
+const fullDate = (v) => new Date(String(v).replace(' ', 'T')).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' })
+const parsed = computed(() => parseNote(noteDoc.data?.content || ''))
+// Další krok → nový úkol navázaný na zakázku / firmu zápisu (design 14: „Vytvořit úkol“)
+const showTask = ref(false)
+const taskDefaults = computed(() => {
+  const ref = current.value?.ref
+  const dt = { lead: 'CRM Lead', org: 'CRM Organization' }[ref?.kind]
+  const next = parsed.value.next.slice(0, 140)
+  return { title: next.charAt(0).toUpperCase() + next.slice(1), ...(dt ? { reference_doctype: dt, reference_docname: ref.to, ref } : {}) }
+})
+const taskFromNote = () => (showTask.value = true)
 </script>
