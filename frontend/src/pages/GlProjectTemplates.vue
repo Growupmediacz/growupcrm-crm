@@ -12,7 +12,7 @@
 
   <div class="grid min-h-0 flex-1 gap-4 overflow-y-auto px-3 pb-6 md:px-2 lg:grid-cols-[300px_1fr]">
     <div class="gl-card flex h-fit flex-col gap-1 p-3">
-      <button v-for="t in list.data || []" :key="t.name" class="flex items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition" :class="current === t.name ? 'bg-[rgba(79,70,229,.1)]' : 'hover:bg-white/60'" @click="open(t.name)">
+      <button v-for="t in list.data || []" :key="t.name" class="flex items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition" :class="current === t.name ? 'bg-[rgba(91,91,246,.1)]' : 'hover:bg-white/60'" @click="open(t.name)">
         <span class="flex size-10 shrink-0 items-center justify-center rounded-xl" :class="TONES[t.icon] || 'bg-[rgba(110,120,200,.12)] text-ink-gray-7'"><GlIcon :name="ICONS[t.icon] || 'edit'" :size="18" /></span>
         <span class="min-w-0"><span class="block truncate text-[15px] font-bold text-ink-gray-9">{{ t.name }}</span>
           <span class="block truncate text-[12px] text-ink-gray-5">{{ t.tasks ? `${t.phases} ${phaseWord(t.phases)} · ${t.tasks} úkolů · ${t.duration_days} dní` : __('prázdná šablona') }}</span></span>
@@ -40,7 +40,7 @@
           <label class="gl-field flex items-center gap-2 !px-3 text-ink-gray-5">+ <input v-model.number="t.offset_days" class="w-full min-w-0 bg-transparent text-ink-gray-9 outline-none tabular-nums" inputmode="numeric" :aria-label="__('Termín od začátku')" /> {{ __('dní') }}</label>
           <select v-model="t.role" class="gl-field w-full"><option v-for="r in ROLES" :key="r" :value="r">{{ __(r) }}</option></select>
         </div>
-        <button class="flex items-center gap-2 px-1 py-1.5 text-[14px] font-medium text-ink-gray-7 hover:text-[#4F46E5]" @click="ph.tasks.push(mkTask())"><GlIcon name="plus" :size="15" />{{ __('Přidat úkol') }}</button>
+        <button class="flex items-center gap-2 px-1 py-1.5 text-[14px] font-medium text-ink-gray-7 hover:text-[#5b5bf6]" @click="ph.tasks.push(mkTask())"><GlIcon name="plus" :size="15" />{{ __('Přidat úkol') }}</button>
       </div>
       <button class="gl-quick self-start" @click="phases.push({ id: ++uid, name: '', tasks: [mkTask()] })"><GlIcon name="plus" :size="15" />{{ __('Přidat fázi') }}</button>
       <p class="text-[13px] text-ink-gray-5">{{ __('Termíny úkolů se při založení projektu dopočítají od data začátku. Role „Klient“ označí úkol jako čekající na klienta.') }}</p>
@@ -57,7 +57,7 @@ import { Breadcrumbs, Button, Dropdown, ErrorMessage, call, createResource, toas
 import { computed, ref } from 'vue'
 
 const ICONS = { globe: 'globe', send: 'send', play: 'play', edit: 'edit' }
-const TONES = { globe: 'bg-[rgba(79,70,229,.12)] text-[#3b30b8]', send: 'bg-[rgba(20,160,190,.14)] text-[#08626f]', play: 'bg-[rgba(249,115,22,.14)] text-[#a3360a]' }
+const TONES = { globe: 'bg-[rgba(91,91,246,.12)] text-[#4644d9]', send: 'bg-[rgba(20,160,190,.14)] text-[#08626f]', play: 'bg-[rgba(249,115,22,.14)] text-[#a3360a]' }
 const ROLES = ['Vlastník projektu', 'Člen týmu', 'Klient']
 const phaseWord = (n) => (n === 1 ? 'fáze' : n >= 2 && n <= 4 ? 'fáze' : 'fází')
 

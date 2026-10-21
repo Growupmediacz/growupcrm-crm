@@ -10,17 +10,17 @@
       <div v-for="row in rows" :key="row.label" class="flex items-baseline justify-between gap-4 py-[7px]">
         <dt class="shrink-0 text-[14px] text-ink-gray-5">{{ row.label }}</dt>
         <dd class="min-w-0 text-right text-[14px] font-medium text-ink-gray-9">
-          <a v-if="row.value && row.href" :href="row.href" target="_blank" rel="noopener" class="block truncate text-[#4F46E5] hover:underline">{{ row.value }}</a>
+          <a v-if="row.value && row.href" :href="row.href" target="_blank" rel="noopener" class="block truncate text-[#5b5bf6] hover:underline">{{ row.value }}</a>
           <span v-else-if="row.value" class="gl-text block">{{ row.value }}</span>
           <span v-else class="gl-empty">{{ __('Bez hodnoty') }}</span>
         </dd>
       </div>
     </dl>
   </div>
-  <form v-else class="gl-card flex flex-col gap-3.5 p-6 ring-2 ring-[rgba(79,70,229,.35)]" @submit.prevent="save">
+  <form v-else class="gl-card flex flex-col gap-3.5 p-6 ring-2 ring-[rgba(91,91,246,.35)]" @submit.prevent="save">
     <div class="flex items-center justify-between">
       <h2 class="text-[18px] font-bold tracking-tight text-ink-gray-9">{{ __('Údaje o firmě') }}</h2>
-      <span class="rounded-full bg-[rgba(79,70,229,.1)] px-2.5 py-0.5 text-[12px] font-semibold text-[#3b30b8]">{{ __('Úpravy') }}</span>
+      <span class="rounded-full bg-[rgba(91,91,246,.1)] px-2.5 py-0.5 text-[12px] font-semibold text-[#4644d9]">{{ __('Úpravy') }}</span>
     </div>
     <label>
       <span class="gl-label">{{ __('Web') }}</span>

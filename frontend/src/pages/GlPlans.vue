@@ -102,7 +102,7 @@
               <td class="py-2.5">
                 <span v-if="r.progress !== null" class="flex items-center gap-2">
                   <span class="h-1.5 w-24 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]">
-                    <span class="block h-full rounded-full bg-[#4f46e5]" :style="{ width: `${Math.min(r.progress, 100)}%` }" />
+                    <span class="block h-full rounded-full bg-[#5b5bf6]" :style="{ width: `${Math.min(r.progress, 100)}%` }" />
                   </span>
                   <span class="num text-[13px] font-bold text-ink-gray-9">{{ r.progress }} %</span>
                 </span>
@@ -118,7 +118,7 @@
       <div class="gl-card p-5">
         <div class="flex items-center justify-between gap-2 text-[14px] text-ink-gray-7">
           {{ __('Předpoklad do konce období') }}
-          <span v-if="p.projection !== null && p.team.target.won" class="rounded-full px-2 py-0.5 text-[12px] font-bold" :class="p.on_track ? 'bg-[rgba(79,70,229,.12)] text-[#3b30b8]' : 'bg-[rgba(224,161,0,.16)] text-[#7a4400]'">
+          <span v-if="p.projection !== null && p.team.target.won" class="rounded-full px-2 py-0.5 text-[12px] font-bold" :class="p.on_track ? 'bg-[rgba(91,91,246,.12)] text-[#4644d9]' : 'bg-[rgba(224,161,0,.16)] text-[#7a4400]'">
             {{ p.on_track ? __('na dobré cestě') : __('pod plánem') }}
           </span>
         </div>
@@ -169,7 +169,7 @@ const p = computed(() => plan.data)
 
 // barvy řad ověřené validátorem palety (CVD, kontrast); u kruhů je vždy legenda s hodnotami
 const SERIES = [
-  { key: 'won', label: __('Zakázky'), color: '#4f46e5', radius: 76 },
+  { key: 'won', label: __('Zakázky'), color: '#5b5bf6', radius: 76 },
   { key: 'meetings', label: __('Schůzky'), color: '#0ea5e9', radius: 59 },
   { key: 'revenue', label: __('Tržby (tis.)'), color: '#c026d3', radius: 42 },
 ]

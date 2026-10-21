@@ -122,9 +122,9 @@ function shift(delta) {
 
 function dayClass(d) {
   const v = iso(view.y, view.m, d)
-  if (v === String(model.value).slice(0, 10)) return 'bg-[#4F46E5] font-bold text-white shadow-[0_4px_12px_-4px_rgba(79,70,229,.6)]'
-  if (v === todayIso()) return 'font-bold text-[#4F46E5] hover:bg-[rgba(79,70,229,.08)]'
-  return 'text-ink-gray-9 hover:bg-[rgba(79,70,229,.08)]'
+  if (v === String(model.value).slice(0, 10)) return 'bg-[#5b5bf6] font-bold text-white shadow-[0_4px_12px_-4px_rgba(91,91,246,.6)]'
+  if (v === todayIso()) return 'font-bold text-[#5b5bf6] hover:bg-[rgba(91,91,246,.08)]'
+  return 'text-ink-gray-9 hover:bg-[rgba(91,91,246,.08)]'
 }
 
 const shortcuts = computed(() => {

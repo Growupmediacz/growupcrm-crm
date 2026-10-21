@@ -3,6 +3,7 @@
     <MobileSidebar />
     <div class="flex h-full flex-1 flex-col overflow-auto">
       <MobileAppHeader />
+      <GlSectionPills />
       <div class="flex min-h-0 flex-1 flex-col" :class="isDetail ? '' : 'pb-24'"><slot /></div>
     </div>
     <MobileTabBar />
@@ -13,6 +14,7 @@
 import MobileSidebar from '@/components/Mobile/MobileSidebar.vue'
 import MobileAppHeader from '@/components/Mobile/MobileAppHeader.vue'
 import MobileTabBar from '@/components/Mobile/MobileTabBar.vue'
+import GlSectionPills from '@/components/Mobile/GlSectionPills.vue'
 import GlobalModals from '@/components/Modals/GlobalModals.vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'

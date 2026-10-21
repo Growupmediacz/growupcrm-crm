@@ -9,7 +9,7 @@ export const CONTACT_STATUS = {
   'Klikl': '#0ea5e9',
   'Odpověděl': '#22B35E',
   'Odhlášen': '#a82614',
-  'Dokončeno': '#3b30b8',
+  'Dokončeno': '#4644d9',
 }
 
 // Třídění odpovědí: štítek + barvy

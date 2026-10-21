@@ -19,7 +19,7 @@
               :key="t.name"
               type="button"
               class="flex flex-col items-center gap-1.5 rounded-2xl border px-2 py-3 text-[14px] font-bold transition"
-              :class="template === t.name ? 'border-[#4f46e5] bg-[rgba(79,70,229,.08)] text-[#3b30b8]' : 'border-white/90 bg-white/70 text-ink-gray-9 hover:bg-white'"
+              :class="template === t.name ? 'border-[#5b5bf6] bg-[rgba(91,91,246,.08)] text-[#4644d9]' : 'border-white/90 bg-white/70 text-ink-gray-9 hover:bg-white'"
               @click="pickTemplate(t)"
             >
               <GlIcon :name="ICONS[t.icon] || 'edit'" :size="20" />{{ __(t.name) }}

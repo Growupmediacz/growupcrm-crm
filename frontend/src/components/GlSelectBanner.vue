@@ -83,7 +83,7 @@ function countText(n) {
   height: 22px !important;
   padding: 3px;
   border-radius: 7px;
-  background: var(--brand-primary, #4f46e5);
+  background: var(--brand-primary, #5b5bf6);
   color: #fff;
 }
 .gl-selbar__actions {

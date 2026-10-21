@@ -26,7 +26,7 @@
               <button class="flex size-8 items-center justify-center rounded-full text-ink-gray-5 hover:bg-black/5" :aria-label="__('Odebrat krok')" @click="steps.splice(i, 1)"><GlIcon name="x" :size="15" /></button>
             </div>
           </div>
-          <button class="mt-2 inline-flex items-center gap-2 px-1 py-1.5 text-[14px] font-semibold text-ink-gray-9 hover:text-[#4F46E5]" @click="addStep">
+          <button class="mt-2 inline-flex items-center gap-2 px-1 py-1.5 text-[14px] font-semibold text-ink-gray-9 hover:text-[#5b5bf6]" @click="addStep">
             <GlIcon name="plus" :size="16" class="text-ink-gray-5" />{{ __('Přidat krok') }}
           </button>
         </div>

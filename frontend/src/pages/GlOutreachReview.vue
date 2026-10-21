@@ -32,7 +32,7 @@
           lang="cs"
           role="textbox"
           :aria-label="__('Text e-mailu')"
-          class="gl-text mt-5 min-h-[220px] whitespace-pre-wrap text-[16px] leading-relaxed text-ink-gray-9 outline-none [&_mark]:rounded-md [&_mark]:bg-[rgba(79,70,229,.14)] [&_mark]:px-1 [&_mark]:text-[#3b32c4]"
+          class="gl-text mt-5 min-h-[220px] whitespace-pre-wrap text-[16px] leading-relaxed text-ink-gray-9 outline-none [&_mark]:rounded-md [&_mark]:bg-[rgba(91,91,246,.14)] [&_mark]:px-1 [&_mark]:text-[#3b32c4]"
           @input="onInput"
         />
         <div class="mt-5 flex items-center gap-2.5 rounded-2xl bg-[rgba(110,120,200,.1)] px-4 py-3 text-[13px] text-ink-gray-7">
@@ -75,7 +75,7 @@
     <div class="ml-auto flex items-center gap-2">
       <button class="gl-quick !h-11 !px-4 !text-[15px]" @click="postpone"><GlIcon name="clock" :size="16" />{{ __('Odložit') }}</button>
       <button class="gl-quick !h-11 !px-4 !text-[15px]" @click="skip"><GlIcon name="skip" :size="16" />{{ __('Přeskočit') }}</button>
-      <button class="inline-flex h-11 items-center gap-2 rounded-full bg-[#4F46E5] px-5 text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(79,70,229,.7)] disabled:opacity-50" :disabled="sending || !canSend" :title="!canSend ? blockReason : ''" @click="approve">
+      <button class="inline-flex h-11 items-center gap-2 rounded-full bg-[#5b5bf6] px-5 text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(91,91,246,.7)] disabled:opacity-50" :disabled="sending || !canSend" :title="!canSend ? blockReason : ''" @click="approve">
         <GlIcon name="send" :size="16" />{{ __('Schválit a odeslat') }}
       </button>
     </div>

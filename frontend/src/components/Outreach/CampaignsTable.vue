@@ -24,7 +24,7 @@
           <span class="size-2 rounded-full" :style="{ background: STATUS[c.status] }" />{{ __(c.status) }}
         </span>
         <span class="col-span-2 flex items-center gap-2 md:col-span-1">
-          <span class="h-1.5 flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><span class="block h-full rounded-full bg-[#4F46E5]" :style="{ width: `${c.progress}%` }" /></span>
+          <span class="h-1.5 flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><span class="block h-full rounded-full bg-[#5b5bf6]" :style="{ width: `${c.progress}%` }" /></span>
           <span class="num w-10 text-right text-[12px] text-ink-gray-5">{{ c.progress }} %</span>
         </span>
         <span class="num hidden text-right text-[15px] font-bold text-ink-gray-9 md:block">{{ c.replies }}</span>
@@ -36,5 +36,5 @@
 <script setup>
 defineProps({ rows: { type: Array, default: () => [] } })
 defineEmits(['new'])
-const STATUS = { 'Běží': '#22b35e', Pozastaveno: '#e0a100', Koncept: '#9ca3af', 'Dokončeno': '#3b30b8' }
+const STATUS = { 'Běží': '#22b35e', Pozastaveno: '#e0a100', Koncept: '#9ca3af', 'Dokončeno': '#4644d9' }
 </script>

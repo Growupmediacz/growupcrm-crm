@@ -6,7 +6,7 @@
       <ol class="mb-5 flex flex-wrap items-center gap-2 text-[13px] font-semibold">
         <template v-for="(s, i) in STEPS" :key="s">
           <li class="flex items-center gap-2" :class="step === i ? 'text-ink-gray-9' : 'text-ink-gray-5'">
-            <span class="flex size-7 items-center justify-center rounded-full text-[12px]" :class="step === i ? 'bg-[#4F46E5] text-white' : step > i ? 'bg-[rgba(34,179,94,.18)] text-[#0f6b32]' : 'bg-[rgba(110,120,200,.14)]'">{{ step > i ? '✓' : i + 1 }}</span>{{ s }}
+            <span class="flex size-7 items-center justify-center rounded-full text-[12px]" :class="step === i ? 'bg-[#5b5bf6] text-white' : step > i ? 'bg-[rgba(34,179,94,.18)] text-[#0f6b32]' : 'bg-[rgba(110,120,200,.14)]'">{{ step > i ? '✓' : i + 1 }}</span>{{ s }}
           </li>
           <span v-if="i < STEPS.length - 1" class="hidden h-px w-8 bg-[rgba(110,120,200,.25)] sm:block" />
         </template>
@@ -21,7 +21,7 @@
         </label>
         <p class="text-[13px] text-ink-gray-5">
           {{ __('Z Google Tabulek: Soubor → Stáhnout → Microsoft Excel.') }}
-          <button class="font-semibold text-[#4F46E5] hover:underline" @click="downloadSample">{{ __('Stáhnout vzorový soubor') }}</button>
+          <button class="font-semibold text-[#5b5bf6] hover:underline" @click="downloadSample">{{ __('Stáhnout vzorový soubor') }}</button>
         </p>
         <label v-if="sheets.length > 1" class="flex items-center gap-3 text-[14px] text-ink-gray-7">
           <span>{{ __('List sešitu') }}</span>

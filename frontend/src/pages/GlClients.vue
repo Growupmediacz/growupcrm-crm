@@ -27,7 +27,7 @@
       <div v-for="k in cards" :key="k.label" class="gl-card flex flex-col gap-1.5 p-4 md:p-5">
         <div class="flex items-center gap-2 text-[14px] text-ink-gray-7">
           {{ k.label }}
-          <span v-if="k.badge" class="rounded-full bg-[rgba(79,70,229,.12)] px-2 py-0.5 text-[12px] font-bold text-[#3b30b8]">{{ k.badge }}</span>
+          <span v-if="k.badge" class="rounded-full bg-[rgba(91,91,246,.12)] px-2 py-0.5 text-[12px] font-bold text-[#4644d9]">{{ k.badge }}</span>
         </div>
         <div class="num text-[30px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[38px]">{{ k.value }}</div>
         <div class="truncate text-[13px] text-ink-gray-5">{{ k.sub }}</div>
@@ -48,7 +48,7 @@
             {{ initials(c.organization_name) }}
           </span>
           <router-link :to="{ name: 'Organization', params: { organizationId: c.name } }" class="min-w-0 flex-1">
-            <div class="truncate text-[17px] font-bold text-ink-gray-9 hover:text-[#4f46e5]">{{ c.organization_name || c.name }}</div>
+            <div class="truncate text-[17px] font-bold text-ink-gray-9 hover:text-[#5b5bf6]">{{ c.organization_name || c.name }}</div>
             <div class="text-[13px] text-ink-gray-5">{{ sinceLabel(c.client_since) }}</div>
           </router-link>
           <Dropdown :options="menu(c)" placement="right">
@@ -99,7 +99,7 @@
         <tbody>
           <tr v-for="c in data?.clients || []" :key="c.name" class="border-t border-[rgba(110,120,200,.12)]">
             <td class="px-3 py-2.5">
-              <router-link :to="{ name: 'Organization', params: { organizationId: c.name } }" class="font-semibold text-ink-gray-9 hover:text-[#4f46e5]">{{ c.organization_name }}</router-link>
+              <router-link :to="{ name: 'Organization', params: { organizationId: c.name } }" class="font-semibold text-ink-gray-9 hover:text-[#5b5bf6]">{{ c.organization_name }}</router-link>
               <div class="text-[12px] text-ink-gray-5">{{ sinceLabel(c.client_since) }}</div>
             </td>
             <td class="px-3 py-2.5">

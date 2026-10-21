@@ -46,7 +46,7 @@
       <div v-for="k in kpis" :key="k.label" class="gl-card flex flex-col gap-1.5 p-4 md:p-5">
         <div class="flex items-center gap-2 text-[14px] text-ink-gray-7">
           {{ k.label }}
-          <span v-if="k.badge" class="rounded-full px-2 py-0.5 text-[12px] font-bold" :class="k.badgeUp ? 'bg-[rgba(79,70,229,.12)] text-[#3b30b8]' : 'bg-[rgba(229,72,77,.12)] text-[#a82614]'">{{ k.badge }}</span>
+          <span v-if="k.badge" class="rounded-full px-2 py-0.5 text-[12px] font-bold" :class="k.badgeUp ? 'bg-[rgba(91,91,246,.12)] text-[#4644d9]' : 'bg-[rgba(229,72,77,.12)] text-[#a82614]'">{{ k.badge }}</span>
         </div>
         <div class="num text-[30px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[40px]">{{ k.value }}</div>
         <div class="truncate text-[13px] text-ink-gray-5">{{ k.sub }}</div>
@@ -65,7 +65,7 @@
           <p class="max-w-[300px] text-[14px] text-ink-gray-5">{{ __('Graf tržeb se ukáže po první výhře v tomto období. Zkuste jiné období.') }}</p>
           <div class="flex gap-2">
             <button class="gl-quick" @click="setGrain('year')">{{ __('Celý rok') }}</button>
-            <router-link :to="{ name: 'Leads' }" class="inline-flex h-9 items-center rounded-full bg-[#4F46E5] px-4 text-[14px] font-semibold text-white shadow-[0_6px_16px_-6px_rgba(79,70,229,.6)]">{{ __('Zakázky') }}</router-link>
+            <router-link :to="{ name: 'Leads' }" class="inline-flex h-9 items-center rounded-full bg-[#5b5bf6] px-4 text-[14px] font-semibold text-white shadow-[0_6px_16px_-6px_rgba(91,91,246,.6)]">{{ __('Zakázky') }}</router-link>
           </div>
         </div>
         <div v-else class="relative mt-4 flex h-[230px] items-end gap-3 border-b border-[rgba(110,120,200,.18)] px-2">
@@ -79,7 +79,7 @@
             <span class="num mb-1 text-[13px] font-bold text-ink-gray-9">{{ k(m.value) }}</span>
             <div
               class="w-full max-w-[46px] rounded-t-[4px] transition-all duration-500"
-              :class="i === lastIndex ? 'bg-[#4f46e5]' : 'bg-[#c7c9f6] group-hover:bg-[#a5a8f0]'"
+              :class="i === lastIndex ? 'bg-[#5b5bf6]' : 'bg-[#c7c9f6] group-hover:bg-[#a5a8f0]'"
               :style="{ height: `${barHeight(m.value)}%`, minHeight: m.value ? '4px' : '0' }"
             />
             <div v-if="hoverBar === i" class="gl-sheet pointer-events-none absolute bottom-full z-10 mb-2 whitespace-nowrap rounded-xl px-3 py-2 text-[13px]">
@@ -115,7 +115,7 @@
         <div v-for="s in data?.sources || []" :key="s.source" class="flex items-center gap-3 py-1.5" :title="`${__(s.source)}: ${s.count}`">
           <span class="w-32 shrink-0 truncate text-[14px] text-ink-gray-9">{{ __(s.source) }}</span>
           <span class="h-2 flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.14)]">
-            <span class="block h-full rounded-full bg-[#4f46e5]" :style="{ width: `${(s.count * 100) / maxSource}%` }" />
+            <span class="block h-full rounded-full bg-[#5b5bf6]" :style="{ width: `${(s.count * 100) / maxSource}%` }" />
           </span>
           <span class="num w-8 text-right text-[14px] font-bold text-ink-gray-9">{{ s.count }}</span>
         </div>
@@ -166,7 +166,7 @@ const GRAINS = [
   { value: 'year', label: __('Rok') },
 ]
 // trychtýř: jedna řada, odstíny indiga od plného po světlý (fáze = pořadí)
-const FUNNEL = ['#4f46e5', '#5b55e8', '#6f6aec', '#8580f0', '#a09cf4', '#b9b6f7']
+const FUNNEL = ['#5b5bf6', '#5b55e8', '#6f6aec', '#8580f0', '#a09cf4', '#b9b6f7']
 
 const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 const today = new Date()

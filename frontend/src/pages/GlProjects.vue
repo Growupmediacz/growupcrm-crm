@@ -10,7 +10,7 @@
       </router-link>
       <Popover placement="bottom-end">
         <template #target="{ togglePopover }">
-          <Button iconLeft="filter" :class="activeFilters && '!bg-[rgba(79,70,229,.12)] !text-[#3b30b8]'" @click="togglePopover()">
+          <Button iconLeft="filter" :class="activeFilters && '!bg-[rgba(91,91,246,.12)] !text-[#4644d9]'" @click="togglePopover()">
             <span class="hidden sm:inline">{{ __('Filtr') }}</span><span v-if="activeFilters"> · {{ activeFilters }}</span>
           </Button>
         </template>
@@ -80,7 +80,7 @@
             <td class="px-3 py-3">
               <div class="flex items-center gap-3">
                 <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]">
-                  <div class="h-full rounded-full bg-[#4f46e5]" :style="{ width: `${p.progress || 0}%` }" />
+                  <div class="h-full rounded-full bg-[#5b5bf6]" :style="{ width: `${p.progress || 0}%` }" />
                 </div>
                 <span class="num w-10 text-right text-[13px] font-bold text-ink-gray-9">{{ Math.round(p.progress || 0) }} %</span>
               </div>
@@ -125,7 +125,7 @@
           <GlUserAvatar :user="l.user" class="size-9 bg-[#dde6ff] text-[11px] font-bold text-[#2440a6]" />
           <span class="w-32 truncate text-[14px] text-ink-gray-9">{{ userName(l.user) }}</span>
           <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]">
-            <div class="h-full rounded-full" :class="l.percent > 100 ? 'bg-[#e5484d]' : 'bg-[#4f46e5]'" :style="{ width: `${Math.min(l.percent, 100)}%` }" />
+            <div class="h-full rounded-full" :class="l.percent > 100 ? 'bg-[#e5484d]' : 'bg-[#5b5bf6]'" :style="{ width: `${Math.min(l.percent, 100)}%` }" />
           </div>
           <span class="num w-12 text-right text-[13px] text-ink-gray-5" :title="__('{0} úkolů na 7 dní', [l.tasks])">{{ l.percent }} %</span>
         </div>
@@ -137,7 +137,7 @@
         <template v-if="board.data?.overdue?.length">
           <div class="text-[34px] font-bold tracking-tight text-[#a82614]">{{ overdueLabel }}</div>
           <div v-for="p in board.data.overdue.slice(0, 2)" :key="p.name" class="mt-1 text-[14px] text-ink-gray-7">
-            <router-link :to="{ name: 'Project', params: { projectId: p.name } }" class="font-semibold hover:text-[#4f46e5]">{{ p.project_name }}</router-link>
+            <router-link :to="{ name: 'Project', params: { projectId: p.name } }" class="font-semibold hover:text-[#5b5bf6]">{{ p.project_name }}</router-link>
             – {{ p.organization_name }}<template v-if="p.waiting_note">. {{ p.waiting_note }}</template>
           </div>
         </template>

@@ -2,7 +2,7 @@
   <!-- GrowUp: karta „Z webu“ na Firmě – profil od agenta (growupcrm.research, Firecrawl) -->
   <div v-if="data && (data.profile.web_status || data.can_run)" class="gl-card mt-3 flex flex-col gap-3 p-4">
     <div class="flex items-center justify-between gap-2">
-      <div class="flex items-center gap-2 text-[15px] font-bold text-ink-gray-9"><GlIcon name="sparkles" :size="17" class="text-[#4f46e5]" />{{ __('Z webu') }}</div>
+      <div class="flex items-center gap-2 text-[15px] font-bold text-ink-gray-9"><GlIcon name="sparkles" :size="17" class="text-[#5b5bf6]" />{{ __('Z webu') }}</div>
       <Button v-if="data.can_run" size="sm" :label="running ? __('Agent pracuje…') : p.web_status === 'Obohaceno' ? __('Aktualizovat') : __('Obohatit')" :loading="starting" :disabled="running" @click="start" />
     </div>
 
@@ -15,8 +15,8 @@
         <div class="text-[12px] font-semibold uppercase tracking-wide text-ink-gray-5">{{ f.label }}</div>
         <div class="text-[14px] leading-snug text-ink-gray-8">{{ p[f.key] }}</div>
       </div>
-      <div v-if="p.web_opener" class="rounded-[14px] bg-[rgba(79,70,229,.07)] px-3 py-2">
-        <div class="text-[12px] font-semibold uppercase tracking-wide text-[#3b30b8]">{{ __('Úvodní věta do e-mailu') }}</div>
+      <div v-if="p.web_opener" class="rounded-[14px] bg-[rgba(91,91,246,.07)] px-3 py-2">
+        <div class="text-[12px] font-semibold uppercase tracking-wide text-[#4644d9]">{{ __('Úvodní věta do e-mailu') }}</div>
         <div class="text-[14px] italic leading-snug text-ink-gray-9">„{{ p.web_opener }}“</div>
       </div>
       <div v-if="data.people.length">

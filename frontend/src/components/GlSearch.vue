@@ -1,6 +1,7 @@
 <template>
   <!-- GrowUp: globální hledání ⌘K (design Liquid Glass). Data: growupcrm.search.search -->
   <button
+    v-if="!hideTrigger"
     class="gl-round flex size-10 items-center justify-center rounded-full"
     :aria-label="__('Hledat (⌘K)')"
     :title="__('Hledat (⌘K)')"
@@ -48,7 +49,7 @@
                 v-for="item in g.items"
                 :key="item.type + item.name"
                 class="flex w-full items-center gap-3 rounded-2xl px-3 py-2 text-left"
-                :class="flat[active] === item ? 'bg-[rgba(79,70,229,.10)]' : 'hover:bg-white/60'"
+                :class="flat[active] === item ? 'bg-[rgba(91,91,246,.10)]' : 'hover:bg-white/60'"
                 @mouseenter="active = flat.indexOf(item)"
                 @click="pick(item, $event)"
               >
@@ -83,6 +84,10 @@ import { statusesStore } from '@/stores/statuses'
 import { call } from 'frappe-ui'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { glSearchRequest } from '@/composables/glSearch'
+
+// hideTrigger: jen okno hledání bez tlačítka (otevírá se z levé lišty přes openGlSearch)
+defineProps({ hideTrigger: { type: Boolean, default: false } })
 
 const router = useRouter()
 const { leadStatuses } = statusesStore()
@@ -133,6 +138,8 @@ watch(q, (value) => {
     }
   }, 180)
 })
+
+watch(glSearchRequest, () => open())
 
 function open() {
   show.value = true

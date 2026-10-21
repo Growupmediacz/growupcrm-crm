@@ -3,7 +3,7 @@
   <div class="gl-card flex flex-col gap-4 p-5">
     <div class="flex flex-wrap items-start justify-between gap-3">
       <div>
-        <h2 class="flex items-center gap-2 text-[20px] font-bold text-ink-gray-9"><GlIcon name="sparkles" :size="19" class="text-[#4f46e5]" />{{ __('Agent kampaně') }}</h2>
+        <h2 class="flex items-center gap-2 text-[20px] font-bold text-ink-gray-9"><GlIcon name="sparkles" :size="19" class="text-[#5b5bf6]" />{{ __('Agent kampaně') }}</h2>
         <p class="mt-1 text-[14px] text-ink-gray-6">{{ __('Agent napíše každé firmě 3 e-maily z dat jejího webu a ukázky jejího oboru. Cíl: proklik na ukázku a audit zdarma.') }}</p>
       </div>
       <span v-if="s?.auto_send" class="rounded-full bg-[rgba(34,179,94,.12)] px-3 py-1 text-[13px] font-semibold text-[#178a4a]">{{ __('Schváleno, odesílá se samo') }}</span>
@@ -58,7 +58,7 @@
           <div class="flex flex-wrap items-baseline justify-between gap-2 text-[13px] text-ink-gray-5">
             <span><b class="text-ink-gray-9">{{ m.organization }}</b> · {{ m.email }}</span>
             <span v-if="m.scheduled_at">{{ __('odejde') }} {{ formatDate(m.scheduled_at) }}</span>
-            <router-link v-else :to="{ name: 'OutreachReview', params: { name: m.name } }" class="text-[#4F46E5] hover:underline">{{ __('Upravit') }}</router-link>
+            <router-link v-else :to="{ name: 'OutreachReview', params: { name: m.name } }" class="text-[#5b5bf6] hover:underline">{{ __('Upravit') }}</router-link>
           </div>
           <div class="mt-1 text-[15px] font-bold text-ink-gray-9">{{ m.subject }}</div>
           <div class="gl-mail mt-1 text-[14px] leading-relaxed text-ink-gray-8" v-html="m.body" />
@@ -70,7 +70,7 @@
       </div>
 
       <!-- schválení -->
-      <div v-if="!s.auto_send && s.pending" class="flex flex-wrap items-center justify-between gap-3 rounded-[16px] bg-[rgba(79,70,229,.07)] px-4 py-3">
+      <div v-if="!s.auto_send && s.pending" class="flex flex-wrap items-center justify-between gap-3 rounded-[16px] bg-[rgba(91,91,246,.07)] px-4 py-3">
         <div class="text-[14px] text-ink-gray-8">
           {{ __('{0} e-mailů připraveno. Po schválení se rozplánují do kalendáře (nejvýš {1} denně, {2}–{3} h, jen pracovní dny) a odejdou samy.', [s.pending, form.daily_limit, form.window_start, form.window_end]) }}
         </div>

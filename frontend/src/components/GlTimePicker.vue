@@ -29,7 +29,7 @@
           type="button"
           :data-time="t"
           class="block w-full rounded-[10px] px-3 py-1.5 text-left text-[15px] tabular-nums"
-          :class="t === model ? 'bg-[#4F46E5] font-semibold text-white' : 'text-ink-gray-9 hover:bg-[rgba(79,70,229,.08)]'"
+          :class="t === model ? 'bg-[#5b5bf6] font-semibold text-white' : 'text-ink-gray-9 hover:bg-[rgba(91,91,246,.08)]'"
           @mousedown.prevent="pick(t, close)"
         >
           {{ show(t) }}

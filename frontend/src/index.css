@@ -1,6 +1,7 @@
 @import 'frappe-ui/style.css';
 @import './styles/pozadi-hedvabi.css';
 @import './theme.css';
+@import './styles/gl3.css';
 
 @layer components {
   .prose-f {

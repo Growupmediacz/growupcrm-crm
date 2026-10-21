@@ -19,7 +19,7 @@
       <div class="gl-card flex flex-col gap-1 p-4 md:p-5">
         <div class="flex items-baseline justify-between text-[14px] text-ink-gray-7">{{ __('Kredity tento měsíc') }}<span class="text-[12px] text-ink-gray-5">{{ __('strop') }} {{ ov.credits_cap }}</span></div>
         <div class="num text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9">{{ ov.credits_used }}<span class="text-[20px] font-medium text-ink-gray-5"> / {{ ov.credits_cap }}</span></div>
-        <div class="h-1.5 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><div class="h-full rounded-full bg-[#4F46E5]" :style="{ width: `${Math.min(100, (ov.credits_used * 100) / (ov.credits_cap || 1))}%` }" /></div>
+        <div class="h-1.5 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><div class="h-full rounded-full bg-[#5b5bf6]" :style="{ width: `${Math.min(100, (ov.credits_used * 100) / (ov.credits_cap || 1))}%` }" /></div>
       </div>
       <div class="gl-card flex flex-col gap-1 p-4 md:p-5">
         <div class="text-[14px] text-ink-gray-7">{{ __('Obohacené firmy') }}</div>
@@ -97,7 +97,7 @@
             <template v-if="r.email"> · {{ r.email }}</template><template v-if="r.phone"> · {{ r.phone }}</template>
           </div>
         </div>
-        <span v-if="r.email_verified" class="rounded-full bg-[rgba(79,70,229,.10)] px-2 py-0.5 text-[11px] font-bold text-[#4F46E5]" :title="__('E-mail ověřil Anymailfinder')">{{ __('ověřeno') }}</span>
+        <span v-if="r.email_verified" class="rounded-full bg-[rgba(91,91,246,.10)] px-2 py-0.5 text-[11px] font-bold text-[#5b5bf6]" :title="__('E-mail ověřil Anymailfinder')">{{ __('ověřeno') }}</span>
         <span v-if="r.action === 'Doplnit kontakt'" class="rounded-full bg-[rgba(34,179,94,.12)] px-2 py-0.5 text-[11px] font-bold text-[#178a4a]">{{ __('doplní e-mail') }}</span>
       </div>
       <div v-if="sg?.rows?.length" class="flex flex-wrap items-center gap-2 border-t border-[rgba(110,120,200,.12)] pt-3">
@@ -156,7 +156,7 @@ import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 
 usePageMeta(() => ({ title: __('Agent') }))
 
-const STATUS_COLOR = { 'Čeká': '#a3a8c3', 'Probíhá': '#4F46E5', 'Hotovo': '#22b35e', 'Chyba': '#d0362a', 'Přeskočeno': '#d6a01d' }
+const STATUS_COLOR = { 'Čeká': '#a3a8c3', 'Probíhá': '#5b5bf6', 'Hotovo': '#22b35e', 'Chyba': '#d0362a', 'Přeskočeno': '#d6a01d' }
 
 const overview = createResource({ url: 'growupcrm.research.get_overview', auto: true })
 const ov = computed(() => overview.data)
@@ -169,7 +169,7 @@ const starting = ref(false)
 
 // návrhy kontaktů (etapa 2)
 const PRIORITIES = [{ label: __('Vše'), value: '' }, { label: __('Vysoká'), value: 'Vysoká' }, { label: __('Střední'), value: 'Střední' }, { label: __('Nízká'), value: 'Nízká' }]
-const PRIORITY_COLOR = { 'Vysoká': '#4F46E5', 'Střední': '#0ea5e9', 'Nízká': '#a3a8c3' }
+const PRIORITY_COLOR = { 'Vysoká': '#5b5bf6', 'Střední': '#0ea5e9', 'Nízká': '#a3a8c3' }
 const sgPriority = ref('Vysoká')
 const sgEmail = ref(true)
 const pageLength = ref(50)

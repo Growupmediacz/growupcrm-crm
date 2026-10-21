@@ -43,7 +43,7 @@
         :aria-label="__('Posunout do fáze {0}', [__(s.name)])"
         @click="move(s)"
       >
-        <span class="h-1.5 rounded-full" :style="{ background: i <= currentIndex ? '#4f46e5' : 'rgba(110,120,200,.16)' }" />
+        <span class="h-1.5 rounded-full" :style="{ background: i <= currentIndex ? '#5b5bf6' : 'rgba(110,120,200,.16)' }" />
         <span v-if="!compact || i === currentIndex" class="text-[13px]" :class="i === currentIndex ? 'font-bold text-ink-gray-9' : 'text-ink-gray-5'">{{ __(s.name) }}</span>
       </button>
     </div>

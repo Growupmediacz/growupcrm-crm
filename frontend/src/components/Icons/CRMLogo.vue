@@ -12,7 +12,7 @@
     <defs>
       <linearGradient :id="`gm-${uid}`" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0" stop-color="#6E6AF6" />
-        <stop offset=".55" stop-color="#4F46E5" />
+        <stop offset=".55" stop-color="#5b5bf6" />
         <stop offset="1" stop-color="#3B32C4" />
       </linearGradient>
       <linearGradient :id="`gh-${uid}`" x1="0" y1="0" x2="0" y2="1">

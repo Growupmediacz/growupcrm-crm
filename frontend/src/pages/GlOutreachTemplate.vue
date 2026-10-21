@@ -54,13 +54,13 @@
         <div class="rounded-2xl bg-[rgba(110,120,200,.1)] p-4">
           <div v-if="form.step_type === 'E-mail'" class="mb-2 text-[15px] font-bold text-ink-gray-9">{{ preview.subject }}</div>
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <div lang="cs" class="gl-text text-[14px] leading-relaxed text-ink-gray-7 [&_mark]:rounded [&_mark]:bg-[rgba(79,70,229,.14)] [&_mark]:px-0.5" v-html="previewHtml" />
+          <div lang="cs" class="gl-text text-[14px] leading-relaxed text-ink-gray-7 [&_mark]:rounded [&_mark]:bg-[rgba(91,91,246,.14)] [&_mark]:px-0.5" v-html="previewHtml" />
         </div>
       </div>
       <div class="gl-card p-5">
         <h3 class="mb-2 text-[16px] font-bold text-ink-gray-9">{{ __('Proměnné') }}</h3>
         <div v-for="v in VARS" :key="v.key" class="flex items-center justify-between gap-3 py-1.5 text-[13px]">
-          <button class="rounded-md bg-[rgba(79,70,229,.1)] px-1.5 font-mono font-semibold text-[#3b30b8]" @click="insert(v.key)">{{ '{' + v.key + '}' }}</button>
+          <button class="rounded-md bg-[rgba(91,91,246,.1)] px-1.5 font-mono font-semibold text-[#4644d9]" @click="insert(v.key)">{{ '{' + v.key + '}' }}</button>
           <span class="truncate text-ink-gray-5">{{ preview.variables?.[v.key] || v.hint }}</span>
         </div>
       </div>

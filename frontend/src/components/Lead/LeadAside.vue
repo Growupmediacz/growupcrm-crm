@@ -22,10 +22,10 @@
     </div>
 
     <!-- Detaily: úpravy (oprava 9) -->
-    <form v-else class="gl-card flex flex-col gap-4 p-6 ring-2 ring-[rgba(79,70,229,.35)]" @submit.prevent="save">
+    <form v-else class="gl-card flex flex-col gap-4 p-6 ring-2 ring-[rgba(91,91,246,.35)]" @submit.prevent="save">
       <div class="flex items-center justify-between">
         <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Detaily') }}</h2>
-        <span class="rounded-full bg-[rgba(79,70,229,.1)] px-2.5 py-0.5 text-[12px] font-semibold text-[#3b30b8]">{{ __('Úpravy') }}</span>
+        <span class="rounded-full bg-[rgba(91,91,246,.1)] px-2.5 py-0.5 text-[12px] font-semibold text-[#4644d9]">{{ __('Úpravy') }}</span>
       </div>
       <label>
         <span class="gl-label">{{ __('Hodnota') }}</span>
@@ -94,7 +94,7 @@
           <component
             :is="doc.contact_person ? 'router-link' : 'div'"
             :to="doc.contact_person ? { name: 'Contact', params: { contactId: doc.contact_person } } : undefined"
-            class="block truncate text-[16px] font-semibold text-ink-gray-9 hover:text-[#4f46e5]"
+            class="block truncate text-[16px] font-semibold text-ink-gray-9 hover:text-[#5b5bf6]"
           >
             {{ person.name }}
           </component>
@@ -146,7 +146,7 @@
           </li>
         </ul>
         <button
-          class="mt-2 inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink-gray-9 hover:text-[#4f46e5]"
+          class="mt-2 inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink-gray-9 hover:text-[#5b5bf6]"
           @click="showNewContact = true"
         >
           <GlIcon name="plus" :size="16" class="text-ink-gray-5" />{{ __('Nový kontakt') }}

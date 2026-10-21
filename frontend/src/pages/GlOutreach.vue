@@ -22,12 +22,12 @@
         <div class="gl-card flex flex-col gap-1 p-4 md:p-5">
           <div class="flex items-baseline justify-between text-[14px] text-ink-gray-7">{{ __('Odesláno tento týden') }}<span class="text-[12px] text-ink-gray-5">{{ __('limit') }} {{ ov.kpis.limit }}</span></div>
           <div class="num text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[42px]">{{ ov.kpis.sent }}<span class="text-[20px] font-medium text-ink-gray-5"> / {{ ov.kpis.limit }}</span></div>
-          <div class="h-1.5 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><div class="h-full rounded-full bg-[#4F46E5]" :style="{ width: `${Math.min(100, (ov.kpis.sent * 100) / (ov.kpis.limit || 1))}%` }" /></div>
+          <div class="h-1.5 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><div class="h-full rounded-full bg-[#5b5bf6]" :style="{ width: `${Math.min(100, (ov.kpis.sent * 100) / (ov.kpis.limit || 1))}%` }" /></div>
           <div class="text-[13px] text-ink-gray-5">{{ __('zbývá {0} e-mailů do neděle', [ov.kpis.remaining]) }}</div>
         </div>
         <div class="gl-card flex flex-col gap-1 p-4 md:p-5">
           <div class="flex items-center justify-between text-[14px] text-ink-gray-7">{{ __('Odpovědi') }}
-            <span v-if="ov.kpis.replies_new" class="rounded-full bg-[rgba(79,70,229,.12)] px-2 py-0.5 text-[12px] font-bold text-[#3b30b8]">{{ ov.kpis.replies_new }} {{ __('nové') }}</span>
+            <span v-if="ov.kpis.replies_new" class="rounded-full bg-[rgba(91,91,246,.12)] px-2 py-0.5 text-[12px] font-bold text-[#4644d9]">{{ ov.kpis.replies_new }} {{ __('nové') }}</span>
           </div>
           <div class="num text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[42px]">{{ ov.kpis.replies_week }}</div>
           <div class="text-[13px] text-ink-gray-5">{{ __('tento týden') }}<template v-if="ov.kpis.sent"> · {{ ov.kpis.reply_pct }} % {{ __('z odeslaných') }}</template></div>
@@ -62,7 +62,7 @@
           </div>
           <div v-if="ov.approve_total" class="mt-2 flex flex-wrap items-center justify-between gap-2">
             <span class="text-[13px] text-ink-gray-5">{{ ov.approve_total > ov.approve.length ? __('+ {0} další · ', [ov.approve_total - ov.approve.length]) : '' }}{{ __('každý e-mail schvalujete ručně') }}</span>
-            <router-link :to="{ name: 'OutreachReview', params: { name: ov.approve[0].name } }" class="inline-flex h-11 items-center gap-2 rounded-full bg-[#4F46E5] px-5 text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(79,70,229,.7)]">
+            <router-link :to="{ name: 'OutreachReview', params: { name: ov.approve[0].name } }" class="inline-flex h-11 items-center gap-2 rounded-full bg-[#5b5bf6] px-5 text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(91,91,246,.7)]">
               <GlIcon name="check" :size="16" />{{ __('Schvalovat postupně') }}
             </router-link>
           </div>
@@ -77,7 +77,7 @@
             </div>
             <GlEmptyState v-if="!ov.process.length" icon="phone" :title="__('Nic ke zpracování')" :text="__('Hovory a zprávy na LinkedIn se objeví podle sekvence kampaně.')" />
             <div v-for="m in ov.process" :key="m.name" class="flex items-center gap-3 py-2">
-              <span class="flex size-10 shrink-0 items-center justify-center rounded-xl" :class="m.step_type === 'Hovor' ? 'bg-[rgba(249,115,22,.14)] text-[#a3360a]' : 'bg-[rgba(79,70,229,.12)] text-[#3b30b8]'">
+              <span class="flex size-10 shrink-0 items-center justify-center rounded-xl" :class="m.step_type === 'Hovor' ? 'bg-[rgba(249,115,22,.14)] text-[#a3360a]' : 'bg-[rgba(91,91,246,.12)] text-[#4644d9]'">
                 <GlIcon :name="m.step_type === 'Hovor' ? 'phone' : 'link'" :size="18" />
               </span>
               <div class="min-w-0 flex-1">
@@ -115,7 +115,7 @@
     <div v-else-if="tab === 'approve'" class="gl-card flex flex-col p-5 md:p-6">
       <div class="mb-2 flex items-center justify-between">
         <h2 class="text-[22px] font-bold tracking-tight text-ink-gray-9">{{ __('Ke schválení') }}</h2>
-        <router-link v-if="queue.data?.length" :to="{ name: 'OutreachReview', params: { name: queue.data[0].name } }" class="inline-flex h-10 items-center gap-2 rounded-full bg-[#4F46E5] px-4 text-[14px] font-semibold text-white">
+        <router-link v-if="queue.data?.length" :to="{ name: 'OutreachReview', params: { name: queue.data[0].name } }" class="inline-flex h-10 items-center gap-2 rounded-full bg-[#5b5bf6] px-4 text-[14px] font-semibold text-white">
           <GlIcon name="check" :size="15" />{{ __('Schvalovat postupně') }}
         </router-link>
       </div>

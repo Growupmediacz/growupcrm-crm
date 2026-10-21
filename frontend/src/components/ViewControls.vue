@@ -161,7 +161,7 @@
       <!-- GrowUp (oprava 12): zrušit všechny rychlé filtry najednou -->
       <button
         v-if="activeQuickFilters.length"
-        class="m-1 shrink-0 whitespace-nowrap px-1 text-[13px] font-semibold text-[#4F46E5] hover:underline"
+        class="m-1 shrink-0 whitespace-nowrap px-1 text-[13px] font-semibold text-[#5b5bf6] hover:underline"
         @click="clearQuickFilters"
       >
         {{ __('Vymazat') }}

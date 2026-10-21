@@ -46,7 +46,7 @@
         <template v-for="g in grouped" :key="g.bucket">
           <div class="mb-1 mt-3 flex items-baseline gap-2 px-2 text-[13px]"><b :class="g.bucket === 'overdue' ? 'text-[#a82614]' : 'text-ink-gray-9'">{{ g.label }}</b><span class="num text-ink-gray-5">{{ g.items.length }}</span></div>
           <div v-for="t in g.items" :key="t.name" class="flex items-center gap-3 rounded-2xl px-2 py-2.5 hover:bg-white/50">
-            <button class="flex size-6 shrink-0 items-center justify-center rounded-full border-[1.75px] transition" :class="t.status === 'Done' ? 'border-[#4f46e5] bg-[#4f46e5] text-white' : 'border-[rgba(110,120,200,.45)] hover:border-[#4f46e5]'" :aria-label="t.status === 'Done' ? __('Hotovo') : __('Označit jako hotové')" @click="toggle(t)">
+            <button class="flex size-6 shrink-0 items-center justify-center rounded-full border-[1.75px] transition" :class="t.status === 'Done' ? 'border-[#5b5bf6] bg-[#5b5bf6] text-white' : 'border-[rgba(110,120,200,.45)] hover:border-[#5b5bf6]'" :aria-label="t.status === 'Done' ? __('Hotovo') : __('Označit jako hotové')" @click="toggle(t)">
               <GlIcon v-if="t.status === 'Done'" name="check" :size="14" />
             </button>
             <!-- mobil (design R2MUkoly): název a pod ním „včera · Zakázka“ -->

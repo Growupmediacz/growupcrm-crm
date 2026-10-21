@@ -11,11 +11,11 @@
   --accent-50: #eef0ff;
   --accent-200: #c7c9f6;
   --accent-400: #8b8ff8;
-  --accent-600: #4f46e5;
-  --accent-700: #3b30b8;
+  --accent-600: #5b5bf6;
+  --accent-700: #4644d9;
   --accent-900: #312e81;
-  --accent-soft: rgba(79, 70, 229, 0.12);
-  --focus-ring: 0 0 0 4px rgba(79, 70, 229, 0.18);
+  --accent-soft: rgba(91, 91, 246, 0.12);
+  --focus-ring: 0 0 0 4px rgba(91, 91, 246, 0.18);
 
   /* text a linky */
   --text-1: #0e1330;
@@ -61,20 +61,20 @@
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
   --sidebar-w: 264px;
   /* 2. kolo – doplňky (design/growupcrm-design-2kolo/tokens) */
-  --brand-grad: linear-gradient(145deg, #6e6af6 0%, #4f46e5 55%, #3b32c4 100%);
+  --brand-grad: linear-gradient(145deg, #6e6af6 0%, #5b5bf6 55%, #3b32c4 100%);
   --brand-media-text: #0f6b32;
   --cst-waiting: #9ca3af;
   --cst-sent: #3b82f6;
   --cst-opened: #8b5cf6;
   --cst-replied: #22b35e;
   --cst-unsub: #a82614;
-  --cst-done: #3b30b8;
+  --cst-done: #4644d9;
   --nav-item-h: 36px;
   --nav-item-fs: 14.5px;
   --nav-head-fs: 12px;
   --empty-color: #464c70;
   --empty-fs: 13px;
-  --row-selected: rgba(79, 70, 229, 0.07);
+  --row-selected: rgba(91, 91, 246, 0.07);
   --check-square-radius: 6px;
   --skeleton: rgba(110, 120, 200, 0.12);
   --skeleton-shine: rgba(255, 255, 255, 0.55);
@@ -93,7 +93,7 @@
   --surface-gray-7: #464c70;
   --surface-gray-8: #3d4466;
   --surface-gray-9: #262c52;
-  --surface-gray-10: #4f46e5;
+  --surface-gray-10: #5b5bf6;
   --surface-sidebar: transparent;
   --surface-elevation-1: rgba(255, 255, 255, 0.94);
   --surface-elevation-2: rgba(255, 255, 255, 0.96);
@@ -113,12 +113,12 @@
   --outline-gray-1: rgba(110, 120, 200, 0.12);
   --outline-gray-2: rgba(110, 120, 200, 0.17);
   --outline-gray-3: rgba(110, 120, 200, 0.28);
-  --outline-gray-4: rgba(79, 70, 229, 0.55);
+  --outline-gray-4: rgba(91, 91, 246, 0.55);
   --outline-elevation-1: rgba(110, 120, 200, 0.12);
   --outline-elevation-2: rgba(110, 120, 200, 0.22);
-  --ink-blue-3: #4f46e5;
-  --ink-blue-5: #3b30b8;
-  --ink-blue-6: #3b30b8;
+  --ink-blue-3: #5b5bf6;
+  --ink-blue-5: #4644d9;
+  --ink-blue-6: #4644d9;
   --ink-blue-7: #3730a3;
 }
 
@@ -135,7 +135,7 @@ body {
   background: transparent;
 }
 ::selection {
-  background: rgba(79, 70, 229, 0.22);
+  background: rgba(91, 91, 246, 0.22);
 }
 * {
   scrollbar-color: rgba(110, 120, 200, 0.35) transparent;
@@ -226,15 +226,15 @@ button.inline-flex.w-6 {
 }
 /* primární (plná) */
 button.bg-surface-gray-10:not([disabled]) {
-  background: #4f46e5;
+  background: #5b5bf6;
   color: #fff;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 8px 18px -8px rgba(30, 25, 110, 0.5);
 }
 button.bg-surface-gray-10:not([disabled]):hover {
-  background: #4f46e5;
+  background: #5b5bf6;
 }
 button.bg-surface-gray-10:not([disabled]):active {
-  background: #3b30b8;
+  background: #4644d9;
 }
 /* sklo (subtle / outline) */
 button.inline-flex.bg-surface-gray-2,
@@ -280,7 +280,7 @@ textarea::placeholder {
 input:not([type='checkbox']):not([type='radio']):not([type='range']):focus,
 textarea:focus,
 select:focus {
-  border-color: #4f46e5 !important;
+  border-color: #5b5bf6 !important;
   box-shadow: var(--focus-ring) !important;
   background: rgba(255, 255, 255, 0.9);
 }
@@ -535,9 +535,9 @@ textarea[class*='bg-surface-gray']:focus {
   background: rgba(255, 255, 255, 0.9);
 }
 .gl-chip-on {
-  background: rgba(79, 70, 229, 0.1);
-  border-color: rgba(79, 70, 229, 0.18);
-  color: #3b30b8;
+  background: rgba(91, 91, 246, 0.1);
+  border-color: rgba(91, 91, 246, 0.18);
+  color: #4644d9;
 }
 .gl-chip-x {
   display: inline-flex;
@@ -548,7 +548,7 @@ textarea[class*='bg-surface-gray']:focus {
   border-radius: 999px;
 }
 .gl-chip-x:hover {
-  background: rgba(79, 70, 229, 0.14);
+  background: rgba(91, 91, 246, 0.14);
 }
 input.gl-chip-input:not(#_),
 input.gl-chip-input:not(#_):focus {
@@ -583,7 +583,7 @@ textarea.gl-field {
 .gl-field:focus,
 .gl-field-focus {
   outline: none;
-  border-color: #4f46e5 !important;
+  border-color: #5b5bf6 !important;
   box-shadow: var(--focus-ring) !important;
   background: rgba(255, 255, 255, 0.92);
 }
@@ -644,12 +644,12 @@ input[type='checkbox']:not([role='switch']) {
   border-radius: var(--check-square-radius, 6px) !important;
   border: 1.5px solid var(--control-border);
   background-color: rgba(255, 255, 255, 0.8);
-  color: #4f46e5;
+  color: #5b5bf6;
   cursor: pointer;
 }
 input[type='checkbox']:not([role='switch']):checked {
-  background-color: #4f46e5;
-  border-color: #4f46e5;
+  background-color: #5b5bf6;
+  border-color: #5b5bf6;
 }
 input[type='checkbox']:not([role='switch']):focus-visible {
   box-shadow: var(--focus-ring);
@@ -657,7 +657,7 @@ input[type='checkbox']:not([role='switch']):focus-visible {
 
 /* vybraný řádek seznamu */
 .gl-row-selected {
-  background: var(--row-selected, rgba(79, 70, 229, 0.07));
+  background: var(--row-selected, rgba(91, 91, 246, 0.07));
 }
 
 /* prázdná hodnota (oprava 7): tlumené „Bez hodnoty“ + odkaz „Doplnit“ */
@@ -669,7 +669,7 @@ input[type='checkbox']:not([role='switch']):focus-visible {
 .gl-fill {
   font-size: 13px;
   font-weight: 600;
-  color: #4f46e5;
+  color: #5b5bf6;
 }
 .gl-fill:hover {
   text-decoration: underline;
@@ -801,7 +801,7 @@ button.inline-flex.bg-surface-red-7:hover {
 }
 [role='row']:has(input[type='checkbox']:checked),
 .group:has(> div > input[type='checkbox']:checked) {
-  background: var(--row-selected, rgba(79, 70, 229, 0.07));
+  background: var(--row-selected, rgba(91, 91, 246, 0.07));
   border-radius: 14px;
 }
 
@@ -862,7 +862,7 @@ button[role='switch'] {
   transition: background-color 0.2s ease;
 }
 button[role='switch'][data-state='checked'] {
-  background-color: #4f46e5 !important;
+  background-color: #5b5bf6 !important;
 }
 button[role='switch'] > span {
   background: #fff !important;
@@ -874,7 +874,7 @@ button[role='switch'] > span {
 .gl-var,
 .gl-text mark,
 [contenteditable] mark {
-  background: rgba(79, 70, 229, 0.12);
+  background: rgba(91, 91, 246, 0.12);
   color: #3b32c4;
   border-radius: 7px;
   padding: 1px 6px;

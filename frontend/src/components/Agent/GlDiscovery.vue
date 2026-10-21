@@ -54,7 +54,7 @@ import { formatDateCz } from '@/utils/glDate'
 import { Button, call, createResource, toast } from 'frappe-ui'
 import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 
-const STATUS_COLOR = { 'Čeká': '#a3a8c3', 'Probíhá': '#4F46E5', 'Hotovo': '#22b35e', 'Chyba': '#d0362a' }
+const STATUS_COLOR = { 'Čeká': '#a3a8c3', 'Probíhá': '#5b5bf6', 'Hotovo': '#22b35e', 'Chyba': '#d0362a' }
 const state = createResource({ url: 'growupcrm.discovery.get_state', auto: true })
 const st = computed(() => state.data)
 const targets = reactive({})
