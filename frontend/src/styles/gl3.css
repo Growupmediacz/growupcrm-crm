@@ -239,3 +239,30 @@ body.app-bg::before {
   background: rgba(91, 91, 246, 0.1);
   color: var(--accent-700);
 }
+
+/* ---------- čipy filtrů (návrh 02: „Vlastník: Všichni ⌄“) ---------- */
+.gl-chip.h-9 {
+  height: 40px;
+}
+.gl-chip {
+  background: var(--mat-panel);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 10px rgba(40, 50, 120, 0.06);
+  color: var(--text-1);
+}
+.gl-chip:hover,
+.gl-chip-open {
+  background: #fff;
+}
+.gl-chip > .opacity-75 {
+  opacity: 1;
+  color: var(--text-2);
+}
+.gl-chip-on {
+  background: rgba(91, 91, 246, 0.1);
+  border-color: rgba(91, 91, 246, 0.22);
+  color: var(--accent-700);
+}
+.gl-chip-on > .opacity-75 {
+  color: var(--accent-700);
+}

@@ -7,7 +7,7 @@
     <div class="flex flex-col gap-2">
       <div class="flex items-center justify-between gap-2">
         <FadedScrollableDiv
-          class="flex flex-1 items-center overflow-x-auto -ml-1 h-9"
+          class="flex flex-1 items-center overflow-x-auto -ml-1 h-12"
           orientation="horizontal"
         >
           <div
