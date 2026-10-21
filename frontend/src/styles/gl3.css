@@ -427,3 +427,12 @@ body.app-bg::before {
   background: rgba(110, 120, 200, 0.1);
   color: var(--text-1);
 }
+
+/* mobilní spodní lišta: stejné neprůhledné sklo jako na desktopu */
+.gl-tabbar {
+  background: var(--mat-bar) !important;
+  -webkit-backdrop-filter: var(--mat-blur);
+  backdrop-filter: var(--mat-blur);
+  border: var(--mat-card-border) !important;
+  box-shadow: 0 16px 48px rgba(40, 50, 120, 0.14) !important;
+}

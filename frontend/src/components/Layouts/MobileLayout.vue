@@ -6,7 +6,7 @@
       <template v-else>
         <MobileAppHeader />
         <GlSectionPills />
-        <div class="flex min-h-0 flex-1 flex-col" :class="isDetail ? '' : 'pb-24'"><slot /></div>
+        <div class="flex min-h-0 flex-1 flex-col pb-24"><slot /></div>
       </template>
     </div>
     <MobileTabBar />
@@ -29,6 +29,4 @@ watch(
   () => route.fullPath,
   () => ((showSettings.value = false), (activeSettingsPage.value = '')),
 )
-// místo pro spodní lištu jen tam, kde lišta je (viz MobileTabBar)
-const isDetail = computed(() => ['Lead', 'Organization', 'Contact', 'Deal'].includes(route.name))
 </script>

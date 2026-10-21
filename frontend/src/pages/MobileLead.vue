@@ -13,8 +13,22 @@
       </Dropdown>
     </header>
   </LayoutHeader>
-  <div v-if="doc.name" class="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pb-24">
+  <div v-if="doc.name" class="flex min-h-0 flex-1 flex-col overflow-y-auto px-4" :class="nextStage ? 'pb-[150px]' : 'pb-24'">
     <LeadHero :key="heroKey" :doc="doc" :stageOptions="mobileStages" compact @changed="afterChange" @fill="openDetails(true)" @plan="activities?.modalRef?.showTask()" />
+
+    <!-- design 3. kolo (m2): 4 rychlé akce s popisky -->
+    <div class="mt-3 grid grid-cols-4 gap-2">
+      <button
+        v-for="a in actions.slice(0, 4)"
+        :key="a.label"
+        class="flex flex-col items-center gap-1.5 py-1 text-[13px] font-medium text-ink-gray-8"
+        :disabled="a.disabled"
+        @click="a.onClick"
+      >
+        <span class="flex size-12 items-center justify-center rounded-full bg-white/90 text-[var(--accent-600)] shadow-[0_6px_16px_-8px_rgba(40,50,120,.35)]"><GlIcon :name="a.icon" :size="21" /></span>
+        {{ a.label }}
+      </button>
+    </div>
 
     <!-- Hodnota a Kontakt -->
     <div class="gl-card mt-3 !rounded-[20px] px-4">
@@ -61,20 +75,15 @@
   </div>
   <ErrorPage v-else-if="errorTitle" :errorTitle="errorTitle" :errorMessage="errorMessage" />
 
-  <!-- pevná spodní lišta akcí -->
-  <nav v-if="doc.name" class="gl-tabbar fixed inset-x-3 bottom-3 z-30 flex items-center gap-1 rounded-[26px] px-2 pt-2 pb-2" :aria-label="__('Akce zakázky')">
+  <!-- hlavní akce přilepená nad spodní lištou (design 3. kolo, m2) -->
+  <div v-if="doc.name && nextStage" class="fixed inset-x-3 bottom-[calc(max(12px,env(safe-area-inset-bottom))+76px)] z-30">
     <button
-      v-for="a in actions"
-      :key="a.label"
-      class="flex h-12 flex-1 items-center justify-center rounded-2xl text-ink-gray-9 transition active:bg-white/80 disabled:opacity-40"
-      :aria-label="a.label"
-      :title="a.label"
-      :disabled="a.disabled"
-      @click="a.onClick"
+      class="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--accent-600)] text-[16px] font-semibold text-white shadow-[0_10px_24px_-10px_rgba(40,50,120,.6)] active:opacity-90"
+      @click="nextStage.onClick()"
     >
-      <GlIcon :name="a.icon" :size="24" :class="a.primary ? 'text-[var(--accent-600)]' : ''" />
+      <GlIcon name="arrow" :size="18" />{{ __('Posunout do {0}', [nextStage.label]) }}
     </button>
-  </nav>
+  </div>
 
   <!-- Detaily a kontakt ve spodním panelu -->
   <Dialog v-model:open="showDetails" :title="__('Detaily')">
@@ -416,7 +425,7 @@ const nextStage = computed(() => {
   return order[i + 1] || null
 })
 const actions = computed(() => [
-  { label: __('Hovor'), icon: 'phone', onClick: () => ((callPerson.value = {}), (showCall.value = true)) },
+  { label: __('Zavolat'), icon: 'phone', onClick: () => ((callPerson.value = {}), (showCall.value = true)) },
   { label: __('Zápis'), icon: 'doc', onClick: () => activities.value?.modalRef?.showNote() },
   { label: __('E-mail'), icon: 'mail', onClick: openEmail },
   { label: __('Naplánovat'), icon: 'cal', onClick: () => (showSchedule.value = true) },

@@ -70,7 +70,7 @@
   </div>
 
   <!-- spodní lišta akcí -->
-  <div v-if="m" class="gl-card fixed inset-x-3 bottom-3 z-30 flex items-center justify-between gap-3 !rounded-[22px] px-4 py-3 md:static md:mx-2 md:mb-2">
+  <div v-if="m" class="gl-card fixed inset-x-3 bottom-[calc(max(12px,env(safe-area-inset-bottom))+76px)] z-30 flex items-center justify-between gap-3 !rounded-[22px] px-4 py-3 md:static md:mx-2 md:mb-2">
     <span class="hidden text-[13px] text-ink-gray-5 lg:block">{{ __('Upravte text přímo v e-mailu') }} · <kbd class="rounded bg-[rgba(110,120,200,.14)] px-1.5">⌘↵</kbd> {{ __('schválit') }} · <kbd class="rounded bg-[rgba(110,120,200,.14)] px-1.5">J</kbd> / <kbd class="rounded bg-[rgba(110,120,200,.14)] px-1.5">K</kbd> {{ __('další / předchozí') }}</span>
     <div class="ml-auto flex items-center gap-2">
       <button class="gl-quick !h-11 !px-4 !text-[15px]" @click="postpone"><GlIcon name="clock" :size="16" />{{ __('Odložit') }}</button>

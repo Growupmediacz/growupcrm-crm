@@ -43,7 +43,22 @@
         <span class="size-2 rounded-full bg-[#e5484d]" />
         <span class="h-px flex-1 bg-[#e5484d]" />
       </div>
-      <div v-if="!dayItems.length" class="gl-card px-4 py-8 text-center text-[14px] text-ink-gray-5">
+      <!-- design 3. kolo (m3): celodenní položky a úkoly bez času v řádku „Celý den“ -->
+      <div v-if="allDayItems.length" class="flex items-start gap-3 px-1">
+        <span class="w-12 shrink-0 pt-1.5 text-right text-[12px] font-semibold text-ink-gray-7">{{ __('Celý den') }}</span>
+        <span class="flex min-w-0 flex-1 flex-wrap gap-1.5">
+          <button
+            v-for="it in allDayItems"
+            :key="it.key"
+            class="max-w-full truncate rounded-full px-3 py-1.5 text-[13px] font-semibold"
+            :class="[tone(it), it.done && 'line-through']"
+            @click="$emit('itemClick', it)"
+          >
+            {{ it.title }}
+          </button>
+        </span>
+      </div>
+      <div v-if="!dayItems.length && !allDayItems.length" class="gl-card px-4 py-8 text-center text-[14px] text-ink-gray-5">
         {{ __('Na tento den nic naplánovaného.') }}
       </div>
       <button v-for="it in dayItems" :key="it.key" class="flex items-stretch gap-3 text-left" @click="$emit('itemClick', it)">
@@ -95,9 +110,11 @@ const dayTitle = computed(() => {
 })
 
 const countOn = (d) => itemsOnDay(props.items, d).length
-const dayItems = computed(() => itemsOnDay(props.items, props.selected))
+const untimed = (i) => i.allDay || (i.kind === 'task' && i.start.getHours() === 0 && i.start.getMinutes() === 0)
+const allDayItems = computed(() => itemsOnDay(props.items, props.selected).filter(untimed))
+const dayItems = computed(() => itemsOnDay(props.items, props.selected).filter((i) => !untimed(i)))
 const countLabel = computed(() => {
-  const n = dayItems.value.length
+  const n = dayItems.value.length + allDayItems.value.length
   return n === 1 ? __('1 položka') : n >= 2 && n <= 4 ? __('{0} položky', [n]) : __('{0} položek', [n])
 })
 
