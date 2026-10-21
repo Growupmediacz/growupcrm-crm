@@ -29,7 +29,7 @@
           </button>
         </template>
       </div>
-      <button class="mt-3 inline-flex items-center gap-2 px-3 py-1.5 text-[14px] font-semibold text-ink-gray-9 hover:text-[#5b5bf6]" @click="addRow">
+      <button class="mt-3 inline-flex items-center gap-2 px-3 py-1.5 text-[14px] font-semibold text-ink-gray-9 hover:text-[var(--accent-600)]" @click="addRow">
         <GlIcon name="plus" :size="16" class="text-ink-gray-5" />{{ __('Přidat schůzku') }}
       </button>
     </template>

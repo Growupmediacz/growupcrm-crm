@@ -44,7 +44,7 @@
             </button>
           </Dropdown>
           <span v-else-if="d.doc_type" class="rounded-full bg-[rgba(110,120,200,.12)] px-2 py-0.5 text-[12px] font-semibold text-[#2440a6]">{{ d.doc_type }}</span>
-          <span v-if="d.source === 'email'" class="rounded-full px-2 py-0.5 text-[12px] font-semibold" :class="d.direction === 'Received' ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[rgba(91,91,246,.1)] text-[#4644d9]'">
+          <span v-if="d.source === 'email'" class="rounded-full px-2 py-0.5 text-[12px] font-semibold" :class="d.direction === 'Received' ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-700)]'">
             {{ d.direction === 'Received' ? __('Přijato e-mailem') : __('Odesláno e-mailem') }}
           </span>
         </div>

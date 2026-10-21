@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="mt-5 flex flex-wrap items-center gap-3">
-          <div class="h-2 min-w-[140px] flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><div class="h-full rounded-full bg-[#5b5bf6] transition-all duration-500" :style="{ width: `${progress}%` }" /></div>
+          <div class="h-2 min-w-[140px] flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><div class="h-full rounded-full bg-[var(--accent-600)] transition-all duration-500" :style="{ width: `${progress}%` }" /></div>
           <span class="num text-[15px] font-bold text-ink-gray-9">{{ progress }} %</span>
           <span class="num text-[13px] text-ink-gray-5">{{ __('{0} z {1} úkolů', [doneCount, p.tasks.length]) }}</span>
         </div>
@@ -49,7 +49,7 @@
             </div>
           </div>
           <button class="gl-quick" @click="remind"><GlIcon name="mail" :size="15" />{{ __('Připomenout') }}</button>
-          <button class="inline-flex h-9 items-center gap-2 rounded-full bg-[#5b5bf6] px-4 text-[13px] font-semibold text-white" @click="resolveWaiting"><GlIcon name="check" :size="15" />{{ __('Podklady dorazily') }}</button>
+          <button class="inline-flex h-9 items-center gap-2 rounded-full bg-[var(--accent-600)] px-4 text-[13px] font-semibold text-white" @click="resolveWaiting"><GlIcon name="check" :size="15" />{{ __('Podklady dorazily') }}</button>
         </div>
       </div>
 
@@ -64,12 +64,12 @@
           <div v-if="g.phase || view === 'phase'" class="mb-1 flex items-center gap-3 text-[13px]">
             <b class="text-ink-gray-9">{{ g.phase || __('Bez fáze') }}</b>
             <span class="num text-ink-gray-5">{{ g.done }} / {{ g.tasks.length }}</span>
-            <span class="h-1.5 w-40 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><span class="block h-full rounded-full bg-[#5b5bf6]" :style="{ width: `${g.tasks.length ? (g.done * 100) / g.tasks.length : 0}%` }" /></span>
+            <span class="h-1.5 w-40 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><span class="block h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${g.tasks.length ? (g.done * 100) / g.tasks.length : 0}%` }" /></span>
           </div>
           <div v-for="t in g.tasks" :key="t.name" class="flex items-center gap-3 rounded-2xl px-1 py-2 hover:bg-white/50">
             <button
               class="flex size-6 shrink-0 items-center justify-center rounded-full border-[1.75px] transition"
-              :class="t.status === 'Done' ? 'border-[#5b5bf6] bg-[#5b5bf6] text-white' : 'border-[rgba(110,120,200,.45)] hover:border-[#5b5bf6]'"
+              :class="t.status === 'Done' ? 'border-[var(--accent-600)] bg-[var(--accent-600)] text-white' : 'border-[rgba(110,120,200,.45)] hover:border-[var(--accent-600)]'"
               :aria-label="t.status === 'Done' ? __('Vrátit mezi otevřené') : __('Označit jako hotové')"
               @click="toggleTask(t)"
             ><GlIcon v-if="t.status === 'Done'" name="check" :size="14" /></button>
@@ -79,7 +79,7 @@
             <GlUserAvatar v-if="t.assigned_to" :user="t.assigned_to" class="size-7 bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" />
             <span v-else class="size-7 shrink-0" />
           </div>
-          <button v-if="view === 'phase'" class="flex items-center gap-2 px-1 py-2 text-[14px] font-medium text-ink-gray-7 hover:text-[#5b5bf6]" @click="focusNew(g.phase)"><GlIcon name="plus" :size="15" />{{ __('Přidat úkol') }}</button>
+          <button v-if="view === 'phase'" class="flex items-center gap-2 px-1 py-2 text-[14px] font-medium text-ink-gray-7 hover:text-[var(--accent-600)]" @click="focusNew(g.phase)"><GlIcon name="plus" :size="15" />{{ __('Přidat úkol') }}</button>
         </div>
         <p v-if="!groups.length" class="py-6 text-center text-[14px] text-ink-gray-5">{{ view === 'mine' ? __('Žádné vaše úkoly.') : __('Projekt zatím nemá úkoly.') }}</p>
         <form class="mt-2 flex flex-wrap items-center gap-2" @submit.prevent="addTask">
@@ -97,7 +97,7 @@
           <div v-for="r in details" :key="r.label" class="flex items-baseline justify-between gap-4 py-[7px]">
             <dt class="shrink-0 text-[14px] text-ink-gray-5">{{ r.label }}</dt>
             <dd class="min-w-0 truncate text-right text-[14px] font-medium text-ink-gray-9">
-              <router-link v-if="r.value && r.to" :to="r.to" class="font-semibold text-[#5b5bf6] hover:underline">{{ r.value }}</router-link>
+              <router-link v-if="r.value && r.to" :to="r.to" class="font-semibold text-[var(--accent-600)] hover:underline">{{ r.value }}</router-link>
               <template v-else-if="r.value">{{ r.value }}</template>
               <span v-else class="gl-empty">{{ __('Bez hodnoty') }}</span>
             </dd>

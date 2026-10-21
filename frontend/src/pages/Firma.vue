@@ -66,7 +66,7 @@
         <GlOrgWebCard :organization="organizationId" @updated="reload" />
       </div>
       <div v-else-if="sections.data" class="flex flex-1 flex-col justify-between overflow-hidden">
-        <button class="mx-5 mb-2 self-start text-[13px] font-semibold text-[#5b5bf6] hover:underline" @click="allFields = false">
+        <button class="mx-5 mb-2 self-start text-[13px] font-semibold text-[var(--accent-600)] hover:underline" @click="allFields = false">
           ‹ {{ __('Zpět na přehled') }}
         </button>
         <SidePanelLayout
@@ -103,7 +103,7 @@
             :class="a.disabled && 'pointer-events-none opacity-40'"
             @click="a.onClick && ($event.preventDefault(), a.onClick())"
           >
-            <GlIcon :name="a.icon" :size="19" class="text-[#5b5bf6]" />{{ a.label }}
+            <GlIcon :name="a.icon" :size="19" class="text-[var(--accent-600)]" />{{ a.label }}
           </a>
         </div>
         <div v-if="summary" class="mt-2 grid w-full grid-cols-4 gap-2">
@@ -172,7 +172,7 @@
                   {{ item.title }}
                 </router-link>
                 <span v-else-if="item.title" class="text-ink-gray-8">{{ item.title }}</span>
-                <span v-if="item.kind === 'email'" class="rounded-full px-1.5 text-[11px] font-semibold" :class="item.direction === 'Received' ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[rgba(91,91,246,.1)] text-[#4644d9]'">
+                <span v-if="item.kind === 'email'" class="rounded-full px-1.5 text-[11px] font-semibold" :class="item.direction === 'Received' ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-700)]'">
                   {{ item.direction === 'Received' ? __('Přijatý') : __('Odeslaný') }}
                 </span>
                 <span v-if="item.kind === 'task'" class="text-ink-gray-5">({{ __(item.status) }})</span>

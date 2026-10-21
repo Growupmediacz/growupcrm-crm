@@ -31,7 +31,7 @@
         :key="o.name"
         type="button"
         class="flex items-center gap-3 rounded-xl px-2.5 py-2 text-left"
-        :class="i === active ? 'bg-[rgba(91,91,246,.10)]' : 'hover:bg-white/70'"
+        :class="i === active ? 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)]' : 'hover:bg-white/70'"
         @mouseenter="active = i"
         @click="pick(o)"
       >

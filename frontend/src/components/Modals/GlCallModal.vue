@@ -23,7 +23,7 @@
             <div class="truncate text-[15px] font-semibold text-ink-gray-9">{{ person.name || leadTitle }}</div>
             <div class="truncate text-[12.5px] text-ink-gray-5">{{ [person.phone, person.role].filter(Boolean).join(' · ') }}</div>
           </div>
-          <span class="num flex items-center gap-1 rounded-full bg-[rgba(91,91,246,.12)] px-2.5 py-1 text-[13px] font-bold text-[#4644d9]">
+          <span class="num flex items-center gap-1 rounded-full bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] px-2.5 py-1 text-[13px] font-bold text-[var(--accent-700)]">
             <GlIcon name="clock" :size="14" />{{ timer }}
           </span>
         </div>

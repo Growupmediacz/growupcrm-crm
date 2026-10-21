@@ -1,7 +1,7 @@
 /* =====================================================================
    GrowUpCRM – design 3. kolo „Denní sklo“ (design/growupcrm-design-3kolo/tokens.css).
    Načítá se po theme.css a přebíjí jeho hodnoty: čisté pozadí bez vln, ploché bílé sklo
-   s rádiusem 24, živější indigo #5B5BF6, levá lišta (GlRail) a spodní lišta (GlTabBar).
+   s rádiusem 24, živější indigo var(--accent-600), levá lišta (GlRail) a spodní lišta (GlTabBar).
    ===================================================================== */
 
 :root {
@@ -12,7 +12,7 @@
   --accent-700: #4644d9;
   --accent-900: #2f2c9e;
   --accent-soft: rgba(91, 91, 246, 0.12);
-  --focus-ring: 0 0 0 4px rgba(91, 91, 246, 0.18);
+  --focus-ring: 0 0 0 4px color-mix(in srgb, var(--accent-600) 18%, transparent);
 
   --text-2: #4a5170;
   --line: rgba(110, 120, 200, 0.16);
@@ -44,13 +44,13 @@
   --gl-rail-w: 96px;
   --gl-tabbar-h: 64px;
 
-  --brand-grad: linear-gradient(145deg, #7373f8 0%, #5b5bf6 55%, #4644d9 100%);
-  --row-selected: rgba(91, 91, 246, 0.07);
-  --surface-gray-10: #5b5bf6;
-  --outline-gray-4: rgba(91, 91, 246, 0.55);
-  --ink-blue-3: #5b5bf6;
-  --ink-blue-5: #4644d9;
-  --ink-blue-6: #4644d9;
+  --brand-grad: linear-gradient(145deg, #7373f8 0%, var(--accent-600) 55%, var(--accent-700) 100%);
+  --row-selected: color-mix(in srgb, var(--accent-600) 7%, transparent);
+  --surface-gray-10: var(--accent-600);
+  --outline-gray-4: color-mix(in srgb, var(--accent-600) 55%, transparent);
+  --ink-blue-3: var(--accent-600);
+  --ink-blue-5: var(--accent-700);
+  --ink-blue-6: var(--accent-700);
   --ink-blue-7: #3a37b8;
 }
 
@@ -66,13 +66,13 @@ body.app-bg {
 }
 body.app-bg::before {
   background:
-    radial-gradient(42% 42% at 92% 0%, rgba(91, 91, 246, 0.07), transparent 70%),
+    radial-gradient(42% 42% at 92% 0%, color-mix(in srgb, var(--accent-600) 7%, transparent), transparent 70%),
     radial-gradient(42% 42% at 0% 100%, rgba(46, 107, 230, 0.06), transparent 70%),
     linear-gradient(135deg, #f4f6fb 0%, #eef1fa 100%);
 }
 
 ::selection {
-  background: rgba(91, 91, 246, 0.22);
+  background: color-mix(in srgb, var(--accent-600) 22%, transparent);
 }
 
 /* ---------- levá lišta (GlRail) ---------- */
@@ -157,7 +157,7 @@ body.app-bg::before {
   background: var(--accent-600);
   color: #fff;
   font-weight: 600;
-  box-shadow: 0 6px 16px -6px rgba(91, 91, 246, 0.6);
+  box-shadow: 0 6px 16px -6px color-mix(in srgb, var(--accent-600) 60%, transparent);
 }
 .gl3-tab:focus-visible {
   outline: none;
@@ -238,7 +238,7 @@ body.app-bg::before {
   color: var(--text-2);
 }
 .gl3-kadd:hover {
-  background: rgba(91, 91, 246, 0.1);
+  background: color-mix(in srgb, var(--accent-600) 10%, transparent);
   color: var(--accent-700);
 }
 
@@ -261,8 +261,8 @@ body.app-bg::before {
   color: var(--text-2);
 }
 .gl-chip-on {
-  background: rgba(91, 91, 246, 0.1);
-  border-color: rgba(91, 91, 246, 0.22);
+  background: color-mix(in srgb, var(--accent-600) 10%, transparent);
+  border-color: color-mix(in srgb, var(--accent-600) 22%, transparent);
   color: var(--accent-700);
 }
 .gl-chip-on > .opacity-75 {
@@ -390,10 +390,21 @@ body.app-bg::before {
   justify-content: center;
   border-radius: 14px;
 }
-.gl3-tone-indigo { background: rgba(91, 91, 246, 0.12); color: var(--accent-600); }
+.gl3-tone-indigo { background: color-mix(in srgb, var(--accent-600) 12%, transparent); color: var(--accent-600); }
 .gl3-tone-green { background: rgba(34, 179, 94, 0.14); color: #15803d; }
 .gl3-tone-blue { background: rgba(46, 107, 230, 0.12); color: #2453c9; }
 .gl3-tone-amber { background: rgba(224, 161, 0, 0.16); color: #8a5300; }
 .gl3-tone-violet { background: rgba(139, 92, 246, 0.14); color: #6d3fd6; }
 .gl3-tone-red { background: rgba(210, 58, 42, 0.12); color: #b42318; }
 .gl3-tone-gray { background: rgba(110, 120, 200, 0.12); color: var(--text-2); }
+
+/* ---------- Nastavení (návrhy 07, 26–34): nadpis sekce 28 px ---------- */
+.gl3-settings h2.text-2xl-semibold,
+.gl3-settings h1.text-2xl-semibold {
+  height: auto;
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-1);
+}

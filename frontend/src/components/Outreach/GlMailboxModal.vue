@@ -6,7 +6,7 @@
       <ol class="mb-5 flex items-center gap-2 text-[13px] font-semibold">
         <template v-for="(s, i) in STEPS" :key="s">
           <li class="flex items-center gap-2" :class="step === i ? 'text-ink-gray-9' : 'text-ink-gray-5'">
-            <span class="flex size-7 items-center justify-center rounded-full text-[12px]" :class="step === i ? 'bg-[#5b5bf6] text-white' : step > i ? 'bg-[rgba(34,179,94,.18)] text-[#0f6b32]' : 'bg-[rgba(110,120,200,.14)]'">{{ step > i ? '✓' : i + 1 }}</span>{{ s }}
+            <span class="flex size-7 items-center justify-center rounded-full text-[12px]" :class="step === i ? 'bg-[var(--accent-600)] text-white' : step > i ? 'bg-[rgba(34,179,94,.18)] text-[#0f6b32]' : 'bg-[rgba(110,120,200,.14)]'">{{ step > i ? '✓' : i + 1 }}</span>{{ s }}
           </li>
           <span v-if="i < STEPS.length - 1" class="h-px flex-1 bg-[rgba(110,120,200,.25)]" />
         </template>

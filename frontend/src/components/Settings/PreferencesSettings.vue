@@ -58,6 +58,7 @@
           />
         </div>
       </div>
+      <GlNotifyPrefs />
     </template>
   </SettingsLayoutBase>
 </template>
@@ -65,6 +66,7 @@
 <script setup>
 import SettingsLayoutBase from '@/components/Layouts/SettingsLayoutBase.vue'
 import Link from '@/components/Controls/Link.vue'
+import GlNotifyPrefs from '@/components/Settings/GlNotifyPrefs.vue'
 import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts'
 import {
   Combobox,

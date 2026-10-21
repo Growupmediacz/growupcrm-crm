@@ -2,13 +2,13 @@
   <!-- GrowUp: e-mail v aktivitě – směr (odeslaný / přijatý), výrazný předmět, sbalený text s „Zobrazit celý“ -->
   <div
     class="flex flex-col rounded-[18px] border bg-white/85 px-4 py-3 text-base shadow-[0_2px_12px_-6px_rgba(64,72,160,.25)]"
-    :class="outgoing ? 'border-[rgba(91,91,246,.18)]' : 'border-[rgba(34,179,94,.25)]'"
+    :class="outgoing ? 'border-[color-mix(in_srgb,var(--accent-600)_18%,transparent)]' : 'border-[rgba(34,179,94,.25)]'"
   >
     <div class="flex items-center justify-between gap-2 text-ink-gray-9">
       <div class="flex min-w-0 items-center gap-2">
         <span
           class="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide"
-          :class="outgoing ? 'bg-[rgba(91,91,246,.1)] text-[#4644d9]' : 'bg-[rgba(34,179,94,.12)] text-[#178a4a]'"
+          :class="outgoing ? 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-700)]' : 'bg-[rgba(34,179,94,.12)] text-[#178a4a]'"
         >
           {{ outgoing ? __('Odeslaný') : __('Přijatý') }}
         </span>
@@ -60,7 +60,7 @@
     <button
       v-if="long"
       type="button"
-      class="mt-1 self-start text-[13px] font-semibold text-[#5b5bf6] hover:underline"
+      class="mt-1 self-start text-[13px] font-semibold text-[var(--accent-600)] hover:underline"
       @click="expanded = !expanded"
     >
       {{ expanded ? __('Sbalit') : __('Zobrazit celý e-mail') }}

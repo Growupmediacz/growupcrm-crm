@@ -3,7 +3,7 @@
        karta Hodnota / Kontakt, čipy aktivity a pevná spodní lišta akcí. -->
   <LayoutHeader>
     <header class="flex min-w-0 items-center justify-between gap-2 py-2.5 pl-2">
-      <router-link :to="{ name: 'Leads' }" class="gl-round inline-flex h-11 items-center gap-1 rounded-full pl-2.5 pr-4 text-[16px] font-semibold text-[#4644d9]">
+      <router-link :to="{ name: 'Leads' }" class="gl-round inline-flex h-11 items-center gap-1 rounded-full pl-2.5 pr-4 text-[16px] font-semibold text-[var(--accent-700)]">
         <GlIcon name="left" :size="17" />{{ __('Zakázky') }}
       </router-link>
       <Dropdown v-if="doc.name" :options="moreOptions" placement="right">
@@ -29,11 +29,11 @@
       <button class="flex min-h-[56px] w-full items-center justify-between gap-3 border-t border-[rgba(110,120,200,.14)] py-2 text-left" @click="openContact">
         <span class="text-[15px] text-ink-gray-5">{{ __('Kontakt') }}</span>
         <span v-if="personName" class="min-w-0 flex-1 truncate text-right text-[17px] font-semibold text-ink-gray-9">{{ personName }}</span>
-        <span v-else class="flex-1 text-right text-[17px] font-semibold text-[#5b5bf6]">+ {{ __('Přidat kontakt') }}</span>
+        <span v-else class="flex-1 text-right text-[17px] font-semibold text-[var(--accent-600)]">+ {{ __('Přidat kontakt') }}</span>
         <GlIcon name="right" :size="16" class="shrink-0 text-ink-gray-4" />
       </button>
     </div>
-    <button class="mt-2 self-start px-1 text-[13px] font-semibold text-[#5b5bf6]" @click="openDetails(false)">{{ __('Všechny detaily') }}</button>
+    <button class="mt-2 self-start px-1 text-[13px] font-semibold text-[var(--accent-600)]" @click="openDetails(false)">{{ __('Všechny detaily') }}</button>
 
     <!-- Aktivita -->
     <h2 class="mb-1 mt-4 px-1 text-[22px] font-bold tracking-tight text-ink-gray-9">{{ __('Aktivita') }}</h2>
@@ -72,7 +72,7 @@
       :disabled="a.disabled"
       @click="a.onClick"
     >
-      <GlIcon :name="a.icon" :size="24" :class="a.primary ? 'text-[#5b5bf6]' : ''" />
+      <GlIcon :name="a.icon" :size="24" :class="a.primary ? 'text-[var(--accent-600)]' : ''" />
     </button>
   </nav>
 

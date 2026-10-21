@@ -51,6 +51,19 @@
         </router-link>
       </nav>
     </template>
+
+    <!-- design 3. kolo (m1/m4): Nastavení a odhlášení na konci -->
+    <nav class="gl-card mt-4 overflow-hidden !rounded-[22px]">
+      <button class="flex min-h-[53px] w-full items-center gap-3.5 px-4 text-left active:bg-white/60" @click="showSettings = true">
+        <span class="flex size-9 items-center justify-center rounded-[11px] bg-[rgba(110,120,200,.12)] text-ink-gray-7"><GlIcon name="sliders" :size="18" /></span>
+        <span class="flex-1 text-[17px] font-medium text-ink-gray-9">{{ __('Nastavení') }}</span>
+        <GlIcon name="right" :size="16" class="text-ink-gray-4" />
+      </button>
+      <button class="flex min-h-[53px] w-full items-center gap-3.5 border-t border-[rgba(110,120,200,.12)] px-4 text-left active:bg-white/60" @click="logout.submit()">
+        <span class="flex size-9 items-center justify-center rounded-[11px] bg-[rgba(210,58,42,.1)] text-[#b42318]"><GlIcon name="logout" :size="18" /></span>
+        <span class="flex-1 text-[17px] font-medium text-[#b42318]">{{ __('Odhlásit se') }}</span>
+      </button>
+    </nav>
   </div>
 </template>
 
@@ -62,6 +75,7 @@ import { unreadNotificationsCount } from '@/stores/notifications'
 import { sessionStore } from '@/stores/session'
 import { usersStore } from '@/stores/users'
 import { showAboutModal } from '@/composables/modals'
+import { showSettings } from '@/composables/settings'
 import { createResource, Dropdown } from 'frappe-ui'
 import { computed } from 'vue'
 

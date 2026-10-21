@@ -29,7 +29,7 @@
           <span
             v-if="!isCollapsed"
             class="truncate text-[17px] font-bold tracking-[-0.02em] text-ink-gray-9"
-            >{{ brandParts[0] }}<span class="font-semibold text-[#5b5bf6]">{{ brandParts[1] }}</span></span
+            >{{ brandParts[0] }}<span class="font-semibold text-[var(--accent-600)]">{{ brandParts[1] }}</span></span
           >
         </router-link>
 
@@ -192,7 +192,7 @@
               <GlIcon name="gear" :size="18" />
             </button>
             <button
-              class="flex size-9 shrink-0 items-center justify-center rounded-full text-ink-gray-5 outline-none transition hover:bg-white/60 hover:text-ink-gray-9 focus-visible:ring-2 focus-visible:ring-[#5b5bf6]/40"
+              class="flex size-9 shrink-0 items-center justify-center rounded-full text-ink-gray-5 outline-none transition hover:bg-white/60 hover:text-ink-gray-9 focus-visible:ring-2 focus-visible:ring-[var(--accent-600)]/40"
               :aria-label="isCollapsed ? __('Expand') : __('Collapse')"
               :title="isCollapsed ? __('Expand') : __('Collapse')"
               @click="isSidebarCollapsed = !isSidebarCollapsed"

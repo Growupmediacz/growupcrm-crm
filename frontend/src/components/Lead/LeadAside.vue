@@ -15,7 +15,7 @@
               <div class="num flex items-center justify-end gap-2 truncate text-[14px] font-medium text-ink-gray-9">
                 <svg v-if="row.ring" viewBox="0 0 36 36" class="size-7 shrink-0 -rotate-90" aria-hidden="true">
                   <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(110,120,200,.16)" stroke-width="4" />
-                  <circle cx="18" cy="18" r="14" fill="none" stroke="var(--accent-600)" stroke-width="4" stroke-linecap="round" :stroke-dasharray="`${(row.ring / 100) * 88} 88`" />
+                  <circle cx="18" cy="18" r="14" fill="none" style="stroke: var(--accent-600)" stroke-width="4" stroke-linecap="round" :stroke-dasharray="`${(row.ring / 100) * 88} 88`" />
                 </svg>
                 {{ row.value }}
               </div>
@@ -28,10 +28,10 @@
     </div>
 
     <!-- Detaily: úpravy (oprava 9) -->
-    <form v-else class="gl-card flex flex-col gap-4 p-6 ring-2 ring-[rgba(91,91,246,.35)]" @submit.prevent="save">
+    <form v-else class="gl-card flex flex-col gap-4 p-6 ring-2 ring-[color-mix(in_srgb,var(--accent-600)_35%,transparent)]" @submit.prevent="save">
       <div class="flex items-center justify-between">
         <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Detaily') }}</h2>
-        <span class="rounded-full bg-[rgba(91,91,246,.1)] px-2.5 py-0.5 text-[12px] font-semibold text-[#4644d9]">{{ __('Úpravy') }}</span>
+        <span class="rounded-full bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] px-2.5 py-0.5 text-[12px] font-semibold text-[var(--accent-700)]">{{ __('Úpravy') }}</span>
       </div>
       <label>
         <span class="gl-label">{{ __('Hodnota') }}</span>
@@ -100,7 +100,7 @@
           <component
             :is="doc.contact_person ? 'router-link' : 'div'"
             :to="doc.contact_person ? { name: 'Contact', params: { contactId: doc.contact_person } } : undefined"
-            class="block truncate text-[16px] font-semibold text-ink-gray-9 hover:text-[#5b5bf6]"
+            class="block truncate text-[16px] font-semibold text-ink-gray-9 hover:text-[var(--accent-600)]"
           >
             {{ person.name }}
           </component>
@@ -152,7 +152,7 @@
           </li>
         </ul>
         <button
-          class="mt-2 inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink-gray-9 hover:text-[#5b5bf6]"
+          class="mt-2 inline-flex items-center gap-2 py-1 text-[15px] font-medium text-ink-gray-9 hover:text-[var(--accent-600)]"
           @click="showNewContact = true"
         >
           <GlIcon name="plus" :size="16" class="text-ink-gray-5" />{{ __('Nový kontakt') }}

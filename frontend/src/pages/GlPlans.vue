@@ -36,7 +36,7 @@
               <circle cx="90" cy="90" :r="r.radius" fill="none" stroke="rgba(110,120,200,.14)" stroke-width="13" />
               <circle
                 v-if="r.length > 0"
-                cx="90" cy="90" :r="r.radius" fill="none" :stroke="r.color" stroke-width="13" stroke-linecap="round"
+                cx="90" cy="90" :r="r.radius" fill="none" :style="{ stroke: r.color }" stroke-width="13" stroke-linecap="round"
                 :stroke-dasharray="`${r.length} ${r.circumference}`" class="transition-all duration-700"
               >
                 <title>{{ r.label }}: {{ r.actualLabel }} / {{ r.targetLabel }}</title>
@@ -102,7 +102,7 @@
               <td class="py-2.5">
                 <span v-if="r.progress !== null" class="flex items-center gap-2">
                   <span class="h-1.5 w-24 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]">
-                    <span class="block h-full rounded-full bg-[#5b5bf6]" :style="{ width: `${Math.min(r.progress, 100)}%` }" />
+                    <span class="block h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${Math.min(r.progress, 100)}%` }" />
                   </span>
                   <span class="num text-[13px] font-bold text-ink-gray-9">{{ r.progress }} %</span>
                 </span>
@@ -119,7 +119,7 @@
         <span class="gl3-kpi-icon gl3-tone-green"><GlIcon name="arrow" :size="22" /></span>
         <div class="flex items-center justify-between gap-2 text-[14px] text-ink-gray-7">
           {{ __('Předpoklad do konce období') }}
-          <span v-if="p.projection !== null && p.team.target.won" class="rounded-full px-2 py-0.5 text-[12px] font-bold" :class="p.on_track ? 'bg-[rgba(91,91,246,.12)] text-[#4644d9]' : 'bg-[rgba(224,161,0,.16)] text-[#7a4400]'">
+          <span v-if="p.projection !== null && p.team.target.won" class="rounded-full px-2 py-0.5 text-[12px] font-bold" :class="p.on_track ? 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]' : 'bg-[rgba(224,161,0,.16)] text-[#7a4400]'">
             {{ p.on_track ? __('na dobré cestě') : __('pod plánem') }}
           </span>
         </div>
@@ -173,7 +173,7 @@ const p = computed(() => plan.data)
 
 // barvy řad ověřené validátorem palety (CVD, kontrast); u kruhů je vždy legenda s hodnotami
 const SERIES = [
-  { key: 'won', label: __('Zakázky'), color: '#5b5bf6', radius: 76 },
+  { key: 'won', label: __('Zakázky'), color: 'var(--accent-600)', radius: 76 },
   { key: 'meetings', label: __('Schůzky'), color: '#0ea5e9', radius: 59 },
   { key: 'revenue', label: __('Tržby (tis.)'), color: '#c026d3', radius: 42 },
 ]

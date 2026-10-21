@@ -3,9 +3,9 @@
   <!-- GrowUp (design 1. kolo MOznameni): Oznámení – Vše / Nepřečtené, skupiny Dnes a Včera, ikona podle typu, tečka u nepřečtených -->
   <div class="flex min-h-0 flex-1 flex-col gap-3 px-4 pb-4 pt-3 text-ink-gray-9">
     <div class="flex items-center justify-between">
-      <router-link :to="{ name: 'More' }" class="text-[16px] font-semibold text-[#4644d9]">{{ __('Zrušit') }}</router-link>
+      <router-link :to="{ name: 'More' }" class="text-[16px] font-semibold text-[var(--accent-700)]">{{ __('Zrušit') }}</router-link>
       <h1 class="text-[18px] font-bold">{{ __('Oznámení') }}</h1>
-      <button class="inline-flex h-9 items-center rounded-full bg-[#5b5bf6] px-4 text-[14px] font-bold text-white shadow-[0_6px_16px_-6px_rgba(91,91,246,.6)]" @click="mark_as_read.reload()">{{ __('Hotovo') }}</button>
+      <button class="inline-flex h-9 items-center rounded-full bg-[var(--accent-600)] px-4 text-[14px] font-bold text-white shadow-[0_6px_16px_-6px_rgba(91,91,246,.6)]" @click="mark_as_read.reload()">{{ __('Hotovo') }}</button>
     </div>
     <div class="gl-seg flex w-full">
       <button class="gl-seg-btn flex-1 justify-center" :class="tab === 'all' && 'gl-seg-on'" @click="tab = 'all'">{{ __('Vše') }}</button>
@@ -26,7 +26,7 @@
             </div>
             <div class="flex shrink-0 flex-col items-end gap-1.5">
               <span class="num text-[12px] text-ink-gray-5">{{ relativeCz(n.creation) }}</span>
-              <span v-if="!n.read" class="size-2 rounded-full bg-[#5b5bf6]" />
+              <span v-if="!n.read" class="size-2 rounded-full bg-[var(--accent-600)]" />
             </div>
           </RouterLink>
         </div>

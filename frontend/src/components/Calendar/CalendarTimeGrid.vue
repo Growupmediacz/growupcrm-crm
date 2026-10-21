@@ -9,7 +9,7 @@
         <span class="text-[15px] font-semibold capitalize" :class="isWeekend(d) ? 'text-ink-gray-4' : 'text-ink-gray-7'">{{ weekdayShort(d) }}</span>
         <span
           class="flex size-9 items-center justify-center rounded-full text-[20px] font-bold tabular-nums"
-          :class="sameDay(d, today) ? 'bg-[#5b5bf6] text-white shadow-[0_6px_16px_-6px_rgba(91,91,246,.7)]' : 'text-ink-gray-9'"
+          :class="sameDay(d, today) ? 'bg-[var(--accent-600)] text-white shadow-[0_6px_16px_-6px_rgba(91,91,246,.7)]' : 'text-ink-gray-9'"
         >
           {{ d.getDate() }}
         </span>
@@ -71,12 +71,12 @@
         >
           <div
             v-if="sameDay(d, today)"
-            class="pointer-events-none absolute inset-x-0.5 -top-3 bottom-0 rounded-[14px] bg-[rgba(91,91,246,.07)]"
+            class="pointer-events-none absolute inset-x-0.5 -top-3 bottom-0 rounded-[14px] bg-[color-mix(in_srgb,var(--accent-600)_7%,transparent)]"
           />
           <!-- výběr tažením myší (jako v Google kalendáři) -->
           <div
             v-if="drag && sameDay(drag.day, d)"
-            class="pointer-events-none absolute inset-x-1 z-30 overflow-hidden rounded-[10px] bg-[rgba(91,91,246,.18)] px-2 py-1 text-[12px] font-semibold text-[#4644d9]"
+            class="pointer-events-none absolute inset-x-1 z-30 overflow-hidden rounded-[10px] bg-[color-mix(in_srgb,var(--accent-600)_18%,transparent)] px-2 py-1 text-[12px] font-semibold text-[var(--accent-700)]"
             :style="dragStyle"
           >
             {{ dragLabel }}

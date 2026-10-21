@@ -15,8 +15,9 @@
         v-for="g in mainGroups"
         :key="g.key"
         :to="groupTarget(g)"
+        @click="showSettings = false"
         class="gl3-rail-item"
-        :class="isActiveGroup(g) && 'is-active'"
+        :class="!showSettings && isActiveGroup(g) && 'is-active'"
         :aria-current="isActiveGroup(g) ? 'page' : undefined"
       >
         <span class="gl3-rail-icon"><GlIcon :name="g.icon" :size="22" /></span>
@@ -31,8 +32,9 @@
       <template v-for="g in sectionGroups" :key="g.key">
         <router-link
           :to="groupTarget(g)"
+          @click="showSettings = false"
           class="gl3-rail-item"
-          :class="isActiveGroup(g) && 'is-active'"
+          :class="!showSettings && isActiveGroup(g) && 'is-active'"
           :aria-current="isActiveGroup(g) ? 'page' : undefined"
         >
           <span class="gl3-rail-icon"><GlIcon :name="g.icon" :size="22" /></span>
@@ -56,14 +58,13 @@
         <span class="gl3-rail-label">{{ __('Oznámení') }}</span>
       </button>
 
-      <button class="gl3-rail-item" :class="showSettings && 'is-active'" @click="showSettings = true">
+      <button class="gl3-rail-item" :class="showSettings && 'is-active'" @click="showSettings = !showSettings">
         <span class="gl3-rail-icon"><GlIcon name="sliders" :size="22" /></span>
         <span class="gl3-rail-label">{{ __('Nastavení') }}</span>
       </button>
     </nav>
 
     <Notifications />
-    <Settings />
     <GlSearch hide-trigger />
   </div>
 </template>
@@ -73,7 +74,6 @@ import CRMLogo from '@/components/Icons/CRMLogo.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlSearch from '@/components/GlSearch.vue'
 import Notifications from '@/components/Notifications.vue'
-import Settings from '@/components/Settings/Settings.vue'
 import { useGlNav } from '@/composables/glNav'
 import { openGlSearch } from '@/composables/glSearch'
 import { showSettings } from '@/composables/settings'

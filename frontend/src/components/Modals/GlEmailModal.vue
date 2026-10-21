@@ -24,14 +24,14 @@
         <div class="flex items-center gap-3 border-b border-[rgba(110,120,200,.12)] px-5 py-2.5"><span class="w-14 shrink-0 text-[14px] text-ink-gray-5">{{ __('Předmět') }}</span><input v-model="subject" class="min-w-0 flex-1 bg-transparent text-[15px] font-semibold text-ink-gray-9 outline-none" /></div>
         <div v-if="templates.data?.length" class="flex items-center gap-3 border-b border-[rgba(110,120,200,.12)] px-5 py-2.5">
           <span class="w-14 shrink-0 text-[14px] text-ink-gray-5">{{ __('Šablona') }}</span>
-          <div class="flex flex-wrap gap-1.5"><button v-for="t in templates.data" :key="t.name" class="rounded-full px-3 py-1 text-[13px] font-semibold" :class="template === t.name ? 'bg-[#0e1330] text-white' : 'bg-[rgba(91,91,246,.1)] text-[#4644d9]'" @click="applyTemplate(t)">{{ t.name }}</button></div>
+          <div class="flex flex-wrap gap-1.5"><button v-for="t in templates.data" :key="t.name" class="rounded-full px-3 py-1 text-[13px] font-semibold" :class="template === t.name ? 'bg-[#0e1330] text-white' : 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-700)]'" @click="applyTemplate(t)">{{ t.name }}</button></div>
         </div>
         <textarea v-model="body" class="gl-text block min-h-[200px] w-full resize-none bg-transparent px-5 py-4 text-[15px] leading-relaxed text-ink-gray-9 outline-none" lang="cs" :placeholder="__('Napište zprávu…')" />
         <ErrorMessage class="px-5 pb-2" :message="error" />
       </div>
       <div class="flex items-center justify-end gap-2 border-t border-[rgba(110,120,200,.14)] px-5 py-3">
         <button class="gl-quick !h-11 !px-4 !text-[14px]" :disabled="sending" @click="show = false">{{ __('Zahodit') }}</button>
-        <button class="inline-flex h-11 items-center gap-2 rounded-full bg-[#5b5bf6] px-5 text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(91,91,246,.7)] disabled:opacity-50" :disabled="sending || !canSend" @click="send">
+        <button class="inline-flex h-11 items-center gap-2 rounded-full bg-[var(--accent-600)] px-5 text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(91,91,246,.7)] disabled:opacity-50" :disabled="sending || !canSend" @click="send">
           <GlIcon name="send" :size="16" />{{ sending ? __('Odesílám…') : __('Odeslat') }}
         </button>
       </div>

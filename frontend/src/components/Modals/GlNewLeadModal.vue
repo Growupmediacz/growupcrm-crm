@@ -46,7 +46,7 @@
               :key="item.key"
               type="button"
               class="flex items-center gap-3 rounded-xl px-2.5 py-2 text-left"
-              :class="i === orgActive ? 'bg-[rgba(91,91,246,.10)]' : 'hover:bg-white/70'"
+              :class="i === orgActive ? 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)]' : 'hover:bg-white/70'"
               @mouseenter="orgActive = i"
               @click="pickOrg(item)"
             >
@@ -120,7 +120,7 @@
     </template>
     <template #actions>
       <div class="flex items-center gap-2">
-        <button type="button" class="text-[13px] font-semibold text-[#5b5bf6] hover:underline" @click="openFull">
+        <button type="button" class="text-[13px] font-semibold text-[var(--accent-600)] hover:underline" @click="openFull">
           {{ __('Podrobný formulář') }}
         </button>
         <div class="flex-1" />

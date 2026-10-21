@@ -33,7 +33,7 @@
           :key="n.comment || n.name"
           :to="getRoute(n)"
           class="mb-1 flex cursor-pointer items-start gap-3 rounded-[18px] px-3 py-3 transition hover:bg-white"
-          :class="!n.read && 'bg-[rgba(91,91,246,.06)]'"
+          :class="!n.read && 'bg-[color-mix(in_srgb,var(--accent-600)_6%,transparent)]'"
           @click="markAsRead(n.comment || n.notification_type_doc)"
         >
           <span class="mt-4 size-[7px] shrink-0 rounded-full" :class="n.read ? 'bg-transparent' : 'bg-[var(--accent-600)]'" />

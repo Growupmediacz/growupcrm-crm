@@ -61,7 +61,7 @@
                 v-for="item in g.items"
                 :key="item.type + item.name"
                 class="flex w-full items-center gap-3 rounded-2xl px-3 py-2 text-left"
-                :class="flat[active] === item ? 'bg-[rgba(91,91,246,.10)]' : 'hover:bg-white/60'"
+                :class="flat[active] === item ? 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)]' : 'hover:bg-white/60'"
                 @mouseenter="active = flat.indexOf(item)"
                 @click="pick(item, $event)"
               >
@@ -69,7 +69,7 @@
                   <GlIcon :name="ICON[item.type]" :size="17" />
                 </div>
                 <div class="min-w-0 flex-1">
-                  <div class="truncate text-[15px] font-semibold text-ink-gray-9"><template v-for="(part, i) in highlight(item.title)" :key="i"><mark v-if="part.hit" class="rounded-[4px] bg-[rgba(91,91,246,.16)] px-0.5 text-[var(--accent-700)]">{{ part.text }}</mark><template v-else>{{ part.text }}</template></template></div>
+                  <div class="truncate text-[15px] font-semibold text-ink-gray-9"><template v-for="(part, i) in highlight(item.title)" :key="i"><mark v-if="part.hit" class="rounded-[4px] bg-[color-mix(in_srgb,var(--accent-600)_16%,transparent)] px-0.5 text-[var(--accent-700)]">{{ part.text }}</mark><template v-else>{{ part.text }}</template></template></div>
                   <div v-if="item.sub" class="truncate text-[12.5px] text-ink-gray-5">{{ item.sub }}</div>
                 </div>
                 <span v-if="flat[active] === item" class="text-[12px] text-ink-gray-5">↵ {{ item.hint || __('otevřít') }}</span>

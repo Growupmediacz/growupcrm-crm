@@ -2,9 +2,12 @@
   <div class="flex h-screen w-screen">
     <MobileSidebar />
     <div class="flex h-full flex-1 flex-col overflow-auto">
-      <MobileAppHeader />
-      <GlSectionPills />
-      <div class="flex min-h-0 flex-1 flex-col" :class="isDetail ? '' : 'pb-24'"><slot /></div>
+      <div v-if="showSettings" class="flex min-h-0 flex-1 flex-col px-4 pb-24 pt-4"><Settings /></div>
+      <template v-else>
+        <MobileAppHeader />
+        <GlSectionPills />
+        <div class="flex min-h-0 flex-1 flex-col" :class="isDetail ? '' : 'pb-24'"><slot /></div>
+      </template>
     </div>
     <MobileTabBar />
     <GlobalModals />
@@ -16,10 +19,16 @@ import MobileAppHeader from '@/components/Mobile/MobileAppHeader.vue'
 import MobileTabBar from '@/components/Mobile/MobileTabBar.vue'
 import GlSectionPills from '@/components/Mobile/GlSectionPills.vue'
 import GlobalModals from '@/components/Modals/GlobalModals.vue'
-import { computed } from 'vue'
+import Settings from '@/components/Settings/Settings.vue'
+import { showSettings, activeSettingsPage } from '@/composables/settings'
+import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
+watch(
+  () => route.fullPath,
+  () => ((showSettings.value = false), (activeSettingsPage.value = '')),
+)
 // místo pro spodní lištu jen tam, kde lišta je (viz MobileTabBar)
 const isDetail = computed(() => ['Lead', 'Organization', 'Contact', 'Deal'].includes(route.name))
 </script>

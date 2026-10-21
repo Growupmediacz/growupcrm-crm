@@ -25,7 +25,7 @@
           <router-link
             v-if="item.leadName"
             :to="{ name: 'Lead', params: { leadId: item.leadName } }"
-            class="flex items-center gap-2 font-semibold text-[#5b5bf6] hover:underline"
+            class="flex items-center gap-2 font-semibold text-[var(--accent-600)] hover:underline"
             @click="close"
           >
             <GlIcon name="brief" :size="16" />{{ item.leadTitle || item.leadName }}
@@ -33,7 +33,7 @@
           <router-link
             v-else-if="item.organization"
             :to="{ name: 'Organization', params: { organizationId: item.organization } }"
-            class="flex items-center gap-2 font-semibold text-[#5b5bf6] hover:underline"
+            class="flex items-center gap-2 font-semibold text-[var(--accent-600)] hover:underline"
             @click="close"
           >
             <GlIcon name="building" :size="16" />{{ item.organization }}

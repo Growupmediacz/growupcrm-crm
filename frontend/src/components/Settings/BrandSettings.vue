@@ -79,6 +79,40 @@
         </div>
       </div>
 
+      <!-- barva akcentu a náhled (design 3. kolo, 34) -->
+      <div class="flex flex-col gap-4 rounded-[18px] border border-[var(--line)] p-5 md:flex-row md:items-center md:justify-between">
+        <div class="flex flex-col gap-3">
+          <div class="flex flex-col gap-1">
+            <span class="text-base-medium">{{ __('Barva akcentu') }}</span>
+            <span class="text-p-base text-ink-gray-6">{{ __('Tlačítka, vybrané položky a grafy v celém CRM.') }}</span>
+          </div>
+          <div class="flex gap-3">
+            <button
+              v-for="c in ACCENTS"
+              :key="c"
+              type="button"
+              class="size-9 rounded-full transition"
+              :class="(settings.doc.growupcrm_accent || DEFAULT_ACCENT).toLowerCase() === c.toLowerCase() ? 'ring-[3px] ring-offset-2 ring-[var(--text-1)]' : 'hover:scale-110'"
+              :style="{ background: c }"
+              :aria-label="c"
+              @click="pickAccent(c)"
+            />
+          </div>
+        </div>
+        <!-- náhled: dlaždice, tlačítko a vybraná položka v nové barvě -->
+        <div class="flex w-full max-w-[300px] flex-col gap-3 rounded-[18px] bg-[#f4f6fb] p-4" :style="{ '--accent-600': preview }">
+          <div class="rounded-[14px] bg-white p-3 shadow-[0_6px_18px_-10px_rgba(40,50,120,.3)]">
+            <div class="text-[12px] text-ink-gray-5">{{ __('Plnění plánu') }}</div>
+            <div class="text-[22px] font-bold text-ink-gray-9">18 / 25</div>
+            <div class="mt-1 h-1.5 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><div class="h-full w-[72%] rounded-full" :style="{ background: preview }" /></div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-flex h-9 items-center rounded-full px-4 text-[13px] font-semibold text-white" :style="{ background: preview }">+ {{ __('Nová zakázka') }}</span>
+            <span class="inline-flex h-9 items-center rounded-full bg-white px-3 text-[13px] font-semibold" :style="{ color: preview }">{{ __('Kanban') }}</span>
+          </div>
+        </div>
+      </div>
+
       <!-- favicon -->
       <div class="flex flex-col justify-between gap-4">
         <div class="flex items-center flex-1 gap-5">
@@ -121,16 +155,24 @@ import ImageIcon from '~icons/lucide/image'
 import ImageUploader from '@/components/Controls/ImageUploader.vue'
 import { FormControl } from 'frappe-ui'
 import { getSettings } from '@/stores/settings'
-import { showSettings } from '@/composables/settings'
+import { ACCENTS, DEFAULT_ACCENT, applyAccent } from '@/utils/glAccent'
+import { computed, onBeforeUnmount } from 'vue'
 
 const { _settings: settings, setupBrand } = getSettings()
 
+const preview = computed(() => settings.doc?.growupcrm_accent || DEFAULT_ACCENT)
+// vybraná barva se hned ukáže v celém CRM, uloží se tlačítkem Uložit
+function pickAccent(c) {
+  settings.doc.growupcrm_accent = c
+  applyAccent(c)
+}
+
+// neuložená změna barvy se po odchodu ze Značky vrátí
+onBeforeUnmount(() => applyAccent(settings.originalDoc?.growupcrm_accent))
+
 function updateSettings() {
   settings.save.submit(null, {
-    onSuccess: () => {
-      showSettings.value = false
-      setupBrand()
-    },
+    onSuccess: () => setupBrand(),
   })
 }
 </script>

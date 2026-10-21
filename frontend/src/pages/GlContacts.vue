@@ -57,7 +57,7 @@
 
     <!-- karta -->
     <div v-if="card.data" class="flex min-h-0 min-w-0 flex-1 flex-col gap-3 overflow-y-auto overflow-x-hidden" :class="!selected && isMobileView ? 'hidden' : ''">
-      <button v-if="isMobileView" class="self-start text-[15px] font-semibold text-[#5b5bf6]" @click="selected = ''">
+      <button v-if="isMobileView" class="self-start text-[15px] font-semibold text-[var(--accent-600)]" @click="selected = ''">
         ‹ {{ __('Kontakty') }}
       </button>
       <!-- design 3. kolo (10): avatar vlevo, jméno, role · firma (odkaz), pod tím 4 akce přes celou šířku -->
@@ -92,7 +92,7 @@
             :class="a.disabled && 'pointer-events-none opacity-40'"
             @click="a.onClick && ($event.preventDefault(), a.onClick())"
           >
-            <GlIcon :name="a.icon" :size="20" class="text-[#5b5bf6]" />{{ a.label }}
+            <GlIcon :name="a.icon" :size="20" class="text-[var(--accent-600)]" />{{ a.label }}
           </a>
         </div>
       </div>
@@ -104,7 +104,7 @@
             <div v-for="r in details" :key="r.label" class="flex items-baseline justify-between gap-4 py-[7px]">
               <dt class="shrink-0 text-[14px] text-ink-gray-5">{{ r.label }}</dt>
               <dd class="min-w-0 truncate text-right text-[14px] font-medium text-ink-gray-9">
-                <a v-if="r.href" :href="r.href" target="_blank" class="font-semibold text-[#5b5bf6] hover:underline">{{ r.value }}</a>
+                <a v-if="r.href" :href="r.href" target="_blank" class="font-semibold text-[var(--accent-600)] hover:underline">{{ r.value }}</a>
                 <template v-else-if="r.value">
                   {{ r.value }}
                   <span v-if="r.sub" class="block text-[12px] font-normal text-ink-gray-5">{{ r.sub }}</span>
@@ -113,7 +113,7 @@
               </dd>
             </div>
           </dl>
-          <router-link :to="{ name: 'Contact', params: { contactId: c.name } }" class="mt-3 inline-block text-[13px] font-semibold text-[#5b5bf6] hover:underline">
+          <router-link :to="{ name: 'Contact', params: { contactId: c.name } }" class="mt-3 inline-block text-[13px] font-semibold text-[var(--accent-600)] hover:underline">
             {{ __('Upravit údaje') }}
           </router-link>
         </div>
@@ -135,7 +135,7 @@
               <span class="flex items-center gap-2">
                 <span class="truncate text-[15px] font-semibold text-ink-gray-9">{{ a.title }}</span>
                 <span v-if="a.badge" class="rounded-full bg-[rgba(224,161,0,.18)] px-2 py-0.5 text-[11px] font-bold text-[#7a4400]">{{ a.badge }}</span>
-                <span v-if="a.upcoming" class="rounded-full bg-[rgba(91,91,246,.12)] px-2 py-0.5 text-[11px] font-bold text-[#4644d9]">{{ __('Naplánováno') }}</span>
+                <span v-if="a.upcoming" class="rounded-full bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] px-2 py-0.5 text-[11px] font-bold text-[var(--accent-700)]">{{ __('Naplánováno') }}</span>
               </span>
               <span class="block truncate text-[12.5px] text-ink-gray-5">{{ a.text || when(a.date) }}</span>
             </span>
@@ -146,7 +146,7 @@
               v-for="l in card.data.leads"
               :key="l.name"
               :to="{ name: 'Lead', params: { leadId: l.name } }"
-              class="flex items-center justify-between gap-3 py-1 text-[14px] hover:text-[#5b5bf6]"
+              class="flex items-center justify-between gap-3 py-1 text-[14px] hover:text-[var(--accent-600)]"
             >
               <span class="truncate font-medium">{{ l.order_title || l.lead_name || l.name }}</span>
               <span class="shrink-0 text-[12.5px] text-ink-gray-5">{{ __(l.status) }}</span>

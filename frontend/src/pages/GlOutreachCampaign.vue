@@ -85,9 +85,9 @@ import { Breadcrumbs, Button, createResource, toast } from 'frappe-ui'
 import { computed, ref, watch } from 'vue'
 
 const props = defineProps({ name: { type: String, required: true } })
-const STATUS = { 'Běží': '#22b35e', Pozastaveno: '#e0a100', Koncept: '#9ca3af', 'Dokončeno': '#4644d9' }
+const STATUS = { 'Běží': '#22b35e', Pozastaveno: '#e0a100', Koncept: '#9ca3af', 'Dokončeno': 'var(--accent-700)' }
 const ICON = { 'E-mail': 'mail', Hovor: 'phone', LinkedIn: 'link' }
-const TONE = { 'E-mail': 'bg-[rgba(20,160,190,.14)] text-[#08626f]', Hovor: 'bg-[rgba(249,115,22,.14)] text-[#a3360a]', LinkedIn: 'bg-[rgba(91,91,246,.12)] text-[#4644d9]' }
+const TONE = { 'E-mail': 'bg-[rgba(20,160,190,.14)] text-[#08626f]', Hovor: 'bg-[rgba(249,115,22,.14)] text-[#a3360a]', LinkedIn: 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]' }
 const filter = ref('all')
 const pageLength = ref(20)
 const showAdd = ref(false)

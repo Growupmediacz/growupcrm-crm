@@ -1,5 +1,6 @@
 import { createDocumentResource } from 'frappe-ui'
 import { reactive, ref } from 'vue'
+import { applyAccent } from '@/utils/glAccent'
 
 const settings = ref({})
 const brand = reactive({})
@@ -19,6 +20,8 @@ export function getSettings() {
     brand.name = settings.value?.brand_name
     brand.logo = settings.value?.brand_logo
     brand.favicon = settings.value?.favicon
+    brand.accent = settings.value?.growupcrm_accent
+    applyAccent(brand.accent)
   }
 
   return {

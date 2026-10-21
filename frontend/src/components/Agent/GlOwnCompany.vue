@@ -39,7 +39,7 @@
         </div>
         <div class="mt-2 flex flex-wrap gap-1.5">
           <button v-for="ind in p.industries" :key="ind" class="rounded-full px-3 py-1 text-[12px] font-semibold"
-            :class="has(pitch, ind) ? 'bg-[#0e1330] text-white' : 'bg-[rgba(91,91,246,.08)] text-[#4644d9]'" @click="toggle(pitch, ind)">{{ ind }}</button>
+            :class="has(pitch, ind) ? 'bg-[#0e1330] text-white' : 'bg-[color-mix(in_srgb,var(--accent-600)_8%,transparent)] text-[var(--accent-700)]'" @click="toggle(pitch, ind)">{{ ind }}</button>
         </div>
         <div v-if="pitch.hook" class="mt-2 text-[14px] italic text-ink-gray-8">„{{ pitch.hook }}“</div>
         <details class="mt-2 text-[13px] text-ink-gray-7">

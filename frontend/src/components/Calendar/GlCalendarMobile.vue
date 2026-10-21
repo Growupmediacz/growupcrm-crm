@@ -24,11 +24,11 @@
         <span class="text-[12px] font-semibold text-ink-gray-5">{{ dayShort(d) }}</span>
         <span
           class="flex size-10 items-center justify-center rounded-full text-[17px] font-bold"
-          :class="same(d, selected) ? 'bg-[#5b5bf6] text-white shadow-[0_8px_18px_-8px_rgba(91,91,246,.8)]' : isToday(d) ? 'text-[#5b5bf6]' : 'text-ink-gray-9'"
+          :class="same(d, selected) ? 'bg-[var(--accent-600)] text-white shadow-[0_8px_18px_-8px_rgba(91,91,246,.8)]' : isToday(d) ? 'text-[var(--accent-600)]' : 'text-ink-gray-9'"
         >
           {{ d.getDate() }}
         </span>
-        <span class="size-1.5 rounded-full" :class="countOn(d) ? 'bg-[#5b5bf6]' : 'bg-transparent'" />
+        <span class="size-1.5 rounded-full" :class="countOn(d) ? 'bg-[var(--accent-600)]' : 'bg-transparent'" />
       </button>
     </div>
 

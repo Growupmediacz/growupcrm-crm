@@ -13,7 +13,7 @@
             :class="active === t.key && 'gl-seg-on'"
           >
             {{ t.label }}
-            <span v-if="t.count" class="num ml-1 rounded-full bg-[rgba(91,91,246,.14)] px-1.5 text-[11px] font-bold text-[#4644d9]">{{ t.count }}</span>
+            <span v-if="t.count" class="num ml-1 rounded-full bg-[color-mix(in_srgb,var(--accent-600)_14%,transparent)] px-1.5 text-[11px] font-bold text-[var(--accent-700)]">{{ t.count }}</span>
           </router-link>
         </div>
       </div>

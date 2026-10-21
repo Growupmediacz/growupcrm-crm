@@ -10,7 +10,7 @@
       </div>
       <button class="gl-round relative flex size-11 shrink-0 items-center justify-center rounded-full" :aria-label="__('Filtr')" @click="openFilter">
         <GlIcon name="filter" :size="18" />
-        <span v-if="activeCount" class="absolute -right-0.5 -top-0.5 flex size-5 items-center justify-center rounded-full bg-[#5b5bf6] text-[11px] font-bold text-white">{{ activeCount }}</span>
+        <span v-if="activeCount" class="absolute -right-0.5 -top-0.5 flex size-5 items-center justify-center rounded-full bg-[var(--accent-600)] text-[11px] font-bold text-white">{{ activeCount }}</span>
       </button>
     </div>
 
@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="flex shrink-0 justify-center gap-1.5" aria-hidden="true">
-        <span v-for="(c, i) in columns" :key="c.column.name" class="h-1.5 rounded-full transition-all" :class="i === stage ? 'w-4 bg-[#5b5bf6]' : 'w-1.5 bg-[rgba(110,120,200,.3)]'" />
+        <span v-for="(c, i) in columns" :key="c.column.name" class="h-1.5 rounded-full transition-all" :class="i === stage ? 'w-4 bg-[var(--accent-600)]' : 'w-1.5 bg-[rgba(110,120,200,.3)]'" />
       </div>
       <p class="shrink-0 px-1 text-[13px] text-ink-gray-5">{{ __('Přejetím do strany na další fázi. Dlouhý stisk karty → Posunout fázi.') }}</p>
     </template>
@@ -65,7 +65,7 @@
         <div class="absolute inset-0 bg-[rgba(30,34,80,.35)]" @click="showFilter = false" />
         <div class="gl-sheet absolute inset-x-0 bottom-0 flex max-h-[88vh] flex-col rounded-t-[26px] p-5 pb-6">
           <div class="mx-auto mb-3 h-1.5 w-10 rounded-full bg-[rgba(110,120,200,.3)]" />
-          <div class="mb-3 flex items-center justify-between"><h2 class="text-[22px] font-bold text-ink-gray-9">{{ __('Filtr') }}</h2><button class="text-[15px] font-semibold text-[#5b5bf6]" @click="clearDraft">{{ __('Vymazat') }}</button></div>
+          <div class="mb-3 flex items-center justify-between"><h2 class="text-[22px] font-bold text-ink-gray-9">{{ __('Filtr') }}</h2><button class="text-[15px] font-semibold text-[var(--accent-600)]" @click="clearDraft">{{ __('Vymazat') }}</button></div>
           <div class="flex-1 overflow-y-auto">
             <div class="mb-1.5 text-[13px] font-semibold text-ink-gray-7">{{ __('Vlastník') }}</div>
             <div class="mb-4 flex flex-wrap gap-2">
@@ -85,7 +85,7 @@
               <div class="flex min-h-[56px] items-center gap-3 border-t border-[rgba(110,120,200,.14)]"><span class="flex size-9 items-center justify-center rounded-[11px] bg-[rgba(224,161,0,.16)] text-[#7a4400]"><GlIcon name="clock" :size="17" /></span><span class="flex-1 text-[16px] text-ink-gray-9">{{ __('Jen po termínu') }}</span><Switch v-model="draft.overdue" /></div>
             </div>
           </div>
-          <button class="mt-4 h-14 w-full rounded-full bg-[#5b5bf6] text-[17px] font-bold text-white shadow-[0_10px_24px_-10px_rgba(91,91,246,.7)]" @click="applyFilter">{{ __('Zobrazit {0}', [zakazkyWord(draftCount)]) }}</button>
+          <button class="mt-4 h-14 w-full rounded-full bg-[var(--accent-600)] text-[17px] font-bold text-white shadow-[0_10px_24px_-10px_rgba(91,91,246,.7)]" @click="applyFilter">{{ __('Zobrazit {0}', [zakazkyWord(draftCount)]) }}</button>
         </div>
       </div>
     </Teleport>

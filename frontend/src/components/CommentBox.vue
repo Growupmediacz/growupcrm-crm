@@ -12,7 +12,7 @@
       <div
         :class="
           editable &&
-          'gl-comment rounded-[18px] border border-white/90 bg-white/80 shadow-[0_6px_24px_-12px_rgba(64,72,160,.35)] focus-within:border-[rgba(91,91,246,.45)] focus-within:shadow-[0_0_0_3px_rgba(91,91,246,.12)]'
+          'gl-comment rounded-[18px] border border-white/90 bg-white/80 shadow-[0_6px_24px_-12px_rgba(64,72,160,.35)] focus-within:border-[color-mix(in_srgb,var(--accent-600)_45%,transparent)] focus-within:shadow-[0_0_0_3px_rgba(91,91,246,.12)]'
         "
       >
         <EditorContent
@@ -49,7 +49,7 @@
             <div class="ml-auto flex items-center gap-2">
               <button class="gl-quick !h-9" v-bind="discardButtonProps || {}">{{ __('Zrušit') }}</button>
               <button
-                class="inline-flex h-9 items-center gap-2 rounded-full bg-[#5b5bf6] px-4 text-[14px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(91,91,246,.7)] disabled:opacity-50"
+                class="inline-flex h-9 items-center gap-2 rounded-full bg-[var(--accent-600)] px-4 text-[14px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(91,91,246,.7)] disabled:opacity-50"
                 :disabled="submitButtonProps?.disabled"
                 @click="submitButtonProps?.onClick?.()"
               >

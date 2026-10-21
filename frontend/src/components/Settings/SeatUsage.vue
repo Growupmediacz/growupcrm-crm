@@ -18,7 +18,7 @@
         {{ usage.data.used }}<span v-if="usage.data.max_users" class="text-[18px] font-medium text-ink-gray-5"> / {{ usage.data.max_users }}</span>
       </div>
       <div v-if="usage.data.max_users" class="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[rgba(110,120,200,.2)]">
-        <div class="h-full rounded-full" :class="full ? 'bg-[#c8321f]' : 'bg-[#5b5bf6]'" :style="{ width: `${Math.min(100, (usage.data.used * 100) / usage.data.max_users)}%` }" />
+        <div class="h-full rounded-full" :class="full ? 'bg-[#c8321f]' : 'bg-[var(--accent-600)]'" :style="{ width: `${Math.min(100, (usage.data.used * 100) / usage.data.max_users)}%` }" />
       </div>
       <div class="mt-1.5 text-[12px] text-ink-gray-5">{{ free }}</div>
     </div>

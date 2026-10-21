@@ -23,7 +23,7 @@
     </div>
 
     <div v-if="current" class="gl-card flex min-h-0 flex-col overflow-y-auto p-5 md:p-6">
-      <button v-if="isMobileView" class="mb-3 self-start text-[14px] font-semibold text-[#5b5bf6]" @click="selected = ''">‹ {{ __('Odpovědi') }}</button>
+      <button v-if="isMobileView" class="mb-3 self-start text-[14px] font-semibold text-[var(--accent-600)]" @click="selected = ''">‹ {{ __('Odpovědi') }}</button>
       <div class="flex items-start gap-3">
         <span class="flex size-12 shrink-0 items-center justify-center rounded-full text-[14px] font-bold" :style="avatarTone(current.contact_name)">{{ initials(current.contact_name) }}</span>
         <div class="min-w-0 flex-1">

@@ -19,7 +19,7 @@
           <button v-for="s in stages" :key="s.name" class="gl-menu-item" role="menuitem" @click="run({ key: 'move', status: s.name })">
             <span class="size-2.5 shrink-0 rounded-full" :style="{ background: COLORS[s.name] || '#9ca3af' }" />
             <span class="flex-1 text-left">{{ __(s.name) }}</span>
-            <GlIcon v-if="s.name === menu.lead.status" name="check" :size="15" class="text-[#5b5bf6]" />
+            <GlIcon v-if="s.name === menu.lead.status" name="check" :size="15" class="text-[var(--accent-600)]" />
           </button>
         </div>
       </div>

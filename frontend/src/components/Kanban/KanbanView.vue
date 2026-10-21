@@ -212,7 +212,7 @@
     </button>
     <div v-if="canLeft || canRight" class="mx-auto mb-2 h-1 w-60 shrink-0 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]" aria-hidden="true">
       <div
-        class="h-full rounded-full bg-[#5b5bf6] opacity-60 transition-[margin] duration-150"
+        class="h-full rounded-full bg-[var(--accent-600)] opacity-60 transition-[margin] duration-150"
         :style="{ width: `${thumb.width}%`, marginLeft: `${thumb.left}%` }"
       />
     </div>

@@ -5,7 +5,7 @@ export const KINDS = {
   call: { icon: 'phone', tone: 'bg-[rgba(249,115,22,.14)] text-[#a3360a]' },
   email: { icon: 'mail', tone: 'bg-[rgba(20,160,190,.13)] text-[#08626f]' },
   won: { icon: 'star', tone: 'bg-[rgba(34,179,94,.14)] text-[#0f6b32]' },
-  assign: { icon: 'brief', tone: 'bg-[rgba(91,91,246,.1)] text-[#4644d9]' },
+  assign: { icon: 'brief', tone: 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-700)]' },
   mention: { icon: 'reply', tone: 'bg-[rgba(110,120,200,.12)] text-[#4a5173]' },
 }
 

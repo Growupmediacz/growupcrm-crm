@@ -4,7 +4,7 @@
   <Dialog v-model:open="show" :options="{ size: 'lg' }">
     <template #body-title>
       <div class="flex items-center gap-3">
-        <span class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[rgba(91,91,246,.12)] text-[#4644d9]"><GlIcon name="link" :size="22" /></span>
+        <span class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]"><GlIcon name="link" :size="22" /></span>
         <div class="min-w-0">
           <h3 class="text-2xl font-semibold leading-6 text-ink-gray-9">{{ __('LinkedIn zpráva') }}</h3>
           <span class="mt-1 block truncate text-[13px] text-ink-gray-5">{{ item?.campaign_name }} · {{ __('krok {0}', [(item?.step_index ?? 0) + 1]) }}</span>
