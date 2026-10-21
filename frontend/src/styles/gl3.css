@@ -309,20 +309,7 @@ body.app-bg::before {
 .gl3-step-blue { color: #2453c9; background: rgba(46, 107, 230, 0.1); }
 .gl3-step-gray { color: var(--text-2); background: rgba(110, 120, 200, 0.08); }
 
-/* ---------- drobečky na detailu (návrh 04: „Zakázky › Rebranding a web“) ---------- */
-@media (min-width: 768px) {
-  #app-header .gl-crumbs:not(#_) {
-    display: flex !important;
-    font-size: 26px;
-    letter-spacing: -0.02em;
-  }
-  #app-header .gl-crumbs:not(#_) a,
-  #app-header .gl-crumbs:not(#_) span,
-  #app-header .gl-crumbs:not(#_) button {
-    font-size: 26px;
-    height: auto;
-  }
-}
+/* drobečky na detailu se na desktopu nezobrazují (Ivan 2026-10-21: méně přeplněné), skrývá je theme.css */
 
 /* ---------- kalendář (návrh 06): blok s barevným proužkem vlevo ---------- */
 .gl3-evt {
