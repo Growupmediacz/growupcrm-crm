@@ -15,6 +15,8 @@
         :loading="aresLoading"
         @click="refreshFromAres"
       />
+      <!-- design 3. kolo (05): Načíst z ARES · Naplánovat -->
+      <Button :label="__('Naplánovat')" iconLeft="lucide-calendar" @click="showEvent = true" />
       </template>
     </template>
   </LayoutHeader>
@@ -37,8 +39,9 @@
         </div>
         <!-- souhrn -->
         <div v-if="summary" class="mt-4 grid grid-cols-2 gap-2">
-          <div v-for="s in stats" :key="s.label" class="rounded-[16px] bg-[rgba(110,120,200,.075)] px-4 py-3">
-            <div class="num text-[24px] font-bold leading-tight text-ink-gray-9">{{ s.value }}</div>
+          <div v-for="s in stats" :key="s.label" class="rounded-[16px] px-4 py-3" :class="s.bg">
+            <GlIcon :name="s.icon" :size="20" :class="s.fg" />
+            <div class="num mt-1 text-[24px] font-bold leading-tight text-ink-gray-9">{{ s.value }}</div>
             <div class="text-[13px] text-ink-gray-5">{{ s.label }}</div>
           </div>
         </div>
@@ -79,9 +82,21 @@
       </div>
     </Resizer>
 
-    <div class="flex min-w-0 flex-1 flex-col gap-3" :class="showClient ? 'overflow-y-auto' : 'overflow-hidden'">
-    <GlClientBlocks v-if="showClient" :data="client.data" />
-    <div class="gl-card flex flex-1 flex-col overflow-hidden" :class="showClient && 'min-h-[520px]'">
+    <div class="flex min-w-0 flex-1 flex-col gap-3 overflow-hidden">
+    <!-- design 3. kolo (05): záložky jako samostatný pruh nad obsahem -->
+    <div v-if="!isMobileView" class="gl-card flex shrink-0 gap-2 overflow-x-auto p-2">
+      <button
+        v-for="t in tabs"
+        :key="t.key"
+        class="flex h-12 shrink-0 items-center gap-2 rounded-full px-5 text-[15px] font-semibold transition"
+        :class="tab === t.key ? 'bg-[var(--accent-600)] text-white shadow-[0_8px_18px_-8px_color-mix(in_srgb,var(--accent-600)_70%,transparent)]' : 'bg-white/60 text-ink-gray-7 hover:bg-white'"
+        @click="tab = t.key"
+      >
+        {{ t.label }}
+        <span v-if="t.count !== null" class="num rounded-full px-2 py-0.5 text-[12px] font-bold" :class="tab === t.key ? 'bg-white/25 text-white' : 'bg-[rgba(110,120,200,.12)] text-ink-gray-6'">{{ t.count }}</span>
+      </button>
+    </div>
+    <div class="gl-card flex flex-1 flex-col overflow-hidden">
       <!-- mobil (design „Mobil – Detail firmy“): logo, stav, rychlé akce a čísla -->
       <div v-if="isMobileView" class="flex flex-col items-center px-4 pt-5 text-center">
         <Avatar size="3xl" class="h-16 w-16" :label="organization.doc.organization_name" :image="organization.doc.organization_logo" />
@@ -113,7 +128,7 @@
           </div>
         </div>
       </div>
-      <div class="m-4 mb-0 flex w-fit max-w-full gap-1 overflow-x-auto rounded-full bg-[rgba(110,120,200,.11)] p-[3px]">
+      <div v-if="isMobileView" class="m-4 mb-0 flex w-fit max-w-full gap-1 overflow-x-auto rounded-full bg-[rgba(110,120,200,.11)] p-[3px]">
         <button
           v-for="t in tabs"
           :key="t.key"
@@ -122,72 +137,74 @@
           @click="tab = t.key"
         >
           {{ t.label }}
-          <Badge variant="subtle" theme="gray" size="sm">{{ t.count }}</Badge>
+          <Badge v-if="t.count !== null" variant="subtle" theme="gray" size="sm">{{ t.count }}</Badge>
         </button>
       </div>
 
       <div class="flex-1 overflow-y-auto p-5">
         <!-- Aktivita -->
         <div v-if="tab === 'activity'">
-          <div class="mb-4 flex flex-wrap items-center gap-1.5">
+          <!-- design 3. kolo (05): nadpis, filtry a Přidat, skupiny Nadcházející a po dnech, zakázka vpravo -->
+          <h2 v-if="!isMobileView" class="mb-4 text-[28px] font-bold tracking-[-0.02em] text-ink-gray-9">{{ __('Aktivita') }}</h2>
+          <div class="mb-3 flex flex-wrap items-center gap-2">
             <button
               v-for="f in kindFilters"
               :key="f.key"
-              class="rounded-full border px-3.5 py-1 text-[14px] font-medium transition"
-              :class="kind === f.key ? 'border-[#0e1330] bg-[#0e1330] text-white' : 'border-white/80 bg-white/55 text-ink-gray-7 hover:bg-white/80'"
+              class="h-10 rounded-full px-4 text-[15px] font-medium transition"
+              :class="kind === f.key ? 'bg-[var(--accent-600)] text-white' : 'bg-white/60 text-ink-gray-7 ring-1 ring-[var(--line)] hover:bg-white'"
               @click="kind = f.key"
             >
               {{ f.label }}
             </button>
             <div v-if="!isMobileView" class="ml-auto">
               <Dropdown v-if="kind === 'all'" :options="addOptions" placement="right">
-                <Button variant="solid" iconLeft="plus" :label="__('Přidat')" />
+                <Button iconLeft="plus" :label="__('Přidat')" />
               </Dropdown>
-              <Button v-else-if="addByKind[kind]" variant="solid" iconLeft="plus" :label="addByKind[kind].label" @click="addByKind[kind].onClick" />
+              <Button v-else-if="addByKind[kind]" iconLeft="plus" :label="addByKind[kind].label" @click="addByKind[kind].onClick" />
             </div>
           </div>
-          <div v-if="!timeline.length" class="py-16 text-center text-sm text-ink-gray-5">
-            {{ __('Zatím tu není žádná aktivita. Zápisy, hovory, schůzky a úkoly u zakázek této firmy se zobrazí tady.') }}
-          </div>
-          <div
-            v-for="item in timeline"
-            :key="item.kind + item.id"
-            class="mb-2 flex gap-3 rounded-2xl px-2 py-1.5"
-            :class="EDITABLE[item.kind] && 'cursor-pointer transition hover:bg-white/60'"
-            :title="EDITABLE[item.kind] ? __('Upravit') : ''"
-            @click="EDITABLE[item.kind] && editItem(item)"
-          >
-            <div class="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl" :class="kindTone[item.kind]">
-              <span :class="kindIcon[item.kind]" class="size-4" aria-hidden="true" />
-            </div>
-            <div class="min-w-0 flex-1 pb-2">
-              <div class="flex flex-wrap items-baseline gap-x-2 text-sm">
-                <span class="font-medium text-ink-gray-9">{{ kindLabel[item.kind] }}</span>
-                <router-link
-                  v-if="item.kind === 'email' && item.lead"
-                  :to="{ name: 'Lead', params: { leadId: item.lead }, hash: '#emails' }"
-                  class="text-ink-gray-8 hover:underline"
-                  :title="__('Otevřít e-mail v zakázce')"
-                >
-                  {{ item.title }}
-                </router-link>
-                <span v-else-if="item.title" class="text-ink-gray-8">{{ item.title }}</span>
-                <span v-if="item.kind === 'email'" class="rounded-full px-1.5 text-[11px] font-semibold" :class="item.direction === 'Received' ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-700)]'">
-                  {{ item.direction === 'Received' ? __('Přijatý') : __('Odeslaný') }}
-                </span>
-                <span v-if="item.kind === 'task'" class="text-ink-gray-5">({{ __(item.status) }})</span>
+          <GlEmptyState v-if="!timeline.length" class="my-8" icon="clock" :title="__('Zatím žádná aktivita')" :text="__('Zápisy, hovory, schůzky a úkoly u zakázek této firmy se zobrazí tady.')" />
+          <template v-for="g in timelineGroups" :key="g.label">
+            <div class="mt-3 border-b border-[var(--line)] pb-2 text-[16px] font-bold text-ink-gray-9">{{ g.label }}</div>
+            <div
+              v-for="item in g.items"
+              :key="item.kind + item.id"
+              class="flex items-start gap-4 border-b border-[var(--line)] px-1 py-3.5 last:border-b-0"
+              :class="EDITABLE[item.kind] && 'cursor-pointer transition hover:bg-white/50'"
+              :title="EDITABLE[item.kind] ? __('Upravit') : ''"
+              @click="EDITABLE[item.kind] && editItem(item)"
+            >
+              <div class="flex size-12 shrink-0 items-center justify-center rounded-[14px]" :class="kindTone[item.kind]">
+                <span :class="kindIcon[item.kind]" class="size-5" aria-hidden="true" />
               </div>
-              <div v-if="item.text" class="mt-1 line-clamp-4 whitespace-pre-line text-sm text-ink-gray-7">{{ plain(item.text) }}</div>
-              <div class="mt-1 flex flex-wrap gap-x-2 text-xs text-ink-gray-5">
-                <span>{{ dateTime(item.date) }}</span>
-                <span v-if="item.user_name">· {{ item.user_name }}</span>
-                <router-link v-if="item.lead" :to="{ name: 'Lead', params: { leadId: item.lead } }" class="text-ink-blue-5 hover:underline" @click.stop>
-                  · {{ item.lead_title }}
-                </router-link>
+              <div class="min-w-0 flex-1">
+                <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                  <router-link
+                    v-if="item.kind === 'email' && item.lead"
+                    :to="{ name: 'Lead', params: { leadId: item.lead }, hash: '#emails' }"
+                    class="text-[16px] font-semibold text-ink-gray-9 hover:underline"
+                    @click.stop
+                  >{{ rowTitle(item) }}</router-link>
+                  <span v-else class="text-[16px] font-semibold text-ink-gray-9">{{ rowTitle(item) }}</span>
+                  <span v-if="rowBadge(item)" class="rounded-full px-2.5 py-0.5 text-[12.5px] font-semibold" :class="rowBadge(item).cls">{{ rowBadge(item).text }}</span>
+                </div>
+                <div v-if="item.text" class="mt-1 line-clamp-2 whitespace-pre-line text-[14px] text-ink-gray-7">{{ plain(item.text) }}</div>
+                <div class="mt-1 text-[13.5px] text-ink-gray-5">
+                  {{ [g.upcoming ? dateTime(item.date) : timeOnly(item.date), item.user_name].filter(Boolean).join(' · ') }}
+                </div>
               </div>
+              <router-link
+                v-if="item.lead && !isMobileView"
+                :to="{ name: 'Lead', params: { leadId: item.lead } }"
+                class="max-w-[220px] shrink-0 truncate rounded-full bg-[rgba(110,120,200,.1)] px-3 py-1 text-[13px] font-medium text-ink-gray-7 hover:bg-[rgba(110,120,200,.18)]"
+                @click.stop
+              >{{ item.lead_title }}</router-link>
             </div>
-          </div>
+          </template>
         </div>
+
+        <!-- Spolupráce (klient agentury): retainer, služby, projekty -->
+        <GlClientBlocks v-else-if="tab === 'client'" :data="client.data" />
 
         <!-- Dokumenty (smlouvy, nabídky, ceníky, přílohy e-mailů) -->
         <GlOrgDocuments v-else-if="tab === 'documents'" ref="documentsRef" :organization="props.organizationId" />
@@ -329,6 +346,7 @@
     :defaultLead="defaultLead"
     @saved="overview.reload()"
   />
+  <GlTaskModal v-if="editTask" :modelValue="true" :task="editTask" @update:modelValue="(v) => !v && (editTask = '')" @saved="overview.reload()" />
   <BranchDialog v-model="showBranchDialog" :organization="props.organizationId" :branch="activeBranch" @saved="reload" />
   <ContactDialog v-model="showContactDialog" :organization="props.organizationId" :branches="branches" @saved="reload" />
 </template>
@@ -342,6 +360,7 @@ import LayoutHeader from '@/components/LayoutHeader.vue'
 import LeadModal from '@/components/Modals/GlNewLeadModal.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
 import GlCallModal from '@/components/Modals/GlCallModal.vue'
+import GlTaskModal from '@/components/Modals/GlTaskModal.vue'
 import GlOrgActivityModal from '@/components/Firma/GlOrgActivityModal.vue'
 import GlOrgDocuments from '@/components/Firma/GlOrgDocuments.vue'
 import GlIcon from '@/components/GlIcon.vue'
@@ -445,18 +464,21 @@ const tab = ref('activity')
 const documentsRef = ref(null)
 const documents = createResource({ url: 'growupcrm.documents.get_documents', params: { organization: props.organizationId }, auto: true })
 watch(() => documentsRef.value?.docs?.data, (d) => d && (documents.data = d))
+// pořadí podle návrhu 05; klient agentury má navíc Spolupráci (retainer, projekty)
 const tabs = computed(() => [
   { key: 'activity', label: __('Aktivita'), count: overview.data?.timeline?.length ?? 0 },
   { key: 'leads', label: __('Zakázky'), count: leads.value.length },
-  { key: 'documents', label: __('Dokumenty'), count: documents.data?.documents?.length ?? 0 },
   { key: 'contacts', label: __('Kontakty'), count: contacts.value.length },
   { key: 'branches', label: __('Pobočky'), count: branches.value.length },
+  { key: 'documents', label: __('Dokumenty'), count: documents.data?.documents?.length ?? 0 },
+  ...(showClient.value ? [{ key: 'client', label: __('Spolupráce'), count: null }] : []),
 ])
+// design 3. kolo (05): dlaždice s ikonou, hovory oranžově
 const stats = computed(() => [
-  { label: __('Zakázky'), value: summary.value.leads },
-  { label: __('Schůzky'), value: summary.value.meetings },
-  { label: __('Zápisy'), value: summary.value.notes },
-  { label: __('Hovory'), value: summary.value.calls },
+  { label: __('Zakázky'), value: summary.value.leads, icon: 'doc', fg: 'text-[var(--accent-600)]', bg: 'bg-[rgba(110,120,200,.075)]' },
+  { label: __('Schůzky'), value: summary.value.meetings, icon: 'cal', fg: 'text-[#3b6ef6]', bg: 'bg-[rgba(110,120,200,.075)]' },
+  { label: __('Zápisy'), value: summary.value.notes, icon: 'doc', fg: 'text-[#8b5cf6]', bg: 'bg-[rgba(110,120,200,.075)]' },
+  { label: __('Hovory'), value: summary.value.calls, icon: 'phone', fg: 'text-[#f97316]', bg: 'bg-[rgba(249,115,22,.08)]' },
 ])
 
 const kind = ref('all')
@@ -524,13 +546,57 @@ const headerAdd = computed(() => {
 // zápis a úkol z aktivity firmy jdou upravit (stejný dialog jako v zakázce a v Zápisech / Úkolech)
 const EDITABLE = { note: { doctype: 'FCRM Note', title: 'Note' }, task: { doctype: 'CRM Task', title: 'Task' } }
 const { showModal } = useDoctypeModal()
+const editTask = ref('')
 function editItem(item) {
+  if (item.kind === 'task') return (editTask.value = item.id)
   const e = EDITABLE[item.kind]
   showModal({ name: item.id, doctype: e.doctype, title: e.title, callbacks: { afterUpdate: () => overview.reload() } })
 }
 const timeline = computed(() =>
   (overview.data?.timeline || []).filter((t) => kind.value === 'all' || t.kind === kind.value),
 )
+const toDate = (d) => new Date(String(d).replace(' ', 'T'))
+const dayFmt = new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'long' })
+const timeFmt = new Intl.DateTimeFormat('cs-CZ', { hour: '2-digit', minute: '2-digit' })
+const timeOnly = (d) => (d ? timeFmt.format(toDate(d)) : '')
+// design 3. kolo (05): nejdřív Nadcházející (schůzky a úkoly v budoucnu), pak po dnech od nejnovějšího
+const timelineGroups = computed(() => {
+  const now = new Date()
+  const startOf = (x) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime()
+  const today = startOf(now)
+  const upcoming = timeline.value.filter((t) => t.date && toDate(t.date) > now && ['event', 'task'].includes(t.kind))
+  const groups = upcoming.length
+    ? [{ label: __('Nadcházející'), upcoming: true, items: [...upcoming].sort((a, b) => toDate(a.date) - toDate(b.date)) }]
+    : []
+  for (const t of timeline.value) {
+    if (upcoming.includes(t)) continue
+    const d = t.date ? toDate(t.date) : null
+    const diff = d ? Math.round((today - startOf(d)) / 86400000) : null
+    const label = d === null ? __('Bez data') : diff === 0 ? __('Dnes') : diff === 1 ? __('Včera') : dayFmt.format(d)
+    let g = groups.find((x) => x.label === label && !x.upcoming)
+    if (!g) groups.push((g = { label, items: [] }))
+    g.items.push(t)
+  }
+  return groups
+})
+function rowTitle(item) {
+  if (item.kind === 'call') return kindLabel.value.call
+  if (item.kind === 'event' || item.kind === 'task' || item.kind === 'email') return item.title || kindLabel.value[item.kind]
+  return item.title || kindLabel.value[item.kind]
+}
+const BADGE = {
+  plan: 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]',
+  warn: 'bg-[rgba(224,161,0,.16)] text-[#7a4400]',
+  ok: 'bg-[rgba(34,179,94,.13)] text-[#178a4a]',
+  gray: 'bg-[rgba(110,120,200,.1)] text-ink-gray-6',
+}
+function rowBadge(item) {
+  if (item.kind === 'event' && item.date && toDate(item.date) > new Date()) return { text: __('Naplánováno'), cls: BADGE.plan }
+  if (item.kind === 'call' && item.title) return { text: item.title, cls: /nebral|zpět/i.test(item.title) ? BADGE.warn : BADGE.ok }
+  if (item.kind === 'task' && item.status) return { text: __(item.status), cls: item.status === 'Done' ? BADGE.ok : BADGE.gray }
+  if (item.kind === 'email') return { text: item.direction === 'Received' ? __('Přijatý') : __('Odeslaný'), cls: item.direction === 'Received' ? BADGE.ok : BADGE.plan }
+  return null
+}
 
 const dateFmt = new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
 const dateTime = (d) => (d ? dateFmt.format(new Date(String(d).replace(' ', 'T'))) : '')
