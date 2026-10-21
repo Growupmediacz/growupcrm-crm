@@ -11,7 +11,7 @@
           <template #prefix><span class="size-2 rounded-full" :style="{ background: STATUS_COLORS[p.status === 'Čeká' ? 'Čeká' : p.display_status] }" /></template>
         </Button>
       </Dropdown>
-      <Button variant="solid" iconLeft="plus" @click="focusNew()"><span class="hidden sm:inline">{{ __('Přidat úkol') }}</span></Button>
+      <Button variant="solid" iconLeft="plus" @click="openTask('')"><span class="hidden sm:inline">{{ __('Přidat úkol') }}</span></Button>
     </template>
   </LayoutHeader>
 
@@ -21,9 +21,9 @@
       <div class="gl-card p-5 md:p-6">
         <div class="flex items-start justify-between gap-6">
           <div class="min-w-0">
-            <h1 class="truncate text-[28px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[34px]">{{ p.project_name }}</h1>
-            <div class="mt-1 truncate text-[16px] text-ink-gray-7">
-              <router-link v-if="p.organization" :to="{ name: 'Organization', params: { organizationId: p.organization } }" class="hover:text-ink-gray-9">{{ p.organization_name }}</router-link>
+            <h1 class="truncate text-[28px] font-bold leading-tight tracking-[-0.02em] text-ink-gray-9 md:text-[40px]">{{ p.project_name }}</h1>
+            <div class="mt-1 truncate text-[17px] text-ink-gray-6">
+              <router-link v-if="p.organization" :to="{ name: 'Organization', params: { organizationId: p.organization } }" class="font-medium text-[var(--accent-700)] hover:underline">{{ p.organization_name }}</router-link>
               <template v-if="p.template"> · {{ __('šablona {0}', [__(p.template)]) }}</template>
             </div>
           </div>
@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="mt-5 flex flex-wrap items-center gap-3">
-          <div class="h-2 min-w-[140px] flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><div class="h-full rounded-full bg-[var(--accent-600)] transition-all duration-500" :style="{ width: `${progress}%` }" /></div>
+          <div class="h-2.5 min-w-[140px] flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><div class="h-full rounded-full bg-[var(--accent-600)] transition-all duration-500" :style="{ width: `${progress}%` }" /></div>
           <span class="num text-[15px] font-bold text-ink-gray-9">{{ progress }} %</span>
           <span class="num text-[13px] text-ink-gray-5">{{ __('{0} z {1} úkolů', [doneCount, p.tasks.length]) }}</span>
         </div>
@@ -54,19 +54,26 @@
       </div>
 
       <div class="gl-card p-5 md:p-6">
-        <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <h2 class="text-[22px] font-bold tracking-tight text-ink-gray-9">{{ __('Úkoly') }}</h2>
-          <div class="gl-seg">
-            <button v-for="v in VIEWS" :key="v.key" class="gl-seg-btn" :class="view === v.key && 'gl-seg-on'" @click="view = v.key">{{ v.label }}</button>
-          </div>
+        <!-- design 3. kolo (18): Úkoly · + Přidat úkol, přepínač, fáze se sbalují a mají vlastní „+ Přidat úkol“ -->
+        <div class="mb-3 flex items-center justify-between gap-2">
+          <h2 class="text-[28px] font-bold tracking-[-0.02em] text-ink-gray-9">{{ __('Úkoly') }}</h2>
+          <button class="flex items-center gap-1.5 text-[15px] font-semibold text-[var(--accent-600)] hover:underline" @click="openTask('')"><GlIcon name="plus" :size="16" />{{ __('Přidat úkol') }}</button>
         </div>
-        <div v-for="g in groups" :key="g.phase" class="mb-3">
-          <div v-if="g.phase || view === 'phase'" class="mb-1 flex items-center gap-3 text-[13px]">
-            <b class="text-ink-gray-9">{{ g.phase || __('Bez fáze') }}</b>
-            <span class="num text-ink-gray-5">{{ g.done }} / {{ g.tasks.length }}</span>
+        <div class="gl-seg mb-3 inline-flex">
+          <button v-for="v in VIEWS" :key="v.key" class="gl-seg-btn" :class="view === v.key && 'gl-seg-on !bg-[var(--accent-600)] !text-white'" @click="view = v.key">{{ v.label }}</button>
+        </div>
+        <div v-for="g in groups" :key="g.phase" class="border-t border-[var(--line)] py-2">
+          <div v-if="g.phase || view === 'phase'" class="flex items-center gap-3 py-1.5">
+            <button class="flex min-w-0 items-center gap-2" :aria-expanded="!collapsed[g.phase]" @click="collapsed[g.phase] = !collapsed[g.phase]">
+              <GlIcon :name="collapsed[g.phase] ? 'right' : 'down'" :size="16" class="text-ink-gray-5" />
+              <b class="truncate text-[17px] text-ink-gray-9">{{ g.phase || __('Bez fáze') }}</b>
+            </button>
+            <span class="num text-[14px] text-ink-gray-5">{{ g.done }} / {{ g.tasks.length }}</span>
             <span class="h-1.5 w-40 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><span class="block h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${g.tasks.length ? (g.done * 100) / g.tasks.length : 0}%` }" /></span>
+            <button v-if="view === 'phase'" class="ml-auto flex shrink-0 items-center gap-1.5 text-[14px] font-semibold text-[var(--accent-600)] hover:underline" @click="openTask(g.phase)"><GlIcon name="plus" :size="15" />{{ __('Přidat úkol') }}</button>
           </div>
-          <div v-for="t in g.tasks" :key="t.name" class="flex items-center gap-3 rounded-2xl px-1 py-2 hover:bg-white/50">
+          <template v-if="!collapsed[g.phase]">
+          <div v-for="t in g.tasks" :key="t.name" class="flex cursor-pointer items-center gap-3 rounded-2xl py-2 pl-7 pr-1 hover:bg-white/50" @click="(e) => !e.target.closest('button,a') && openTask(null, t.name)">
             <button
               class="flex size-6 shrink-0 items-center justify-center rounded-full border-[1.75px] transition"
               :class="t.status === 'Done' ? 'border-[var(--accent-600)] bg-[var(--accent-600)] text-white' : 'border-[rgba(110,120,200,.45)] hover:border-[var(--accent-600)]'"
@@ -79,50 +86,65 @@
             <GlUserAvatar v-if="t.assigned_to" :user="t.assigned_to" class="size-7 bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" />
             <span v-else class="size-7 shrink-0" />
           </div>
-          <button v-if="view === 'phase'" class="flex items-center gap-2 px-1 py-2 text-[14px] font-medium text-ink-gray-7 hover:text-[var(--accent-600)]" @click="focusNew(g.phase)"><GlIcon name="plus" :size="15" />{{ __('Přidat úkol') }}</button>
+          </template>
         </div>
         <p v-if="!groups.length" class="py-6 text-center text-[14px] text-ink-gray-5">{{ view === 'mine' ? __('Žádné vaše úkoly.') : __('Projekt zatím nemá úkoly.') }}</p>
-        <form class="mt-2 flex flex-wrap items-center gap-2" @submit.prevent="addTask">
-          <input ref="newEl" v-model="newTitle" class="gl-field min-w-[180px] flex-1" :placeholder="newPhase ? __('Nový úkol ve fázi {0}…', [newPhase]) : __('Nový úkol…')" />
-          <div class="w-44"><GlDatePicker v-model="newDue" :withWeekday="false" :withYear="false" :placeholder="__('Termín')" /></div>
-          <Button type="submit" variant="solid" iconLeft="plus" :label="__('Přidat')" :disabled="!newTitle.trim()" />
-        </form>
       </div>
     </div>
 
-    <div class="hidden w-[330px] shrink-0 flex-col gap-3 overflow-y-auto lg:flex">
+    <!-- design 3. kolo (18): Detaily a Milníky ve sloupci, Tým vedle (na užší obrazovce pod sebou) -->
+    <div class="hidden shrink-0 gap-3 overflow-y-auto lg:flex lg:flex-col xl:flex-row xl:items-start">
+    <div class="flex w-[330px] flex-col gap-3">
       <div class="gl-card p-6">
-        <h2 class="mb-2 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Detaily') }}</h2>
+        <h2 class="mb-2 text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Detaily') }}</h2>
         <dl class="flex flex-col">
-          <div v-for="r in details" :key="r.label" class="flex items-baseline justify-between gap-4 py-[7px]">
-            <dt class="shrink-0 text-[14px] text-ink-gray-5">{{ r.label }}</dt>
-            <dd class="min-w-0 truncate text-right text-[14px] font-medium text-ink-gray-9">
-              <router-link v-if="r.value && r.to" :to="r.to" class="font-semibold text-[var(--accent-600)] hover:underline">{{ r.value }}</router-link>
+          <div v-for="r in details" :key="r.label" class="flex items-center justify-between gap-4 border-b border-[var(--line)] py-3 last:border-b-0">
+            <dt class="shrink-0 text-[15px] text-ink-gray-5">{{ r.label }}</dt>
+            <dd class="flex min-w-0 items-center gap-2 truncate text-right text-[15px] font-medium text-ink-gray-9">
+              <GlUserAvatar v-if="r.user" :user="r.user" class="size-7 bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" />
+              <router-link v-if="r.value && r.to" :to="r.to" class="truncate font-semibold text-[var(--accent-600)] hover:underline">{{ r.value }}</router-link>
               <template v-else-if="r.value">{{ r.value }}</template>
               <span v-else class="gl-empty">{{ __('Bez hodnoty') }}</span>
             </dd>
           </div>
         </dl>
-      </div>
-      <div class="gl-card p-6">
-        <div class="mb-2 flex items-baseline justify-between"><h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Tým') }}</h2><button class="gl-fill" @click="openEdit">{{ __('Upravit') }}</button></div>
-        <div v-for="m in p.team_load" :key="m.user" class="flex items-center gap-3 py-1.5">
-          <GlUserAvatar :user="m.user" class="size-10 bg-[#dde6ff] text-[12px] font-bold text-[#2440a6]" />
-          <span class="min-w-0 flex-1"><span class="block truncate text-[15px] font-semibold text-ink-gray-9">{{ userName(m.user) }}</span><span v-if="m.owner" class="block text-[12px] text-ink-gray-5">{{ __('vlastník') }}</span></span>
-          <span class="num text-[13px] text-ink-gray-5">{{ tasksWord(m.tasks) }}</span>
+        <div v-if="p.budget_hours" class="mt-2">
+          <div class="text-[15px] text-ink-gray-5">{{ __('Rozpočet hodin') }}</div>
+          <div class="num mt-1 text-[20px] font-bold text-ink-gray-9">{{ new Intl.NumberFormat('cs-CZ').format(p.budget_hours) }} h</div>
         </div>
       </div>
       <div v-if="p.milestones?.length" class="gl-card p-6">
-        <h2 class="mb-2 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Milníky') }}</h2>
-        <div v-for="m in p.milestones" :key="m.title" class="flex items-center gap-3 py-1.5">
-          <span class="size-2.5 shrink-0 rounded-full" :style="{ background: m.done ? '#22b35e' : m.client ? '#e0a100' : '#c7c9f6' }" />
-          <span class="min-w-0 flex-1"><span class="block truncate text-[15px] text-ink-gray-9" :class="m.done && 'line-through opacity-60'">{{ m.title }}</span><span v-if="m.client && !m.done" class="block text-[12px] text-ink-gray-5">{{ __('čeká se') }}</span></span>
-          <span v-if="m.date" class="num text-[13px]" :class="!m.done && m.date < today ? 'font-semibold text-[#a82614]' : 'text-ink-gray-5'">{{ shortDate(m.date) }}</span>
+        <h2 class="mb-3 text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Milníky') }}</h2>
+        <div class="relative">
+          <div v-for="(m, i) in p.milestones" :key="m.title" class="relative flex gap-4 pb-5 last:pb-0">
+            <span v-if="i < p.milestones.length - 1" class="absolute left-[9px] top-6 h-[calc(100%-18px)] w-px bg-[rgba(110,120,200,.3)]" aria-hidden="true" />
+            <span class="relative z-[1] mt-1 size-[19px] shrink-0 rounded-full border-[3px] border-white shadow-[0_0_0_1px_rgba(110,120,200,.25)]" :style="{ background: m.done ? '#22b35e' : m.client ? '#e0a100' : '#a3a8cc' }" />
+            <span class="min-w-0 flex-1 border-b border-[var(--line)] pb-4" :class="i === p.milestones.length - 1 && 'border-b-0 pb-0'">
+              <span class="flex items-baseline justify-between gap-3">
+                <span class="truncate text-[16px] font-semibold text-ink-gray-9" :class="m.done && 'line-through opacity-60'">{{ m.title }}</span>
+                <span v-if="m.date && m.client && !m.done" class="num shrink-0 text-[15px]" :class="m.date < today ? 'font-semibold text-[#c8321f]' : 'text-ink-gray-6'">{{ shortDate(m.date) }}</span>
+              </span>
+              <span v-if="m.client && !m.done" class="block text-[14px] font-medium text-[#d48a00]">{{ __('čeká se') }}</span>
+              <span v-else-if="m.date" class="num block text-[14px]" :class="!m.done && m.date < today ? 'font-semibold text-[#c8321f]' : 'text-ink-gray-6'">{{ shortDate(m.date) }}</span>
+            </span>
+          </div>
         </div>
       </div>
     </div>
+    <div class="flex w-[330px] flex-col gap-3 xl:w-[300px]">
+      <div class="gl-card p-6">
+        <div class="mb-3 flex items-baseline justify-between"><h2 class="text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Tým') }}</h2><button class="flex items-center gap-1 text-[14px] font-semibold text-[var(--accent-600)] hover:underline" @click="openEdit"><GlIcon name="edit" :size="14" />{{ __('Upravit') }}</button></div>
+        <div v-for="m in p.team_load" :key="m.user" class="flex items-center gap-3 border-b border-[var(--line)] py-3 last:border-b-0">
+          <GlUserAvatar :user="m.user" class="size-12 bg-[#dde6ff] text-[14px] font-bold text-[#2440a6]" />
+          <span class="min-w-0 flex-1"><span class="block truncate text-[16px] font-semibold text-ink-gray-9">{{ userName(m.user) }}</span><span class="block text-[13px] text-ink-gray-5">{{ m.owner ? __('vlastník') : __('člen týmu') }}</span></span>
+          <span class="num shrink-0 rounded-full bg-[rgba(110,120,200,.1)] px-2.5 py-0.5 text-[12.5px] font-medium text-ink-gray-6">{{ tasksWord(m.tasks) }}</span>
+        </div>
+      </div>
+    </div>
+    </div>
   </div>
 
+  <GlTaskModal v-if="showTask" v-model="showTask" :task="taskName" :defaults="taskDefaults" @saved="project.reload()" />
   <Dialog v-model:open="showWaiting" :title="__('Projekt čeká')">
     <template #default>
       <label><span class="gl-label">{{ __('Na co čekáme?') }}</span><input v-model="waitingNote" class="gl-field w-full" :placeholder="__('Např. podklady od klienta')" /></label>
@@ -166,6 +188,7 @@
 </template>
 <script setup>
 import GlIcon from '@/components/GlIcon.vue'
+import GlTaskModal from '@/components/Modals/GlTaskModal.vue'
 import GlDatePicker from '@/components/GlDatePicker.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import { completeTaskWithUndo } from '@/composables/glTaskDone'
@@ -174,7 +197,7 @@ import GlUserAvatar from '@/components/GlUserAvatar.vue'
 import { usersStore } from '@/stores/users'
 import { formatDateCz, shortDateCz } from '@/utils/glDate'
 import { Breadcrumbs, Button, Dialog, Dropdown, call, createResource, toast, usePageMeta } from 'frappe-ui'
-import { computed, h, nextTick, reactive, ref } from 'vue'
+import { computed, h, reactive, ref } from 'vue'
 
 const props = defineProps({ projectId: { type: String, required: true } })
 const { getUser, users } = usersStore()
@@ -276,24 +299,17 @@ async function toggleTask(t) {
   }
 }
 
-const newTitle = ref('')
-const newDue = ref('')
-const newPhase = ref('')
-const newEl = ref(null)
-function focusNew(phase = '') {
-  newPhase.value = phase
-  nextTick(() => newEl.value?.focus())
-}
-async function addTask() {
-  try {
-    const name = await call('growupcrm.projects.add_task', { project: props.projectId, title: newTitle.value.trim(), due_date: newDue.value || null })
-    if (newPhase.value) await call('frappe.client.set_value', { doctype: 'CRM Task', name, fieldname: 'project_phase', value: newPhase.value })
-    newTitle.value = ''
-    newDue.value = ''
-    project.reload()
-  } catch (e) {
-    toast.error(e.messages?.[0] || e.message)
-  }
+// úkol projektu v okně (design 3. kolo): nový ve fázi, nebo úprava kliknutím na řádek
+const collapsed = reactive({})
+const showTask = ref(false)
+const taskName = ref('')
+const taskDefaults = ref({})
+function openTask(phase, name = '') {
+  taskName.value = name || ''
+  taskDefaults.value = name
+    ? {}
+    : { project: props.projectId, project_phase: phase || '', ref: { kind: 'project', label: `${__('Projekt')} · ${p.value.project_name}${phase ? ` · ${phase}` : ''}` }, reference_docname: '' }
+  showTask.value = true
 }
 
 const details = computed(() => [
@@ -304,8 +320,7 @@ const details = computed(() => [
     to: p.value.lead && { name: 'Lead', params: { leadId: p.value.lead } },
   },
   { label: __('Začátek'), value: p.value.start_date ? fullDate(p.value.start_date) : '' },
-  { label: __('Vlastník'), value: p.value.project_owner ? userName(p.value.project_owner) : '' },
-  { label: __('Rozpočet hodin'), value: p.value.budget_hours ? `${new Intl.NumberFormat('cs-CZ').format(p.value.budget_hours)} h` : '' },
+  { label: __('Vlastník'), value: p.value.project_owner ? userName(p.value.project_owner) : '', user: p.value.project_owner },
 ])
 
 // úprava projektu

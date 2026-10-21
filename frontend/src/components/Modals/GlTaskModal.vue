@@ -66,7 +66,7 @@
         </div>
         <div>
           <div class="mb-1.5 text-xs text-ink-gray-5">{{ __('Navázáno na') }}</div>
-          <div v-if="form.ref && form.reference_docname" class="flex items-center gap-2">
+          <div v-if="form.ref && (form.reference_docname || form.ref.kind === 'project')" class="flex items-center gap-2">
             <span class="rounded-full bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] px-3 py-1.5 text-[13.5px] font-medium text-[var(--accent-700)]">{{ form.ref.label }}</span>
             <button v-if="!readonly && form.ref.kind !== 'project'" type="button" class="text-[13px] text-ink-gray-5 hover:text-ink-gray-8" @click="clearRef">{{ __('Zrušit vazbu') }}</button>
           </div>
@@ -174,6 +174,8 @@ async function save() {
     title: form.title, description: form.description, status: form.status, priority: form.priority,
     assigned_to: form.assigned_to, date: form.date || '', time: form.date ? form.time || '' : '',
   }
+  // úkol projektu (z detailu projektu): projekt a fáze
+  if (form.project) Object.assign(data, { project: form.project, project_phase: form.project_phase || '' })
   if (refValue.value) Object.assign(data, { reference_doctype: refType.value, reference_docname: refValue.value })
   else Object.assign(data, { reference_doctype: form.reference_docname ? form.reference_doctype : '', reference_docname: form.reference_docname || '' })
   saving.value = true
