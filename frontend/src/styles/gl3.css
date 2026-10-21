@@ -321,3 +321,11 @@ body.app-bg::before {
     height: auto;
   }
 }
+
+/* ---------- kalendář (návrh 06): blok s barevným proužkem vlevo ---------- */
+.gl3-evt {
+  border: 0 !important;
+  border-left: 3px solid currentColor !important;
+  border-radius: 10px;
+  box-shadow: none;
+}

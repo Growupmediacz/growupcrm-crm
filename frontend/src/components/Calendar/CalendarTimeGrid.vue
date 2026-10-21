@@ -5,8 +5,8 @@
     <!-- hlavička dnů -->
     <div class="flex pr-[var(--sb)]" :style="{ '--sb': scrollbar + 'px' }">
       <div class="w-16 shrink-0" />
-      <div v-for="d in days" :key="d.getTime()" class="flex flex-1 flex-col items-center gap-1 pb-2">
-        <span class="text-[13px] font-medium capitalize text-ink-gray-5">{{ weekdayShort(d) }}</span>
+      <div v-for="d in days" :key="d.getTime()" class="flex flex-1 items-center justify-center gap-2 pb-3">
+        <span class="text-[15px] font-semibold capitalize" :class="isWeekend(d) ? 'text-ink-gray-4' : 'text-ink-gray-7'">{{ weekdayShort(d) }}</span>
         <span
           class="flex size-9 items-center justify-center rounded-full text-[20px] font-bold tabular-nums"
           :class="sameDay(d, today) ? 'bg-[#5b5bf6] text-white shadow-[0_6px_16px_-6px_rgba(91,91,246,.7)]' : 'text-ink-gray-9'"
@@ -21,10 +21,10 @@
       class="flex border-b border-[rgba(110,120,200,.16)] pb-2 pr-[var(--sb)]"
       :style="{ '--sb': scrollbar + 'px' }"
     >
-      <div class="w-16 shrink-0 pt-1.5 text-[12px] font-medium text-ink-gray-5">{{ __('Úkoly') }}</div>
+      <div class="w-16 shrink-0 pt-1.5 text-[13px] font-semibold text-ink-gray-7">{{ __('Celý den') }}</div>
       <div v-for="d in days" :key="d.getTime()" class="flex min-w-0 flex-1 flex-col gap-1 px-1">
         <button
-          v-for="item in topItems(d)"
+          v-for="item in shownTop(d)"
           :key="item.key"
           class="flex min-w-0 items-center gap-1.5 rounded-lg px-2 py-1 text-left text-[12px] font-semibold"
           :class="topClasses(item)"
@@ -38,6 +38,13 @@
             aria-hidden="true"
           />
           <span class="truncate" :class="item.done && 'line-through'">{{ item.title }}</span>
+        </button>
+        <button
+          v-if="!topExpanded && topItems(d).length > TOP_LIMIT"
+          class="rounded-lg px-2 py-0.5 text-left text-[12px] font-semibold text-ink-gray-5 hover:bg-[rgba(110,120,200,.1)] hover:text-ink-gray-9"
+          @click="topExpanded = true"
+        >
+          + {{ topItems(d).length - TOP_LIMIT }} {{ __('další') }}
         </button>
       </div>
     </div>
@@ -58,6 +65,7 @@
           v-for="d in days"
           :key="d.getTime()"
           class="relative min-w-0 flex-1 cursor-pointer select-none"
+          :class="isWeekend(d) && 'bg-[rgba(110,120,200,.035)]'"
           :ref="(el) => setColumn(el, d)"
           @pointerdown="onPointerDown($event, d)"
         >
@@ -89,7 +97,7 @@
           <div
             v-for="b in layout(d)"
             :key="b.item.key"
-            class="absolute z-10 overflow-hidden rounded-[10px] px-2 py-1 text-[12px] shadow-[0_2px_8px_-4px_rgba(64,72,160,.35)]"
+            class="gl3-evt absolute z-10 overflow-hidden rounded-[10px] px-2 py-1 text-[12px]"
             :class="itemClasses(b.item)"
             :style="b.style"
             :title="b.item.title"
@@ -134,9 +142,18 @@ const hasTopRow = computed(() => props.days.some((d) => topItems(d).length))
 // Úkol je bod v čase: krátký blok od termínu (30 min), událost má skutečnou délku.
 const TASK_MINUTES = 30
 
-// nad mřížkou: úkoly (bod v čase, ne blok) a celodenní události
+// design 3. kolo (06): v řádku „Celý den“ jen celodenní události a úkoly bez času,
+// úkoly s časem jsou v mřížce jako krátký blok. Řádek ukáže nejvýš 2 položky na den a „+ další“.
+const TOP_LIMIT = 2
+const topExpanded = ref(false)
+const isUntimedTask = (i) => i.kind === 'task' && i.start.getHours() === 0 && i.start.getMinutes() === 0
+const isWeekend = (d) => d.getDay() === 0 || d.getDay() === 6
 function topItems(d) {
-  return itemsOnDay(props.items, d).filter((i) => i.allDay || i.kind === 'task')
+  return itemsOnDay(props.items, d).filter((i) => i.allDay || isUntimedTask(i))
+}
+function shownTop(d) {
+  const all = topItems(d)
+  return topExpanded.value ? all : all.slice(0, TOP_LIMIT)
 }
 function topClasses(item) {
   if (item.kind === 'event') return 'bg-[rgba(59,110,246,.14)] text-[#1f48b8]'
@@ -149,7 +166,7 @@ function layout(d) {
   const dayStart = startOfDay(d)
   const dayEnd = addDays(dayStart, 1)
   const blocks = itemsOnDay(props.items, d)
-    .filter((i) => !i.allDay && i.kind !== 'task')
+    .filter((i) => !i.allDay && !isUntimedTask(i))
     .map((item) => {
       const s = item.start < dayStart ? dayStart : item.start
       let e = item.kind === 'task' ? new Date(item.start.getTime() + TASK_MINUTES * 60000) : item.end
