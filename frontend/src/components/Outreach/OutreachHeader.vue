@@ -21,7 +21,9 @@
     <template #right-header>
       <button class="gl-chip hidden h-9 items-center gap-2 rounded-full px-3.5 text-[14px] sm:flex" @click="$emit('mailbox')">
         <span class="size-2 rounded-full" :class="connected ? 'bg-[#22b35e]' : 'bg-[#e0a100]'" />
-        {{ connected ? __('Schránka připojena') : __('Připojit schránku') }}
+        <template v-if="connected">{{ __('Schránka') }}: <b class="font-semibold">{{ sender || __('připojena') }}</b></template>
+        <template v-else>{{ __('Připojit schránku') }}</template>
+        <span class="lucide-chevron-down size-4 opacity-60" aria-hidden="true" />
       </button>
       <Button variant="solid" iconLeft="plus" @click="$emit('newCampaign')">
         <span class="hidden sm:inline">{{ __('Nová kampaň') }}</span>
@@ -49,6 +51,7 @@ import { computed } from 'vue'
 const props = defineProps({
   active: { type: String, default: 'overview' },
   connected: { type: Boolean, default: false },
+  sender: { type: String, default: '' },
   counts: { type: Object, default: () => ({}) },
 })
 defineEmits(['mailbox', 'newCampaign'])
