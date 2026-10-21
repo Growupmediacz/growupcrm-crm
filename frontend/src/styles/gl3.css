@@ -77,6 +77,8 @@ body.app-bg::before {
 
 /* ---------- levá lišta (GlRail) ---------- */
 .gl3-rail {
+  position: relative;
+  z-index: 31; /* nad ztlumením panelu oznámení */
   background: var(--mat-bar);
   backdrop-filter: var(--mat-blur);
   -webkit-backdrop-filter: var(--mat-blur);
