@@ -1,5 +1,5 @@
 <template>
-  <!-- GrowUp: Agent (Firecrawl) – obohacení firem z webu. Další etapy: kontakty, kampaně, hledání podobných firem.
+  <!-- GrowUp: Agent (Firecrawl, Anymailfinder) – obohacení firem z webu, dohledání e-mailů, kontakty, hledání firem.
        Data: growupcrm.research.* (jen správci, jen se zapnutým growupcrm_agency). -->
   <LayoutHeader>
     <template #left-header>
@@ -64,12 +64,15 @@
       </div>
     </div>
 
+    <!-- Etapa 2b: dohledání e-mailů (Anymailfinder) -->
+    <GlEmailFinder :industries="industries.data || []" :territories="territories.data || []" @done="loadSuggestions" />
+
     <!-- Etapa 2: návrhy kontaktů -->
     <div class="gl-card flex flex-col gap-3 p-5">
       <div class="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h3 class="text-[18px] font-bold text-ink-gray-9">{{ __('Návrhy kontaktů') }}</h3>
-          <p class="mt-1 text-[14px] text-ink-gray-6">{{ __('Lidé nalezení na webech firem. Po přijetí se z nich stanou kontakty u firmy, u jednatelů z ARES se jen doplní e-mail.') }}</p>
+          <p class="mt-1 text-[14px] text-ink-gray-6">{{ __('Lidé nalezení na webech firem a ověřené e-maily z Anymailfinderu. Po přijetí se z nich stanou kontakty u firmy, u jednatelů z ARES se jen doplní e-mail.') }}</p>
         </div>
         <Button v-if="sg?.counts_email?.['Vysoká']" variant="solid" :label="__('Přijmout všechny s vysokou prioritou ({0})', [sg.counts_email['Vysoká']])" :loading="busy" @click="acceptHigh" />
       </div>
@@ -83,7 +86,7 @@
         <span class="ml-auto text-[13px] text-ink-gray-5">{{ __('přijato celkem {0}', [sg?.accepted || 0]) }}</span>
       </div>
       <GlEmptyState v-if="sg && !sg.rows.length" icon="users" :title="sgEmail && sg.without_email ? __('Všechny návrhy s e-mailem jsou vyřízené') : __('Žádné návrhy')"
-        :text="sgEmail && sg.without_email ? __('Zbývá {0} lidí bez e-mailu. E-maily jim později dohledá Anymailfinder; jako kontakty (jméno a role) je přidáte po vypnutí filtru „jen s e-mailem“.', [sg.without_email]) : __('Návrhy vznikají z obohacení firem.')" />
+        :text="sgEmail && sg.without_email ? __('Zbývá {0} lidí bez e-mailu. E-maily jim dohledá Anymailfinder (karta Dohledání e-mailů výše); jako kontakty (jméno a role) je přidáte po vypnutí filtru „jen s e-mailem“.', [sg.without_email]) : __('Návrhy vznikají z obohacení firem.')" />
       <div v-for="r in sg?.rows || []" :key="r.name" class="flex items-center gap-3 border-t border-[rgba(110,120,200,.12)] py-2 first:border-0">
         <input v-model="selected" type="checkbox" :value="r.name" class="rounded" />
         <span class="size-2 shrink-0 rounded-full" :style="{ background: PRIORITY_COLOR[r.priority] }" :title="r.priority" />
@@ -94,6 +97,7 @@
             <template v-if="r.email"> · {{ r.email }}</template><template v-if="r.phone"> · {{ r.phone }}</template>
           </div>
         </div>
+        <span v-if="r.email_verified" class="rounded-full bg-[rgba(79,70,229,.10)] px-2 py-0.5 text-[11px] font-bold text-[#4F46E5]" :title="__('E-mail ověřil Anymailfinder')">{{ __('ověřeno') }}</span>
         <span v-if="r.action === 'Doplnit kontakt'" class="rounded-full bg-[rgba(34,179,94,.12)] px-2 py-0.5 text-[11px] font-bold text-[#178a4a]">{{ __('doplní e-mail') }}</span>
       </div>
       <div v-if="sg?.rows?.length" class="flex flex-wrap items-center gap-2 border-t border-[rgba(110,120,200,.12)] pt-3">
@@ -143,6 +147,7 @@ import GlForbidden from '@/components/GlForbidden.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlOwnCompany from '@/components/Agent/GlOwnCompany.vue'
 import GlDiscovery from '@/components/Agent/GlDiscovery.vue'
+import GlEmailFinder from '@/components/Agent/GlEmailFinder.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import { isForbidden } from '@/utils/glErrors'
 import { saveFailed } from '@/composables/glToast'
