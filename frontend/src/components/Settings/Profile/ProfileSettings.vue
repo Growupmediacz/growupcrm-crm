@@ -87,6 +87,7 @@
         </FileUploader>
       </div>
       <GlProfileConnections />
+      <GlProfileSecurity />
       <div>
         <div class="text-base-semibold text-ink-gray-9">
           {{ __('Account Info & Security') }}
@@ -134,6 +135,7 @@
 
 <script setup>
 import GlProfileConnections from '@/components/Settings/Profile/GlProfileConnections.vue'
+import GlProfileSecurity from '@/components/Settings/Profile/GlProfileSecurity.vue'
 import EditIcon from '@/components/Icons/EditIcon.vue'
 import SettingsLayoutBase from '@/components/Layouts/SettingsLayoutBase.vue'
 import ChangePasswordModal from '@/components/Modals/ChangePasswordModal.vue'
