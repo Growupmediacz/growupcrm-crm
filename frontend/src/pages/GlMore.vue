@@ -18,10 +18,11 @@
         </router-link>
         <Dropdown :options="profileOptions" placement="right">
           <button
-            class="flex size-11 items-center justify-center rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2440a6] shadow-[0_2px_10px_-3px_rgba(64,72,160,.35)]"
+            class="flex size-11 items-center justify-center overflow-hidden rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2440a6] shadow-[0_2px_10px_-3px_rgba(64,72,160,.35)]"
             :aria-label="__('Profil')"
           >
-            {{ initials }}
+            <img v-if="user.user_image" :src="user.user_image" :alt="user.full_name" class="size-full object-cover" />
+            <template v-else>{{ initials }}</template>
           </button>
         </Dropdown>
       </div>
