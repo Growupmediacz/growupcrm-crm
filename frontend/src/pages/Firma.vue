@@ -22,29 +22,33 @@
     <Resizer v-if="!isMobileView" :parent="$refs.parentRef" class="gl-card flex h-full flex-col overflow-hidden">
       <div class="p-5">
         <div class="flex items-center gap-4">
-          <Avatar size="3xl" class="h-15.5 w-15.5" :label="organization.doc.organization_name" :image="organization.doc.organization_logo" />
+          <!-- design 3. kolo (05): logo jako zaoblený čtverec, název 28 px, stav a IČO pod ním -->
+          <img v-if="organization.doc.organization_logo" :src="organization.doc.organization_logo" class="size-16 shrink-0 rounded-[18px] bg-white object-contain" alt="" />
+          <div v-else class="flex size-16 shrink-0 items-center justify-center rounded-[18px] bg-[var(--accent-soft)] text-[20px] font-bold text-[var(--accent-700)]">{{ orgInitials }}</div>
           <div class="flex min-w-0 flex-col gap-1.5">
-            <div class="truncate text-2xl-medium text-ink-gray-9">{{ organization.doc.organization_name }}</div>
-            <div class="truncate text-sm text-ink-gray-6">
-              <span v-if="organization.doc.ico">{{ __('IČO') }} {{ organization.doc.ico }}</span>
-              <span v-if="organization.doc.ico && organization.doc.territory"> · </span>
-              <span v-if="organization.doc.territory">{{ organization.doc.territory }}</span>
+            <div class="truncate text-[26px] font-bold leading-tight tracking-[-0.02em] text-ink-gray-9">{{ organization.doc.organization_name }}</div>
+            <div class="flex min-w-0 items-center gap-2 text-[14px] text-ink-gray-5">
+              <span v-if="organization.doc.relationship" class="flex shrink-0 items-center gap-1.5 rounded-full bg-[rgba(110,120,200,.08)] px-2.5 py-0.5 text-[13px] font-semibold text-ink-gray-8">
+                <span class="size-2 rounded-full" :style="{ background: REL_COLORS[organization.doc.relationship] || '#9ca3af' }" />{{ __(organization.doc.relationship) }}
+              </span>
+              <span v-if="organization.doc.ico" class="truncate">{{ __('IČO') }} {{ organization.doc.ico }}</span>
             </div>
           </div>
         </div>
         <!-- souhrn -->
         <div v-if="summary" class="mt-4 grid grid-cols-2 gap-2">
-          <div v-for="s in stats" :key="s.label" class="rounded-2xl bg-[rgba(110,120,200,.075)] px-3 py-2">
-            <div class="text-xl-medium text-ink-gray-9">{{ s.value }}</div>
-            <div class="text-xs text-ink-gray-5">{{ s.label }}</div>
+          <div v-for="s in stats" :key="s.label" class="rounded-[16px] bg-[rgba(110,120,200,.075)] px-4 py-3">
+            <div class="num text-[24px] font-bold leading-tight text-ink-gray-9">{{ s.value }}</div>
+            <div class="text-[13px] text-ink-gray-5">{{ s.label }}</div>
           </div>
         </div>
-        <div v-if="summary?.last_call" class="mt-3 flex items-start gap-2 rounded-2xl bg-[rgba(224,161,0,.14)] px-3 py-2 text-sm text-[#7a4400]">
-          <span class="lucide-phone mt-0.5 size-4 shrink-0" aria-hidden="true" />
-          <span>
-            {{ __('Poslední hovor') }}: <b>{{ summary.last_call.title }}</b>
-            ({{ dateTime(summary.last_call.date) }}<span v-if="summary.last_call.user_name">, {{ summary.last_call.user_name }}</span>)
+        <div v-if="summary?.last_call" class="mt-3 flex items-center gap-3 rounded-[16px] bg-[rgba(224,161,0,.14)] px-4 py-3 text-[#7a4400]">
+          <span class="lucide-phone size-5 shrink-0" aria-hidden="true" />
+          <span class="min-w-0 flex-1">
+            <span class="block truncate text-[14px] font-semibold">{{ __('Poslední hovor') }}: {{ summary.last_call.title }}</span>
+            <span class="block truncate text-[12.5px] opacity-80">{{ dateTime(summary.last_call.date) }}<template v-if="summary.last_call.user_name"> · {{ summary.last_call.user_name }}</template></span>
           </span>
+          <Button variant="solid" size="sm" :label="__('Zavolat')" @click="showCall = true" />
         </div>
       </div>
       <!-- GrowUp (oprava 13): Údaje o firmě jen ke čtení; celý formulář CRM až pod „Všechna pole“ -->
@@ -482,6 +486,15 @@ const kindIcon = {
 }
 // GrowUp: přidání aktivity přímo z Firmy, v sekci podle typu (schůzka → kalendář, ostatní → Zakázka nebo firma)
 const showCall = ref(false)
+const orgInitials = computed(() =>
+  (organization.doc?.organization_name || '?')
+    .replace(/\b(s\.r\.o\.|a\.s\.|spol\.)/gi, '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join(''),
+)
 const activityKind = ref('')
 const openLeads = computed(() => {
   const closed = new Set((leadStatuses.data || []).filter((st) => ['Won', 'Lost'].includes(st.type)).map((st) => st.name))
