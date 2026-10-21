@@ -24,14 +24,14 @@
       <template v-else>
         <Button :label="__('Upravit')" iconLeft="edit-2" @click="editing = true" />
         <Button :label="__('Naplánovat')" iconLeft="calendar" @click="showSchedule = true" />
-        <Tooltip v-if="nextStage" :text="__('Posune do fáze {0}', [nextStage.label])">
-          <Button
-            variant="solid"
-            iconLeft="arrow-right"
-            :label="__('Další fáze')"
-            @click="nextStage.onClick()"
-          />
-        </Tooltip>
+        <!-- design 3. kolo (04): název další fáze přímo v tlačítku -->
+        <Button
+          v-if="nextStage"
+          variant="solid"
+          iconLeft="arrow-right"
+          :label="__('Posunout do {0}', [nextStage.label])"
+          @click="nextStage.onClick()"
+        />
       </template>
       <Dropdown :options="moreOptions" placement="right">
         <Button icon="more-horizontal" :aria-label="__('Další akce')" />

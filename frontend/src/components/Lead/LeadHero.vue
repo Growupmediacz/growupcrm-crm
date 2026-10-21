@@ -16,7 +16,7 @@
           <router-link
             v-if="doc.organization_link"
             :to="{ name: 'Organization', params: { organizationId: doc.organization_link } }"
-            class="hover:text-ink-gray-9"
+            class="font-medium text-[var(--accent-700)] hover:underline"
           >
             {{ doc.organization || doc.organization_link }}
           </router-link>

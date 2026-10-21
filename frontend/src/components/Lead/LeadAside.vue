@@ -12,7 +12,13 @@
           <dt class="shrink-0 text-[14px] text-ink-gray-5">{{ row.label }}</dt>
           <dd class="min-w-0 text-right">
             <template v-if="row.value">
-              <div class="num truncate text-[14px] font-medium text-ink-gray-9">{{ row.value }}</div>
+              <div class="num flex items-center justify-end gap-2 truncate text-[14px] font-medium text-ink-gray-9">
+                <svg v-if="row.ring" viewBox="0 0 36 36" class="size-7 shrink-0 -rotate-90" aria-hidden="true">
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(110,120,200,.16)" stroke-width="4" />
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="var(--accent-600)" stroke-width="4" stroke-linecap="round" :stroke-dasharray="`${(row.ring / 100) * 88} 88`" />
+                </svg>
+                {{ row.value }}
+              </div>
               <div v-if="row.sub" class="truncate text-[12px] text-ink-gray-5">{{ row.sub }}</div>
             </template>
             <span v-else class="gl-empty">{{ __('Bez hodnoty') }}</span>
@@ -153,6 +159,33 @@
         </button>
       </template>
     </div>
+
+    <!-- Firma (design 3. kolo, 04) -->
+    <router-link
+      v-if="doc.organization_link"
+      :to="{ name: 'Organization', params: { organizationId: doc.organization_link } }"
+      class="gl-card flex items-center gap-4 p-6 transition hover:bg-white"
+    >
+      <div class="flex min-w-0 flex-1 flex-col gap-3">
+        <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Firma') }}</h2>
+        <div class="flex items-center gap-3">
+          <img v-if="org.data?.organization_logo" :src="org.data.organization_logo" class="size-12 shrink-0 rounded-[14px] bg-white object-contain" alt="" />
+          <div v-else class="flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-[var(--accent-soft)] text-[15px] font-bold text-[var(--accent-700)]">
+            {{ initials(doc.organization || doc.organization_link) }}
+          </div>
+          <div class="min-w-0">
+            <div class="truncate text-[15px] font-semibold text-ink-gray-9">{{ doc.organization || doc.organization_link }}</div>
+            <div class="flex items-center gap-2 text-[13px] text-ink-gray-5">
+              <span v-if="org.data?.relationship" class="flex items-center gap-1.5 font-medium text-ink-gray-7">
+                <span class="size-2 rounded-full" :class="org.data.relationship === 'Klient' ? 'bg-[#22b35e]' : 'bg-[#3b82f6]'" />{{ __(org.data.relationship) }}
+              </span>
+              <span v-if="org.data?.ico">{{ __('IČO') }} {{ org.data.ico }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <GlIcon name="right" :size="18" class="text-ink-gray-4" />
+    </router-link>
   </div>
   <ContactModal
     v-if="showNewContact"
@@ -184,6 +217,15 @@ const contact = createResource({ url: 'frappe.client.get' })
 watch(
   () => props.doc.contact_person,
   (name) => name && contact.fetch({ doctype: 'Contact', name }),
+  { immediate: true },
+)
+
+const org = createResource({ url: 'frappe.client.get_value' })
+watch(
+  () => props.doc.organization_link,
+  (name) =>
+    name &&
+    org.fetch({ doctype: 'CRM Organization', filters: { name }, fieldname: ['relationship', 'ico', 'organization_logo'] }),
   { immediate: true },
 )
 
@@ -222,7 +264,7 @@ const rows = computed(() => {
   }
   out.push(
     { label: __('Zdroj'), value: d.source ? __(d.source) : '', sub: d.channel || '' },
-    { label: __('Pravděpodobnost'), value: d.probability ? `${Math.round(d.probability)} %` : '' },
+    { label: __('Pravděpodobnost'), value: d.probability ? `${Math.round(d.probability)} %` : '', ring: Math.round(d.probability || 0) },
     { label: __('Očekávané uzavření'), value: formatDateCz(d.expected_closure_date) },
   )
   if (d.signed_date) out.push({ label: __('Datum podpisu'), value: formatDateCz(d.signed_date) })

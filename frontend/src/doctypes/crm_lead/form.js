@@ -10,20 +10,7 @@ export class CRMLead {
   onRender() {
     this.applyFirmaMode()
     this.filterBranches()
-    // proklik na Firmu (přehled zakázek, kontaktů, poboček a aktivity)
-    if (this.doc.organization_link && !this.doc.__newDocument) {
-      this.actions = [
-        {
-          name: 'Open Firma',
-          label: __('Otevřít firmu'),
-          onClick: () =>
-            this.router.push({
-              name: 'Organization',
-              params: { organizationId: this.doc.organization_link },
-            }),
-        },
-      ]
-    }
+    // design 3. kolo: proklik na Firmu je karta „Firma“ v pravém sloupci (LeadAside), tlačítko nahoře odpadá
   }
 
   // Nová zakázka otevřená z Firmy: firma je dána, schováme IČO, ARES, web a obor.
