@@ -68,9 +68,9 @@
             {{ initials(c.full_name) }}
           </span>
           <div class="min-w-0">
-            <router-link :to="{ name: 'Contact', params: { contactId: c.name } }" class="text-[28px] font-bold tracking-tight text-ink-gray-9 hover:text-[var(--accent-600)]">
+            <button class="text-left text-[28px] font-bold tracking-tight text-ink-gray-9 hover:text-[var(--accent-600)]" :title="__('Upravit kontakt')" @click="showEdit = true">
               {{ c.full_name }}
-            </router-link>
+            </button>
             <div class="text-[15px] text-ink-gray-7">
               <span v-if="c.designation">{{ c.designation }}</span>
               <span v-if="c.designation && (c.crm_organization || c.company_name)"> · </span>
@@ -113,9 +113,9 @@
               </dd>
             </div>
           </dl>
-          <router-link :to="{ name: 'Contact', params: { contactId: c.name } }" class="mt-3 inline-block text-[13px] font-semibold text-[var(--accent-600)] hover:underline">
+          <button class="mt-3 inline-block text-[13px] font-semibold text-[var(--accent-600)] hover:underline" @click="showEdit = true">
             {{ __('Upravit údaje') }}
-          </router-link>
+          </button>
         </div>
 
         <div class="gl-card min-w-0 p-6">
@@ -161,6 +161,13 @@
   </div>
 
   <GlImportModal v-if="showImport" v-model="showImport" @done="directory.reload()" />
+  <GlContactEditModal
+    v-if="showEdit && selected"
+    v-model="showEdit"
+    :contact="selected"
+    @saved="(card.reload(), directory.reload())"
+    @deleted="afterDelete"
+  />
   <ContactModal
     v-if="showContactModal"
     v-model="showContactModal"
@@ -197,6 +204,7 @@ import LayoutHeader from '@/components/LayoutHeader.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
 import ContactModal from '@/components/Modals/ContactModal.vue'
 import GlImportModal from '@/components/Modals/GlImportModal.vue'
+import GlContactEditModal from '@/components/Modals/GlContactEditModal.vue'
 import { isMobileView } from '@/composables/settings'
 import { sessionStore } from '@/stores/session'
 import { Button, Dialog, FormControl, call, createResource, toast, usePageMeta } from 'frappe-ui'
@@ -212,6 +220,19 @@ usePageMeta(() => ({ title: __('Kontakty') }))
 const q = ref('')
 const selected = ref(route.query.contact || '')
 const showContactModal = ref(false)
+// úprava kontaktu (design 35/m6); ?edit=1 otevře okno rovnou (přesměrování ze staré stránky /contacts/:id?edit)
+const showEdit = ref(Boolean(route.query.edit))
+// odkaz na jiný kontakt, když už je stránka otevřená
+watch(
+  () => route.query.contact,
+  (name) => name && name !== selected.value && (selected.value = name),
+)
+function afterDelete() {
+  selected.value = ''
+  router.replace({ query: {} })
+  directory.reload()
+  contactCount.reload()
+}
 const showEvent = ref(false)
 const showNote = ref(false)
 const noteText = ref('')
@@ -239,7 +260,7 @@ watch(q, () => {
 const card = createResource({ url: 'growupcrm.contacts.get_card' })
 function select(name) {
   selected.value = name
-  router.replace({ query: { ...route.query, contact: name } })
+  router.replace({ query: { contact: name } })
 }
 watch(selected, (name) => name && card.fetch({ name }), { immediate: true })
 

@@ -595,7 +595,8 @@ function reload() {
 }
 
 const showExportDialog = ref(false)
-const showImport = ref(false)
+// ?import=1 (přesměrování ze staré stránky /data-import) otevře import rovnou
+const showImport = ref(Boolean(route.query.import))
 const IMPORT_KIND = { 'CRM Lead': 'lead', 'CRM Organization': 'organization', Contact: 'contact' }
 const export_type = ref('Excel')
 const export_all = ref(false)

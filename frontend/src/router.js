@@ -134,10 +134,10 @@ const routes = [
     component: () => import('@/pages/Contacts.vue'),
   },
   {
+    // GrowUp (design 3. kolo, 35/m6): detail kontaktu = karta v Kontaktech, úprava v okně (stará stránka CRM se nepoužívá)
     path: '/contacts/:contactId',
     name: 'Contact',
-    component: () => import(`@/pages/${handleMobileView('Contact')}.vue`),
-    props: true,
+    redirect: (to) => ({ name: 'ContactsCards', query: { contact: to.params.contactId } }),
   },
   {
     alias: '/organizations',
@@ -163,9 +163,10 @@ const routes = [
     component: () => import('@/pages/Calendar.vue'),
   },
   {
+    // GrowUp: import jde průvodcem v Zakázkách (GlImportModal); původní anglická stránka CRM se nepoužívá
     path: '/data-import',
     name: 'DataImportList',
-    component: () => import('@/pages/DataImport.vue'),
+    redirect: { name: 'Leads', params: { viewType: 'list' }, query: { import: '1' } },
   },
   {
     path: '/data-import/doctype/:doctype',
