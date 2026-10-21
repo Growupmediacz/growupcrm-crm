@@ -23,17 +23,16 @@
   <div v-else-if="overview.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Klienty se nepodařilo načíst')" :text="errorText" @retry="overview.reload()" /></div>
   <div v-else-if="!overview.data" class="px-3 md:px-2"><GlSkeleton :rows="5" /></div>
   <div v-else class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
-    <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-      <div v-for="(k, i) in cards" :key="k.label" class="gl-card flex items-start gap-4 p-4 md:p-5">
-        <span class="gl3-kpi-icon" :class="`gl3-tone-${KPI_ICONS[i]?.[1] || 'gray'}`"><GlIcon :name="KPI_ICONS[i]?.[0] || 'chart'" :size="22" /></span>
-        <div class="flex min-w-0 flex-1 flex-col gap-1.5">
-        <div class="flex items-center gap-2 text-[14px] text-ink-gray-7">
-          {{ k.label }}
-          <span v-if="k.badge" class="rounded-full bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] px-2 py-0.5 text-[12px] font-bold text-[var(--accent-700)]">{{ k.badge }}</span>
+    <!-- design 3. kolo (16): ikona a název v řádku, velké číslo přes celou šířku; na užší obrazovce 2 × 2 -->
+    <div class="grid grid-cols-2 gap-3 md:gap-4 xl:grid-cols-4">
+      <div v-for="(k, i) in cards" :key="k.label" class="gl-card flex min-w-0 flex-col gap-2 p-4 md:p-5">
+        <div class="flex min-w-0 items-center gap-3">
+          <span class="gl3-kpi-icon shrink-0" :class="`gl3-tone-${KPI_ICONS[i]?.[1] || 'gray'}`"><GlIcon :name="KPI_ICONS[i]?.[0] || 'chart'" :size="22" /></span>
+          <span class="line-clamp-2 min-w-0 flex-1 text-[16px] font-semibold leading-snug text-ink-gray-9">{{ k.label }}</span>
+          <span v-if="k.badge" class="shrink-0 rounded-full bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] px-2.5 py-0.5 text-[13px] font-semibold text-[var(--accent-700)]">{{ k.badge }}</span>
         </div>
-        <div class="num text-[30px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[38px]">{{ k.value }}</div>
-        <div class="truncate text-[13px] text-ink-gray-5">{{ k.sub }}</div>
-        </div>
+        <div class="num truncate text-[34px] font-bold leading-tight tracking-tight md:text-[44px]" :class="i === 3 && k.value ? 'text-[#e5484d]' : 'text-ink-gray-9'">{{ k.value }}</div>
+        <div class="truncate text-[15px] text-ink-gray-5">{{ k.sub }}</div>
       </div>
     </div>
 
@@ -60,27 +59,26 @@
             </button>
           </Dropdown>
         </div>
-        <div class="flex items-center gap-2 text-[14px] font-semibold text-ink-gray-9">
-          <span class="size-2 shrink-0 rounded-full" :style="{ background: HEALTH_COLORS[c.health] }" />
-          <span class="truncate">{{ __(c.health) }}<template v-if="c.health_note"> – {{ c.health_note }}</template></span>
+        <div class="flex items-center gap-2 text-[15px]">
+          <span class="size-2.5 shrink-0 rounded-full" :style="{ background: HEALTH_COLORS[c.health] }" />
+          <span class="truncate" :class="c.health === 'V pořádku' ? 'text-ink-gray-9' : c.health === 'Ohrožený' ? 'text-[#c8321f]' : 'text-[#c77700]'">{{ __(c.health) }}<template v-if="c.health_note"> – <span class="text-[#c8321f]">{{ c.health_note }}</span></template></span>
         </div>
+        <!-- design 16: ikona, popisek nad číslem, bez retaineru „—“ -->
         <div class="grid grid-cols-2 gap-2">
-          <div class="rounded-2xl bg-[rgba(110,120,200,.075)] px-3 py-2.5">
-            <div class="num text-[19px] font-bold text-ink-gray-9">{{ c.monthly ? money(c.monthly) : '' }}</div>
-            <div class="text-[12px] text-ink-gray-5">{{ __('měsíčně') }}</div>
+          <div class="flex items-start gap-2.5 rounded-2xl bg-[rgba(110,120,200,.075)] px-3 py-3">
+            <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/70 text-[var(--accent-600)]"><GlIcon name="card" :size="16" /></span>
+            <span class="min-w-0"><span class="block text-[12.5px] text-ink-gray-5">{{ __('měsíčně') }}</span><span class="num block truncate text-[18px] font-bold text-ink-gray-9">{{ c.monthly ? money(c.monthly) : '—' }}</span></span>
           </div>
-          <router-link :to="{ name: 'Projects' }" class="rounded-2xl bg-[rgba(110,120,200,.075)] px-3 py-2.5 hover:bg-[rgba(110,120,200,.12)]">
-            <div class="num text-[19px] font-bold text-ink-gray-9">{{ c.projects }}</div>
-            <div class="text-[12px] text-ink-gray-5">{{ __('aktivní projekty') }}</div>
+          <router-link :to="{ name: 'Projects' }" class="flex items-start gap-2.5 rounded-2xl bg-[rgba(110,120,200,.075)] px-3 py-3 hover:bg-[rgba(110,120,200,.12)]">
+            <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/70 text-[var(--accent-600)]"><GlIcon name="folder" :size="16" /></span>
+            <span class="min-w-0"><span class="block text-[12.5px] text-ink-gray-5">{{ __('aktivní projekty') }}</span><span class="num block text-[18px] font-bold text-ink-gray-9">{{ c.projects }}</span></span>
           </router-link>
         </div>
-        <div class="flex items-center gap-2 text-[14px] text-ink-gray-7">
+        <div class="flex items-center gap-2 rounded-2xl border border-[var(--line)] px-3 py-2 text-[14px] text-ink-gray-7">
           <GlIcon name="cal" :size="16" class="shrink-0 text-ink-gray-5" />
           <span class="min-w-0 flex-1 truncate">{{ c.next_event ? `${c.next_event.title} · ${shortDate(c.next_event.at)}` : __('Nic naplánovaného') }}</span>
           <span class="flex -space-x-1.5">
-            <span v-for="u in c.team" :key="u" class="flex size-7 items-center justify-center rounded-full border-2 border-white bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" :title="userName(u)">
-              {{ initials(userName(u)) }}
-            </span>
+            <GlUserAvatar v-for="u in c.team" :key="u" :user="u" class="size-8 border-2 border-white bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" />
           </span>
         </div>
       </div>
@@ -155,6 +153,7 @@ import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import { isForbidden } from '@/utils/glErrors'
 import GlForbidden from '@/components/GlForbidden.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import GlUserAvatar from '@/components/GlUserAvatar.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
 import GlNewClientModal from '@/components/Modals/GlNewClientModal.vue'
