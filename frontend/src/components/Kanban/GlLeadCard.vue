@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-col gap-2">
     <div class="flex items-start justify-between gap-2">
-      <div class="text-[15px] font-bold leading-snug text-ink-gray-9">{{ title }}</div>
+      <div class="text-[16px] font-semibold leading-snug text-ink-gray-9">{{ title }}</div>
       <GlTemperature :value="lead.temperature" class="mt-0.5" />
     </div>
-    <div v-if="lead.organization && lead.organization !== title" class="truncate text-[13px] text-ink-gray-5">
+    <div v-if="lead.organization && lead.organization !== title" class="truncate text-[14px] text-ink-gray-5">
       {{ lead.organization }}
     </div>
     <!-- zdroj zakázky a u poptávek z webu kanál (Google Ads, vyhledávání…) -->
@@ -28,8 +28,8 @@
       <GlIcon name="alert" :size="14" />
       <span class="truncate">{{ __('Bez dalšího kroku') }}</span>
     </div>
-    <div class="mt-1 flex items-center justify-between gap-2">
-      <div v-if="lead.order_value" class="num text-[15px] font-bold text-ink-gray-9">{{ money }}</div>
+    <div class="mt-2 flex items-center justify-between gap-2">
+      <div v-if="lead.order_value" class="num text-[17px] font-bold text-ink-gray-9">{{ money }}</div>
       <!-- oprava 7: bez hodnoty odkaz „+ hodnota“ (otevře detail s kartou Detaily v úpravách) -->
       <button v-else class="gl-fill" @click.stop.prevent="fillValue">+ {{ __('hodnota') }}</button>
       <UserAvatar v-if="lead.lead_owner" :user="lead.lead_owner" size="md" />

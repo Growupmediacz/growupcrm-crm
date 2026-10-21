@@ -188,3 +188,54 @@ body.app-bg::before {
   color: #fff;
   font-weight: 600;
 }
+
+/* ---------- nadpis stránky (design 3. kolo: velký nadpis vlevo nahoře) ---------- */
+@media (min-width: 768px) {
+  #app-header .gl-page-title:not(#_) {
+    display: inline-flex !important;
+    font-size: 40px;
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--text-1);
+  }
+}
+
+/* ---------- Kanban (návrh 02) ---------- */
+.gl3-lane {
+  position: relative;
+  background: var(--mat-panel);
+  -webkit-backdrop-filter: var(--mat-blur);
+  backdrop-filter: var(--mat-blur);
+  border: var(--mat-card-border);
+  border-radius: var(--r-panel);
+  box-shadow: var(--mat-card-shadow);
+  overflow: hidden;
+  padding-top: 16px !important;
+}
+/* barevná linka fáze nahoře */
+.gl3-lane::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--lane, #9ca3af);
+}
+.gl3-kcard {
+  background: #fff;
+  border: 1px solid rgba(110, 120, 200, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(40, 50, 120, 0.05);
+}
+.gl3-kcard.gl-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -12px rgba(40, 50, 120, 0.22);
+}
+.gl3-kadd {
+  background: rgba(110, 120, 200, 0.07);
+  color: var(--text-2);
+}
+.gl3-kadd:hover {
+  background: rgba(91, 91, 246, 0.1);
+  color: var(--accent-700);
+}

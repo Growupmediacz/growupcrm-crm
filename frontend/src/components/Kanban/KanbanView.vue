@@ -7,26 +7,26 @@
       :list="columns"
       item-key="column"
       :delay="isTouchScreenDevice() ? 200 : 0"
-      class="flex sm:mx-2.5 mx-2 pb-3.5"
+      class="flex mx-0 pb-3.5"
       @end="updateColumn"
     >
       <template #item="{ element: column }">
         <div
           v-if="!column.column.delete"
-          class="gl-lane flex flex-col gap-3 min-w-72 w-72 p-3 mr-3 self-start"
+          class="gl3-lane flex flex-1 flex-col gap-3 min-w-[200px] p-3 mr-3"
+          :style="{ '--lane': stageHex(column.column.color) }"
         >
           <div class="flex gap-2 items-center group justify-between">
             <div class="flex items-center text-base">
               <Popover>
                 <template #target="{ togglePopover }">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    class="hover:!bg-surface-gray-2"
+                  <button
+                    class="flex size-7 items-center justify-center rounded-full hover:bg-surface-gray-2"
+                    :aria-label="__('Barva sloupce')"
                     @click="togglePopover"
                   >
-                    <IndicatorIcon :class="parseColor(column.column.color)" />
-                  </Button>
+                    <span class="size-3 rounded-full bg-[var(--lane)]" />
+                  </button>
                 </template>
                 <template #body>
                   <div
@@ -52,8 +52,7 @@
                   </div>
                 </template>
               </Popover>
-              <div class="font-semibold text-ink-gray-9">{{ __(column.column.name) }}</div>
-              <span class="num ml-1.5 text-ink-gray-5">{{ column.column.all_count }}</span>
+              <div class="truncate text-[17px] font-semibold tracking-[-0.01em] text-ink-gray-9">{{ __(column.column.name) }}</div>
             </div>
             <div class="flex">
               <Dropdown :options="actions(column)">
@@ -65,18 +64,12 @@
                   />
                 </template>
               </Dropdown>
-              <Button
-                icon="lucide-plus"
-                variant="ghost"
-                @click="options.onNewClick(column)"
-              />
             </div>
           </div>
-          <div
-            v-if="column.column.sum !== undefined"
-            class="num -mt-2 pl-9 text-[13px] text-ink-gray-5"
-          >
-            {{ new Intl.NumberFormat('cs-CZ').format(column.column.sum) }} Kč
+          <!-- design 3. kolo: pod názvem „3 · 245 000 Kč“ -->
+          <div class="num -mt-2.5 pl-8 text-[14px] text-ink-gray-5">
+            {{ column.column.all_count }}<template v-if="column.column.sum !== undefined">
+              · {{ new Intl.NumberFormat('cs-CZ').format(column.column.sum) }} Kč</template>
           </div>
           <div class="overflow-y-auto flex flex-col gap-2 h-full">
             <Draggable
@@ -91,7 +84,7 @@
               <template #item="{ element: fields }">
                 <component
                   :is="options.getRoute ? 'router-link' : 'div'"
-                  class="gl-card gl-lift !rounded-[18px] p-3.5 text-base flex flex-col text-ink-gray-9"
+                  class="gl3-kcard gl-lift p-4 text-base flex flex-col text-ink-gray-9"
                   :data-name="fields.name"
                   @contextmenu.prevent="emit('cardMenu', { x: $event.clientX, y: $event.clientY, lead: fields })"
                   v-bind="{
@@ -150,7 +143,7 @@
             </Draggable>
             <button
               v-if="options.onNewClick"
-              class="gl-add flex items-center gap-2 rounded-xl px-2 py-2 text-[14px] font-semibold text-ink-gray-5 hover:bg-white/50 hover:text-ink-gray-9"
+              class="gl3-kadd flex h-11 items-center justify-center gap-2 rounded-[14px] text-[15px] font-medium"
               @click="options.onNewClick(column)"
             >
               <span class="lucide-plus size-4" aria-hidden="true" />
@@ -169,19 +162,22 @@
         </div>
       </template>
     </Draggable>
-    <div class="shrink-0 min-w-64">
+    <!-- design 3. kolo: přidání skrytého sloupce jako malé kulaté „+“, ať se vejde 5 fází -->
+    <div class="shrink-0">
       <Combobox
         :model-value="null"
         :options="deletedColumns"
         @update:selected-option="(e) => addColumn(e)"
       >
         <template #trigger="{ open, setOpen }">
-          <Button
-            class="w-full mt-2.5 mb-1 mr-5"
-            :label="__('Add Column')"
-            iconLeft="plus"
+          <button
+            class="gl-round mr-2 mt-1 flex size-10 items-center justify-center rounded-full text-ink-gray-5"
+            :aria-label="__('Add Column')"
+            :title="__('Add Column')"
             @click="setOpen(!open)"
-          />
+          >
+            <span class="lucide-plus size-4" aria-hidden="true" />
+          </button>
         </template>
         <template #footer>
           <Button
@@ -196,7 +192,7 @@
   </div>
     <div
       v-if="canRight"
-      class="pointer-events-none absolute bottom-6 right-0 top-0 w-24 bg-gradient-to-l from-[rgba(238,234,255,.95)] to-transparent"
+      class="pointer-events-none absolute bottom-6 right-0 top-0 w-24 bg-gradient-to-l from-[rgba(241,243,250,.95)] to-transparent"
     />
     <button
       v-if="canRight"
@@ -226,6 +222,12 @@
 import RefreshIcon from '@/components/Icons/RefreshIcon.vue'
 import IndicatorIcon from '@/components/Icons/IndicatorIcon.vue'
 import { isTouchScreenDevice, colors, parseColor } from '@/utils'
+
+// design 3. kolo: barva fáze (tečka a linka sloupce) podle tokenů, ne podle palety frappe-ui
+const STAGE_HEX = { blue: '#3b82f6', purple: '#8b5cf6', violet: '#8b5cf6', yellow: '#e0a100', amber: '#e0a100', orange: '#f97316', green: '#22b35e', red: '#ef4444', pink: '#ec4899', cyan: '#06b6d4', teal: '#14b8a6', gray: '#9ca3af', black: '#0e1330' }
+function stageHex(color) {
+  return STAGE_HEX[color] || STAGE_HEX.gray
+}
 import Draggable from 'vuedraggable'
 import { Combobox, Dropdown, Popover } from 'frappe-ui'
 import GlIcon from '@/components/GlIcon.vue'
