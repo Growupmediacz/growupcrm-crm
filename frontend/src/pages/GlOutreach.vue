@@ -21,14 +21,15 @@
       <!-- design 3. kolo (11): měsíční čísla – odesláno, otevřeno, odpovědi, schůzky -->
       <div class="grid grid-cols-2 gap-3 xl:grid-cols-4 xl:gap-4">
         <div v-for="k in kpis" :key="k.label" class="gl-card flex min-w-0 items-start gap-4 p-4 md:p-5">
-          <span class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-600)]"><GlIcon :name="k.icon" :size="22" /></span>
+          <!-- mobil: bez ikony, popisky se zalamují a číslo je menší, aby se nic neořezávalo; od md beze změny -->
+          <span class="hidden size-12 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-600)] md:flex"><GlIcon :name="k.icon" :size="22" /></span>
           <div class="flex min-w-0 flex-1 flex-col gap-0.5">
-            <div class="flex items-center justify-between gap-2">
-              <span class="truncate text-[17px] font-semibold text-ink-gray-9">{{ k.label }}</span>
+            <div class="flex items-start justify-between gap-2 md:items-center">
+              <span class="text-[14px] font-semibold text-ink-gray-9 md:truncate md:text-[17px]">{{ k.label }}</span>
               <span v-if="k.badge" class="shrink-0 rounded-full bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] px-2.5 py-0.5 text-[13px] font-semibold text-[var(--accent-700)]">{{ k.badge }}</span>
             </div>
-            <div class="num truncate text-[36px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[46px]">{{ k.value }}<span v-if="k.unit" class="text-[28px] font-medium text-ink-gray-7"> {{ k.unit }}</span></div>
-            <div class="truncate text-[15px] text-ink-gray-5">{{ k.sub }}</div>
+            <div class="num text-[26px] font-bold leading-tight tracking-tight text-ink-gray-9 md:truncate md:text-[46px]">{{ k.value }}<span v-if="k.unit" class="text-[18px] font-medium text-ink-gray-7 md:text-[28px]"> {{ k.unit }}</span></div>
+            <div class="text-[13px] text-ink-gray-5 md:truncate md:text-[15px]">{{ k.sub }}</div>
           </div>
         </div>
       </div>
@@ -139,8 +140,10 @@ import GlLinkedInModal from '@/components/Outreach/GlLinkedInModal.vue'
 import GlProcessCallModal from '@/components/Outreach/GlProcessCallModal.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import { api, avatarTone, initials, plain, REPLY_LABEL } from '@/composables/outreach'
-import { createResource, Button, toast } from 'frappe-ui'
+import { createResource, Button, toast, usePageMeta } from 'frappe-ui'
 import { computed, ref, watch } from 'vue'
+
+usePageMeta(() => ({ title: __('Outreach') }))
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()

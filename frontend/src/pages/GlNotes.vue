@@ -124,8 +124,10 @@ import { parseNote } from '@/utils/glNote'
 import { useDoctypeModal } from '@/composables/doctypeModal'
 import { usersStore } from '@/stores/users'
 import { shortDateCz, formatTimeCz } from '@/utils/glDate'
-import { Button, Dropdown, call, createResource, toast } from 'frappe-ui'
+import { Button, Dropdown, call, createResource, toast, usePageMeta } from 'frappe-ui'
 import { computed, defineAsyncComponent, ref, watch } from 'vue'
+
+usePageMeta(() => ({ title: __('Zápisy') }))
 import { useRoute } from 'vue-router'
 import { isMobileView } from '@/composables/settings'
 

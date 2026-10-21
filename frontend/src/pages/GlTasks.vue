@@ -85,8 +85,10 @@ import GlTaskModal from '@/components/Modals/GlTaskModal.vue'
 import { completeTaskWithUndo } from '@/composables/glTaskDone'
 import { usersStore } from '@/stores/users'
 import { shortDateCz, formatTimeCz } from '@/utils/glDate'
-import { Button, call, createResource, toast } from 'frappe-ui'
+import { Button, call, createResource, toast, usePageMeta } from 'frappe-ui'
 import { computed, defineAsyncComponent, ref, watch } from 'vue'
+
+usePageMeta(() => ({ title: __('Úkoly') }))
 import { useRoute } from 'vue-router'
 
 const CrmTasks = defineAsyncComponent(() => import('@/pages/Tasks.vue'))

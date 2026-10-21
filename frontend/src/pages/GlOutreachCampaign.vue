@@ -81,7 +81,7 @@ import GlCampaignModal from '@/components/Outreach/GlCampaignModal.vue'
 import GlCampaignAgent from '@/components/Outreach/GlCampaignAgent.vue'
 import { api, avatarTone, CONTACT_STATUS, initials } from '@/composables/outreach'
 import { formatDateCz } from '@/utils/glDate'
-import { Breadcrumbs, Button, createResource, toast } from 'frappe-ui'
+import { Breadcrumbs, Button, createResource, toast, usePageMeta } from 'frappe-ui'
 import { computed, ref, watch } from 'vue'
 
 const props = defineProps({ name: { type: String, required: true } })
@@ -94,6 +94,8 @@ const showAdd = ref(false)
 const showEdit = ref(false)
 const res = createResource({ url: 'growupcrm.outreach.get_campaign', params: { name: props.name, status: 'all', page_length: 20 }, auto: true })
 const d = computed(() => res.data)
+
+usePageMeta(() => ({ title: d.value?.campaign_name || __('Kampaň') }))
 watch([filter, pageLength], () => res.fetch({ name: props.name, status: filter.value, page_length: pageLength.value }))
 
 async function setStatus(status) {

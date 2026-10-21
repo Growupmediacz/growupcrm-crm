@@ -149,8 +149,10 @@ import {
 } from '@/composables/calendar'
 import GlIcon from '@/components/GlIcon.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
-import { Button, call, toast } from 'frappe-ui'
+import { Button, call, toast, usePageMeta } from 'frappe-ui'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+
+usePageMeta(() => ({ title: __('Kalendář') }))
 
 // Na úzkém displeji (<768 px) jen seznam a den, na širokém měsíc, týden a den.
 const narrow = ref(window.innerWidth < 768)

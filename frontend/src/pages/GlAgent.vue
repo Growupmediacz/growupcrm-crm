@@ -25,12 +25,13 @@
     <!-- design 3. kolo (12): obohacené firmy, návrhy kontaktů, dohledané e-maily, kredity -->
     <div class="grid grid-cols-2 gap-3 xl:grid-cols-4 xl:gap-4">
       <div v-for="k in kpis" :key="k.label" class="gl-card flex min-w-0 items-start gap-4 p-4 md:p-5">
-        <span class="flex size-12 shrink-0 items-center justify-center rounded-[14px]" :class="k.tone"><GlIcon :name="k.icon" :size="22" /></span>
+        <!-- mobil: bez ikony, popisky se zalamují a číslo je menší, aby se nic neořezávalo; od md beze změny -->
+        <span class="hidden size-12 shrink-0 items-center justify-center rounded-[14px] md:flex" :class="k.tone"><GlIcon :name="k.icon" :size="22" /></span>
         <div class="flex min-w-0 flex-1 flex-col gap-1">
-          <div class="truncate text-[17px] font-semibold text-ink-gray-9">{{ k.label }}</div>
-          <div class="num truncate text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[40px]">{{ k.value }}<span v-if="k.of" class="text-[22px] font-medium text-ink-gray-5"> / {{ k.of }}</span></div>
+          <div class="text-[14px] font-semibold text-ink-gray-9 md:truncate md:text-[17px]">{{ k.label }}</div>
+          <div class="num text-[26px] font-bold leading-tight tracking-tight text-ink-gray-9 md:truncate md:text-[40px]">{{ k.value }}<span v-if="k.of" class="text-[15px] font-medium text-ink-gray-5 md:text-[22px]"> / {{ k.of }}</span></div>
           <div v-if="k.bar !== undefined" class="h-2 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><div class="h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${Math.min(100, k.bar)}%` }" /></div>
-          <div class="truncate text-[14px] text-ink-gray-5">{{ k.sub }}</div>
+          <div class="text-[13px] text-ink-gray-5 md:truncate md:text-[14px]">{{ k.sub }}</div>
         </div>
       </div>
     </div>

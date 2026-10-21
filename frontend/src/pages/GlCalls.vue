@@ -82,8 +82,10 @@ import GlCallModal from '@/components/Modals/GlCallModal.vue'
 import Link from '@/components/Controls/Link.vue'
 import { usersStore } from '@/stores/users'
 import { shortDateCz, formatTimeCz } from '@/utils/glDate'
-import { Button, Dialog, call, createResource } from 'frappe-ui'
+import { Button, Dialog, call, createResource, usePageMeta } from 'frappe-ui'
 import { computed, defineAsyncComponent, ref, watch } from 'vue'
+
+usePageMeta(() => ({ title: __('Hovory') }))
 import { useRoute } from 'vue-router'
 
 const CrmCalls = defineAsyncComponent(() => import('@/pages/CallLogs.vue'))

@@ -44,7 +44,10 @@ import { notifications, notificationsStore } from '@/stores/notifications'
 import { globalStore } from '@/stores/global'
 import { sanitizeHTML } from '@/utils'
 import { relativeCz } from '@/utils/glDate'
+import { usePageMeta } from 'frappe-ui'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+
+usePageMeta(() => ({ title: __('Oznámení') }))
 
 const { $socket } = globalStore()
 const { mark_as_read, mark_doc_as_read } = notificationsStore()

@@ -87,9 +87,11 @@ import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import { api, avatarTone, initials } from '@/composables/outreach'
 import { sanitizeHTML } from '@/utils'
-import { Breadcrumbs, createResource, toast } from 'frappe-ui'
+import { Breadcrumbs, createResource, toast, usePageMeta } from 'frappe-ui'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+
+usePageMeta(() => ({ title: __('Ke schválení') }))
 
 const props = defineProps({ name: { type: String, required: true } })
 const router = useRouter()

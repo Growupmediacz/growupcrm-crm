@@ -74,7 +74,7 @@ import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import { api } from '@/composables/outreach'
 import { sanitizeHTML } from '@/utils'
-import { Breadcrumbs, Button, Dropdown, ErrorMessage, createResource, toast } from 'frappe-ui'
+import { Breadcrumbs, Button, Dropdown, ErrorMessage, createResource, toast, usePageMeta } from 'frappe-ui'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -88,6 +88,8 @@ const VARS = [
   { key: 'prvni_veta', hint: __('z výzkumu webu') }, { key: 'podpis', hint: __('z nastavení schránky') },
 ]
 const form = reactive({ template_name: '', step_type: 'E-mail', category: '', subject: '', body: '' })
+
+usePageMeta(() => ({ title: form.template_name || (isNew.value ? __('Nová šablona') : __('Šablona')) }))
 const editor = ref(null)
 const target = ref('body')
 const saving = ref(false)
