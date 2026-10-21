@@ -18,7 +18,7 @@
           <button class="gl-seg-btn" :class="scope === 'mine' && 'gl-seg-on'" @click="scope = 'mine'">{{ __('Moje') }}</button>
           <button class="gl-seg-btn" :class="scope === 'team' && 'gl-seg-on'" @click="scope = 'team'">{{ __('Celý tým') }}</button>
         </div>
-        <Button variant="solid" iconLeft="plus" @click="newEl?.focus()"><span class="hidden sm:inline">{{ __('Nový úkol') }}</span></Button>
+        <Button variant="solid" iconLeft="plus" @click="openTask('')"><span class="hidden sm:inline">{{ __('Nový úkol') }}</span></Button>
       </template>
     </LayoutHeader>
 
@@ -46,7 +46,7 @@
         <GlEmptyState v-else-if="!items.length" class="my-3" icon="check" :title="bucket === 'all' && !kind ? __('Všechno hotovo') : __('Nic nenalezeno')" :text="bucket === 'all' && !kind ? __('Nemáte žádné otevřené úkoly. Pěkná práce.') : __('Filtru neodpovídá žádný úkol.')" :action="bucket === 'all' && !kind ? '' : __('Zrušit filtr')" @action="(bucket = 'all'), (kind = '')" />
         <template v-for="g in grouped" :key="g.bucket">
           <div class="mb-1 mt-3 flex items-baseline gap-2 px-2 text-[13px]"><b :class="g.bucket === 'overdue' ? 'text-[#a82614]' : 'text-ink-gray-9'">{{ g.label }}</b><span class="num text-ink-gray-5">{{ g.items.length }}</span></div>
-          <div v-for="t in g.items" :key="t.name" class="flex items-center gap-3 rounded-2xl px-2 py-2.5 hover:bg-white/50">
+          <div v-for="t in g.items" :key="t.name" class="flex cursor-pointer items-center gap-3 rounded-2xl px-2 py-2.5 hover:bg-white/50" @click="(e) => !e.target.closest('button,a') && openTask(t.name)">
             <button class="flex size-6 shrink-0 items-center justify-center rounded-full border-[1.75px] transition" :class="t.status === 'Done' ? 'border-[var(--accent-600)] bg-[var(--accent-600)] text-white' : 'border-[rgba(110,120,200,.45)] hover:border-[var(--accent-600)]'" :aria-label="t.status === 'Done' ? __('Hotovo') : __('Označit jako hotové')" @click="toggle(t)">
               <GlIcon v-if="t.status === 'Done'" name="check" :size="14" />
             </button>
@@ -59,11 +59,13 @@
               <span class="min-w-0 flex-1 truncate text-[15px]" :class="t.status === 'Done' ? 'text-ink-gray-5 line-through' : 'font-medium text-ink-gray-9'">{{ t.title }}<GlIcon v-if="t.flag && t.status !== 'Done'" name="flag" :size="13" class="ml-1.5 inline text-[#a82614]" /></span>
               <router-link v-if="t.ref" :to="refRoute(t.ref)" class="hidden max-w-[260px] shrink-0 truncate rounded-full px-2.5 py-0.5 text-[12px] font-bold sm:block" :class="REF_TONE[t.ref.kind]">{{ t.ref.label }}</router-link>
               <span class="num w-16 shrink-0 text-right text-[13px]" :class="t.bucket === 'overdue' ? 'font-semibold text-[#a82614]' : 'text-ink-gray-5'">{{ dueLabel(t) }}</span>
-              <span v-if="t.assigned_to" class="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" :title="userName(t.assigned_to)">{{ initials(userName(t.assigned_to)) }}</span>
+              <img v-if="t.assigned_to && userImage(t.assigned_to)" :src="userImage(t.assigned_to)" class="size-7 shrink-0 rounded-full object-cover" :title="userName(t.assigned_to)" />
+              <span v-else-if="t.assigned_to" class="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" :title="userName(t.assigned_to)">{{ initials(userName(t.assigned_to)) }}</span>
               <span v-else class="size-7 shrink-0" />
             </template>
           </div>
         </template>
+        <GlTaskModal v-if="showTask" v-model="showTask" :task="editTask" @saved="res.reload()" />
         <GlListFooter v-if="items.length" class="mt-4 px-2" :modelValue="limit" :options="{ rowCount: items.length, totalCount: res.data?.total }" @update:modelValue="(v) => (limit = v)" @loadMore="limit += 20" />
       </div>
     </div>
@@ -79,6 +81,7 @@ import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlListFooter from '@/components/GlListFooter.vue'
+import GlTaskModal from '@/components/Modals/GlTaskModal.vue'
 import { completeTaskWithUndo } from '@/composables/glTaskDone'
 import { usersStore } from '@/stores/users'
 import { shortDateCz, formatTimeCz } from '@/utils/glDate'
@@ -172,4 +175,13 @@ async function toggle(t) {
     res.reload()
   }
 }
+
+// úprava a nový úkol v okně (design 3. kolo): komu, termín, priorita, vazba
+const showTask = ref(false)
+const editTask = ref('')
+function openTask(name) {
+  editTask.value = name
+  showTask.value = true
+}
+const userImage = (email) => getUser(email)?.user_image || ''
 </script>

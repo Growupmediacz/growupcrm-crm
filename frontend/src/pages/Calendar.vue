@@ -113,7 +113,8 @@
     @edit="editFromPeek"
     @changed="reload"
   />
-  <CalendarTaskModal v-model="showTask" :item="activeTask" @saved="reload" />
+  <!-- úkol z kalendáře jde rovnou upravit (stejné okno jako v Úkolech) -->
+  <GlTaskModal v-if="showTask && activeTask" v-model="showTask" :task="activeTask.name" @saved="reload" />
   <CalendarPlanWeekModal
     v-model="showPlan"
     :weekStart="range.start"
@@ -129,7 +130,7 @@ import GlCalendarMobile from '@/components/Calendar/GlCalendarMobile.vue'
 import CalendarMonth from '@/components/Calendar/CalendarMonth.vue'
 import CalendarTimeGrid from '@/components/Calendar/CalendarTimeGrid.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
-import CalendarTaskModal from '@/components/Modals/CalendarTaskModal.vue'
+import GlTaskModal from '@/components/Modals/GlTaskModal.vue'
 import CalendarPlanWeekModal from '@/components/Modals/CalendarPlanWeekModal.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import ViewBreadcrumbs from '@/components/ViewBreadcrumbs.vue'

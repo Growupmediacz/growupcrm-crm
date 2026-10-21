@@ -87,16 +87,23 @@ export function daysBetween(start, end) {
   return out
 }
 
-// Barvy: Eventy modře, úkoly podle priority, hotové úkoly šedě.
+// Barvy podle typu činnosti (design 3. kolo, kalendář 06): schůzka modře, hovor oranžově, natáčení fialově,
+// interní šedě, jiné tyrkysově; úkoly žlutě (hotové šedě a přeškrtnuté). Proužek vlevo bere barvu textu (gl3-evt).
+export const ACTIVITY_TYPES = [
+  { value: 'Schůzka', label: 'Schůzka', tone: 'bg-[rgba(59,110,246,.14)] text-[#1f48b8] hover:bg-[rgba(59,110,246,.22)]', dot: '#3b6ef6' },
+  { value: 'Hovor', label: 'Hovor', tone: 'bg-[rgba(249,115,22,.14)] text-[#b4500d] hover:bg-[rgba(249,115,22,.22)]', dot: '#f97316' },
+  { value: 'Natáčení', label: 'Natáčení', tone: 'bg-[rgba(139,92,246,.15)] text-[#6a3fd4] hover:bg-[rgba(139,92,246,.23)]', dot: '#8b5cf6' },
+  { value: 'Interní', label: 'Interní', tone: 'bg-[rgba(110,120,160,.14)] text-[#454c6b] hover:bg-[rgba(110,120,160,.22)]', dot: '#7a819e' },
+  { value: 'Jiné', label: 'Jiné', tone: 'bg-[rgba(8,145,178,.14)] text-[#0b5f73] hover:bg-[rgba(8,145,178,.22)]', dot: '#0891b2' },
+]
+export const TASK_TONE = 'bg-[rgba(234,170,8,.2)] text-[#7a4400] hover:bg-[rgba(234,170,8,.28)]'
+
 export function itemClasses(item) {
   // GrowUp: plán odesílání kampaně (Outreach) – vlastní barva, ať se nesplete se schůzkou
   if (item.outreach) return 'bg-[rgba(8,145,178,.14)] text-[#0b5f73] border-transparent hover:bg-[rgba(8,145,178,.22)]'
-  if (item.kind === 'event')
-    return 'bg-[rgba(59,110,246,.14)] text-[#1f48b8] border-transparent hover:bg-[rgba(59,110,246,.22)]'
+  if (item.kind === 'event') return `${(ACTIVITY_TYPES.find((t) => t.value === item.activityType) || ACTIVITY_TYPES[0]).tone} border-transparent`
   if (item.done) return 'bg-[rgba(110,120,200,.08)] text-ink-gray-4 border-transparent line-through'
-  if (item.priority === 'High') return 'bg-[rgba(200,50,31,.12)] text-[#a82614] border-transparent hover:bg-[rgba(200,50,31,.2)]'
-  if (item.priority === 'Medium') return 'bg-[rgba(234,170,8,.18)] text-[#7a4400] border-transparent hover:bg-[rgba(234,170,8,.28)]'
-  return 'bg-[rgba(110,120,200,.12)] text-ink-gray-7 border-transparent hover:bg-[rgba(110,120,200,.2)]'
+  return `${TASK_TONE} border-transparent`
 }
 
 export function toItems({ events = [], tasks = [] }) {
@@ -109,6 +116,7 @@ export function toItems({ events = [], tasks = [] }) {
       kind: 'event',
       name: e.name,
       title: e.subject,
+      activityType: e.activity_type || 'Schůzka',
       start,
       end,
       allDay: Boolean(e.all_day),

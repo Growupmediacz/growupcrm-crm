@@ -155,12 +155,8 @@ function shownTop(d) {
   const all = topItems(d)
   return topExpanded.value ? all : all.slice(0, TOP_LIMIT)
 }
-function topClasses(item) {
-  if (item.kind === 'event') return 'bg-[rgba(59,110,246,.14)] text-[#1f48b8]'
-  if (item.done) return 'bg-[rgba(110,120,200,.1)] text-ink-gray-5'
-  if (item.priority === 'High') return 'bg-[rgba(200,50,31,.12)] text-[#a82614]'
-  return 'bg-[rgba(234,170,8,.2)] text-[#7a4400]'
-}
+// řádek Celý den: stejné barvy jako bloky (typ činnosti, úkoly žlutě)
+const topClasses = (item) => itemClasses(item)
 
 function layout(d) {
   const dayStart = startOfDay(d)

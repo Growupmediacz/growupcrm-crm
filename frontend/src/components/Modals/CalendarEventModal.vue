@@ -10,6 +10,23 @@
           autofocus
           :disabled="!canEdit"
         />
+        <!-- design 3. kolo (06): typ činnosti = barva v kalendáři -->
+        <div>
+          <div class="mb-1.5 text-xs text-ink-gray-5">{{ __('Typ činnosti') }}</div>
+          <div class="flex flex-wrap gap-1.5">
+            <button
+              v-for="t in ACTIVITY_TYPES"
+              :key="t.value"
+              type="button"
+              class="gl-chip flex h-9 items-center gap-2 rounded-full px-3 text-[13.5px] font-medium"
+              :class="form.activityType === t.value && '!bg-[#0e1330] !text-white'"
+              :disabled="!canEdit"
+              @click="form.activityType = t.value"
+            >
+              <span class="size-2.5 rounded-full" :style="{ background: t.dot }" />{{ __(t.label) }}
+            </button>
+          </div>
+        </div>
         <!-- GrowUp (design 2. kolo, opravy 2 a 3): Datum · Od · Do v jedné řadě, „čt 1. 10. 2026“, čas po 15 min -->
         <fieldset :disabled="!canEdit" class="flex flex-col gap-2">
           <div class="grid gap-2.5" :class="form.allDay ? 'grid-cols-1' : 'grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)]'">
@@ -104,7 +121,7 @@
 import Link from '@/components/Controls/Link.vue'
 import GlDatePicker from '@/components/GlDatePicker.vue'
 import GlTimePicker from '@/components/GlTimePicker.vue'
-import { isoDate, isoDateTime, pad } from '@/composables/calendar'
+import { ACTIVITY_TYPES, isoDate, isoDateTime, pad } from '@/composables/calendar'
 import { Button, Dialog, ErrorMessage, FormControl, call, toast } from 'frappe-ui'
 import { computed, onMounted, ref, watch } from 'vue'
 
@@ -116,6 +133,7 @@ const props = defineProps({
   lead: { type: String, default: null },
   organization: { type: String, default: null },
   subject: { type: String, default: '' },
+  activityType: { type: String, default: '' },
   currentUser: { type: String, default: '' },
   users: { type: Array, default: () => [] },
 })
@@ -158,6 +176,7 @@ function init() {
       organization: i.organization || '',
       assignedTo: i.assignedTo,
       description: i.description || '',
+      activityType: i.activityType || 'Schůzka',
     }
   } else {
     const s = props.start || new Date()
@@ -172,6 +191,7 @@ function init() {
       organization: props.organization || '',
       assignedTo: props.currentUser,
       description: '',
+      activityType: props.activityType || 'Schůzka',
     }
   }
 }
@@ -193,6 +213,7 @@ async function save() {
       lead: f.lead || null,
       organization: f.lead ? null : f.organization || null,
       assigned_to: f.assignedTo || null,
+      activity_type: f.activityType || 'Schůzka',
     })
     toast.success(isNew.value ? __('Událost byla vytvořena') : __('Událost byla uložena'))
     show.value = false
