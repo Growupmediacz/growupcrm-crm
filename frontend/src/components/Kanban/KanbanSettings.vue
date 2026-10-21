@@ -1,8 +1,10 @@
 <template>
+  <!-- GrowUp (design 3. kolo, 02): jen ikona s popiskem, ať lišta filtrů není přeplněná -->
   <Button
-    :label="__('Kanban settings')"
+    :tooltip="__('Kanban settings')"
+    :aria-label="__('Kanban settings')"
     v-bind="$attrs"
-    :iconLeft="KanbanIcon"
+    :icon="KanbanIcon"
     @click="showDialog = true"
   />
   <Dialog v-model:open="showDialog" :title="__('Kanban Settings')">

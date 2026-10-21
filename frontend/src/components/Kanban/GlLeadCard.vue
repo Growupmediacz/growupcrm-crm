@@ -1,16 +1,9 @@
 <template>
   <div class="flex flex-col gap-2">
-    <div class="flex items-start justify-between gap-2">
-      <div class="text-[16px] font-semibold leading-snug text-ink-gray-9">{{ title }}</div>
-      <GlTemperature :value="lead.temperature" class="mt-0.5" />
-    </div>
-    <div v-if="lead.organization && lead.organization !== title" class="truncate text-[14px] text-ink-gray-5">
+    <!-- design 3. kolo (02): název, firma, kraj, další krok, hodnota a vlastník; zdroj je v detailu -->
+    <div class="line-clamp-2 text-[15.5px] font-semibold leading-snug tracking-[-0.01em] text-ink-gray-9" :title="title">{{ title }}</div>
+    <div v-if="lead.organization && lead.organization !== title" class="-mt-1 truncate text-[13.5px] text-ink-gray-5">
       {{ lead.organization }}
-    </div>
-    <!-- zdroj zakázky a u poptávek z webu kanál (Google Ads, vyhledávání…) -->
-    <div v-if="lead.source" class="flex items-center gap-1.5 text-[13px] text-ink-gray-5" :title="lead.channel || ''">
-      <GlIcon name="inbox" :size="14" />
-      <span class="truncate">{{ __(lead.source) }}<template v-if="lead.channel"> · {{ lead.channel }}</template></span>
     </div>
     <!-- příchozí zakázka čeká na první odpověď -->
     <div v-if="response && response.tone !== 'ok' && lead.gl_response_state === 'Čeká'" class="self-start rounded-full px-2 py-0.5 text-[12px] font-semibold" :class="BADGE_TONE[response.tone]" :title="response.title">
@@ -28,11 +21,14 @@
       <GlIcon name="alert" :size="14" />
       <span class="truncate">{{ __('Bez dalšího kroku') }}</span>
     </div>
-    <div class="mt-2 flex items-center justify-between gap-2">
+    <div class="mt-1.5 flex items-center justify-between gap-2">
       <div v-if="lead.order_value" class="num text-[17px] font-bold text-ink-gray-9">{{ money }}</div>
-      <!-- oprava 7: bez hodnoty odkaz „+ hodnota“ (otevře detail s kartou Detaily v úpravách) -->
-      <button v-else class="gl-fill" @click.stop.prevent="fillValue">+ {{ __('hodnota') }}</button>
-      <UserAvatar v-if="lead.lead_owner" :user="lead.lead_owner" size="md" />
+      <!-- oprava 7: bez hodnoty nenápadné „+ hodnota“ (otevře detail s kartou Detaily v úpravách) -->
+      <button v-else class="text-[13px] font-medium text-ink-gray-4 hover:text-[var(--accent-600)]" @click.stop.prevent="fillValue">+ {{ __('hodnota') }}</button>
+      <span class="flex shrink-0 items-center gap-1.5">
+        <GlTemperature :value="lead.temperature" size="sm" />
+        <UserAvatar v-if="lead.lead_owner" :user="lead.lead_owner" size="md" />
+      </span>
     </div>
   </div>
 </template>
