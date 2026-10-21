@@ -2,9 +2,13 @@
   <!-- GrowUp: „Zapsat hovor“ (design). Data: growupcrm.calls.log_call -->
   <Dialog v-model:open="show" :options="{ size: 'lg' }">
     <template #body-title>
-      <div class="flex flex-col">
-        <h3 class="text-2xl font-semibold leading-6 text-ink-gray-9">{{ __('Zapsat hovor') }}</h3>
-        <span v-if="leadTitle" class="mt-1 text-[13px] text-ink-gray-5">{{ leadTitle }}</span>
+      <!-- design 3. kolo (24): oranžová ikona telefonu v hlavičce -->
+      <div class="flex items-center gap-3.5">
+        <span class="flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-[#f97316] text-white shadow-[0_8px_18px_-8px_rgba(249,115,22,.7)]"><GlIcon name="phone" :size="22" /></span>
+        <div class="flex min-w-0 flex-col">
+          <h3 class="text-[24px] font-bold leading-tight tracking-[-0.02em] text-ink-gray-9">{{ __('Zapsat hovor') }}</h3>
+          <span v-if="leadTitle" class="truncate text-[13px] text-ink-gray-5">{{ [person.name, leadTitle].filter(Boolean).join(' · ') }}</span>
+        </div>
       </div>
     </template>
     <template #default>
@@ -32,7 +36,7 @@
               :key="o.value"
               type="button"
               class="gl-seg-btn flex-1 justify-center"
-              :class="outcome === o.value && 'gl-seg-on'"
+              :class="outcome === o.value && 'gl-seg-on !bg-[var(--accent-600)] !text-white'"
               @click="outcome = o.value"
             >
               {{ o.label }}
@@ -67,6 +71,12 @@
           <Switch v-model="createTask" />
         </label>
 
+        <label v-if="nextStage" class="flex cursor-pointer items-center gap-2.5 text-[15px] text-ink-gray-9">
+          <input v-model="moveStage" type="checkbox" class="size-4 rounded" />
+          {{ __('Posunout zakázku do fáze') }}
+          <span class="flex items-center gap-1.5 font-semibold"><span class="size-2 rounded-full" :style="{ background: stageHex(nextStage.color) }" />{{ __(nextStage.name) }}</span>
+        </label>
+
         <ErrorMessage :message="error" />
       </div>
     </template>
@@ -82,6 +92,8 @@
 import GlIcon from '@/components/GlIcon.vue'
 import GlLeadPicker from '@/components/Firma/GlLeadPicker.vue'
 import { usersStore } from '@/stores/users'
+import { statusesStore } from '@/stores/statuses'
+import { stageHex } from '@/utils/glStage'
 import { Button, Dialog, ErrorMessage, FormControl, Switch, call, toast } from 'frappe-ui'
 import { computed, onBeforeUnmount, ref } from 'vue'
 
@@ -113,6 +125,17 @@ const CHOICES = [
 ]
 
 const outcome = ref('reached')
+
+// posun zakázky do další otevřené fáze (ne Vyhráno/Prohráno – ty mají vlastní dialog)
+const { leadStatuses } = statusesStore()
+const nextStage = computed(() => {
+  if (props.organization || !props.lead?.status) return null
+  const list = leadStatuses.data || []
+  const i = list.findIndex((x) => x.name === props.lead.status)
+  const next = i >= 0 ? list[i + 1] : null
+  return next && !['Won', 'Lost'].includes(next.type) ? next : null
+})
+const moveStage = ref(false)
 const note = ref('')
 const choice = ref('week')
 const customDate = ref('')
@@ -171,6 +194,9 @@ async function save() {
       create_task: createTask.value ? 1 : 0,
       duration: seconds.value,
     })
+    if (moveStage.value && nextStage.value) {
+      await call('frappe.client.set_value', { doctype: 'CRM Lead', name: props.lead.name, fieldname: 'status', value: nextStage.value.name })
+    }
     toast.success(__('Hovor byl zapsán'))
     show.value = false
     emit('saved')

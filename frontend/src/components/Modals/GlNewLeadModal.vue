@@ -67,6 +67,23 @@
           <div v-if="orgLoading" class="mt-1 text-[12px] text-ink-gray-5">{{ __('Načítám z ARES…') }}</div>
         </div>
 
+        <!-- design 3. kolo (23): kontaktní osoba z kontaktů firmy a zdroj zakázky -->
+        <div class="grid grid-cols-2 gap-3">
+          <FormControl
+            v-model="form.contact_person"
+            :label="__('Kontaktní osoba')"
+            type="select"
+            :disabled="!org"
+            :options="[{ label: org ? __('Bez kontaktu') : __('Nejdřív vyberte firmu'), value: '' }, ...orgContacts.map((c) => ({ label: c.full_name || c.name, value: c.name }))]"
+          />
+          <FormControl
+            v-model="form.source"
+            :label="__('Zdroj')"
+            type="select"
+            :options="[{ label: __('Vyberte zdroj'), value: '' }, ...sources.map((x) => ({ label: __(x.name), value: x.name }))]"
+          />
+        </div>
+
         <div class="grid grid-cols-2 gap-3">
           <FormControl v-model="valueText" :label="__('Hodnota')" type="text" :placeholder="__('Např. 40 000')">
             <template #suffix><span class="text-[13px] text-ink-gray-5">Kč</span></template>
@@ -85,10 +102,18 @@
               :class="form.status === s.name && 'gl-seg-on'"
               @click="form.status = s.name"
             >
-              {{ shortStage(s.name) }}
+              <span class="size-2 shrink-0 rounded-full" :style="{ background: stageHex(s.color) }" />{{ shortStage(s.name) }}
             </button>
           </div>
         </div>
+
+        <FormControl
+          v-model="form.order_description"
+          :label="__('Popis zakázky')"
+          type="textarea"
+          :rows="3"
+          :placeholder="__('Co klient chce, rozsah, termíny…')"
+        />
 
         <ErrorMessage :message="error" />
       </form>
@@ -110,6 +135,7 @@ import GlIcon from '@/components/GlIcon.vue'
 import LeadModal from '@/components/Modals/LeadModal.vue'
 import { sessionStore } from '@/stores/session'
 import { statusesStore } from '@/stores/statuses'
+import { stageHex } from '@/utils/glStage'
 import { Button, Dialog, ErrorMessage, FormControl, call, toast } from 'frappe-ui'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -130,7 +156,17 @@ const form = ref({
   order_title: props.defaults.order_title || '',
   status: props.defaults.status || '',
   next_step: '',
+  contact_person: '',
+  source: props.defaults.source || '',
+  order_description: '',
 })
+
+// zdroje zakázek a kontakty vybrané firmy
+const sources = ref([])
+call('frappe.client.get_list', { doctype: 'CRM Lead Source', fields: ['name'], limit_page_length: 100 })
+  .then((r) => (sources.value = r || []))
+  .catch(() => {})
+const orgContacts = ref([])
 const valueText = ref(props.defaults.order_value ? String(props.defaults.order_value) : '')
 
 // fáze: otevřené a probíhající; Vyhráno jen když přichází z Kanbanu jako výchozí
@@ -225,6 +261,22 @@ async function pickOrg(item) {
   }
 }
 
+watch(
+  () => org.value?.name,
+  async (name) => {
+    form.value.contact_person = ''
+    orgContacts.value = name
+      ? await call('frappe.client.get_list', {
+          doctype: 'Contact',
+          filters: { crm_organization: name },
+          fields: ['name', 'full_name'],
+          limit_page_length: 50,
+        }).catch(() => [])
+      : []
+  },
+  { immediate: true },
+)
+
 function clearOrg() {
   org.value = null
   orgQuery.value = ''
@@ -264,6 +316,9 @@ async function create() {
         organization_link: org.value?.name || undefined,
         order_value: orderValue.value || undefined,
         status: form.value.status,
+        contact_person: form.value.contact_person || undefined,
+        source: form.value.source || undefined,
+        order_description: form.value.order_description.trim() || undefined,
         lead_owner: props.defaults.lead_owner || user,
       },
     })
