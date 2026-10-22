@@ -4,7 +4,7 @@
     <div class="flex flex-wrap items-start justify-between gap-3">
       <div>
         <h2 class="flex items-center gap-2 text-[20px] font-bold text-ink-gray-9"><GlIcon name="sparkles" :size="19" class="text-[var(--accent-600)]" />{{ __('Agent kampaně') }}</h2>
-        <p class="mt-1 text-[14px] text-ink-gray-6">{{ __('Agent napíše každé firmě 3 e-maily z dat jejího webu a ukázky jejího oboru. Cíl: proklik na ukázku a audit zdarma.') }}</p>
+        <p class="mt-1 text-[14px] text-ink-gray-6">{{ __('Agent napíše každé firmě 4 e-maily z dat jejího webu a ukázky jejího oboru: úvod, follow-up s auditem zdarma, další data z oboru a upřímné rozloučení. Cíl: proklik na ukázku a audit zdarma.') }}</p>
       </div>
       <span v-if="s?.auto_send" class="rounded-full bg-[rgba(34,179,94,.12)] px-3 py-1 text-[13px] font-semibold text-[#178a4a]">{{ __('Schváleno, odesílá se samo') }}</span>
     </div>
