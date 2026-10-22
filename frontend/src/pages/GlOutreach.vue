@@ -18,9 +18,9 @@
 
     <!-- Přehled -->
     <template v-if="tab === 'overview'">
-      <!-- design 3. kolo (11): měsíční čísla – odesláno, otevřeno, odpovědi, schůzky -->
-      <div class="grid grid-cols-2 gap-3 xl:grid-cols-4 xl:gap-4">
-        <div v-for="k in kpis" :key="k.label" class="gl-card flex min-w-0 items-start gap-4 p-4 md:p-5">
+      <!-- design 3. kolo (11): měsíční čísla – odesláno, odpovědi, schůzky (otevření nesledujeme, Ivan 2026-10-22) -->
+      <div class="grid grid-cols-2 gap-3 xl:grid-cols-3 xl:gap-4">
+        <div v-for="(k, i) in kpis" :key="k.label" class="gl-card flex min-w-0 items-start gap-4 p-4 md:p-5" :class="i === kpis.length - 1 && 'col-span-2 xl:col-span-1'">
           <!-- mobil: bez ikony, popisky se zalamují a číslo je menší, aby se nic neořezávalo; od md beze změny -->
           <span class="hidden size-12 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-600)] md:flex"><GlIcon :name="k.icon" :size="22" /></span>
           <div class="flex min-w-0 flex-1 flex-col gap-0.5">
@@ -208,7 +208,6 @@ const kpis = computed(() => {
   const k = ov.value?.kpis || {}
   return [
     { label: __('Odesláno v {0}', [__(MONTHS[new Date().getMonth()])]), icon: 'send', value: k.sent_month ?? 0, sub: __('tento týden {0} / {1}', [k.sent, k.limit]) },
-    { label: __('Otevřeno'), icon: 'eye', value: k.open_pct ?? '—', unit: k.open_pct === null || k.open_pct === undefined ? '' : '%', sub: k.open_pct === null || k.open_pct === undefined ? __('zatím nic neodešlo') : __('{0} z {1}', [k.opened_month, k.sent_month]) },
     { label: __('Odpovědi'), icon: 'reply', value: k.reply_pct_month ?? '—', unit: k.reply_pct_month === null || k.reply_pct_month === undefined ? '' : '%', badge: k.replies_new ? __('{0} nové', [k.replies_new]) : '', sub: __('{0} odpovědí', [k.replies_month ?? 0]) },
     { label: __('Domluvené schůzky'), icon: 'cal', value: k.meetings ?? 0, sub: __('z outreach kampaní') },
   ]

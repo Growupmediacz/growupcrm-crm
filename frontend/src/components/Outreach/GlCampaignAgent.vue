@@ -1,10 +1,10 @@
 <template>
-  <!-- GrowUp: agent kampaně (growupcrm.campaign_agent) – texty od Claude, schválení, plán, prokliky na ukázku -->
+  <!-- GrowUp: agent kampaně (growupcrm.campaign_agent) – texty od Claude, schválení, plán (bez sledování otevření a prokliků) -->
   <div class="gl-card flex flex-col gap-4 p-5">
     <div class="flex flex-wrap items-start justify-between gap-3">
       <div>
         <h2 class="flex items-center gap-2 text-[20px] font-bold text-ink-gray-9"><GlIcon name="sparkles" :size="19" class="text-[var(--accent-600)]" />{{ __('Agent kampaně') }}</h2>
-        <p class="mt-1 text-[14px] text-ink-gray-6">{{ __('Agent napíše každé firmě 4 e-maily z dat jejího webu a ukázky jejího oboru: úvod, follow-up s auditem zdarma, další data z oboru a upřímné rozloučení. Cíl: proklik na ukázku a audit zdarma.') }}</p>
+        <p class="mt-1 text-[14px] text-ink-gray-6">{{ __('Agent napíše každé firmě 4 e-maily z dat jejího webu a ukázky jejího oboru: úvod, follow-up s auditem zdarma, další data z oboru a upřímné rozloučení. Cíl: aby se podívali na ukázku svého oboru a ozvali se kvůli auditu zdarma.') }}</p>
       </div>
       <span v-if="s?.auto_send" class="rounded-full bg-[rgba(34,179,94,.12)] px-3 py-1 text-[13px] font-semibold text-[#178a4a]">{{ __('Schváleno, odesílá se samo') }}</span>
     </div>
@@ -13,7 +13,7 @@
 
     <template v-if="s">
       <!-- výsledky -->
-      <div class="grid grid-cols-2 gap-3 md:grid-cols-5">
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
         <div v-for="k in KPIS" :key="k.key" class="rounded-[14px] bg-[rgba(110,120,200,.06)] px-3 py-2">
           <div class="text-[12px] text-ink-gray-5">{{ k.label }}</div>
           <div class="num text-[24px] font-bold text-ink-gray-9">{{ k.value(s) }}</div>
@@ -97,7 +97,6 @@ const emit = defineEmits(['changed'])
 const KPIS = [
   { key: 'plan', label: __('Naplánováno'), value: (s) => s.plan.count },
   { key: 'sent', label: __('Odesláno'), value: (s) => s.sent },
-  { key: 'clicked', label: __('Klikli na ukázku'), value: (s) => s.clicked },
   { key: 'replied', label: __('Odpověděli'), value: (s) => s.replied },
   { key: 'pending', label: __('Čeká na schválení'), value: (s) => s.pending },
 ]

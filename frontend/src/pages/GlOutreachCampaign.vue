@@ -30,9 +30,9 @@
           <div class="min-w-0"><div class="truncate text-[15px] font-bold text-ink-gray-9">{{ s.index + 1 }}. {{ s.title || (s.step_type === 'E-mail' ? (s.index ? __('Follow-up') : __('Úvodní e-mail')) : s.step_type) }}</div>
             <div class="truncate text-[12px] text-ink-gray-5">{{ __('den {0}', [s.day_offset]) }} · {{ s.step_type === 'E-mail' ? (s.template_name ? __('šablona {0}', [s.template_name]) : '') : __('ručně') }}</div></div>
         </div>
-        <div class="mt-3 grid grid-cols-3 gap-2">
+        <div class="mt-3 grid gap-2" :class="s.step_type === 'E-mail' ? 'grid-cols-2' : 'grid-cols-3'">
           <template v-if="s.step_type === 'E-mail'">
-            <div v-for="k in [[s.sent, __('odesláno')], [s.opened, __('otevřeno')], [s.replies, __('odpovědi')]]" :key="k[1]"><div class="num text-[22px] font-bold text-ink-gray-9">{{ k[0] }}</div><div class="text-[11px] text-ink-gray-5">{{ k[1] }}</div></div>
+            <div v-for="k in [[s.sent, __('odesláno')], [s.replies, __('odpovědi')]]" :key="k[1]"><div class="num text-[22px] font-bold text-ink-gray-9">{{ k[0] }}</div><div class="text-[11px] text-ink-gray-5">{{ k[1] }}</div></div>
           </template>
           <template v-else>
             <div v-for="k in [[s.tasks, __('úkolů')], [s.done, __('hotovo')], [s.replies, __('odpovědi')]]" :key="k[1]"><div class="num text-[22px] font-bold text-ink-gray-9">{{ k[0] }}</div><div class="text-[11px] text-ink-gray-5">{{ k[1] }}</div></div>
