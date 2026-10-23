@@ -42,6 +42,21 @@
     <div v-if="st?.searched" class="text-[13px] text-ink-gray-5">
       {{ __('Prohledáno {0} firem, nalezeno {1} ověřených e-mailů. Firmy se znovu nabídnou po 30 dnech.', [st.searched, st.found]) }}
     </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-3 rounded-[16px] bg-[rgba(110,120,200,.07)] px-4 py-3">
+      <div class="text-[14px] text-ink-gray-8">
+        <div class="font-semibold">{{ __('Osobní e-maily ve firmě') }}</div>
+        <div class="text-[13px] text-ink-gray-6">{{ __('U firem bez e-mailu na jednatele vypíše osobní adresy na doméně. Adresa jednatele ho doplní, ostatní lidé přibudou jako návrhy. 1 kredit za firmu, jen když něco najde.') }}</div>
+        <template v-if="estCompany.data">
+          <b>{{ estCompany.data.count }}</b> {{ __('firem') }} · {{ __('nejvýš') }} <b>{{ estCompany.data.max_credits }}</b> {{ __('kreditů') }}
+        </template>
+      </div>
+      <Button variant="subtle" :label="st?.queued_company ? __('Hledám ({0})', [st.queued_company]) : __('Najít osobní e-maily')" :loading="busyCompany"
+        :disabled="!st?.configured || !estCompany.data?.count || estCompany.data.remaining < 1 || !!st?.queued_company" @click="startCompany" />
+    </div>
+    <div v-if="st?.searched_company" class="text-[13px] text-ink-gray-5">
+      {{ __('Prohledáno {0} firem, osobní e-maily u {1} z nich.', [st.searched_company, st.found_company]) }}
+    </div>
   </div>
 </template>
 
@@ -58,19 +73,25 @@ const state = createResource({ url: 'growupcrm.email_finder.get_overview', auto:
 const st = computed(() => state.data)
 const est = createResource({ url: 'growupcrm.email_finder.estimate' })
 const filters = reactive({ industry: '', territory: '', contact_coverage: '' })
+const estCompany = createResource({ url: 'growupcrm.email_finder.estimate_company' })
 const busy = ref(false)
+const busyCompany = ref(false)
 const opt = (list) => [{ label: __('Vše'), value: '' }, ...(list || []).map((v) => ({ label: v, value: v }))]
 
-watch(filters, () => est.submit({ filters: JSON.stringify(filters) }), { immediate: true, deep: true })
+watch(filters, () => {
+  est.submit({ filters: JSON.stringify(filters) })
+  estCompany.submit({ filters: JSON.stringify(filters) })
+}, { immediate: true, deep: true })
 
 // během dohledávání obnovujeme; po doběhnutí přepočítáme odhad a dáme vědět návrhům kontaktů
-watch(() => st.value?.queued, (now, before) => {
+watch(() => (st.value?.queued || 0) + (st.value?.queued_company || 0), (now, before) => {
   if (before && !now) {
     est.reload()
+    estCompany.reload()
     emit('done')
   }
 })
-const timer = setInterval(() => st.value?.queued && state.reload(), 8000)
+const timer = setInterval(() => (st.value?.queued || st.value?.queued_company) && state.reload(), 8000)
 onBeforeUnmount(() => clearInterval(timer))
 
 async function start() {
@@ -83,6 +104,19 @@ async function start() {
     saveFailed(e, start, __('Spuštění se nepovedlo'))
   } finally {
     busy.value = false
+  }
+}
+
+async function startCompany() {
+  busyCompany.value = true
+  try {
+    const res = await call('growupcrm.email_finder.start_company', { filters: JSON.stringify(filters) })
+    toast.success(__('Agent hledá osobní e-maily u {0} firem', [res.queued]))
+    state.reload()
+  } catch (e) {
+    saveFailed(e, startCompany, __('Spuštění se nepovedlo'))
+  } finally {
+    busyCompany.value = false
   }
 }
 </script>
