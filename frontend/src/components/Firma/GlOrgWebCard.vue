@@ -11,6 +11,12 @@
     <p v-if="data.run?.status === 'Chyba'" class="text-[13px] text-[#a82614]">{{ data.run.error }}</p>
 
     <template v-if="p.web_status === 'Obohaceno'">
+      <div v-if="p.web_industry_fit === 'Nesedí'" class="rounded-[14px] bg-[rgba(214,160,29,.12)] px-3 py-2 text-[13px] text-ink-gray-8">
+        <b>{{ __('Obor nesedí.') }}</b> {{ __('Podle webu je hlavní činnost „{0}“, v CRM je obor „{1}“. Kampaně firmu přeskočí, dokud se obor neupraví.', [p.web_industry, p.industry || '—']) }}
+      </div>
+      <div v-else-if="p.web_industry_fit === 'Jiný'" class="rounded-[14px] bg-[rgba(214,160,29,.12)] px-3 py-2 text-[13px] text-ink-gray-8">
+        {{ __('Hlavní činnost podle webu nepatří do žádného našeho oboru.') }}
+      </div>
       <div v-for="f in FIELDS" v-show="p[f.key]" :key="f.key">
         <div class="text-[12px] font-semibold uppercase tracking-wide text-ink-gray-5">{{ f.label }}</div>
         <div class="text-[14px] leading-snug text-ink-gray-8">{{ p[f.key] }}</div>
@@ -46,7 +52,13 @@ const FIELDS = [
   { key: 'web_services', label: __('Služby') },
   { key: 'web_customers', label: __('Zákazníci') },
   { key: 'web_region', label: __('Působnost') },
+  { key: 'web_main_business', label: __('Hlavní činnost') },
+  { key: 'web_facts', label: __('Odlišující fakta') },
+  { key: 'web_proof', label: __('Důkazy důvěryhodnosti') },
   { key: 'web_size', label: __('Velikost') },
+  { key: 'web_prices', label: __('Ceny na webu') },
+  { key: 'web_response_promise', label: __('Slib odpovědi') },
+  { key: 'web_offers', label: __('Aktuální akce') },
   { key: 'web_signals', label: __('Marketing') },
 ]
 
