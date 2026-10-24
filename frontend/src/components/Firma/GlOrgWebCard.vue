@@ -11,6 +11,9 @@
     <p v-if="data.run?.status === 'Chyba'" class="text-[13px] text-[#a82614]">{{ data.run.error }}</p>
 
     <template v-if="p.web_status === 'Obohaceno'">
+      <div v-if="p.web_scale === 'Velká nebo síť'" class="rounded-[14px] bg-[rgba(214,160,29,.12)] px-3 py-2 text-[13px] text-ink-gray-8">
+        <b>{{ __('Velká firma nebo síť.') }}</b> {{ __('Franšíza, pobočka řetězce nebo velká firma. Kampaně ji přeskočí.') }}
+      </div>
       <div v-if="p.web_industry_fit === 'Nesedí'" class="rounded-[14px] bg-[rgba(214,160,29,.12)] px-3 py-2 text-[13px] text-ink-gray-8">
         <b>{{ __('Obor nesedí.') }}</b> {{ __('Podle webu je hlavní činnost „{0}“, v CRM je obor „{1}“. Kampaně firmu přeskočí, dokud se obor neupraví.', [p.web_industry, p.industry || '—']) }}
       </div>
