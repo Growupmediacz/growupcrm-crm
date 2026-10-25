@@ -120,7 +120,7 @@
 
         <div class="gl-card min-w-0 p-6">
           <h2 class="mb-3 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Poslední aktivita') }}</h2>
-          <GlEmptyState v-if="!card.data.activity.length" icon="clock" :title="__('Zatím žádná aktivita')" :text="__('Hovory, schůzky a zápisy s tímto kontaktem se ukážou tady.')" />
+          <GlEmptyState v-if="!card.data.activity.length" icon="clock" :title="__('Zatím žádná aktivita')" :text="__('Hovory, schůzky, zápisy a e-maily s tímto kontaktem se ukážou tady.')" />
           <component
             :is="a.lead ? 'router-link' : 'div'"
             v-for="(a, i) in card.data.activity"
@@ -322,6 +322,7 @@ const KIND = {
   call: { icon: 'phone', tone: 'bg-[#fde8dc] text-[#a3360a]' },
   event: { icon: 'cal', tone: 'bg-[#e6ecff] text-[#1f48b8]' },
   note: { icon: 'doc', tone: 'bg-[#efe7ff] text-[#6d3fd0]' },
+  email: { icon: 'mail', tone: 'bg-[rgba(20,160,190,.13)] text-[#08626f]' },
 }
 const TONES = ['bg-[#dde6ff] text-[#2440a6]', 'bg-[#ffe9d6] text-[#b4560f]', 'bg-[#efe7ff] text-[#6d3fd0]', 'bg-[#dcf5e6] text-[#0f6b32]']
 const tone = (s) => TONES[[...(s || '')].reduce((a, ch) => a + ch.charCodeAt(0), 0) % TONES.length]
