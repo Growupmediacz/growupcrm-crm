@@ -9,6 +9,9 @@
     <div v-if="response && response.tone !== 'ok' && lead.gl_response_state === 'Čeká'" class="self-start rounded-full px-2 py-0.5 text-[12px] font-semibold" :class="BADGE_TONE[response.tone]" :title="response.title">
       {{ response.text }}
     </div>
+    <div v-if="lead.interest_service" class="self-start rounded-full bg-surface-gray-2 px-2 py-0.5 text-[12px] font-medium text-ink-gray-7">
+      {{ lead.interest_service }}
+    </div>
     <div v-if="lead.territory" class="flex items-center gap-1.5 text-[13px] text-ink-gray-5">
       <GlIcon name="pin" :size="14" />
       <span class="truncate">{{ lead.territory }}</span>

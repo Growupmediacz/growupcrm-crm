@@ -20,6 +20,7 @@
         <span class="size-2 rounded-full" :style="{ background: color }" />{{ __(lead.status) }}
       </div>
     </div>
+    <div v-if="plain(lead.interest_service)" class="mt-1.5 inline-block rounded-full bg-surface-gray-2 px-2 py-0.5 text-[12px] font-medium text-ink-gray-7">{{ plain(lead.interest_service) }}</div>
     <div v-if="plain(lead.source)" class="mt-1 truncate text-[13px] text-ink-gray-5">
       {{ __(plain(lead.source)) }}<template v-if="plain(lead.channel)"> · {{ plain(lead.channel) }}</template>
     </div>
