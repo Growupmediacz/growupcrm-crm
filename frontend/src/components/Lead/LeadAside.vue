@@ -17,7 +17,8 @@
                   <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(110,120,200,.16)" stroke-width="4" />
                   <circle cx="18" cy="18" r="14" fill="none" style="stroke: var(--accent-600)" stroke-width="4" stroke-linecap="round" :stroke-dasharray="`${(row.ring / 100) * 88} 88`" />
                 </svg>
-                {{ row.value }}
+                <a v-if="row.href" :href="row.href" target="_blank" rel="noopener" class="truncate text-[var(--accent-600)] hover:underline">{{ row.value }}</a>
+                <template v-else>{{ row.value }}</template>
               </div>
               <div v-if="row.sub" class="truncate text-[12px] text-ink-gray-5">{{ row.sub }}</div>
             </template>
@@ -74,6 +75,20 @@
           </select>
         </label>
       </div>
+      <!-- GrowUp: ukázka webu. U zakázky „Ukázka předem“ uložení odkazu naplánuje e-mail s ukázkou (growupcrm.previews). -->
+      <template v-if="showPreview">
+        <label>
+          <span class="gl-label">{{ __('Odkaz na ukázku') }}</span>
+          <input v-model="form.preview_url" class="gl-field w-full" inputmode="url" placeholder="https://" />
+          <span v-if="doc.preview_ahead" class="mt-1 block text-[12px] text-ink-gray-5">
+            {{ __('Po uložení odkazu odejde firmě e-mail s ukázkou (nejdřív za 15 minut, v pracovní době).') }}
+          </span>
+        </label>
+        <label v-if="doc.preview_ahead">
+          <span class="gl-label">{{ __('Věta k ukázce (nepovinné)') }}</span>
+          <input v-model="form.preview_note" lang="cs" class="gl-field w-full" :placeholder="__('Např. Nahoře je teď hned vidět, co děláte')" />
+        </label>
+      </template>
       <label>
         <span class="gl-label">{{ __('Popis') }}</span>
         <textarea v-model="form.order_description" lang="cs" class="gl-field gl-text w-full" rows="3" />
@@ -269,8 +284,12 @@ const rows = computed(() => {
     { label: __('Očekávané uzavření'), value: formatDateCz(d.expected_closure_date) },
   )
   if (d.signed_date) out.push({ label: __('Datum podpisu'), value: formatDateCz(d.signed_date) })
+  if (d.preview_url) out.push({ label: __('Ukázka'), value: d.preview_url.replace(/^https?:\/\//, ''), href: d.preview_url })
+  else if (d.preview_ahead) out.push({ label: __('Ukázka'), value: '' })
   return out
 })
+// odkaz na ukázku webu: u zakázek na web a u „Ukázky předem“
+const showPreview = computed(() => !!(props.doc.preview_ahead || props.doc.preview_url || props.doc.interest_service === 'Web'))
 
 // --- úpravy v kartě ---
 const PROBABILITIES = [20, 40, 60, 80]
@@ -294,6 +313,8 @@ function fillForm() {
     source: d.source || '',
     lead_owner: d.lead_owner || '',
     order_description: d.order_description || '',
+    preview_url: d.preview_url || '',
+    preview_note: d.preview_note || '',
   })
   sources.fetch()
 }
@@ -320,11 +341,13 @@ async function save() {
         source: form.source || null,
         lead_owner: form.lead_owner || null,
         order_description: form.order_description || '',
+        ...(showPreview.value ? { preview_url: (form.preview_url || '').trim() || null, preview_note: form.preview_note || null } : {}),
       },
     })
+    const queued = props.doc.preview_ahead && (form.preview_url || '').trim() && (form.preview_url || '').trim() !== (props.doc.preview_url || '')
     editing.value = false
     emit('saved')
-    toast.success(__('Uloženo'))
+    toast.success(queued ? __('Uloženo. E-mail s ukázkou je naplánovaný.') : __('Uloženo'))
   } catch (e) {
     saveFailed(e, save)
   } finally {
