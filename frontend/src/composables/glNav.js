@@ -33,6 +33,7 @@ const PAGES = [
     routes: ['Projects', 'Project', 'ProjectTemplates'],
     condition: () => agencyEnabled.value,
   },
+  { key: 'Webs', label: 'Weby', icon: 'globe', routes: ['Webs'], condition: () => agencyEnabled.value },
   { key: 'Plans', label: 'Plány', icon: 'target', routes: ['Plans'], condition: () => agencyEnabled.value },
   { key: 'Analytics', label: 'Analytika', icon: 'chart', routes: ['Analytics'], condition: () => analyticsEnabled.value },
 ]
@@ -41,7 +42,7 @@ const GROUPS = [
   { key: 'today', label: 'Dnes', icon: 'grid', pages: ['Today', 'Leads', 'Organizations', 'ContactsCards', 'Outreach', 'Agent'] },
   { key: 'sales', label: 'Prodej', icon: 'brief', pages: ['Leads', 'Organizations', 'ContactsCards', 'Outreach', 'Agent'] },
   { key: 'work', label: 'Práce', icon: 'check', pages: ['Tasks', 'Calendar', 'Notes', 'Call Logs'] },
-  { key: 'delivery', label: 'Dodání', icon: 'folder', pages: ['Clients', 'Projects', 'Plans', 'Analytics'] },
+  { key: 'delivery', label: 'Dodání', icon: 'folder', pages: ['Clients', 'Projects', 'Webs', 'Plans', 'Analytics'] },
 ]
 
 // naposledy navštívená stránka každé skupiny (klik na skupinu tam vrátí)

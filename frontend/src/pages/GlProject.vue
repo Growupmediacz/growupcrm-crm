@@ -113,6 +113,22 @@
           <div class="num mt-1 text-[20px] font-bold text-ink-gray-9">{{ new Intl.NumberFormat('cs-CZ').format(p.budget_hours) }} h</div>
         </div>
       </div>
+      <div v-if="p.web_slug" class="gl-card p-6">
+        <h2 class="mb-2 text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Web') }}</h2>
+        <dl class="flex flex-col">
+          <div class="flex items-center justify-between gap-4 border-b border-[var(--line)] py-3">
+            <dt class="shrink-0 text-[15px] text-ink-gray-5">{{ __('Fáze') }}</dt>
+            <dd class="text-right text-[15px] font-semibold text-ink-gray-9">{{ p.web_phase || '–' }}</dd>
+          </div>
+          <div v-for="l in webLinks" :key="l.label" class="flex items-center justify-between gap-4 border-b border-[var(--line)] py-3 last:border-b-0">
+            <dt class="shrink-0 text-[15px] text-ink-gray-5">{{ l.label }}</dt>
+            <dd class="min-w-0 truncate text-right text-[15px]">
+              <a v-if="l.url" :href="l.url" target="_blank" rel="noopener" class="font-semibold text-[var(--accent-600)] hover:underline">{{ l.short }}</a>
+              <span v-else class="gl-empty">{{ __('Bez hodnoty') }}</span>
+            </dd>
+          </div>
+        </dl>
+      </div>
       <div v-if="p.milestones?.length" class="gl-card p-6">
         <h2 class="mb-3 text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Milníky') }}</h2>
         <div class="relative">
@@ -354,4 +370,16 @@ const toDate = (s) => new Date(String(s).length === 10 ? `${s}T00:00` : String(s
 const fullDate = formatDateCz
 const shortDate = shortDateCz
 const isOverdue = (t) => t.status !== 'Done' && t.due_date && toDate(t.due_date) < new Date()
+
+// GrowUp: odkazy webu (POSTUP-WEB.md), jen u projektů se zkratkou webu
+const webLinks = computed(() => {
+  const d = project.data || {}
+  const short = (u) => (u ? u.replace(/^https?:\/\//, '').replace(/\/$/, '') : '')
+  return [
+    { label: __('Náhled'), url: d.preview_url },
+    { label: __('Ostrý web'), url: d.live_url },
+    { label: __('Repozitář'), url: d.repo_url },
+    { label: __('Drive'), url: d.drive_url },
+  ].map((l) => ({ ...l, short: l.label === __('Drive') && l.url ? __('Otevřít složku') : short(l.url) }))
+})
 </script>

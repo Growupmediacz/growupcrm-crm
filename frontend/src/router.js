@@ -94,6 +94,8 @@ const routes = [
     name: 'Projects',
     component: () => import('@/pages/GlProjects.vue'),
   },
+  // GrowUp: weby klientů podle fáze (POSTUP-WEB.md)
+  { path: '/webs', name: 'Webs', component: () => import('@/pages/GlWebs.vue') },
   {
     path: '/plans',
     name: 'Plans',
