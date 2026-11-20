@@ -61,10 +61,10 @@
             <router-link v-else :to="{ name: 'OutreachReview', params: { name: m.name } }" class="text-[var(--accent-600)] hover:underline">{{ __('Upravit') }}</router-link>
           </div>
           <div class="mt-1 text-[15px] font-bold text-ink-gray-9">{{ m.subject }}</div>
-          <div class="gl-mail mt-1 text-[14px] leading-relaxed text-ink-gray-8" v-html="m.body" />
+          <div class="gl-mail mt-1 text-[14px] leading-relaxed text-ink-gray-8" v-html="sanitizeHTML(m.body)" />
           <details v-if="m.followups.length" class="mt-2 text-[13px] text-ink-gray-7">
             <summary class="cursor-pointer text-ink-gray-5">{{ __('Navazující e-maily') }}</summary>
-            <div v-for="(f, i) in m.followups" :key="i" class="mt-3 rounded-[12px] bg-[rgba(110,120,200,.05)] p-3"><b class="text-ink-gray-9">{{ f[0] }}</b><div class="mt-1" v-html="f[1]" /></div>
+            <div v-for="(f, i) in m.followups" :key="i" class="mt-3 rounded-[12px] bg-[rgba(110,120,200,.05)] p-3"><b class="text-ink-gray-9">{{ f[0] }}</b><div class="mt-1" v-html="sanitizeHTML(f[1])" /></div>
           </details>
         </div>
       </div>
@@ -87,7 +87,7 @@
 <script setup>
 import GlIcon from '@/components/GlIcon.vue'
 import { saveFailed } from '@/composables/glToast'
-import { formatDate } from '@/utils'
+import { formatDate, sanitizeHTML } from '@/utils'
 import { Button, FormControl, call, createResource, toast } from 'frappe-ui'
 import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 

@@ -77,7 +77,7 @@
                 <!-- Cíl · Průběh · Závěr jako samostatné bloky, Další krok jako pruh s „Vytvořit úkol“ -->
                 <div v-for="(sec, i) in parsed.sections" :key="i" class="border-b border-[var(--line)] py-5 last:border-b-0">
                   <div v-if="sec.label" class="mb-2 text-[13px] font-bold uppercase tracking-[0.06em] text-ink-gray-5">{{ sec.label }}</div>
-                  <div lang="cs" class="gl3-note" v-html="sec.html" />
+                  <div lang="cs" class="gl3-note" v-html="sanitizeHTML(sec.html)" />
                 </div>
                 <div v-if="parsed.next" class="mt-1 flex items-center gap-3 rounded-[18px] border border-[rgba(224,161,0,.35)] bg-[rgba(224,161,0,.1)] px-4 py-3">
                   <GlIcon name="clock" :size="22" class="shrink-0 text-[#d48a00]" />
@@ -121,6 +121,7 @@ import GlIcon from '@/components/GlIcon.vue'
 import Link from '@/components/Controls/Link.vue'
 import GlTaskModal from '@/components/Modals/GlTaskModal.vue'
 import { parseNote } from '@/utils/glNote'
+import { sanitizeHTML } from '@/utils'
 import { useDoctypeModal } from '@/composables/doctypeModal'
 import { usersStore } from '@/stores/users'
 import { shortDateCz, formatTimeCz } from '@/utils/glDate'

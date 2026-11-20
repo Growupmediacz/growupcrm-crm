@@ -2,6 +2,7 @@
   <iframe
     ref="iframeRef"
     :srcdoc="htmlContent"
+    sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"
     class="prose-f block h-10 max-h-[500px] w-full"
   />
 </template>
@@ -104,6 +105,7 @@ const htmlContent = `
 <!DOCTYPE html>
 <html>
 <head>
+  <base target="_blank">
   <style>${emailContentStyles}</style>
 </head>
 <body>
