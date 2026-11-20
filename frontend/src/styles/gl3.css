@@ -129,6 +129,8 @@
   /* společné odstíny */
   --c-tint: #6e78c8;
   --c-white: #ffffff;
+  --c-gray-50: #f1f3fa; /* V1 kontrola: přechod u okraje Kanbanu */
+  --c-violet-25: #fbf9ff; /* V1 kontrola: přechod za záložkami detailu zakázky */
   --c-shadow: #283278;
   --c-shadow-2: #4048a0;
   --c-shadow-3: #282878;

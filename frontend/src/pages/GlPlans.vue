@@ -70,7 +70,7 @@
       <!-- obchodníci -->
       <!-- mobil: obchodníci jako karty -->
       <template v-if="isMobileView">
-        <div class="-mb-2 px-1 text-[13px] font-semibold text-[var(--text-3,var(--text-3))]">{{ __('Obchodníci') }}</div>
+        <div class="-mb-2 px-1 text-[13px] font-semibold text-[var(--text-3)]">{{ __('Obchodníci') }}</div>
         <div v-gl-animate class="gl-card !rounded-[22px] px-4">
           <div v-for="(r, i) in p.people" :key="r.user" class="flex items-center gap-3 py-3" :class="i && 'border-t border-[var(--outline-gray-1)]'">
             <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[13px] font-bold text-[var(--c-blue-600)]">{{ initials(r.full_name) }}</span>

@@ -19,7 +19,7 @@
       <!-- GrowUp (design 2. kolo, oprava 8): max. 3 tlačítka + „…“; „Další fáze“ s názvem fáze v nápovědě -->
       <template v-if="allFields">
         <AssignTo v-model="assignees.data" doctype="CRM Lead" :docname="leadId" />
-        <Button variant="solid" :label="__('Hotovo')" iconLeft="check" @click="allFields = false" />
+        <Button variant="solid" :label="__('Hotovo')" iconLeft="lucide-check" @click="allFields = false" />
       </template>
       <template v-else>
         <Button :label="__('Upravit')" iconLeft="lucide-pencil-line" @click="editing = true" />
@@ -51,10 +51,10 @@
         <GlConversations v-if="mailTab === 'conv'" ref="conversations" v-model:focused="mailFocus" doctype="CRM Lead" :docname="leadId" :doc="doc" />
         <template v-else>
         <!-- oprava 10: 5 čipů (Vše, Zápisy, Hovory, Úkoly, Komentáře), ostatní záložky v nabídce „Více“ -->
-        <div v-if="extraTabs.length" class="gl-more-tabs absolute right-0 top-[76px] z-[2] bg-gradient-to-l from-[#fbf9ff] from-70% to-transparent pb-0.5 pl-5 pr-5"><Dropdown :options="extraTabs" placement="right">
+        <div v-if="extraTabs.length" class="gl-more-tabs absolute right-0 top-[76px] z-[2] bg-gradient-to-l from-[var(--c-violet-25)] from-70% to-transparent pb-0.5 pl-5 pr-5"><Dropdown :options="extraTabs" placement="right">
           <button
             class="inline-flex h-9 items-center gap-1 rounded-full px-3.5 text-[14px] font-semibold transition"
-            :class="moreTab ? 'bg-[#0e1330] text-white' : 'bg-white/55 text-[var(--ink-gray-6,#5b6280)] hover:bg-white/85'"
+            :class="moreTab ? 'bg-[var(--text-1)] text-white' : 'bg-white/55 text-[var(--ink-gray-6,var(--c-blue-550-3))] hover:bg-white/85'"
           >
             {{ moreTab ? moreTab.label : __('Více') }}
             <GlIcon name="down" :size="14" />
@@ -81,7 +81,7 @@
     </Tabs>
         </template>
         <!-- rychlé akce pod aktivitou (design 2. kolo, R2ZakazkaDetail) -->
-        <div class="flex shrink-0 flex-wrap gap-2 border-t border-[rgba(110,120,200,.14)] px-5 py-3">
+        <div class="flex shrink-0 flex-wrap gap-2 border-t border-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] px-5 py-3">
           <button v-for="a in quickActions" :key="a.label" class="gl-quick" @click="a.onClick">
             <GlIcon :name="a.icon" :size="16" />{{ a.label }}
           </button>
@@ -131,7 +131,7 @@
                             onClick: openFileSelector,
                           },
                           {
-                            icon: 'trash-2',
+                            icon: 'lucide-trash-2',
                             label: __('Remove Image'),
                             onClick: () => updateField('image', ''),
                           },
@@ -637,16 +637,16 @@ const moreOptions = computed(() => {
     {
       group: __('Zakázka'),
       items: [
-        { label: __('Přiložit soubor'), icon: 'paperclip', onClick: () => (showFilesUploader.value = true) },
+        { label: __('Přiložit soubor'), icon: 'lucide-paperclip', onClick: () => (showFilesUploader.value = true) },
         { label: __('Všechna pole'), icon: 'sliders', onClick: () => ((editing.value = false), (allFields.value = true)) },
-        { label: __('Kopírovat číslo zakázky'), icon: 'copy', onClick: () => copyToClipboard(props.leadId) },
+        { label: __('Kopírovat číslo zakázky'), icon: 'lucide-copy', onClick: () => copyToClipboard(props.leadId) },
         !leadsOnlyMode.value && {
           label: __('Convert to Deal'),
-          icon: 'repeat',
+          icon: 'lucide-repeat',
           condition: () => !isLeadConversionDisabled.value,
           onClick: () => (showConvertToDealModal.value = true),
         },
-        canDelete.value && { label: __('Smazat zakázku'), icon: 'trash-2', theme: 'red', onClick: deleteLead },
+        canDelete.value && { label: __('Smazat zakázku'), icon: 'lucide-trash-2', theme: 'red', onClick: deleteLead },
       ].filter(Boolean),
     },
   ]

@@ -52,7 +52,7 @@
           <component v-if="!isMobileView" :is="c.lead ? 'router-link' : 'div'" v-for="c in res.data.items" :key="c.name" :to="c.lead ? { name: 'Lead', params: { leadId: c.lead } } : undefined" class="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 border-t border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] py-3.5 md:grid-cols-[110px_1.4fr_50px_130px_70px_1.6fr_40px]">
             <span class="num hidden text-[13px] text-ink-gray-5 md:block">{{ whenLabel(c.when) }}</span>
             <span class="flex min-w-0 items-center gap-3"><span class="flex size-10 shrink-0 items-center justify-center rounded-[12px] bg-[color-mix(in_srgb,var(--stage-jednani)_14%,transparent)] text-[var(--c-orange-600-2)]"><GlIcon name="phone" :size="18" /></span><span class="min-w-0"><span class="block truncate text-[15px] font-bold text-ink-gray-9">{{ c.person || c.org }}</span><span class="block truncate text-[13px] text-ink-gray-5">{{ c.org }}</span></span></span>
-            <span class="hidden text-ink-gray-5 md:block"><GlIcon :name="c.incoming ? 'down' : 'up'" :size="15" class="[transform:rotate(-45deg)]" /></span>
+            <span class="hidden text-ink-gray-5 md:block"><GlIcon :name="c.incoming ? 'phone-incoming' : 'phone-outgoing'" :size="15" /></span>
             <span><span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[12px] font-bold" :class="TONE[c.kind]">{{ LABEL[c.kind] }}</span></span>
             <span class="num hidden text-[14px] text-ink-gray-9 md:block">{{ c.duration ? mmss(c.duration) : '' }}</span>
             <span class="gl-text col-span-2 truncate text-[13px] text-ink-gray-7 md:col-span-1">{{ c.note || __('Bez poznámky') }}</span>

@@ -27,7 +27,7 @@
             :key="item.label"
             :data-page="item.label"
             class="flex min-h-[44px] w-full items-center gap-3 rounded-[14px] px-3 text-left text-[15px] transition"
-            :class="!isMobileView && activeTab?.label == item.label ? 'bg-white font-semibold text-[var(--accent-700)] shadow-[0_4px_14px_-8px_rgba(40,50,120,.3)]' : 'text-ink-gray-8 hover:bg-white/60'"
+            :class="!isMobileView && activeTab?.label == item.label ? 'bg-white font-semibold text-[var(--accent-700)] shadow-[0_4px_14px_-8px_color-mix(in_srgb,var(--c-shadow)_30%,transparent)]' : 'text-ink-gray-8 hover:bg-white/60'"
             @click="openPage(item.label)"
           >
             <Icon :icon="item.icon" class="size-[18px] shrink-0" :class="!isMobileView && activeTab?.label == item.label ? 'text-[var(--accent-600)]' : 'text-ink-gray-6'" />

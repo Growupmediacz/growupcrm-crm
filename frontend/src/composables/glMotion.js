@@ -18,6 +18,9 @@ export const vGlAnimateWhen = {
   },
   updated(el, binding) {
     if (!el.__glAA || binding.value === binding.oldValue) return
-    binding.value === false ? el.__glAA.disable() : el.__glAA.enable()
+    clearTimeout(el.__glAAt)
+    // zapnout až po dojezdu animace Sortable (220 ms), aby puštěná karta nedostala druhý pohyb
+    if (binding.value === false) el.__glAA.disable()
+    else el.__glAAt = setTimeout(() => el.__glAA?.enable(), 260)
   },
 }

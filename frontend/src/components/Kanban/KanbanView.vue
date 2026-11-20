@@ -220,7 +220,7 @@
   </div>
     <div
       v-if="canRight"
-      class="pointer-events-none absolute bottom-6 right-0 top-0 w-24 bg-gradient-to-l from-[rgba(241,243,250,.95)] to-transparent"
+      class="pointer-events-none absolute bottom-6 right-0 top-0 w-24 bg-gradient-to-l from-[color-mix(in_srgb,var(--c-gray-50)_95%,transparent)] to-transparent"
     />
     <button
       v-if="canRight"
@@ -384,7 +384,7 @@ function actions(column) {
       items: [
         {
           label: __('Delete'),
-          icon: 'trash-2',
+          icon: 'lucide-trash-2',
           onClick: () => {
             column.column['delete'] = true
             updateColumn()
