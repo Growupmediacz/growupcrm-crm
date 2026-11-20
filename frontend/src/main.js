@@ -2,6 +2,7 @@ import './index.css'
 
 import { createApp } from 'vue'
 import { initTabPill } from './composables/glPill'
+import { initPwa } from './composables/glPwa'
 import { createPinia } from 'pinia'
 import { createDialog } from './utils/dialogs'
 import { initSocket } from './socket'
@@ -45,6 +46,8 @@ let globalComponents = {
 let pinia = createPinia()
 
 initTabPill()
+// GrowUp (2027 E2): service worker se scope /crm a výzva k instalaci na plochu
+initPwa()
 let app = createApp(App)
 
 setConfig('resourceFetcher', frappeRequest)

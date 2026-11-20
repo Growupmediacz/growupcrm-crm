@@ -59,6 +59,7 @@
         </div>
       </div>
       <GlNotifyPrefs />
+      <GlPushSettings />
     </template>
   </SettingsLayoutBase>
 </template>
@@ -67,6 +68,7 @@
 import SettingsLayoutBase from '@/components/Layouts/SettingsLayoutBase.vue'
 import Link from '@/components/Controls/Link.vue'
 import GlNotifyPrefs from '@/components/Settings/GlNotifyPrefs.vue'
+import GlPushSettings from '@/components/Settings/GlPushSettings.vue'
 import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts'
 import {
   Combobox,

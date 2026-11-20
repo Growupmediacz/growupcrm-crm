@@ -11,20 +11,22 @@ export default defineConfig(async ({ mode }) => {
     plugins: [
       vue(),
       vueJsx(),
+      // GrowUp (zadání 2027 E2): plugin dělá jen manifest. Vlastní service worker je frontend/public/gl-sw.js,
+      // servírovaný přes growupcrm.pwa.service_worker (scope /crm) a registrovaný v composables/glPwa.js.
+      // selfDestroying: na staré adrese /assets/crm/frontend/sw.js zůstane SW, který se sám odregistruje
+      // (úklid po předchozí verzi, která ukládala celé sestavení a neřídila /crm).
       VitePWA({
-        registerType: 'autoUpdate',
-        workbox: {
-          maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
-        },
-        devOptions: {
-          enabled: true,
-        },
+        injectRegister: false,
+        selfDestroying: true,
         manifest: {
+          id: '/crm',
+          scope: '/crm',
+          start_url: '/crm/today',
           display: 'standalone',
+          orientation: 'any',
           name: 'GrowUpCRM',
           short_name: 'GrowUpCRM',
           lang: 'cs',
-          start_url: '/crm',
           theme_color: '#EEEAFF',
           background_color: '#EEEAFF',
           description: 'GrowUpCRM by GrowUpMedia: zakázky, úkoly a kalendář na jednom místě',
