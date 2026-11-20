@@ -40,7 +40,7 @@
   </LayoutHeader>
   <div v-if="doc.name" class="flex h-full gap-3 overflow-hidden px-2 pb-2">
     <div class="flex min-w-0 flex-1 flex-col gap-3" :class="mailTab === 'conv' ? 'overflow-y-auto' : 'overflow-hidden'">
-      <LeadHero :key="heroKey" :doc="doc" :stageOptions="statuses" @changed="reloadResources" @fill="editing = true" @plan="logAction((a) => a.modalRef?.showTask())" />
+      <LeadHero :key="heroKey" :doc="doc" :stageOptions="statuses" :strip="mailFocus" @changed="reloadResources" @fill="editing = true" @plan="logAction((a) => a.modalRef?.showTask())" />
       <!-- zadání 2027 E1: záložky Konverzace (e-mailová vlákna, rozložení A) a Záznamy (změny, hovory, úkoly bez e-mailů) -->
       <div class="gl-card gl-chiptabs gl-chiptabs-d gl-lead-mail relative flex flex-col" :class="[moreTab && 'gl-chiptabs-more', mailTab === 'conv' ? 'shrink-0' : 'min-h-0 flex-1 overflow-hidden']">
         <div class="gl-mailtabs" role="group" :aria-label="__('Komunikace')">

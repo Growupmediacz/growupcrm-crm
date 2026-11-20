@@ -1,5 +1,31 @@
 <template>
-  <div class="gl-card" :class="compact ? 'p-4' : 'p-6'">
+  <!-- zadání 2027 E2: v režimu „Soustředit“ jeden řádek (název, fáze, částka; upozornění jako odznak), ať má vlákno skoro celou výšku -->
+  <div v-if="strip" class="gl-card gl-hero-strip flex min-h-[56px] items-center gap-3 px-5 py-2">
+    <span class="dot size-2 shrink-0 rounded-full" :style="{ background: stageColor }" />
+    <h1 class="min-w-0 truncate text-[17px] font-[650] text-ink-gray-9" :title="doc.order_title || doc.lead_name || doc.name">
+      {{ doc.order_title || doc.lead_name || doc.name }}
+    </h1>
+    <span class="shrink-0 rounded-full bg-[var(--accent-50)] px-2.5 py-1 text-[13px] font-semibold text-[var(--accent-700)]">{{ __(doc.status) }}</span>
+    <button
+      v-if="!next && !doc.next_step && isOpen && tasks.data"
+      type="button"
+      class="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-[var(--warn-bg)] px-3 text-[13px] font-semibold text-[var(--warn-fg)]"
+      :title="__('Naplánujte úkol nebo schůzku, ať zakázka nevychladne.')"
+      @click="emit('plan')"
+    >
+      <GlIcon name="alert" :size="15" />{{ __('Bez dalšího kroku') }}
+    </button>
+    <span
+      v-else-if="next"
+      class="inline-flex h-9 min-w-0 shrink items-center gap-1.5 truncate rounded-full px-3 text-[13px] font-semibold"
+      :class="overdue ? 'bg-[rgba(200,50,31,.09)] text-[#a82614]' : 'bg-[var(--warn-bg)] text-[var(--warn-fg)]'"
+      :title="`${next.title} · ${nextSub}`"
+    >
+      <GlIcon name="clock" :size="15" class="shrink-0" /><span class="truncate">{{ next.title }} · {{ dueLabel }}</span>
+    </span>
+    <span class="ml-auto shrink-0 text-[17px] font-bold tabular-nums text-ink-gray-9">{{ money || __('Bez hodnoty') }}</span>
+  </div>
+  <div v-else class="gl-card" :class="compact ? 'p-4' : 'p-6'">
     <div class="flex items-start justify-between gap-6">
       <div class="min-w-0">
         <div class="flex items-center gap-2 text-[13px] font-medium text-ink-gray-7">
@@ -107,6 +133,7 @@ const props = defineProps({
   doc: { type: Object, required: true },
   stageOptions: { type: Array, default: () => [] },
   compact: { type: Boolean, default: false },
+  strip: { type: Boolean, default: false },
 })
 const response = computed(() => responseBadge(props.doc))
 const emit = defineEmits(['changed', 'fill', 'plan'])
