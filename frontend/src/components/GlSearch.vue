@@ -66,13 +66,14 @@
                 @click="pick(item, $event)"
               >
                 <div class="flex size-9 shrink-0 items-center justify-center rounded-xl" :class="TONE[item.type]">
-                  <GlIcon :name="ICON[item.type]" :size="17" />
+                  <GlIcon :name="item.icon || ICON[item.type]" :size="17" />
                 </div>
                 <div class="min-w-0 flex-1">
                   <div class="truncate text-[15px] font-semibold text-ink-gray-9"><template v-for="(part, i) in highlight(item.title)" :key="i"><mark v-if="part.hit" class="rounded-[4px] bg-[color-mix(in_srgb,var(--accent-600)_16%,transparent)] px-0.5 text-[var(--accent-700)]">{{ part.text }}</mark><template v-else>{{ part.text }}</template></template></div>
                   <div v-if="item.sub" class="truncate text-[12.5px] text-ink-gray-5">{{ item.sub }}</div>
                 </div>
-                <span v-if="flat[active] === item" class="text-[12px] text-ink-gray-5">↵ {{ item.hint || __('otevřít') }}</span>
+                <span v-if="flat[active] === item" class="text-[13px] text-ink-gray-5">↵ {{ item.hint || __('otevřít') }}</span>
+                <kbd v-else-if="item.shortcut" class="rounded-md bg-[rgba(110,120,200,.12)] px-1.5 py-0.5 text-[13px] font-semibold text-ink-gray-5">{{ item.shortcut }}</kbd>
               </button>
             </template>
           </div>
@@ -94,6 +95,8 @@
 import GlIcon from '@/components/GlIcon.vue'
 import LeadModal from '@/components/Modals/GlNewLeadModal.vue'
 import { statusesStore } from '@/stores/statuses'
+import { usersStore } from '@/stores/users'
+import { useGlNav } from '@/composables/glNav'
 import { call } from 'frappe-ui'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -104,6 +107,7 @@ defineProps({ hideTrigger: { type: Boolean, default: false } })
 
 const router = useRouter()
 const { leadStatuses } = statusesStore()
+const { pages: navPages } = useGlNav()
 
 const show = ref(false)
 const q = ref('')
@@ -123,10 +127,46 @@ const TONE = {
   calendar: 'bg-[#e6ecff] text-[#1f48b8]',
 }
 
-const ACTIONS = [
-  { type: 'action', name: 'new-lead', title: __('Nová zakázka'), sub: __('Vytvořit'), hint: __('vytvořit') },
-  { type: 'calendar', name: 'calendar', title: __('Naplánovat schůzku'), sub: __('Kalendář'), hint: __('otevřít') },
-]
+// zadání 2027 E3: skupina „Akce“ (prázdný dotaz i shoda textu)
+const NAV_SHORTCUT = { Today: 'g d', Leads: 'g z', Organizations: 'g f', ContactsCards: 'g k', Outreach: 'g o', Tasks: 'g u' }
+const agentStatus = ref(null) // { enabled } jen pro vedoucí
+const isManager = () => usersStore().isManager()
+
+const allActions = computed(() => {
+  const list = [
+    { type: 'action', name: 'new-lead', title: __('Nová zakázka'), sub: __('Vytvořit'), hint: __('vytvořit'), icon: 'plus' },
+    { type: 'calendar', name: 'calendar', title: __('Naplánovat schůzku'), sub: __('Kalendář'), hint: __('otevřít') },
+    ...navPages.value.map((p) => ({
+      type: 'action',
+      name: 'go-' + p.key,
+      title: __('Přejít na {0}', [__(p.label)]),
+      keywords: __(p.label),
+      icon: p.icon,
+      to: { name: p.key },
+      shortcut: NAV_SHORTCUT[p.key],
+    })),
+    { type: 'action', name: 'go-week', title: __('Týden ke schválení'), sub: __('Outreach'), icon: 'send', to: { name: 'WeekApprove' }, shortcut: 'g t' },
+    { type: 'action', name: 'go-agent-log', title: __('Záznam agenta'), sub: __('Agent'), icon: 'sparkles', to: { name: 'AgentLog' } },
+    { type: 'action', name: 'go-settings', title: __('Nastavení'), icon: 'sliders', to: { name: 'Settings' }, shortcut: 'g n' },
+  ]
+  if (agentStatus.value) {
+    const on = agentStatus.value.enabled
+    list.push({
+      type: 'action',
+      name: 'agent-toggle',
+      title: on ? __('Vypnout agenta') : __('Zapnout agenta'),
+      sub: __('Agent'),
+      icon: 'sparkles',
+      hint: on ? __('vypnout') : __('zapnout'),
+    })
+  }
+  return list
+})
+const ACTIONS = computed(() => {
+  const needle = fold(q.value.trim())
+  if (!needle) return allActions.value
+  return allActions.value.filter((a) => fold(`${a.title} ${a.keywords || ''} ${a.sub || ''}`).includes(needle))
+})
 
 const FILTERS = [
   { key: '', label: __('Vše') },
@@ -139,7 +179,8 @@ const groups = computed(() => {
   const found = results.value
     .map((g) => ({ ...g, items: kind.value ? g.items.filter((i) => i.type === kind.value) : g.items }))
     .filter((g) => g.items.length)
-  return kind.value ? found : [...found, { label: 'Akce', items: ACTIONS }]
+  if (kind.value) return found
+  return ACTIONS.value.length ? [...found, { label: 'Akce', items: ACTIONS.value }] : found
 })
 // zvýraznění hledaného výrazu v názvu (bez ohledu na velikost písmen a diakritiku)
 // po znacích, ať indexy sedí na původní text (á → a, ne á → a + ´)
@@ -187,6 +228,27 @@ function open() {
   results.value = []
   active.value = 0
   nextTick(() => input.value?.focus())
+  loadAgentStatus()
+}
+async function loadAgentStatus() {
+  agentStatus.value = null
+  if (!isManager()) return
+  try {
+    agentStatus.value = await call('growupcrm.agent_tools.status')
+  } catch (e) {
+    agentStatus.value = null
+  }
+}
+async function toggleAgent() {
+  const next = agentStatus.value?.enabled ? 0 : 1
+  const text = next ? __('Zapnout agenta? Začne znovu používat nástroje CRM.') : __('Vypnout agenta? Přestane používat nástroje CRM.')
+  if (!window.confirm(text)) return
+  try {
+    const res = await call('growupcrm.agent_tools.set_enabled', { enabled: next })
+    agentStatus.value = { ...agentStatus.value, enabled: res?.enabled ?? !!next }
+  } catch (e) {
+    window.alert(__('Přepnutí agenta se nepovedlo.'))
+  }
 }
 function close() {
   show.value = false
@@ -211,7 +273,12 @@ function pick(item, event) {
     showLeadModal.value = true
     return
   }
-  const to = routeFor(item)
+  if (item.name === 'agent-toggle') {
+    close()
+    toggleAgent()
+    return
+  }
+  const to = item.to || routeFor(item)
   if (!to) return
   if (event?.metaKey || event?.ctrlKey) {
     window.open(router.resolve(to).href, '_blank')
