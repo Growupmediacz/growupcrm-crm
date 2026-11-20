@@ -35,5 +35,7 @@ const fade = { duration: 350, easing: 'ease-out' }
 <style>
 .gl-num {
   font-variant-numeric: tabular-nums;
+  /* NumberFlow přidává nad a pod číslice prostor pro prolnutí (0,25 em); bez něj má číslo stejnou výšku řádku jako text dřív */
+  --number-flow-mask-height: 0px;
 }
 </style>
