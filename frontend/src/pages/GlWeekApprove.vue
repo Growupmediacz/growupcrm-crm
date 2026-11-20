@@ -46,7 +46,7 @@
       <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
         <div class="wk-sum">
           <span class="wk-sum-l">{{ __('Firem k oslovení') }}</span>
-          <b class="wk-sum-n num">{{ d.rows.length }}</b>
+          <b class="wk-sum-n num"><GlNumber :value="d.rows.length" /></b>
           <span class="wk-sum-s">
             <template v-if="d.volume?.recommended_per_week">{{ __('cíl roku žádá ~{0} týdně', [Math.round(d.volume.recommended_per_week)]) }}</template>
             <span v-if="d.volume?.small_sample" class="wk-tag">{{ __('málo dat') }}</span>
@@ -54,17 +54,17 @@
         </div>
         <div class="wk-sum">
           <span class="wk-sum-l">{{ __('E-maily') }}</span>
-          <b class="wk-sum-n num">{{ d.rows.length }}<template v-if="followupTotal"> + {{ followupTotal }}</template></b>
+          <b class="wk-sum-n num"><GlNumber :value="d.rows.length" /><template v-if="followupTotal"> + <GlNumber :value="followupTotal" /></template></b>
           <span class="wk-sum-s">{{ followupTotal ? __('první e-maily + rozloučení') : __('první e-maily') }}</span>
         </div>
         <div class="wk-sum">
           <span class="wk-sum-l">{{ __('Kontroly') }}</span>
-          <b class="wk-sum-n num">{{ d.clean }} <span class="wk-sum-u">{{ __('v pořádku') }}</span></b>
+          <b class="wk-sum-n num"><GlNumber :value="d.clean" /> <span class="wk-sum-u">{{ __('v pořádku') }}</span></b>
           <span class="wk-sum-s" :class="warnCount && 'wk-warn-t'">{{ warnCount ? __('{0} s upozorněním', [warnCount]) : __('bez upozornění') }}</span>
         </div>
         <div class="wk-sum">
           <span class="wk-sum-l">{{ __('Odeslané a naplánované') }}</span>
-          <b class="wk-sum-n num">{{ d.sent }} <span class="wk-sum-u">/ {{ d.scheduled }}</span></b>
+          <b class="wk-sum-n num"><GlNumber :value="d.sent" /> <span class="wk-sum-u">/ <GlNumber :value="d.scheduled" /></span></b>
           <span class="wk-sum-s">{{ __('odesláno / naplánováno ({0} firem v týdnu)', [d.companies]) }}</span>
         </div>
       </div>
@@ -82,11 +82,11 @@
             <label class="wk-cb" :title="__('Označit všechny zobrazené')"><input type="checkbox" :checked="allChecked" :indeterminate.prop="someChecked && !allChecked" :disabled="locked" :aria-label="__('Označit všechny zobrazené')" @change="toggleAll($event.target.checked)" /></label>
             <b class="min-w-0 flex-1 truncate text-[15px] font-bold text-ink-gray-9">{{ __('Firma a důvod výběru') }}</b>
             <div class="flex shrink-0 gap-1" role="group" :aria-label="__('Filtr')">
-              <button type="button" class="wk-filter" :class="filter === 'all' && 'wk-filter-on'" :aria-pressed="filter === 'all'" @click="filter = 'all'">{{ __('Vše') }} {{ d.rows.length }}</button>
-              <button type="button" class="wk-filter" :class="filter === 'warn' && 'wk-filter-on'" :aria-pressed="filter === 'warn'" @click="filter = 'warn'">{{ __('Upozornění') }} {{ warnCount }}</button>
+              <button type="button" class="wk-filter" :class="filter === 'all' && 'wk-filter-on'" :aria-pressed="filter === 'all'" @click="filter = 'all'">{{ __('Vše') }} <GlNumber :value="d.rows.length" /></button>
+              <button type="button" class="wk-filter" :class="filter === 'warn' && 'wk-filter-on'" :aria-pressed="filter === 'warn'" @click="filter = 'warn'">{{ __('Upozornění') }} <GlNumber :value="warnCount" /></button>
             </div>
           </div>
-          <ul class="m-0 list-none p-0">
+          <ul v-gl-animate class="m-0 list-none p-0">
             <li v-for="r in visible" :key="r.name" class="wk-row" :class="{ 'wk-row-sel': cur && cur.name === r.name, 'wk-row-leave': leaving.has(r.name) }">
               <label class="wk-cb"><input type="checkbox" :checked="checked.includes(r.name)" :disabled="locked" :aria-label="__('Označit {0}', [r.organization?.title || r.email])" @change="toggle(r.name)" /></label>
               <button type="button" class="wk-pick" :aria-current="cur && cur.name === r.name ? 'true' : undefined" @click="pick(r.name)">
@@ -188,6 +188,8 @@ import GlEmptyState from '@/components/GlEmptyState.vue'
 import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import GlForbidden from '@/components/GlForbidden.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import GlNumber from '@/components/GlNumber.vue'
+import { vGlAnimate } from '@/composables/glMotion'
 import GlSkeleton from '@/components/GlSkeleton.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import { isPhone, isWide } from '@/composables/glBreakpoint'

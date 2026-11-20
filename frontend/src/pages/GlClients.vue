@@ -32,7 +32,7 @@
           <span v-if="k.badge" class="shrink-0 rounded-full bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] px-2.5 py-0.5 text-[13px] font-semibold text-[var(--accent-700)]">{{ k.badge }}</span>
         </div>
         <!-- telefon: zkrácená částka („66 tis. Kč“), celá hodnota v title; sloupec 2 × 2 je úzký -->
-        <div class="num break-words text-[26px] font-bold leading-tight tracking-tight tabular-nums md:truncate md:text-[44px]" :class="i === 3 && k.value ? 'text-[var(--c-red-400)]' : 'text-ink-gray-9'" :title="k.full" :aria-label="k.full">{{ k.value }}</div>
+        <div class="num break-words text-[26px] font-bold leading-tight tracking-tight tabular-nums md:truncate md:text-[44px]" :class="i === 3 && k.value ? 'text-[var(--c-red-400)]' : 'text-ink-gray-9'" :title="k.full" :aria-label="k.full"><GlNumber :value="k.raw" :format="k.format" :suffix="k.suffix" :fallback="String(k.value)" /></div>
         <div class="line-clamp-2 text-[14px] leading-snug text-ink-gray-5 md:truncate md:text-[15px]">{{ k.sub }}</div>
       </div>
     </div>
@@ -43,7 +43,7 @@
     </div>
 
     <!-- karty -->
-    <div v-if="effectiveLayout === 'cards'" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <div v-if="effectiveLayout === 'cards'" v-gl-animate class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       <div v-for="c in data?.clients || []" :key="c.name" class="gl-card gl-lift flex min-w-0 flex-col gap-4 p-4 md:p-5">
         <div class="flex items-start gap-3">
           <img v-if="c.organization_logo" :src="c.organization_logo" class="size-12 shrink-0 rounded-2xl bg-white object-contain p-1.5" />
@@ -68,11 +68,11 @@
         <div class="grid grid-cols-2 gap-2">
           <div class="flex items-start gap-2.5 rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_7.5%,transparent)] px-3 py-3">
             <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/70 text-[var(--accent-600)]"><GlIcon name="card" :size="16" /></span>
-            <span class="min-w-0"><span class="block text-[13px] text-ink-gray-5 md:text-[12.5px]">{{ __('měsíčně') }}</span><span class="num block truncate text-[18px] font-bold text-ink-gray-9 tabular-nums" :title="c.monthly ? money(c.monthly) : ''">{{ c.monthly ? (isPhone ? moneyCompact(c.monthly) : money(c.monthly)) : '—' }}</span></span>
+            <span class="min-w-0"><span class="block text-[13px] text-ink-gray-5 md:text-[12.5px]">{{ __('měsíčně') }}</span><span class="num block truncate text-[18px] font-bold text-ink-gray-9 tabular-nums" :title="c.monthly ? money(c.monthly) : ''"><GlNumber v-if="c.monthly" :value="Math.round(c.monthly)" :format="isPhone ? FMT_COMPACT : FMT_CZK" :suffix="isPhone ? ' Kč' : undefined" /><template v-else>—</template></span></span>
           </div>
           <router-link :to="{ name: 'Projects' }" class="flex min-h-11 items-start gap-2.5 rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_7.5%,transparent)] px-3 py-3 hover:bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)]">
             <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/70 text-[var(--accent-600)]"><GlIcon name="folder" :size="16" /></span>
-            <span class="min-w-0"><span class="block text-[13px] text-ink-gray-5 md:text-[12.5px]">{{ __('aktivní projekty') }}</span><span class="num block text-[18px] font-bold text-ink-gray-9">{{ c.projects }}</span></span>
+            <span class="min-w-0"><span class="block text-[13px] text-ink-gray-5 md:text-[12.5px]">{{ __('aktivní projekty') }}</span><span class="num block text-[18px] font-bold text-ink-gray-9"><GlNumber :value="c.projects" /></span></span>
           </router-link>
         </div>
         <div class="flex min-h-11 items-center gap-2 rounded-2xl border border-[var(--line)] px-3 py-2 text-[14px] text-ink-gray-7">
@@ -98,7 +98,7 @@
             <th class="px-3 py-2"></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-gl-animate>
           <tr v-for="c in data?.clients || []" :key="c.name" class="border-t border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)]">
             <td class="px-3 py-2.5">
               <router-link :to="{ name: 'Organization', params: { organizationId: c.name } }" class="font-semibold text-ink-gray-9 hover:text-[var(--accent-600)]">{{ c.organization_name }}</router-link>
@@ -107,8 +107,8 @@
             <td class="px-3 py-2.5">
               <span class="flex items-center gap-1.5"><span class="size-2 rounded-full" :style="{ background: HEALTH_COLORS[c.health] }" />{{ __(c.health) }}</span>
             </td>
-            <td class="num px-3 py-2.5 text-right font-semibold">{{ c.monthly ? money(c.monthly) : '' }}</td>
-            <td class="num px-3 py-2.5 text-right">{{ c.projects }}</td>
+            <td class="num px-3 py-2.5 text-right font-semibold"><GlNumber v-if="c.monthly" :value="Math.round(c.monthly)" :format="FMT_CZK" /></td>
+            <td class="num px-3 py-2.5 text-right"><GlNumber :value="c.projects" /></td>
             <td class="px-3 py-2.5 text-ink-gray-7">{{ c.next_event ? `${c.next_event.title} · ${shortDate(c.next_event.at)}` : '' }}</td>
             <td class="px-3 py-2.5 text-right">
               <Dropdown :options="menu(c)" placement="right">
@@ -154,6 +154,8 @@ import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import { isForbidden } from '@/utils/glErrors'
 import GlForbidden from '@/components/GlForbidden.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import GlNumber from '@/components/GlNumber.vue'
+import { vGlAnimate } from '@/composables/glMotion'
 import GlUserAvatar from '@/components/GlUserAvatar.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
@@ -181,6 +183,9 @@ const errorText = computed(() => overview.error?.messages?.[0] || __('Klienty se
 
 const HEALTH_COLORS = { 'V pořádku': 'var(--stage-vyhrano)', 'Potřebuje pozornost': 'var(--stage-nabidka)', 'Ohrožený': 'var(--c-red-400)' }
 
+// formáty GlNumber: stejný výstup jako money() a moneyCompact() níž
+const FMT_CZK = { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }
+const FMT_COMPACT = { notation: 'compact', compactDisplay: 'short', maximumFractionDigits: 1 }
 const money = (n) => `${new Intl.NumberFormat('cs-CZ').format(Math.round(n || 0))} Kč`
 const compact = new Intl.NumberFormat('cs-CZ', { notation: 'compact', maximumFractionDigits: 1 })
 const moneyCompact = (n) => `${compact.format(Math.round(n || 0))} Kč`
@@ -190,16 +195,19 @@ const cards = computed(() => {
   if (!k) return []
   const word = (n, one, few, many) => (n === 1 ? one : n >= 2 && n <= 4 ? few : many)
   return [
-    { label: __('Aktivní klienti'), value: k.clients, sub: __('z toho {0} na retaineru', [k.on_retainer]) },
+    { label: __('Aktivní klienti'), value: k.clients, raw: k.clients, sub: __('z toho {0} na retaineru', [k.on_retainer]) },
     {
       label: __('Měsíčně z retainerů'),
       value: isPhone.value ? moneyCompact(k.monthly) : money(k.monthly),
       full: money(k.monthly),
+      raw: Math.round(k.monthly || 0),
+      format: isPhone.value ? FMT_COMPACT : FMT_CZK,
+      suffix: isPhone.value ? ' Kč' : undefined,
       badge: k.monthly_new ? `↗ ${thousands(k.monthly_new)}` : '',
       sub: `${k.on_retainer} ${word(k.on_retainer, __('klient'), __('klienti'), __('klientů'))}`,
     },
-    { label: __('Aktivní projekty'), value: k.projects, sub: __('{0} končí tento měsíc', [k.projects_ending]) },
-    { label: __('Potřebují pozornost'), value: k.attention, sub: k.attention_names.join(', ') || __('všechno v pořádku') },
+    { label: __('Aktivní projekty'), value: k.projects, raw: k.projects, sub: __('{0} končí tento měsíc', [k.projects_ending]) },
+    { label: __('Potřebují pozornost'), value: k.attention, raw: k.attention, sub: k.attention_names.join(', ') || __('všechno v pořádku') },
   ]
 })
 

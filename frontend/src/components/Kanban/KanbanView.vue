@@ -65,7 +65,7 @@
               <div class="truncate text-[17px] font-semibold tracking-[-0.01em] text-ink-gray-9">{{ __(column.column.name) }}</div>
             </div>
             <!-- počet a součet v jednom řádku s názvem -->
-            <span class="num shrink-0 text-[14px] font-semibold text-ink-gray-7">{{ column.column.all_count }}</span>
+            <span class="num shrink-0 text-[14px] font-semibold text-ink-gray-7"><GlNumber :value="column.column.all_count" /></span>
             <span
               v-if="column.column.sum !== undefined"
               class="num ml-auto min-w-0 truncate whitespace-nowrap text-[13px] text-ink-gray-5"
@@ -105,6 +105,7 @@
               ghost-class="gl3-kghost"
               chosen-class="gl3-kchosen"
               :data-column="column.column.name"
+              v-gl-animate-when="!dragging"
               @start="dragging = true"
               @end="onDragEnd"
             >
@@ -251,6 +252,8 @@ import IndicatorIcon from '@/components/Icons/IndicatorIcon.vue'
 import { isTouchScreenDevice, colors, parseColor } from '@/utils'
 
 import { stageHex } from '@/utils/glStage'
+import GlNumber from '@/components/GlNumber.vue' // GrowUp V1: plynulá čísla a pohyb karet
+import { vGlAnimateWhen } from '@/composables/glMotion'
 import Draggable from 'vuedraggable'
 import { Combobox, Dropdown, Popover } from 'frappe-ui'
 import GlIcon from '@/components/GlIcon.vue'

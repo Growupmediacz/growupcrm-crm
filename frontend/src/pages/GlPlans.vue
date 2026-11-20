@@ -49,7 +49,7 @@
               </circle>
             </g>
           </svg>
-          <span v-if="overall !== null" class="num absolute inset-0 flex items-center justify-center text-[20px] font-bold text-ink-gray-9">{{ overall }} %</span>
+          <span v-if="overall !== null" class="num absolute inset-0 flex items-center justify-center text-[20px] font-bold text-ink-gray-9"><GlNumber :value="overall" suffix=" %" /></span>
           </div>
           <div class="flex w-full flex-col">
             <div class="grid grid-cols-[1fr_auto_56px] gap-3 pb-2 text-[13px] text-ink-gray-5">
@@ -59,8 +59,8 @@
             </div>
             <div v-for="r in rings" :key="r.key" class="grid grid-cols-[1fr_auto_56px] items-center gap-3 border-t border-[var(--line)] py-3 text-[17px]">
               <span class="flex items-center gap-2.5 text-ink-gray-9"><span class="size-3.5 shrink-0 rounded-full" :style="{ background: r.color }" />{{ r.label }}</span>
-              <span class="num text-ink-gray-9">{{ r.actualLabel }} <span class="text-ink-gray-5">/ {{ r.targetLabel }}</span></span>
-              <span class="num text-right font-semibold text-ink-gray-9">{{ r.percent === null ? '—' : `${r.percent} %` }}</span>
+              <span class="num text-ink-gray-9"><GlNumber :value="r.actualRaw" :format="FMT_INT" /> <span class="text-ink-gray-5">/ <GlNumber v-if="r.targetRaw !== null" :value="r.targetRaw" :format="FMT_INT" /><template v-else>{{ r.targetLabel }}</template></span></span>
+              <span class="num text-right font-semibold text-ink-gray-9"><GlNumber :value="r.percent" suffix=" %" /></span>
             </div>
             <div v-if="!hasTargets" class="text-[13px] text-ink-gray-5">{{ __('Cíle zatím nejsou nastavené.') }}</div>
           </div>
@@ -71,18 +71,18 @@
       <!-- mobil: obchodníci jako karty -->
       <template v-if="isMobileView">
         <div class="-mb-2 px-1 text-[13px] font-semibold text-[var(--text-3,var(--text-3))]">{{ __('Obchodníci') }}</div>
-        <div class="gl-card !rounded-[22px] px-4">
+        <div v-gl-animate class="gl-card !rounded-[22px] px-4">
           <div v-for="(r, i) in p.people" :key="r.user" class="flex items-center gap-3 py-3" :class="i && 'border-t border-[var(--outline-gray-1)]'">
             <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[13px] font-bold text-[var(--c-blue-600)]">{{ initials(r.full_name) }}</span>
             <span class="min-w-0 flex-1">
               <span class="block truncate text-[17px] font-bold text-ink-gray-9">{{ r.full_name }}</span>
               <span class="num block text-[13px] text-ink-gray-5">
-                {{ __('zakázky') }} {{ r.actual.won }}<template v-if="r.target.won">/{{ r.target.won }}</template>
-                · {{ __('schůzky') }} {{ r.actual.meetings }}<template v-if="r.target.meetings">/{{ r.target.meetings }}</template>
+                {{ __('zakázky') }} <GlNumber :value="r.actual.won" /><template v-if="r.target.won">/<GlNumber :value="r.target.won" /></template>
+                · {{ __('schůzky') }} <GlNumber :value="r.actual.meetings" /><template v-if="r.target.meetings">/<GlNumber :value="r.target.meetings" /></template>
               </span>
             </span>
             <span class="num text-[19px] font-bold text-ink-gray-9">
-              <template v-if="r.progress !== null">{{ r.progress }} %</template>
+              <template v-if="r.progress !== null"><GlNumber :value="r.progress" suffix=" %" /></template>
               <span v-else class="text-[13px] font-normal text-ink-gray-5">{{ __('bez cíle') }}</span>
             </span>
           </div>
@@ -100,7 +100,7 @@
               <th class="py-2">{{ __('Plnění') }}</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody v-gl-animate>
             <tr v-for="r in p.people" :key="r.user" class="border-b border-[var(--line)] last:border-b-0">
               <td class="py-4">
                 <span class="flex items-center gap-3">
@@ -108,10 +108,10 @@
                   <span class="text-ink-gray-9">{{ r.full_name }}</span>
                 </span>
               </td>
-              <td class="num py-4">{{ r.actual.won }}<span v-if="r.target.won" class="text-ink-gray-5"> / {{ r.target.won }}</span></td>
-              <td class="num py-4">{{ r.actual.meetings }}<span v-if="r.target.meetings" class="text-ink-gray-5"> / {{ r.target.meetings }}</span></td>
+              <td class="num py-4"><GlNumber :value="r.actual.won" /><span v-if="r.target.won" class="text-ink-gray-5"> / <GlNumber :value="r.target.won" /></span></td>
+              <td class="num py-4"><GlNumber :value="r.actual.meetings" /><span v-if="r.target.meetings" class="text-ink-gray-5"> / <GlNumber :value="r.target.meetings" /></span></td>
               <td class="num py-4">
-                {{ thousands(r.actual.revenue) }}
+                <GlNumber :value="thousandsValue(r.actual.revenue)" :suffix="r.actual.revenue ? ' tis.' : undefined" />
                 <span v-if="r.actual.recurring" class="block text-[13px] text-ink-gray-5">{{ __('z toho pravidelné {0}', [thousands(r.actual.recurring)]) }}</span>
               </td>
               <td class="py-4">
@@ -119,7 +119,7 @@
                   <span class="h-2 w-36 overflow-hidden rounded-full bg-[var(--line)]">
                     <span class="block h-full rounded-full" :class="r.progress < 60 ? 'bg-[var(--c-amber-450)]' : 'bg-[var(--accent-600)]'" :style="{ width: `${Math.min(r.progress, 100)}%` }" />
                   </span>
-                  <span class="num text-[15px] text-ink-gray-9">{{ r.progress }} %</span>
+                  <span class="num text-[15px] text-ink-gray-9"><GlNumber :value="r.progress" suffix=" %" /></span>
                 </span>
                 <span v-else class="text-[13px] text-ink-gray-5">{{ __('bez cíle') }}</span>
               </td>
@@ -135,7 +135,7 @@
         <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Obrat') }} · {{ p.label }}</h2>
         <span v-if="sourceLabel" class="text-[14px] text-ink-gray-5">{{ __('Plnění cíle se počítá z čísla „{0}“.', [sourceLabel]) }}</span>
       </div>
-      <div class="grid gap-3" :class="revenueCards.length > 1 ? 'sm:grid-cols-3' : ''">
+      <div v-gl-animate class="grid gap-3" :class="revenueCards.length > 1 ? 'sm:grid-cols-3' : ''">
         <div
           v-for="c in revenueCards"
           :key="c.key"
@@ -146,7 +146,7 @@
             {{ c.label }}
             <span v-if="c.counted && revenueCards.length > 1" class="rounded-full bg-[color-mix(in_srgb,var(--accent-600)_14%,transparent)] px-2 py-0.5 text-[13px] font-semibold text-[var(--accent-700)]">{{ __('počítá se') }}</span>
           </span>
-          <span class="truncate text-[30px] font-medium leading-tight tracking-tight tabular-nums text-ink-gray-9" :title="money(c.value)">{{ money(c.value) }}</span>
+          <span class="truncate text-[30px] font-medium leading-tight tracking-tight tabular-nums text-ink-gray-9" :title="money(c.value)"><GlNumber :value="Math.round(c.value || 0)" :format="FMT_CZK" /></span>
           <span v-if="c.recurring" class="text-[13px] tabular-nums text-ink-gray-5">{{ __('z toho pravidelné {0}', [money(c.recurring)]) }}</span>
         </div>
       </div>
@@ -163,28 +163,28 @@
       <div class="grid gap-3 sm:grid-cols-3">
         <div class="flex flex-col gap-1 rounded-[18px] bg-[var(--fill-tinted)] px-4 py-3.5">
           <span class="text-[14px] text-ink-gray-5">{{ __('Doporučeno týdně') }}</span>
-          <span class="text-[30px] font-medium leading-tight tabular-nums text-ink-gray-9">{{ vp.recommended_per_week ?? '—' }}</span>
+          <span class="text-[30px] font-medium leading-tight tabular-nums text-ink-gray-9"><GlNumber :value="vp.recommended_per_week" :format="FMT_ANY" /></span>
           <span class="text-[13px] text-ink-gray-5">{{ __('firem k oslovení') }}</span>
         </div>
         <div class="flex flex-col gap-1 rounded-[18px] bg-[var(--fill-tinted)] px-4 py-3.5">
           <span class="text-[14px] text-ink-gray-5">{{ __('Webů ještě potřeba') }}</span>
-          <span class="text-[30px] font-medium leading-tight tabular-nums text-ink-gray-9">{{ czNumber(vp.webs_needed ?? 0) }}</span>
+          <span class="text-[30px] font-medium leading-tight tabular-nums text-ink-gray-9"><GlNumber :value="vp.webs_needed ?? 0" :format="FMT_ANY" /></span>
           <span class="text-[13px] text-ink-gray-5">{{ __('do konce roku {0}', [vp.year]) }}</span>
         </div>
         <div class="flex flex-col gap-1 rounded-[18px] bg-[var(--fill-tinted)] px-4 py-3.5">
           <span class="text-[14px] text-ink-gray-5">{{ __('Zbývá týdnů') }}</span>
-          <span class="text-[30px] font-medium leading-tight tabular-nums text-ink-gray-9">{{ vp.weeks_left ?? '—' }}</span>
+          <span class="text-[30px] font-medium leading-tight tabular-nums text-ink-gray-9"><GlNumber :value="vp.weeks_left" :format="FMT_ANY" /></span>
           <span v-if="vp.pool_weeks" class="text-[13px] text-ink-gray-5">{{ __('zásoba firem vystačí na {0} týdnů', [czNumber(vp.pool_weeks)]) }}</span>
         </div>
       </div>
-      <div v-if="vp.scenarios?.length" class="flex flex-col">
+      <div v-if="vp.scenarios?.length" v-gl-animate class="flex flex-col">
         <div class="grid grid-cols-[1fr_auto_auto] gap-x-4 pb-1.5 text-[13px] text-ink-gray-5">
           <span>{{ __('Scénář') }}</span><span class="text-right">{{ __('Z oslovení na zakázku') }}</span><span class="w-20 text-right">{{ __('Týdně') }}</span>
         </div>
         <div v-for="sc in vp.scenarios" :key="sc.scenario" class="grid min-h-9 grid-cols-[1fr_auto_auto] items-center gap-x-4 border-t border-[var(--line)] py-1.5 text-[15px]">
           <span class="min-w-0 break-words text-ink-gray-9">{{ __(sc.scenario) }}</span>
-          <span class="text-right tabular-nums text-ink-gray-7">{{ czNumber(sc.contact_to_win) }} %</span>
-          <span class="w-20 text-right font-semibold tabular-nums text-ink-gray-9">{{ sc.per_week ?? '—' }}</span>
+          <span class="text-right tabular-nums text-ink-gray-7"><GlNumber :value="sc.contact_to_win" :format="FMT_ANY" suffix=" %" /></span>
+          <span class="w-20 text-right font-semibold tabular-nums text-ink-gray-9"><GlNumber :value="sc.per_week" :format="FMT_ANY" /></span>
         </div>
       </div>
     </div>
@@ -197,7 +197,7 @@
           <span class="text-[18px] font-semibold text-ink-gray-9">{{ __('Předpoklad do konce období') }}</span>
         </div>
         <div class="num mt-3 text-[56px] font-bold leading-none tracking-tight text-ink-gray-9">
-          {{ p.projection ?? 0 }}<span v-if="p.team.target.won" class="text-[32px] text-ink-gray-5"> / {{ p.team.target.won }}</span>
+          <GlNumber :value="p.projection ?? 0" :format="FMT_ANY" /><span v-if="p.team.target.won" class="text-[32px] text-ink-gray-5"> / <GlNumber :value="p.team.target.won" :format="FMT_ANY" /></span>
         </div>
         <div class="text-[16px] text-ink-gray-5">{{ p.projection !== null ? __('při současném tempu') : __('období už skončilo nebo ještě nezačalo') }}</div>
         <span v-if="p.projection !== null && p.team.target.won" class="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[14px] font-semibold" :class="p.on_track ? 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)]' : 'bg-[color-mix(in_srgb,var(--stage-nabidka)_16%,transparent)] text-[var(--warning)]'">
@@ -207,7 +207,7 @@
       <div class="gl-card flex flex-col gap-2 p-6">
         <span class="gl3-kpi-icon gl3-tone-indigo !size-14 !rounded-[16px]"><GlIcon name="clock" :size="26" /></span>
         <div class="mt-2 text-[18px] font-semibold text-ink-gray-9">{{ __('Potřebné tempo') }}</div>
-        <div v-if="p.pace" class="num text-[56px] font-bold leading-none tracking-tight text-ink-gray-9">{{ czNumber(p.pace) }}</div>
+        <div v-if="p.pace" class="num text-[56px] font-bold leading-none tracking-tight text-ink-gray-9"><GlNumber :value="p.pace" :format="FMT_ANY" /></div>
         <div v-else class="mt-2 text-[24px] font-semibold text-[var(--empty-color)]">{{ __('Bez dat') }}</div>
         <div class="text-[16px] text-ink-gray-5">{{ p.pace ? __('zakázky týdně navíc') : __('cíl je splněný nebo nenastavený') }}</div>
       </div>
@@ -229,6 +229,8 @@
 import { usersStore } from '@/stores/users'
 import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import GlNumber from '@/components/GlNumber.vue'
+import { vGlAnimate } from '@/composables/glMotion'
 import GlUserAvatar from '@/components/GlUserAvatar.vue'
 import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import { isForbidden } from '@/utils/glErrors'
@@ -250,6 +252,10 @@ watch(period, () => plan.reload())
 const p = computed(() => plan.data)
 
 // zadání 2027 E3: tři čísla obratu (nasmlouváno, vystaveno, zaplaceno); obchodník má issued/paid null, tak ukážeme jen nasmlouváno
+// formáty GlNumber (stejný výstup jako dřívější Intl.NumberFormat('cs-CZ'))
+const FMT_INT = { maximumFractionDigits: 0 }
+const FMT_ANY = { maximumFractionDigits: 3 }
+const FMT_CZK = { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }
 const money = (n) => `${new Intl.NumberFormat('cs-CZ').format(Math.round(n || 0))} Kč`
 const revenueCards = computed(() => {
   const r = p.value?.revenue
@@ -290,6 +296,8 @@ const rings = computed(() =>
       length: target ? Math.min(actual / target, 1) * circumference : 0,
       percent,
       actualLabel: fmt(actual),
+      actualRaw: MONEY.includes(s.key) ? Math.round(actual / 1000) : actual,
+      targetRaw: target ? (MONEY.includes(s.key) ? Math.round(target / 1000) : target) : null,
       targetLabel: target ? fmt(target) : __('bez cíle'),
     }
   }),
@@ -315,6 +323,7 @@ const periodRange = computed(() => {
 })
 const daysLeft = (n) => (n === 0 ? __('Poslední den') : n === 1 ? __('Zbývá 1 den') : n <= 4 ? __('Zbývají {0} dny', [n]) : __('Zbývá {0} dní', [n]))
 const thousands = (n) => (n ? `${new Intl.NumberFormat('cs-CZ').format(Math.round(n / 1000))} tis.` : '0')
+const thousandsValue = (n) => (n ? Math.round(n / 1000) : 0)
 const czNumber = (n) => new Intl.NumberFormat('cs-CZ').format(n)
 const initials = (s) =>
   (s || '?')

@@ -13,7 +13,7 @@
     </header>
 
     <GlSkeleton v-if="loading && !thread" :rows="3" />
-    <div v-else-if="thread" class="gl-thread-msgs">
+    <div v-else-if="thread" v-gl-animate class="gl-thread-msgs">
       <template v-for="item in items" :key="item.key">
         <button v-if="item.kind === 'more'" type="button" class="gl-thread-more" @click="showAll = true">
           <span class="gl-thread-more-n">{{ item.count }}</span>{{ __('starších zpráv – zobrazit') }}
@@ -41,6 +41,7 @@ import GlIcon from '@/components/GlIcon.vue'
 import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlMessage from '@/components/Email/GlMessage.vue'
 import { mailTime } from '@/composables/glMail'
+import { vGlAnimate } from '@/composables/glMotion'
 import { computed, reactive, ref, watch } from 'vue'
 
 const props = defineProps({

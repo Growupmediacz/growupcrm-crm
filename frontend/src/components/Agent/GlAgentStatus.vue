@@ -38,11 +38,11 @@
     <div class="grid grid-cols-2 gap-3">
       <div class="rounded-[16px] bg-[var(--fill-tinted)] px-3.5 py-2.5">
         <div class="text-[13px] text-ink-gray-5">{{ __('Volání dnes') }}</div>
-        <div class="text-[24px] font-medium leading-tight tabular-nums text-ink-gray-9">{{ status.data.calls_today ?? 0 }}</div>
+        <div class="text-[24px] font-medium leading-tight tabular-nums text-ink-gray-9"><GlNumber :value="status.data.calls_today ?? 0" /></div>
       </div>
       <div class="rounded-[16px] bg-[var(--fill-tinted)] px-3.5 py-2.5">
         <div class="text-[13px] text-ink-gray-5">{{ __('Odmítnuto dnes') }}</div>
-        <div class="text-[24px] font-medium leading-tight tabular-nums" :class="status.data.refused_today ? 'text-[var(--c-red-550)]' : 'text-ink-gray-9'">{{ status.data.refused_today ?? 0 }}</div>
+        <div class="text-[24px] font-medium leading-tight tabular-nums" :class="status.data.refused_today ? 'text-[var(--c-red-550)]' : 'text-ink-gray-9'"><GlNumber :value="status.data.refused_today ?? 0" /></div>
       </div>
     </div>
 
@@ -77,6 +77,7 @@
   </section>
 </template>
 <script setup>
+import GlNumber from '@/components/GlNumber.vue'
 import { usersStore } from '@/stores/users'
 import { Button, Dialog, ErrorMessage, call, createResource, toast } from 'frappe-ui'
 import { computed, ref } from 'vue'

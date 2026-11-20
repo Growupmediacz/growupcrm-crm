@@ -6,7 +6,7 @@
       <template #left-header>
         <div class="flex min-w-0 items-center gap-3">
           <h1 class="gl-page-title text-lg-medium shrink-0">{{ __('Úkoly') }}</h1>
-          <span v-if="counts.overdue" class="num -ml-1 hidden size-7 shrink-0 items-center justify-center rounded-full bg-[var(--overdue)] text-[13px] font-bold text-white md:inline-flex" :title="__('Po termínu')">{{ counts.overdue }}</span>
+          <span v-if="counts.overdue" class="num -ml-1 hidden size-7 shrink-0 items-center justify-center rounded-full bg-[var(--overdue)] text-[13px] font-bold text-white md:inline-flex" :title="__('Po termínu')"><GlNumber :value="counts.overdue" /></span>
           <div class="gl-seg hidden sm:inline-flex">
             <button class="gl-seg-btn gl-seg-on">{{ __('Seznam') }}</button>
             <router-link class="gl-seg-btn" :to="{ name: 'Tasks', params: { viewType: 'kanban' } }">{{ __('Kanban') }}</router-link>
@@ -26,7 +26,7 @@
       <div class="flex flex-wrap items-center justify-between gap-2 px-1">
         <div class="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:overflow-visible md:px-0">
           <button v-for="c in CHIPS" :key="c.key" class="gl-chip flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-4 text-[14px] font-medium" :class="chipClass(c)" @click="bucket = bucket === c.key ? 'all' : c.key">
-            {{ c.label }} <span class="num font-semibold">{{ counts[c.count] || 0 }}</span>
+            {{ c.label }} <span class="num font-semibold"><GlNumber :value="counts[c.count] || 0" /></span>
           </button>
         </div>
         <label class="hidden items-center gap-2 text-[14px] md:flex"><span class="text-ink-gray-5">{{ __('Navázáno na') }}:</span>
@@ -44,8 +44,9 @@
         <GlErrorBanner v-if="res.error" class="my-2" :title="__('Úkoly se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" />
         <GlSkeleton v-else-if="!res.data" :rows="5" />
         <GlEmptyState v-else-if="!items.length" class="my-3" icon="check" :title="bucket === 'all' && !kind ? __('Všechno hotovo') : __('Nic nenalezeno')" :text="bucket === 'all' && !kind ? __('Nemáte žádné otevřené úkoly. Pěkná práce.') : __('Filtru neodpovídá žádný úkol.')" :action="bucket === 'all' && !kind ? '' : __('Zrušit filtr')" @action="(bucket = 'all'), (kind = '')" />
+        <div v-gl-animate>
         <template v-for="g in grouped" :key="g.bucket">
-          <div class="mb-1 mt-3 flex items-baseline gap-2 px-2 text-[13px]"><b :class="g.bucket === 'overdue' ? 'text-[var(--overdue)]' : 'text-ink-gray-9'">{{ g.label }}</b><span class="num text-ink-gray-5">{{ g.items.length }}</span></div>
+          <div class="mb-1 mt-3 flex items-baseline gap-2 px-2 text-[13px]"><b :class="g.bucket === 'overdue' ? 'text-[var(--overdue)]' : 'text-ink-gray-9'">{{ g.label }}</b><span class="num text-ink-gray-5"><GlNumber :value="g.items.length" /></span></div>
           <div v-for="t in g.items" :key="t.name" class="flex cursor-pointer items-center gap-3 rounded-2xl px-2 py-2.5 hover:bg-white/50" @click="(e) => !e.target.closest('button,a') && openTask(t.name)">
             <button class="flex size-6 shrink-0 items-center justify-center rounded-full border-[1.75px] transition" :class="t.status === 'Done' ? 'border-[var(--accent-600)] bg-[var(--accent-600)] text-white' : 'border-[color-mix(in_srgb,var(--c-tint)_45%,transparent)] hover:border-[var(--accent-600)]'" :aria-label="t.status === 'Done' ? __('Hotovo') : __('Označit jako hotové')" @click="toggle(t)">
               <GlIcon v-if="t.status === 'Done'" name="check" :size="14" />
@@ -65,6 +66,7 @@
             </template>
           </div>
         </template>
+        </div>
         <GlTaskModal v-if="showTask" v-model="showTask" :task="editTask" @saved="res.reload()" />
         <GlListFooter v-if="items.length" class="mt-4 px-2" :modelValue="limit" :options="{ rowCount: items.length, totalCount: res.data?.total }" @update:modelValue="(v) => (limit = v)" @loadMore="limit += 20" />
       </div>
@@ -80,6 +82,8 @@ import GlEmptyState from '@/components/GlEmptyState.vue'
 import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import GlNumber from '@/components/GlNumber.vue'
+import { vGlAnimate } from '@/composables/glMotion'
 import GlListFooter from '@/components/GlListFooter.vue'
 import GlTaskModal from '@/components/Modals/GlTaskModal.vue'
 import { completeTaskWithUndo } from '@/composables/glTaskDone'

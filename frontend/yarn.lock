@@ -1447,6 +1447,11 @@
     "@floating-ui/utils" "^0.2.11"
     vue-demi ">=0.13.0"
 
+"@formkit/auto-animate@0.10.2":
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/@formkit/auto-animate/-/auto-animate-0.10.2.tgz#b13e443efc9cd575c5fa7318ec71aeb61a0b6cdb"
+  integrity sha512-t2Z3y8b/zB3wPWwgpc6JDVm4q0ezb5vfe2mqfUrQJ7XziZY8iYuhocQ7eJdTzowRePihrNbZ/DNJoFa6Yi5blg==
+
 "@framework/ui@link:../../frappe/ui":
   version "0.0.0"
   uid ""
@@ -1704,6 +1709,14 @@
   dependencies:
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
+
+"@number-flow/vue@0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@number-flow/vue/-/vue-0.5.2.tgz#71e5469b353cc88decae6c3f8c2877f91f58bb34"
+  integrity sha512-+FvSTXuIVeFxiTMQFv7NFGE8qqy6qVe+0s/55yascW4JWkd60twPGjN+/iFQCNW43EI2w3Yn1oUXt93kYdAyEA==
+  dependencies:
+    esm-env "^1.1.4"
+    number-flow "0.6.2"
 
 "@oxc-project/types@=0.142.0":
   version "0.142.0"
@@ -3755,6 +3768,11 @@ eslint@^10.0.2:
     natural-compare "^1.4.0"
     optionator "^0.9.3"
 
+esm-env@^1.1.4:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/esm-env/-/esm-env-1.2.2.tgz#263c9455c55861f41618df31b20cb571fc20b75e"
+  integrity sha512-Epxrv+Nr/CaL4ZcFGPJIYLWFom+YeV1DqMLHJoEd9SYRxNbaFruBwfEX/kkHUJf55j2+TUbmDcmuilbP1TmXHA==
+
 "espree@^10.3.0 || ^11.0.0", espree@^11.2.0:
   version "11.2.0"
   resolved "https://registry.yarnpkg.com/espree/-/espree-11.2.0.tgz#01d5e47dc332aaba3059008362454a8cc34ccaa5"
@@ -4981,6 +4999,13 @@ nth-check@^2.1.1:
   integrity sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==
   dependencies:
     boolbase "^1.0.0"
+
+number-flow@0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/number-flow/-/number-flow-0.6.2.tgz#458f61f697af94584b06e41c10c144455ac8eb32"
+  integrity sha512-MCnImG4Q5vPwhSXnov56nOuyyKn6LC+Qd7II1UiKc+ACRtug5iAtn0+CwXNxM38AC5lSowEY+oYEtZX2qMnUyw==
+  dependencies:
+    esm-env "^1.1.4"
 
 object-assign@^4.0.1:
   version "4.1.1"

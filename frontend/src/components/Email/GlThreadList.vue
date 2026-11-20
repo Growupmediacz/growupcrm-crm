@@ -3,7 +3,7 @@
   <nav class="gl-tl" :aria-label="__('Konverzace')">
     <GlSkeleton v-if="loading && !threads.length" :rows="3" />
     <p v-else-if="!threads.length" class="px-3 py-4 text-[14px] text-[color:var(--text-2)]">{{ emptyText || __('Zatím tu není žádný e-mail.') }}</p>
-    <ul v-else class="flex flex-col gap-1">
+    <ul v-else v-gl-animate class="flex flex-col gap-1">
       <li v-for="t in threads" :key="t.id">
         <button
           type="button"
@@ -33,6 +33,7 @@
 <script setup>
 import GlIcon from '@/components/GlIcon.vue'
 import GlSkeleton from '@/components/GlSkeleton.vue'
+import { vGlAnimate } from '@/composables/glMotion'
 import { STATE_LABEL, mailTime } from '@/composables/glMail'
 
 defineProps({

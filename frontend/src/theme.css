@@ -644,7 +644,7 @@ button.inline-flex.bg-surface-red-7:hover {
     width: 100% !important;
     border-radius: 26px 26px 0 0 !important;
     padding-bottom: env(safe-area-inset-bottom, 0);
-    animation: gl-sheet-up 0.4s var(--spring, cubic-bezier(0.22, 1, 0.36, 1)) both;
+    animation: gl-sheet-up var(--t-sheet, 280ms) var(--ease-panel, cubic-bezier(0.32, 0.72, 0, 1)) both; /* V1: tokeny pohybu */
   }
   .dialog-scroll-container .dialog-content::before {
     content: '';
@@ -726,7 +726,7 @@ button.inline-flex.bg-surface-red-7:hover {
   border-radius: 8px;
   background: linear-gradient(90deg, var(--skeleton, color-mix(in srgb, var(--c-tint) 12%, transparent)) 25%, var(--skeleton-shine, color-mix(in srgb, var(--c-white) 55%, transparent)) 50%, var(--skeleton, color-mix(in srgb, var(--c-tint) 12%, transparent)) 75%);
   background-size: 200% 100%;
-  animation: gl-shimmer var(--dur-skeleton, 1.4s) linear infinite;
+  animation: gl-shimmer var(--t-skeleton, 1.4s) linear infinite;
 }
 .gl-skel-card {
   display: flex;

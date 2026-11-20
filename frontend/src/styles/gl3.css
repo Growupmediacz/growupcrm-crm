@@ -743,6 +743,45 @@ body.app-bg::before {
   --warn-bg: rgba(214, 130, 20, 0.14);
   --warn-fg: #7a4400;
 }
+/* ---------- Pohyb (zadání 2027 kolo 2 V1, RECEPTY.md, DESIGN-ZADANI 1.7) ----------
+   Jen transform a opacity. Běžná akce do 200 ms, klik platí hned (pohyb jen doprovází).
+   Seznamy: v-gl-animate (auto-animate, 180 ms), čísla: <GlNumber> (NumberFlow, 700 ms). */
+:root {
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --t-leave: 160ms;
+  --t-move: 200ms;
+  --t-toast-in: 200ms;
+  --t-toast-out: 150ms;
+  --t-number: 700ms;
+  --t-skeleton: 1.4s;
+  --t-shimmer: 1.6s;
+}
+/* stisk tlačítka 90 ms, scale .97 (vlastnost `scale` se skládá s transformací tlačítka, nic nepřepíše) */
+:where(button, [role='button']) {
+  transition: scale var(--t-press, 90ms) var(--ease-out); /* nulová specificita: vlastní přechody komponent mají přednost */
+}
+:where(button, [role='button']):not(:disabled):not([draggable='true']):active {
+  scale: 0.97;
+}
+/* seznamy přes <TransitionGroup name="gl-row"> */
+.gl-row-enter-active { transition: opacity var(--t-base) var(--ease-out), transform var(--t-base) var(--ease-out); }
+.gl-row-enter-from { opacity: 0; transform: translateY(6px); }
+.gl-row-leave-active { transition: opacity var(--t-leave) var(--ease-in), transform var(--t-leave) var(--ease-in); }
+.gl-row-leave-to { opacity: 0; transform: translateX(-8px); }
+.gl-row-move { transition: transform var(--t-move) var(--ease-out); }
+/* dialogy frappe-ui (desktop): vstup 180 ms zdola 6 px, odchod 160 ms */
+@keyframes gl-dialog-in { from { opacity: 0; transform: translateY(6px) scale(0.985); } to { opacity: 1; transform: none; } }
+@keyframes gl-dialog-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(4px) scale(0.985); } }
+@keyframes gl-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@media (min-width: 768px) {
+  .dialog-scroll-container .dialog-content[data-state='open'] { animation: gl-dialog-in var(--t-base) var(--ease-out); }
+  .dialog-scroll-container .dialog-content[data-state='closed'] { animation: gl-dialog-out var(--t-leave) var(--ease-in); }
+}
+.dialog-overlay[data-state='open'] { animation: gl-fade-in var(--t-base) var(--ease-out); }
+/* postranní panel (náhled, soustředění): .gl-panel-enter… */
+.gl-panel-enter-active, .gl-panel-leave-active { transition: opacity var(--t-panel) var(--ease-panel), transform var(--t-panel) var(--ease-panel); }
+.gl-panel-enter-from, .gl-panel-leave-to { opacity: 0; transform: translateX(24px); }
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     --t-press: 0ms;
@@ -750,7 +789,15 @@ body.app-bg::before {
     --t-base: 0ms;
     --t-panel: 0ms;
     --t-sheet: 0ms;
+    --t-leave: 0ms;
+    --t-move: 0ms;
+    --t-toast-in: 0ms;
+    --t-toast-out: 0ms;
+    --t-number: 0ms;
   }
+  :where(button, [role='button']):active { scale: none; }
+  .dialog-scroll-container .dialog-content[data-state],
+  .dialog-overlay[data-state] { animation: none !important; }
 }
 @media (pointer: coarse) {
   :root {

@@ -24,7 +24,7 @@
       <div class="grid grid-cols-2 gap-3">
         <div v-for="k in cards" :key="k.label" class="gl-card flex min-w-0 flex-col gap-1 p-4">
           <div class="text-[14px] text-ink-gray-7">{{ k.label }}</div>
-          <div class="num text-[28px] font-medium leading-none tracking-tight text-ink-gray-9">{{ k.value }}</div>
+          <div class="num text-[28px] font-medium leading-none tracking-tight text-ink-gray-9"><GlNumber :value="k.value" /></div>
           <div class="text-[13px] text-ink-gray-5">{{ k.sub }}</div>
         </div>
       </div>
@@ -80,6 +80,7 @@
 <script setup>
 import GlQueue from '@/components/Queue/GlQueue.vue'
 import GlAgentStatus from '@/components/Agent/GlAgentStatus.vue'
+import GlNumber from '@/components/GlNumber.vue'
 function programLink(item) {
   if (item.lead) return { name: 'Lead', params: { leadId: item.lead }, hash: item.kind === 'task' ? '#tasks' : '#activity' }
   if (item.org) return { name: 'Organization', params: { organizationId: item.org } }

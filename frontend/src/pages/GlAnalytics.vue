@@ -69,7 +69,7 @@
           <span v-if="k.badge" class="shrink-0 rounded-full px-2.5 py-0.5 text-[13px] font-semibold" :class="k.badgeUp ? 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]' : 'bg-[color-mix(in_srgb,var(--c-red-400)_12%,transparent)] text-[var(--overdue)]'">{{ k.badge }}</span>
         </div>
         <!-- telefon: zkrácená čísla (66 tis.), celá hodnota v title; číslice stejně široké -->
-        <div class="num break-words text-[26px] font-bold leading-tight tracking-tight text-ink-gray-9 tabular-nums md:truncate md:text-[48px]" :title="k.full" :aria-label="k.full">{{ k.value }}</div>
+        <div class="num break-words text-[26px] font-bold leading-tight tracking-tight text-ink-gray-9 tabular-nums md:truncate md:text-[48px]" :title="k.full" :aria-label="k.full"><GlNumber :value="k.raw" :format="k.format" :suffix="k.suffix" :fallback="String(k.value)" /></div>
         <div class="line-clamp-2 text-[14px] leading-snug text-ink-gray-5 md:truncate md:text-[15px]">{{ k.sub }}</div>
       </div>
     </div>
@@ -97,7 +97,7 @@
             @mouseenter="hoverBar = i"
             @mouseleave="hoverBar = null"
           >
-            <span class="num mb-1 max-w-full truncate text-[13px] font-bold text-ink-gray-9">{{ k(m.value) }}</span>
+            <span class="num mb-1 max-w-full truncate text-[13px] font-bold text-ink-gray-9"><GlNumber :value="Math.round((m.value || 0) / 1000)" /></span>
             <div
               class="w-full max-w-[46px] rounded-t-[4px] transition-all duration-500"
               :class="i === lastIndex ? 'bg-[var(--accent-600)]' : 'bg-[var(--c-indigo-150)] group-hover:bg-[var(--c-indigo-200)]'"
@@ -117,13 +117,13 @@
       <div class="gl-card min-w-0 p-4 md:p-6">
         <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Trychtýř') }}</h2>
         <div class="text-[13px] text-ink-gray-5">{{ __('kolik zakázek z období dosáhlo aspoň dané fáze') }}</div>
-        <div class="mt-4 flex flex-col gap-2.5">
+        <div v-gl-animate class="mt-4 flex flex-col gap-2.5">
           <div v-for="(f, i) in data?.funnel || []" :key="f.stage" class="flex items-center gap-3" :title="`${__(f.stage)}: ${f.count}`">
             <span class="w-24 shrink-0 text-[14px] leading-tight text-ink-gray-9 md:w-36 md:truncate">{{ __(f.stage) }}</span>
             <span class="h-3.5 flex-1 rounded-full bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)]">
               <span class="block h-full rounded-full" :style="{ width: `${funnelWidth(f.count)}%`, background: FUNNEL[i] || FUNNEL[FUNNEL.length - 1], minWidth: f.count ? '4px' : '0' }" />
             </span>
-            <span class="num w-8 text-right text-[14px] font-bold text-ink-gray-9">{{ f.count }}</span>
+            <span class="num w-8 text-right text-[14px] font-bold text-ink-gray-9"><GlNumber :value="f.count" /></span>
           </div>
         </div>
       </div>
@@ -138,7 +138,7 @@
         <template v-else>
           <div class="mt-4 flex h-[150px] items-end gap-1.5 border-b md:gap-3 border-[color-mix(in_srgb,var(--c-tint)_18%,transparent)] px-1">
             <div v-for="(s, i) in data.sources.slice(0, 5)" :key="s.source" class="flex h-full flex-1 flex-col items-center justify-end" :title="`${__(s.source)}: ${s.count}`">
-              <span class="num mb-1 text-[14px] font-semibold text-ink-gray-9">{{ s.count }}</span>
+              <span class="num mb-1 text-[14px] font-semibold text-ink-gray-9"><GlNumber :value="s.count" /></span>
               <div class="w-full max-w-[64px] rounded-t-[6px]" :class="i === 0 ? 'bg-[var(--accent-600)]' : 'bg-[var(--c-indigo-150)]'" :style="{ height: `${(s.count * 100) / maxSource}%`, minHeight: '4px' }" />
             </div>
           </div>
@@ -151,15 +151,15 @@
       <div class="gl-card flex min-w-0 flex-col p-4 md:p-6">
         <h2 class="text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Reakční doba') }}</h2>
         <template v-if="data?.response?.count">
-          <div class="num mt-3 text-[44px] font-bold leading-none md:text-[56px] tracking-tight text-ink-gray-9">{{ hoursOf(data.response.avg) }}</div>
+          <div class="num mt-3 text-[44px] font-bold leading-none md:text-[56px] tracking-tight text-ink-gray-9"><GlNumber :value="avgParts.value" :format="avgParts.format" :suffix="avgParts.suffix" /></div>
           <div class="mt-2 text-[16px] text-ink-gray-5">{{ __('cíl {0} pracovní hodiny', [String(data.response.hours ?? 4).replace('.', ',')]) }}</div>
           <span v-if="data.response.on_time_pct !== null" class="mt-4 inline-flex w-fit max-w-full flex-wrap items-center gap-2 rounded-full px-3.5 py-1.5 text-[15px] font-semibold" :class="data.response.on_time_pct >= 80 ? 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)]' : 'bg-[color-mix(in_srgb,var(--stage-nabidka)_16%,transparent)] text-[var(--warning)]'">
-            <GlIcon :name="data.response.on_time_pct >= 80 ? 'check' : 'alert'" :size="16" />{{ __('V limitu') }} {{ data.response.on_time_pct }} %
+            <GlIcon :name="data.response.on_time_pct >= 80 ? 'check' : 'alert'" :size="16" />{{ __('V limitu') }} <GlNumber :value="data.response.on_time_pct" suffix=" %" />
           </span>
         </template>
         <GlEmptyState v-else class="mt-2" icon="clock" :title="__('Zatím bez dat')" :text="__('Měří se příchozí zakázky z webu, formulářů a Facebooku.')" />
       </div>
-      <div class="gl-card min-w-0 p-4 md:p-6">
+      <div v-gl-animate class="gl-card min-w-0 p-4 md:p-6">
         <h2 class="mb-3 text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Nejlepší klienti') }}</h2>
         <GlEmptyState v-if="!data?.clients?.length" icon="star" :title="__('Zatím žádná výhra')" :text="__('Nejlepší klienti se ukážou po první vyhrané zakázce v období.')" />
         <component
@@ -174,7 +174,7 @@
             <span class="line-clamp-2 break-words text-[15px] font-semibold leading-snug text-ink-gray-9">{{ c.name }}</span>
             <span class="block text-[13px] text-ink-gray-5">{{ clientSub(c) }}</span>
           </span>
-          <span class="num shrink-0 whitespace-nowrap text-[16px] font-bold text-ink-gray-9 tabular-nums" :title="money(c.value)">{{ isPhone ? moneyCompact(c.value) : money(c.value) }}</span>
+          <span class="num shrink-0 whitespace-nowrap text-[16px] font-bold text-ink-gray-9 tabular-nums" :title="money(c.value)"><GlNumber :value="Math.round(c.value || 0)" :format="isPhone ? FMT_COMPACT : FMT_CZK" :suffix="isPhone ? ' Kč' : undefined" /></span>
         </component>
       </div>
     </div>
@@ -192,6 +192,8 @@ import { isForbidden } from '@/utils/glErrors'
 import GlForbidden from '@/components/GlForbidden.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import GlNumber from '@/components/GlNumber.vue'
+import { vGlAnimate } from '@/composables/glMotion'
 import { isMobileView } from '@/composables/settings'
 import { isPhone } from '@/composables/glBreakpoint'
 import { usersStore } from '@/stores/users'
@@ -282,6 +284,9 @@ const userMenu = computed(() => [
 ])
 const userName = (u) => getUser(u)?.full_name || u
 
+// formáty GlNumber: stejný výstup jako money() a moneyCompact() níž
+const FMT_CZK = { style: 'currency', currency: 'CZK', maximumFractionDigits: 0 }
+const FMT_COMPACT = { notation: 'compact', compactDisplay: 'short', maximumFractionDigits: 1 }
 const money = (n) => `${new Intl.NumberFormat('cs-CZ').format(Math.round(n || 0))} Kč`
 const k = (n) => new Intl.NumberFormat('cs-CZ').format(Math.round((n || 0) / 1000))
 // telefon: zkrácený zápis velkých částek („66 tis.“, „1,2 mil.“), jinak celé tisíce jako dřív
@@ -289,6 +294,11 @@ const compact = new Intl.NumberFormat('cs-CZ', { notation: 'compact', maximumFra
 const moneyCompact = (n) => `${compact.format(Math.round(n || 0))} Kč`
 const thousandsLabel = (n) => (isPhone.value ? compact.format(Math.round(n || 0)) : thousandsFull(n))
 const thousandsFull = (n) => (n >= 1000 ? `${k(n)} tis.` : String(Math.round(n || 0)))
+// surová hodnota + formát pro GlNumber; výstup shodný s thousandsLabel()
+const thousandsParts = (n) => {
+  if (isPhone.value) return { raw: Math.round(n || 0), format: FMT_COMPACT }
+  return n >= 1000 ? { raw: Math.round(n / 1000), suffix: ' tis.' } : { raw: Math.round(n || 0) }
+}
 const kpis = computed(() => {
   const x = data.value?.kpis
   if (!x) return []
@@ -298,13 +308,14 @@ const kpis = computed(() => {
     {
       label: __('Tržby'),
       value: thousandsLabel(x.revenue),
+      ...thousandsParts(x.revenue),
       full: money(x.revenue),
       badge: x.revenue_delta === null ? '' : `${x.revenue_delta >= 0 ? '↗' : '↘'} ${Math.abs(x.revenue_delta)} %`,
       badgeUp: x.revenue_delta >= 0,
       sub: `Kč · ${months(s)} – ${months(e)}`,
     },
-    { label: __('Úspěšnost'), value: x.success === null ? __('Bez dat') : `${x.success} %`, sub: __('vyhráno {0} z {1} založených', [x.won, x.created]) },
-    { label: __('Průměrná zakázka'), value: thousandsLabel(x.avg_value), full: money(x.avg_value), sub: __('Kč · vyhrané zakázky') },
+    { label: __('Úspěšnost'), value: x.success === null ? __('Bez dat') : `${x.success} %`, raw: x.success, suffix: ' %', sub: __('vyhráno {0} z {1} založených', [x.won, x.created]) },
+    { label: __('Průměrná zakázka'), value: thousandsLabel(x.avg_value), ...thousandsParts(x.avg_value), full: money(x.avg_value), sub: __('Kč · vyhrané zakázky') },
     { label: __('Délka obchodu'), value: x.cycle_days === null ? __('Bez dat') : __('{0} dní', [x.cycle_days]), sub: __('od založení po výhru') },
   ]
 })
@@ -351,5 +362,10 @@ function exportCsv() {
 }
 
 // průměrná odpověď v hodinách („2,4 h“); pod hodinu v minutách
+const avgParts = computed(() => {
+  const min = data.value?.response?.avg
+  if (min === null || min === undefined) return {}
+  return min < 60 ? { value: Math.round(min), suffix: ' min' } : { value: min / 60, format: { maximumFractionDigits: 1 }, suffix: ' h' }
+})
 const hoursOf = (min) => (min === null || min === undefined ? '—' : min < 60 ? `${Math.round(min)} min` : `${new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 1 }).format(min / 60)} h`)
 </script>

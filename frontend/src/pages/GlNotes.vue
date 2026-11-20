@@ -32,7 +32,7 @@
       <GlEmptyState v-else-if="!res.data.items.length" icon="doc" :title="q ? __('Nic nenalezeno') : __('Zatím žádné zápisy')" :text="q ? __('Zkuste jiné slovo nebo zrušte filtr.') : __('Zápisy vznikají u zakázek, firem a kontaktů.')" :action="q ? __('Zrušit hledání') : __('Nový zápis')" :primary="!q" @action="q ? (q = '') : createNote()" />
       <!-- design 3. kolo (14): na desktopu seznam vlevo a otevřený zápis vpravo, na mobilu karty -->
       <div v-if="!isMobileView && res.data?.items.length" class="grid min-h-0 flex-1 grid-cols-12 gap-4">
-        <div class="gl-card col-span-5 flex min-h-0 flex-col overflow-y-auto p-2">
+        <div v-gl-animate class="gl-card col-span-5 flex min-h-0 flex-col overflow-y-auto p-2">
           <button
             v-for="n in res.data.items"
             :key="n.name"
@@ -90,7 +90,7 @@
           </template>
         </div>
       </div>
-      <div v-else class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div v-else v-gl-animate class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         <div v-for="n in res.data?.items || []" :key="n.name" class="gl-card gl-lift flex min-h-[200px] cursor-pointer flex-col gap-2.5 p-5" @click="editNote(n.name)">
           <div class="flex items-start justify-between gap-2">
             <div lang="cs" class="gl-text line-clamp-2 text-[17px] font-bold leading-snug text-ink-gray-9">{{ n.title }}</div>
@@ -120,6 +120,7 @@ import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import Link from '@/components/Controls/Link.vue'
 import GlTaskModal from '@/components/Modals/GlTaskModal.vue'
+import { vGlAnimate } from '@/composables/glMotion'
 import { parseNote } from '@/utils/glNote'
 import { sanitizeHTML } from '@/utils'
 import { useDoctypeModal } from '@/composables/doctypeModal'

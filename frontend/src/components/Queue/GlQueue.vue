@@ -12,7 +12,7 @@
         :aria-pressed="filter === f.key"
         @click="filter = f.key"
       >
-        {{ f.label }} <span class="num">{{ f.count }}</span>
+        {{ f.label }} <span class="num"><GlNumber :value="f.count" /></span>
       </button>
     </div>
 
@@ -47,6 +47,7 @@
 <script setup>
 import GlIcon from '@/components/GlIcon.vue'
 import GlErrorBanner from '@/components/GlErrorBanner.vue'
+import GlNumber from '@/components/GlNumber.vue'
 import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlQueueCard from '@/components/Queue/GlQueueCard.vue'
 import { undoToast } from '@/composables/glMail'
