@@ -8,7 +8,7 @@
         <span class="hidden size-14 shrink-0 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,color-mix(in_srgb,var(--accent-600)_80%,white),var(--accent-600))] text-white shadow-[0_8px_20px_-8px_color-mix(in_srgb,var(--accent-600)_60%,transparent)] md:flex"><GlIcon name="sparkles" :size="26" /></span>
         <div class="min-w-0">
           <span class="gl-page-title text-lg-medium text-ink-gray-9">{{ __('Agent') }}</span>
-          <div class="hidden truncate text-[15px] text-ink-gray-5 md:block">{{ __('Obohacuje firmy z webu, hledá rozhodující osoby a nové firmy.') }}</div>
+          <div class="hidden truncate text-[15px] text-ink-gray-6 md:block">{{ __('Obohacuje firmy z webu, hledá rozhodující osoby a nové firmy.') }}</div>
         </div>
       </div>
     </template>
@@ -22,6 +22,12 @@
       <b class="text-ink-gray-9">{{ __('Firecrawl zatím není nastavený.') }}</b> {{ __('Chybí API klíč, obraťte se na správce.') }}
     </div>
 
+    <!-- GrowUp (zadání 2027 kolo 2 V2): stav a vypínač agenta + „Co smí agent sám“ (tabulka samostatnosti) -->
+    <div class="grid grid-cols-1 items-start gap-4 xl:grid-cols-[400px_minmax(0,1fr)]">
+      <GlAgentStatus />
+      <GlAgentAutonomy />
+    </div>
+
     <!-- design 3. kolo (12): obohacené firmy, návrhy kontaktů, dohledané e-maily, kredity -->
     <div class="grid grid-cols-2 gap-3 xl:grid-cols-4 xl:gap-4">
       <div v-for="k in kpis" :key="k.label" class="gl-card flex min-w-0 items-start gap-4 p-4 md:p-5">
@@ -29,7 +35,7 @@
         <span class="hidden size-12 shrink-0 items-center justify-center rounded-[14px] md:flex" :class="k.tone"><GlIcon :name="k.icon" :size="22" /></span>
         <div class="flex min-w-0 flex-1 flex-col gap-1">
           <div class="text-[14px] font-semibold text-ink-gray-9 md:truncate md:text-[17px]">{{ k.label }}</div>
-          <div class="num text-[26px] font-bold leading-tight tracking-tight text-ink-gray-9 md:truncate md:text-[40px]">{{ k.value }}<span v-if="k.of" class="text-[15px] font-medium text-ink-gray-5 md:text-[22px]"> / {{ k.of }}</span></div>
+          <div class="num text-[26px] font-bold leading-tight tracking-tight text-ink-gray-9 md:truncate md:text-[40px]"><GlNumber :value="k.value" /><span v-if="k.of !== undefined" class="text-[15px] font-medium text-ink-gray-5 md:text-[22px]"> / <GlNumber :value="k.of" /></span></div>
           <div v-if="k.bar !== undefined" class="h-2 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--c-tint)_16%,transparent)]"><div class="h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${Math.min(100, k.bar)}%` }" /></div>
           <div class="text-[13px] text-ink-gray-5 md:truncate md:text-[14px]">{{ k.sub }}</div>
         </div>
@@ -58,23 +64,50 @@
               <button class="gl-seg-btn !px-5" :class="sgPriority === 'Vysoká' && 'gl-seg-on !bg-[var(--accent-600)] !text-white'" @click="sgPriority = 'Vysoká'">{{ __('Rozhodující') }}<span v-if="sg?.counts?.['Vysoká']" class="num ml-1 opacity-75">{{ sg.counts['Vysoká'] }}</span></button>
               <button class="gl-seg-btn !px-5" :class="sgPriority === '' && 'gl-seg-on !bg-[var(--accent-600)] !text-white'" @click="sgPriority = ''">{{ __('Vše') }}<span v-if="pendingTotal" class="num ml-1 opacity-75">{{ pendingTotal }}</span></button>
             </div>
-            <label class="flex items-center gap-2 text-[14px] text-ink-gray-7"><input v-model="sgEmail" type="checkbox" class="rounded" />{{ __('jen s e-mailem') }}</label>
+            <label class="flex min-h-[44px] cursor-pointer items-center gap-2 text-[14px] text-ink-gray-7"><input v-model="sgEmail" type="checkbox" class="size-4 rounded" />{{ __('jen s e-mailem') }}</label>
           </div>
         </div>
-        <div v-if="sg?.rows?.length" class="flex items-center gap-2">
-          <Button variant="solid" iconLeft="lucide-check" :label="selected.length ? __('Přijmout vybrané ({0})', [selected.length]) : __('Přijmout vše')" :loading="busy" @click="decideBulk('accept')" />
-          <Button iconLeft="lucide-x" theme="red" :label="selected.length ? __('Zamítnout vybrané') : __('Zamítnout vše')" :loading="busy" @click="decideBulk('reject')" />
+        <div v-if="sg?.rows?.length" class="flex flex-wrap items-center gap-2">
+          <Button variant="solid" class="min-h-[44px] md:min-h-[36px]" iconLeft="lucide-check" :label="selected.length ? __('Přijmout vybrané ({0})', [selected.length]) : __('Přijmout vše')" :loading="busy" @click="decideBulk('accept')" />
+          <Button class="min-h-[44px] md:min-h-[36px]" iconLeft="lucide-x" theme="red" :label="selected.length ? __('Zamítnout vybrané') : __('Zamítnout vše')" :loading="busy" @click="decideBulk('reject')" />
         </div>
       </div>
       <GlErrorBanner v-if="suggestions.error" class="mt-4" :title="__('Návrhy se nepodařilo načíst')" @retry="suggestions.reload()" />
       <GlSkeleton v-else-if="suggestions.loading && !suggestions.data" class="mt-4" :rows="3" />
       <GlEmptyState v-else-if="sg && !sg.rows.length" class="mt-4" icon="users" :title="sgEmail && sg.without_email ? __('Všechny návrhy s e-mailem jsou vyřízené') : __('Žádné návrhy')"
         :text="sgEmail && sg.without_email ? __('Zbývá {0} lidí bez e-mailu. E-maily jim dohledá Anymailfinder (Dohledat e-maily výše); jako kontakty je přidáte po vypnutí filtru „jen s e-mailem“.', [sg.without_email]) : __('Návrhy vznikají z obohacení firem a z ARES.')" />
-      <div v-else-if="sg" class="mt-4 overflow-x-auto">
+      <div v-else-if="sg" class="mt-4">
+        <!-- telefon: karty -->
+        <ul v-if="isPhone" class="flex flex-col gap-3">
+          <li v-for="r in sg.rows" :key="r.name" class="flex flex-col gap-2 rounded-[18px] bg-[color-mix(in_srgb,var(--c-tint)_7%,transparent)] p-3">
+            <div class="flex items-center gap-1">
+              <label class="flex size-11 shrink-0 cursor-pointer items-center justify-center"><input v-model="selected" type="checkbox" :value="r.name" class="size-4 rounded" :aria-label="__('Vybrat {0}', [r.full_name])" /></label>
+              <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[13px] font-semibold text-[var(--accent-700)]">{{ initials(r.full_name) }}</span>
+              <div class="min-w-0 flex-1 pl-2">
+                <div class="truncate text-[15px] font-semibold text-ink-gray-9">{{ r.full_name }}</div>
+                <router-link :to="{ name: 'Organization', params: { organizationId: r.organization } }" class="block truncate text-[14px] text-ink-gray-7 hover:underline">{{ r.organization }}</router-link>
+              </div>
+            </div>
+            <div class="flex flex-col gap-1 pl-1 text-[14px] text-ink-gray-7">
+              <div v-if="r.role" class="break-words">{{ r.role }}</div>
+              <div v-if="r.email" class="flex flex-wrap items-center gap-2">
+                <span class="min-w-0 break-all">{{ r.email }}</span>
+                <span v-if="r.email_verified" class="flex shrink-0 items-center gap-1 rounded-full bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] px-2.5 py-0.5 text-[13px] font-medium text-[var(--c-green-700)]"><GlIcon name="check" :size="13" />{{ __('Ověřeno') }}</span>
+              </div>
+              <div v-if="r.action === 'Doplnit kontakt'" class="text-[13px] font-medium text-[var(--c-green-700)]">{{ __('doplní e-mail ke kontaktu') }}</div>
+              <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] px-2.5 py-1 text-[13px] text-ink-gray-7"><GlIcon :name="SOURCE_ICON[r.source] || 'doc'" :size="14" />{{ r.source || __('Web') }}</span>
+            </div>
+            <div class="flex justify-end gap-2">
+              <button class="flex size-11 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)]" :aria-label="__('Přijmout')" :title="__('Přijmout')" @click="decideOne('accept', r.name)"><GlIcon name="check" :size="18" /></button>
+              <button class="flex size-11 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] text-ink-gray-6" :aria-label="__('Zamítnout')" :title="__('Zamítnout')" @click="decideOne('reject', r.name)"><GlIcon name="x" :size="18" /></button>
+            </div>
+          </li>
+        </ul>
+        <div v-else class="overflow-x-auto">
         <table class="w-full min-w-[860px] text-left text-[15px]">
           <thead class="border-b border-[var(--line)] text-[14px] text-ink-gray-5">
             <tr>
-              <th class="w-8 py-2"><input type="checkbox" class="rounded" :checked="selected.length && selected.length === sg.rows.length" :aria-label="__('Vybrat vše')" @change="(e) => (selected = e.target.checked ? sg.rows.map((r) => r.name) : [])" /></th>
+              <th class="w-12 py-1"><label class="flex size-11 cursor-pointer items-center justify-center"><input type="checkbox" class="size-4 rounded" :checked="selected.length && selected.length === sg.rows.length" :aria-label="__('Vybrat vše')" @change="(e) => (selected = e.target.checked ? sg.rows.map((r) => r.name) : [])" /></label></th>
               <th class="py-2 font-medium">{{ __('Osoba') }}</th>
               <th class="py-2 font-medium">{{ __('Firma') }}</th>
               <th class="py-2 font-medium">{{ __('Role') }}</th>
@@ -85,7 +118,7 @@
           </thead>
           <tbody>
             <tr v-for="r in sg.rows" :key="r.name" class="border-b border-[var(--line)] last:border-b-0">
-              <td class="py-3"><input v-model="selected" type="checkbox" :value="r.name" class="rounded" /></td>
+              <td class="py-1"><label class="flex size-11 cursor-pointer items-center justify-center"><input v-model="selected" type="checkbox" :value="r.name" class="size-4 rounded" :aria-label="__('Vybrat {0}', [r.full_name])" /></label></td>
               <td class="py-3">
                 <span class="flex items-center gap-3">
                   <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[13px] font-semibold text-[var(--accent-700)]">{{ initials(r.full_name) }}</span>
@@ -97,26 +130,27 @@
               <td class="py-3">
                 <span v-if="r.email" class="flex items-center gap-2">
                   <span class="truncate text-ink-gray-8">{{ r.email }}</span>
-                  <span v-if="r.email_verified" class="flex shrink-0 items-center gap-1 rounded-full bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] px-2.5 py-0.5 text-[12.5px] font-medium text-[var(--c-green-700)]"><GlIcon name="check" :size="13" />{{ __('Ověřeno') }}</span>
+                  <span v-if="r.email_verified" class="flex shrink-0 items-center gap-1 rounded-full bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] px-2.5 py-0.5 text-[13px] font-medium text-[var(--c-green-700)]"><GlIcon name="check" :size="13" />{{ __('Ověřeno') }}</span>
                 </span>
                 <span v-else class="text-ink-gray-5">—</span>
-                <span v-if="r.action === 'Doplnit kontakt'" class="mt-1 block text-[12px] font-medium text-[var(--c-green-700)]">{{ __('doplní e-mail ke kontaktu') }}</span>
+                <span v-if="r.action === 'Doplnit kontakt'" class="mt-1 block text-[13px] font-medium text-[var(--c-green-700)]">{{ __('doplní e-mail ke kontaktu') }}</span>
               </td>
               <td class="py-3">
                 <span class="inline-flex items-center gap-1.5 rounded-full bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] px-2.5 py-1 text-[13px] text-ink-gray-7"><GlIcon :name="SOURCE_ICON[r.source] || 'doc'" :size="14" />{{ r.source || __('Web') }}</span>
               </td>
               <td class="py-3">
                 <span class="flex justify-end gap-2">
-                  <button class="flex size-9 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)] hover:bg-[color-mix(in_srgb,var(--stage-vyhrano)_20%,transparent)]" :aria-label="__('Přijmout')" :title="__('Přijmout')" @click="decideOne('accept', r.name)"><GlIcon name="check" :size="17" /></button>
-                  <button class="flex size-9 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] text-ink-gray-6 hover:bg-[color-mix(in_srgb,var(--c-red-400)_12%,transparent)] hover:text-[var(--c-red-550)]" :aria-label="__('Zamítnout')" :title="__('Zamítnout')" @click="decideOne('reject', r.name)"><GlIcon name="x" :size="16" /></button>
+                  <button class="flex size-11 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)] hover:bg-[color-mix(in_srgb,var(--stage-vyhrano)_20%,transparent)]" :aria-label="__('Přijmout')" :title="__('Přijmout')" @click="decideOne('accept', r.name)"><GlIcon name="check" :size="18" /></button>
+                  <button class="flex size-11 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] text-ink-gray-6 hover:bg-[color-mix(in_srgb,var(--c-red-400)_12%,transparent)] hover:text-[var(--c-red-550)]" :aria-label="__('Zamítnout')" :title="__('Zamítnout')" @click="decideOne('reject', r.name)"><GlIcon name="x" :size="18" /></button>
                 </span>
               </td>
             </tr>
           </tbody>
         </table>
+        </div>
         <div v-if="sg.rows.length < sg.total" class="mt-3 flex items-center justify-between text-[13px] text-ink-gray-5">
           {{ __('{0} z {1}', [sg.rows.length, sg.total]) }}
-          <Button :label="__('Načíst další')" @click="pageLength += 50" />
+          <Button class="min-h-[44px] md:min-h-[36px]" :label="__('Načíst další')" @click="pageLength += 50" />
         </div>
       </div>
     </div>
@@ -183,6 +217,10 @@
 
 <script setup>
 import GlSkeleton from '@/components/GlSkeleton.vue'
+import GlNumber from '@/components/GlNumber.vue'
+import GlAgentStatus from '@/components/Agent/GlAgentStatus.vue'
+import GlAgentAutonomy from '@/components/Agent/GlAgentAutonomy.vue'
+import { isPhone } from '@/composables/glBreakpoint'
 import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import GlEmptyState from '@/components/GlEmptyState.vue'
 import GlForbidden from '@/components/GlForbidden.vue'
@@ -280,10 +318,10 @@ const kpis = computed(() => {
   const o = ov.value || {}
   const f = finder.data || {}
   return [
-    { label: __('Obohacené firmy'), icon: 'building', tone: 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-600)]', value: nf(o.enriched), of: nf(o.with_web), bar: o.with_web ? (o.enriched * 100) / o.with_web : 0, sub: o.with_web ? `${Math.round((o.enriched * 100) / o.with_web)} %` : __('zatím žádná firma s webem') },
-    { label: __('Návrhy kontaktů'), icon: 'users', tone: 'bg-[color-mix(in_srgb,var(--stage-kontaktovano)_12%,transparent)] text-[var(--c-violet-400)]', value: nf(pendingTotal.value), sub: __('čeká na schválení') },
-    { label: __('Dohledané e-maily'), icon: 'mail', tone: 'bg-[color-mix(in_srgb,var(--c-blue-400)_12%,transparent)] text-[var(--c-blue-500)]', value: nf(f.found), sub: f.searched ? __('z {0} firem', [nf(f.searched)]) : __('zatím nic nehledáno') },
-    { label: __('Kredity tento měsíc'), icon: 'server', tone: 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-600)]', value: nf(o.credits_used), of: nf(o.credits_cap), bar: o.credits_cap ? (o.credits_used * 100) / o.credits_cap : 0, sub: o.credits_cap ? `${Math.round((o.credits_used * 100) / o.credits_cap)} %${o.queued ? ' · ' + __('ve frontě {0}', [o.queued]) : ''}` : '' },
+    { label: __('Obohacené firmy'), icon: 'building', tone: 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-600)]', value: o.enriched || 0, of: o.with_web || 0, bar: o.with_web ? (o.enriched * 100) / o.with_web : 0, sub: o.with_web ? `${Math.round((o.enriched * 100) / o.with_web)} %` : __('zatím žádná firma s webem') },
+    { label: __('Návrhy kontaktů'), icon: 'users', tone: 'bg-[color-mix(in_srgb,var(--stage-kontaktovano)_12%,transparent)] text-[var(--c-violet-400)]', value: pendingTotal.value, sub: __('čeká na schválení') },
+    { label: __('Dohledané e-maily'), icon: 'mail', tone: 'bg-[color-mix(in_srgb,var(--c-blue-400)_12%,transparent)] text-[var(--c-blue-500)]', value: f.found || 0, sub: f.searched ? __('z {0} firem', [nf(f.searched)]) : __('zatím nic nehledáno') },
+    { label: __('Kredity tento měsíc'), icon: 'server', tone: 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-600)]', value: o.credits_used || 0, of: o.credits_cap || 0, bar: o.credits_cap ? (o.credits_used * 100) / o.credits_cap : 0, sub: o.credits_cap ? `${Math.round((o.credits_used * 100) / o.credits_cap)} %${o.queued ? ' · ' + __('ve frontě {0}', [o.queued]) : ''}` : '' },
   ]
 })
 const actions = computed(() => [

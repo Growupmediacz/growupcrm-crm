@@ -9,7 +9,7 @@
       <div class="min-w-0 flex-1">
         <h2 class="text-[16px] font-bold text-ink-gray-9">{{ enabled ? __('Agent běží') : __('Agent je vypnutý') }}</h2>
         <div class="text-[13px] text-ink-gray-5">
-          <template v-if="status.data.last_call">{{ __('Poslední volání {0} · {1}', [when(status.data.last_call.at), status.data.last_call.tool]) }}</template>
+          <template v-if="status.data.last_call"><span :title="status.data.last_call.tool">{{ __('Poslední volání {0} · {1}', [when(status.data.last_call.at), agentActionLabel(status.data.last_call.tool)]) }}</span></template>
           <template v-else>{{ __('Zatím bez volání') }}</template>
         </div>
       </div>
@@ -52,7 +52,7 @@
       <ul v-else class="flex flex-col">
         <li v-for="r in recent.data" :key="r.name" class="flex flex-col gap-0.5 border-t border-[var(--line)] py-2 first:border-t-0">
           <div class="flex items-baseline justify-between gap-3">
-            <span class="min-w-0 break-words text-[14px] font-medium text-ink-gray-9">{{ r.tool }}</span>
+            <span class="min-w-0 break-words text-[14px] font-medium text-ink-gray-9" :title="r.tool">{{ agentActionLabel(r.tool) }}</span>
             <span class="shrink-0 text-[13px] tabular-nums text-ink-gray-5">{{ when(r.at) }}</span>
           </div>
           <div v-if="r.reference_title || r.reference_name" class="break-words text-[14px] text-ink-gray-7">{{ r.reference_title || r.reference_name }}</div>
@@ -79,6 +79,7 @@
 <script setup>
 import GlNumber from '@/components/GlNumber.vue'
 import { usersStore } from '@/stores/users'
+import { agentActionLabel } from '@/utils/glAgentActions'
 import { Button, Dialog, ErrorMessage, call, createResource, toast } from 'frappe-ui'
 import { computed, ref } from 'vue'
 

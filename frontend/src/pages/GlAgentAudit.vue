@@ -2,7 +2,10 @@
   <!-- GrowUp (zadání 2027 E3): „Celý záznam“ agenta. Jen vedoucí. Data: growupcrm.audit.get_log / get_entry. -->
   <LayoutHeader>
     <template #left-header>
-      <span class="gl-page-title text-lg-medium text-ink-gray-9">{{ __('Záznam agenta') }}</span>
+      <div class="min-w-0">
+        <span class="gl-page-title text-lg-medium text-ink-gray-9">{{ __('Záznam agenta') }}</span>
+        <div class="hidden truncate text-[15px] text-ink-gray-6 md:block">{{ __('Co agent v CRM udělal, kdy a proč. Technické názvy najdete v detailu záznamu.') }}</div>
+      </div>
     </template>
   </LayoutHeader>
 
@@ -11,15 +14,14 @@
     <GlAgentStatus :show-link="false" @changed="reload" />
 
     <!-- filtry -->
-    <div class="gl-card grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 lg:grid-cols-5">
-      <FormControl v-model="filters.tool" type="select" :label="__('Nástroj')" :options="toolOptions" />
-      <FormControl v-model="filters.status" type="select" :label="__('Výsledek')" :options="statusOptions" />
-      <FormControl v-model="filters.kind" type="select" :label="__('Druh')" :options="kindOptions" />
-      <FormControl v-model="filters.from_date" type="date" :label="__('Od')" />
-      <FormControl v-model="filters.to_date" type="date" :label="__('Do')" />
-      <div v-if="hasFilters" class="sm:col-span-2 lg:col-span-5">
-        <button type="button" class="gl-quick !h-11 md:!h-9" @click="clearFilters">{{ __('Zrušit filtry') }}</button>
-      </div>
+    <!-- GrowUp (zadání 2027 kolo 2 V2): filtry v jedné zalamující se řadě -->
+    <div class="gl-card flex flex-wrap items-end gap-3 p-4">
+      <FormControl v-model="filters.tool" class="min-w-[170px] flex-1" type="select" :label="__('Nástroj')" :options="toolOptions" />
+      <FormControl v-model="filters.status" class="min-w-[150px] flex-1" type="select" :label="__('Výsledek')" :options="statusOptions" />
+      <FormControl v-model="filters.kind" class="min-w-[150px] flex-1" type="select" :label="__('Druh')" :options="kindOptions" />
+      <FormControl v-model="filters.from_date" class="min-w-[150px] flex-1" type="date" :label="__('Od')" />
+      <FormControl v-model="filters.to_date" class="min-w-[150px] flex-1" type="date" :label="__('Do')" />
+      <button v-if="hasFilters" type="button" class="gl-quick !h-11 md:!h-9" @click="clearFilters">{{ __('Zrušit filtry') }}</button>
     </div>
 
     <GlErrorBanner v-if="error" :title="__('Záznam se nepodařilo načíst')" :text="error" @retry="reload" />
@@ -27,8 +29,8 @@
     <GlEmptyState
       v-else-if="!rows.length"
       icon="inbox"
-      :title="hasFilters ? __('Filtru nic neodpovídá') : __('Agent zatím nic nezaznamenal')"
-      :text="hasFilters ? __('Zkuste změnit nebo zrušit filtry.') : __('Každé volání nástroje agenta se zapíše sem.')"
+      :title="hasFilters ? __('Filtru nic neodpovídá') : __('Agent zatím nic neudělal')"
+      :text="hasFilters ? __('Zkuste změnit nebo zrušit filtry.') : __('Každá akce agenta se zapíše sem.')"
     />
 
     <template v-else>
@@ -36,7 +38,7 @@
       <div v-if="isPhone" class="flex flex-col gap-3">
         <button v-for="r in rows" :key="r.name" type="button" class="gl-card flex min-h-11 flex-col gap-1.5 p-4 text-left" @click="openEntry(r)">
           <div class="flex items-baseline justify-between gap-3">
-            <span class="min-w-0 break-words text-[15px] font-bold text-ink-gray-9">{{ r.tool }}</span>
+            <span class="min-w-0 break-words text-[15px] font-bold text-ink-gray-9" :title="r.tool">{{ agentActionLabel(r.tool) }}</span>
             <span class="shrink-0 text-[13px] tabular-nums text-ink-gray-5">{{ when(r.at) }}</span>
           </div>
           <div class="flex flex-wrap items-center gap-2 text-[13px] text-ink-gray-5">
@@ -56,7 +58,7 @@
             <tr>
               <th class="px-3 py-2">{{ __('Čas') }}</th>
               <th class="px-3 py-2">{{ __('Kdo') }}</th>
-              <th class="px-3 py-2">{{ __('Nástroj') }}</th>
+              <th class="px-3 py-2">{{ __('Akce') }}</th>
               <th class="px-3 py-2">{{ __('Druh') }}</th>
               <th class="px-3 py-2">{{ __('Výsledek') }}</th>
               <th class="px-3 py-2">{{ __('U čeho') }}</th>
@@ -68,13 +70,13 @@
               v-for="r in rows"
               :key="r.name"
               tabindex="0"
-              class="cursor-pointer border-t border-[var(--outline-gray-1)] align-top hover:bg-white/60 focus-visible:bg-white/60"
+              class="h-14 cursor-pointer border-t border-[var(--outline-gray-1)] align-top hover:bg-white/60 focus-visible:bg-white/60"
               @click="openEntry(r)"
               @keydown.enter="openEntry(r)"
             >
               <td class="whitespace-nowrap px-3 py-3 tabular-nums text-ink-gray-7">{{ when(r.at) }}</td>
               <td class="px-3 py-3 text-ink-gray-7">{{ r.user_name || r.user }}</td>
-              <td class="px-3 py-3 font-medium text-ink-gray-9">{{ r.tool }}</td>
+              <td class="px-3 py-3 font-medium text-ink-gray-9" :title="r.tool">{{ agentActionLabel(r.tool) }}</td>
               <td class="px-3 py-3 text-ink-gray-7">{{ r.kind }}</td>
               <td class="px-3 py-3"><span class="inline-flex rounded-full px-2.5 py-0.5 text-[13px] font-semibold" :class="badge(r.status)">{{ statusLabel(r.status) }}</span></td>
               <td class="px-3 py-3">
@@ -125,6 +127,7 @@ import GlSkeleton from '@/components/GlSkeleton.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import { isPhone } from '@/composables/glBreakpoint'
 import { usersStore } from '@/stores/users'
+import { agentActionLabel } from '@/utils/glAgentActions'
 import { Button, Dialog, FormControl, call, usePageMeta } from 'frappe-ui'
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 
@@ -140,7 +143,11 @@ const loading = ref(false)
 const error = ref('')
 
 const opts = (label, values) => [{ label, value: '' }, ...values.map((v) => ({ label: v, value: v }))]
-const toolOptions = computed(() => opts(__('Všechny'), tools.value))
+// filtr ukazuje české popisky, hodnota zůstává technický název
+const toolOptions = computed(() => [
+  { label: __('Všechny'), value: '' },
+  ...tools.value.map((t) => ({ label: agentActionLabel(t), value: t })).sort((a, b) => a.label.localeCompare(b.label, 'cs')),
+])
 const statusOptions = computed(() => opts(__('Všechny'), ['OK', 'Odmítnuto', 'Chyba']))
 const kindOptions = computed(() => opts(__('Všechny'), ['Čtení', 'Zápis', 'Mimo nástroje']))
 const hasFilters = computed(() => Object.values(filters).some(Boolean))
