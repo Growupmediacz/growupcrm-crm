@@ -39,12 +39,19 @@
     </template>
   </LayoutHeader>
   <div v-if="doc.name" class="flex h-full gap-3 overflow-hidden px-2 pb-2">
-    <div class="flex min-w-0 flex-1 flex-col gap-3 overflow-hidden">
-      <LeadHero :key="heroKey" :doc="doc" :stageOptions="statuses" @changed="reloadResources" @fill="editing = true" @plan="activities?.modalRef?.showTask()" />
-      <div class="gl-card gl-chiptabs gl-chiptabs-d relative flex min-h-0 flex-1 flex-col overflow-hidden" :class="moreTab && 'gl-chiptabs-more'">
-        <h2 class="pointer-events-none absolute left-0 top-[16px] z-[2] bg-gradient-to-r from-[#fbf9ff] from-80% to-transparent py-1 pl-6 pr-5 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Aktivita') }}</h2>
-        <!-- oprava 10: 5 čipů (Vše, Zápisy, Hovory, E-maily, Úkoly), ostatní záložky v nabídce „Více“ -->
-        <div v-if="extraTabs.length" class="gl-more-tabs absolute right-0 top-[16px] z-[2] bg-gradient-to-l from-[#fbf9ff] from-70% to-transparent pb-0.5 pl-5 pr-5"><Dropdown :options="extraTabs" placement="right">
+    <div class="flex min-w-0 flex-1 flex-col gap-3" :class="mailTab === 'conv' ? 'overflow-y-auto' : 'overflow-hidden'">
+      <LeadHero :key="heroKey" :doc="doc" :stageOptions="statuses" @changed="reloadResources" @fill="editing = true" @plan="logAction((a) => a.modalRef?.showTask())" />
+      <!-- zadání 2027 E1: záložky Konverzace (e-mailová vlákna, rozložení A) a Záznamy (změny, hovory, úkoly bez e-mailů) -->
+      <div class="gl-card gl-chiptabs gl-chiptabs-d gl-lead-mail relative flex flex-col" :class="[moreTab && 'gl-chiptabs-more', mailTab === 'conv' ? 'shrink-0' : 'min-h-0 flex-1 overflow-hidden']">
+        <div class="gl-mailtabs" role="group" :aria-label="__('Komunikace')">
+          <button v-for="t in mailTabs" :key="t.key" type="button" :aria-pressed="mailTab === t.key" class="gl-mailtab" @click="mailTab = t.key">
+            {{ t.label }}
+          </button>
+        </div>
+        <GlConversations v-if="mailTab === 'conv'" ref="conversations" v-model:focused="mailFocus" doctype="CRM Lead" :docname="leadId" :doc="doc" />
+        <template v-else>
+        <!-- oprava 10: 5 čipů (Vše, Zápisy, Hovory, Úkoly, Komentáře), ostatní záložky v nabídce „Více“ -->
+        <div v-if="extraTabs.length" class="gl-more-tabs absolute right-0 top-[76px] z-[2] bg-gradient-to-l from-[#fbf9ff] from-70% to-transparent pb-0.5 pl-5 pr-5"><Dropdown :options="extraTabs" placement="right">
           <button
             class="inline-flex h-9 items-center gap-1 rounded-full px-3.5 text-[14px] font-semibold transition"
             :class="moreTab ? 'bg-[#0e1330] text-white' : 'bg-white/55 text-[var(--ink-gray-6,#5b6280)] hover:bg-white/85'"
@@ -61,6 +68,7 @@
       <template #tab-panel>
         <Activities
           ref="activities"
+          hideEmails
           v-model:reload="reload"
           v-model:tabIndex="tabIndex"
           doctype="CRM Lead"
@@ -71,6 +79,7 @@
         />
       </template>
     </Tabs>
+        </template>
         <!-- rychlé akce pod aktivitou (design 2. kolo, R2ZakazkaDetail) -->
         <div class="flex shrink-0 flex-wrap gap-2 border-t border-[rgba(110,120,200,.14)] px-5 py-3">
           <button v-for="a in quickActions" :key="a.label" class="gl-quick" @click="a.onClick">
@@ -80,15 +89,15 @@
       </div>
     </div>
     <LeadAside
-      v-if="!allFields"
+      v-if="!allFields && !mailFocus"
       v-model:editing="editing"
       :doc="doc"
-      @email="showEmail = true"
+      @email="openNewMail"
       @call="(p) => ((callPerson = p), (showCall = true))"
       @saved="afterAsideSave"
       @allFields="(editing = false), (allFields = true)"
     />
-    <Resizer v-else class="gl-card flex flex-col justify-between" side="right">
+    <Resizer v-else-if="allFields" class="gl-card flex flex-col justify-between" side="right">
       <div
         class="flex h-[45px] cursor-copy items-center border-b px-5 py-2.5 text-lg-medium text-ink-gray-9"
         @click="copyToClipboard(leadId)"
@@ -263,7 +272,6 @@
     :users="calendarUsers.data || []"
     @saved="() => activities?.all_activities?.reload()"
   />
-  <GlEmailModal v-if="showEmail" v-model="showEmail" :lead="doc" :toName="[doc.first_name, doc.last_name].filter(Boolean).join(' ')" @sent="() => activities?.all_activities?.reload()" />
   <GlWonModal v-if="showWon" v-model="showWon" :lead="doc" :onConfirm="confirmWon" />
   <GlCallModal
     v-if="showCall"
@@ -288,7 +296,6 @@ import ErrorPage from '@/components/ErrorPage.vue'
 import Icon from '@/components/Icon.vue'
 import Resizer from '@/components/Resizer.vue'
 import ActivityIcon from '@/components/Icons/ActivityIcon.vue'
-import EmailIcon from '@/components/Icons/EmailIcon.vue'
 import Email2Icon from '@/components/Icons/Email2Icon.vue'
 import CommentIcon from '@/components/Icons/CommentIcon.vue'
 import DetailsIcon from '@/components/Icons/DetailsIcon.vue'
@@ -305,7 +312,7 @@ import LayoutHeader from '@/components/LayoutHeader.vue'
 import LeadHero from '@/components/Lead/LeadHero.vue'
 import LeadAside from '@/components/Lead/LeadAside.vue'
 import GlIcon from '@/components/GlIcon.vue'
-import GlEmailModal from '@/components/Modals/GlEmailModal.vue'
+import GlConversations from '@/components/Email/GlConversations.vue'
 import GlCallModal from '@/components/Modals/GlCallModal.vue'
 import GlWonModal from '@/components/Modals/GlWonModal.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
@@ -396,7 +403,6 @@ function afterCall() {
   heroKey.value++
 }
 const showSchedule = ref(false)
-const showEmail = ref(false)
 const sessionUser = sessionStore().user
 const calendarUsers = createResource({ url: 'growupcrm.calendar.get_users', auto: true })
 const scheduleStart = computed(() => {
@@ -519,7 +525,6 @@ const tabs = computed(() => {
     { name: 'Activity', label: __('Vše'), icon: ActivityIcon },
     { name: 'Notes', label: __('Zápisy'), icon: NoteIcon },
     { name: 'Calls', label: __('Hovory'), icon: PhoneIcon },
-    { name: 'Emails', label: __('E-maily'), icon: EmailIcon },
     { name: 'Tasks', label: __('Úkoly'), icon: TaskIcon },
     { name: 'Comments', label: __('Komentáře'), icon: CommentIcon },
     { name: 'Data', label: __('Data'), icon: DetailsIcon },
@@ -545,7 +550,20 @@ const extraTabs = computed(() =>
   })),
 )
 // interní komentář: editor je v CommunicationArea (záložky Vše / E-maily / Komentáře), jinak přepnout na Vše
+// Zápis, úkol a komentář žijí v Záznamech (Activities); z Konverzace se tam nejdřív přepne
+async function logAction(cb) {
+  if (mailTab.value !== 'log') {
+    mailTab.value = 'log'
+    await nextTick()
+    await nextTick()
+  }
+  if (activities.value) cb(activities.value)
+}
 async function openComment() {
+  if (mailTab.value !== 'log') {
+    mailTab.value = 'log'
+    await nextTick()
+  }
   if (!activities.value?.emailBox) {
     tabIndex.value = 0
     await nextTick()
@@ -555,11 +573,10 @@ async function openComment() {
 }
 const quickActions = computed(() => [
   { label: __('Zapsat hovor'), icon: 'phone', onClick: () => ((callPerson.value = {}), (showCall.value = true)) },
-  { label: __('Zápis'), icon: 'doc', onClick: () => activities.value?.modalRef?.showNote() },
-  { label: __('E-mail'), icon: 'mail', onClick: () => (showEmail.value = true) },
-  { label: __('Úkol'), icon: 'check', onClick: () => activities.value?.modalRef?.showTask() },
+  { label: __('Zápis'), icon: 'doc', onClick: () => logAction((a) => a.modalRef?.showNote()) },
+  { label: __('E-mail'), icon: 'mail', onClick: openNewMail },
+  { label: __('Úkol'), icon: 'check', onClick: () => logAction((a) => a.modalRef?.showTask()) },
   { label: __('Komentář'), icon: 'edit', onClick: openComment },
-  { label: __('Naplánovat'), icon: 'cal', onClick: () => (showSchedule.value = true) },
 ])
 const moreTab = computed(() => (tabIndex.value >= VISIBLE_TABS ? tabs.value[tabIndex.value] : null))
 
@@ -641,11 +658,22 @@ function deleteLead() {
 }
 
 function openEmailBox() {
-  let currentTab = tabs.value[tabIndex.value]
-  if (!['Emails', 'Comments', 'Activities'].includes(currentTab.name)) {
-    activities.value.changeTabTo('emails')
-  }
-  nextTick(() => (activities.value.emailBox.show = true))
+  allFields.value = false
+  openNewMail()
+}
+
+// zadání 2027 E1: konverzace zakázky (výchozí záložka) a „Soustředit“ (sbalí pravý sloupec)
+const mailTab = ref(route.query.zaznamy ? 'log' : 'conv')
+const mailFocus = ref(false)
+const conversations = ref(null)
+const mailTabs = computed(() => [
+  { key: 'conv', label: __('Konverzace') },
+  { key: 'log', label: __('Záznamy') },
+])
+async function openNewMail() {
+  mailTab.value = 'conv'
+  await nextTick()
+  conversations.value?.openNew()
 }
 
 function statusLabel(status) {

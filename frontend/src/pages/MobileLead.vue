@@ -49,6 +49,9 @@
     </div>
     <button class="mt-2 self-start px-1 text-[13px] font-semibold text-[var(--accent-600)]" @click="openDetails(false)">{{ __('Všechny detaily') }}</button>
 
+    <!-- zadání 2027 E1: e-maily jako konverzace (vlákno přes celou obrazovku), v Aktivitě už nejsou -->
+    <GlMobileConversations ref="conversations" :docname="leadId" :doc="doc" @sent="afterChange" />
+
     <!-- Aktivita -->
     <h2 class="mb-1 mt-4 px-1 text-[22px] font-bold tracking-tight text-ink-gray-9">{{ __('Aktivita') }}</h2>
     <div class="gl-chiptabs flex min-h-[420px] flex-col">
@@ -61,6 +64,7 @@
         <template #tab-panel>
           <Activities
             ref="activities"
+            hideEmails
             v-model:reload="reload"
             v-model:tabIndex="tabIndex"
             doctype="CRM Lead"
@@ -103,7 +107,6 @@
     :users="calendarUsers.data || []"
     @saved="afterChange"
   />
-  <GlEmailModal v-if="showEmail" v-model="showEmail" :lead="doc" :toName="personName" @sent="afterChange" />
   <GlWonModal v-if="showWon" v-model="showWon" :lead="doc" :onConfirm="confirmWon" />
   <ConvertToDealModal v-if="showConvertToDealModal" v-model="showConvertToDealModal" :lead="doc" />
   <DeleteLinkedDocModal
@@ -125,7 +128,6 @@ import ErrorPage from '@/components/ErrorPage.vue'
 import Icon from '@/components/Icon.vue'
 import DetailsIcon from '@/components/Icons/DetailsIcon.vue'
 import ActivityIcon from '@/components/Icons/ActivityIcon.vue'
-import EmailIcon from '@/components/Icons/EmailIcon.vue'
 import CommentIcon from '@/components/Icons/CommentIcon.vue'
 import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
 import TaskIcon from '@/components/Icons/TaskIcon.vue'
@@ -138,7 +140,7 @@ import LayoutHeader from '@/components/LayoutHeader.vue'
 import LeadHero from '@/components/Lead/LeadHero.vue'
 import LeadAside from '@/components/Lead/LeadAside.vue'
 import GlIcon from '@/components/GlIcon.vue'
-import GlEmailModal from '@/components/Modals/GlEmailModal.vue'
+import GlMobileConversations from '@/components/Email/GlMobileConversations.vue'
 import GlCallModal from '@/components/Modals/GlCallModal.vue'
 import GlWonModal from '@/components/Modals/GlWonModal.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
@@ -296,7 +298,6 @@ const tabs = computed(() => {
     { name: 'Activity', label: __('Vše'), icon: ActivityIcon },
     { name: 'Notes', label: __('Zápisy'), icon: NoteIcon },
     { name: 'Calls', label: __('Hovory'), icon: PhoneIcon },
-    { name: 'Emails', label: __('E-maily'), icon: EmailIcon },
     { name: 'Tasks', label: __('Úkoly'), icon: TaskIcon },
     { name: 'Comments', label: __('Komentáře'), icon: CommentIcon },
     { name: 'Data', label: __('Data'), icon: DetailsIcon },
@@ -382,7 +383,6 @@ const editingDetails = ref(false)
 const showCall = ref(false)
 const callPerson = ref({})
 const showSchedule = ref(false)
-const showEmail = ref(false)
 const showWon = ref(false)
 const wonStatus = ref('')
 const sessionUser = sessionStore().user
@@ -414,9 +414,10 @@ function openContact() {
   if (doc.value.contact_person) router.push({ name: 'Contact', params: { contactId: doc.value.contact_person } })
   else openDetails(false)
 }
+const conversations = ref(null)
 function openEmail() {
   showDetails.value = false
-  showEmail.value = true
+  conversations.value?.openNew()
 }
 
 const nextStage = computed(() => {

@@ -503,6 +503,8 @@ const props = defineProps({
   doctype: { type: String, default: 'CRM Lead' },
   docname: { type: String, default: '' },
   tabs: { type: Array, default: () => [] },
+  // GrowUp (zadání 2027 E1): e-maily jsou v záložce Konverzace, v Záznamech se nevykreslují
+  hideEmails: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['beforeSave', 'afterSave'])
@@ -638,6 +640,8 @@ const activities = computed(() => {
   let _activities = []
   if (title.value == 'Activity') {
     _activities = get_activities()
+    if (props.hideEmails)
+      _activities = _activities.filter((a) => a.activity_type !== 'communication')
   } else if (title.value == 'Emails') {
     if (!all_activities.data?.versions) return []
     _activities = all_activities.data.versions.filter(

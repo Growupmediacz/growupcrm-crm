@@ -35,19 +35,28 @@
         </Dropdown>
       </div>
 
-      <div class="mt-4 rounded-2xl bg-[rgba(110,120,200,.1)] p-4">
-        <div class="mb-1 text-[12px] text-ink-gray-5">{{ whenLabel(current.sent_at) }}</div>
-        <div lang="cs" class="gl-text whitespace-pre-line text-[15px] leading-relaxed text-ink-gray-9">{{ plain(current.body) }}</div>
-      </div>
-      <div v-if="current.original" class="mt-3 rounded-2xl border border-dashed border-[rgba(110,120,200,.35)] p-4">
-        <div class="mb-1 text-[12px] text-ink-gray-5">{{ __('Vy') }} · {{ current.original.step }}. {{ __('e-mail') }} · {{ current.original.subject }}</div>
-        <div lang="cs" class="gl-text line-clamp-3 text-[14px] text-ink-gray-7">{{ plain(current.original.body) }}</div>
-      </div>
+      <!-- zadání 2027 E1: celé vlákno kampaně (GlThread) a odpověď stejným editorem jako u zakázky místo mailto: -->
+      <GlThread class="mt-4" :thread="thread.data" :loading="thread.loading" @reply="replyOpen = true">
+        <template #below>
+          <div v-if="replyOpen" class="mt-4">
+            <GlComposer
+              :key="current.name"
+              :draftKey="{ reference_doctype: 'CRM Lead', reference_name: current.lead || '', thread_id: 'outreach:' + current.name, local_id: 'outreach-' + current.name }"
+              :defaults="replyDefaults"
+              :outreachReply="current.name"
+              :title="__('Odpověď')"
+              :note="current.lead ? __('Odpověď se uloží k zakázce.') : __('Odesláním se založí zakázka (s firmou, kontaktem a vláknem), odpověď se uloží k ní.')"
+              @sent="replied"
+              @close="replyOpen = false"
+            />
+          </div>
+        </template>
+      </GlThread>
 
       <div class="mt-4 flex flex-wrap gap-2">
         <Button variant="solid" iconLeft="briefcase" :loading="busy === 'lead'" :disabled="!!current.lead" @click="createLead">{{ current.lead ? __('Zakázka založena') : __('Vytvořit zakázku') }}</Button>
         <Button iconLeft="calendar" @click="showEvent = true">{{ __('Naplánovat schůzku') }}</Button>
-        <a :href="mailto" class="inline-flex"><Button iconLeft="corner-up-left">{{ __('Odpovědět') }}</Button></a>
+        <Button iconLeft="corner-up-left" @click="replyOpen = true">{{ __('Odpovědět') }}</Button>
         <Button variant="subtle" theme="red" iconLeft="x" @click="unsub">{{ __('Odhlásit') }}</Button>
         <Button iconLeft="check" @click="resolve">{{ __('Vyřízeno') }}</Button>
       </div>
@@ -72,6 +81,9 @@
 import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlEmptyState from '@/components/GlEmptyState.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'
+import GlThread from '@/components/Email/GlThread.vue'
+import GlComposer from '@/components/Email/GlComposer.vue'
+import { replySubject } from '@/composables/glMail'
 import { api, avatarTone, initials, plain, REPLY_LABEL, whenLabel } from '@/composables/outreach'
 import { isMobileView } from '@/composables/settings'
 import { sessionStore } from '@/stores/session'
@@ -105,10 +117,27 @@ const tomorrow = computed(() => {
   d.setHours(10, 0, 0, 0)
   return d
 })
-const mailto = computed(() => {
+// vlákno odpovědi a editor (zadání 2027 E1)
+const replyOpen = ref(false)
+const thread = createResource({ url: 'growupcrm.mail_threads.outreach_thread' })
+watch(
+  () => current.value?.name,
+  (n) => {
+    replyOpen.value = false
+    if (n) thread.fetch({ name: n })
+  },
+  { immediate: true },
+)
+const replyDefaults = computed(() => {
   const r = current.value
-  return r ? `mailto:${r.email || ''}?subject=${encodeURIComponent('Re: ' + (r.original?.subject || ''))}` : '#'
+  const last = [...(thread.data?.messages || [])].reverse().find((m) => m.sent_or_received === 'Received')
+  return { to: r?.email ? [r.email] : [], subject: replySubject(last?.subject || r?.original?.subject || r?.subject || '') }
 })
+async function replied() {
+  replyOpen.value = false
+  await list.reload()
+  emit('changed')
+}
 const labelOptions = computed(() =>
   ['Zájem', 'Později', 'Automatická odpověď', 'Odmítnutí', ''].map((l) => ({
     label: l ? __(l) : __('Bez třídění'),

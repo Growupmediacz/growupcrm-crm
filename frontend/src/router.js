@@ -59,6 +59,13 @@ const routes = [
     component: () => import(`@/pages/${handleMobileView('Lead')}.vue`),
     props: true,
   },
+  // GrowUp (zadání 2027 E1): vlákno e-mailů zakázky přes celou obrazovku (telefon)
+  {
+    path: '/leads/:leadId/konverzace/:threadId',
+    name: 'GlMailThread',
+    component: () => import('@/pages/GlMailThread.vue'),
+    props: true,
+  },
   {
     alias: '/deals',
     path: '/deals/view/:viewType?',
