@@ -560,3 +560,8 @@ body.app-bg::before {
     min-height: 44px;
   }
 }
+
+/* zadání 2027 E3: nic klikacího pod 36 px ani na desktopu (přepínač Kanban / Seznam, segmenty) */
+.gl-seg-btn {
+  min-height: var(--hit-sm, 36px);
+}

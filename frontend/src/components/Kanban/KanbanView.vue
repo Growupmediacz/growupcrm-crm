@@ -2,26 +2,36 @@
   <!-- GrowUp (design 2. kolo, oprava 12): sloupce se posouvají, okraj s přechodem + šipka a ukazatel pozice -->
   <div class="relative flex h-full min-h-0 flex-col">
   <div ref="scroller" class="gl-kanban-scroll flex h-full overflow-x-auto" @scroll="measure">
+    <!-- GrowUp (zadání 2027 E3): pružná mřížka místo pevných 237 px; sbalené koncové fáze mají 64 px -->
     <Draggable
       v-if="columns"
       :list="columns"
       item-key="column"
       :delay="isTouchScreenDevice() ? 200 : 0"
-      class="flex mx-0 pb-3.5"
+      class="grid h-full min-h-0 min-w-0 flex-1 gap-3 pb-3.5"
+      :style="{ gridTemplateColumns: gridCols, gridTemplateRows: 'minmax(0,1fr)' }"
       @end="updateColumn"
     >
       <template #item="{ element: column }">
+        <GlKanbanColumnCollapsed
+          v-if="!column.column.delete && isCollapsed(column)"
+          :column="column"
+          :color="stageHex(column.column.color)"
+          :dragging="dragging"
+          @expand="setExpanded(column, true)"
+          @end="onDragEnd"
+        />
         <div
-          v-if="!column.column.delete"
-          class="gl3-lane flex flex-1 flex-col gap-3 min-w-[200px] p-3 mr-3"
+          v-else-if="!column.column.delete"
+          class="gl3-lane flex min-w-0 flex-col gap-3 p-3"
           :style="{ '--lane': stageHex(column.column.color) }"
         >
-          <div class="flex gap-2 items-center group justify-between">
-            <div class="flex items-center text-base">
+          <div class="group flex min-w-0 items-center gap-1.5">
+            <div class="flex min-w-0 items-center text-base">
               <Popover>
                 <template #target="{ togglePopover }">
                   <button
-                    class="flex size-7 items-center justify-center rounded-full hover:bg-surface-gray-2"
+                    class="gl-kb-hit flex size-9 shrink-0 items-center justify-center rounded-full hover:bg-surface-gray-2"
                     :aria-label="__('Barva sloupce')"
                     @click="togglePopover"
                   >
@@ -54,22 +64,34 @@
               </Popover>
               <div class="truncate text-[17px] font-semibold tracking-[-0.01em] text-ink-gray-9">{{ __(column.column.name) }}</div>
             </div>
-            <div class="flex">
-              <Dropdown :options="actions(column)">
-                <template #default>
-                  <Button
-                    class="opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity"
-                    icon="lucide-more-horizontal"
-                    variant="ghost"
-                  />
-                </template>
-              </Dropdown>
-            </div>
-          </div>
-          <!-- design 3. kolo: pod názvem „3 · 245 000 Kč“ -->
-          <div class="num -mt-2.5 pl-8 text-[14px] text-ink-gray-5">
-            {{ column.column.all_count }}<template v-if="column.column.sum !== undefined">
-              · {{ new Intl.NumberFormat('cs-CZ').format(column.column.sum) }} Kč</template>
+            <!-- počet a součet v jednom řádku s názvem -->
+            <span class="num shrink-0 text-[14px] font-semibold text-ink-gray-7">{{ column.column.all_count }}</span>
+            <span
+              v-if="column.column.sum !== undefined"
+              class="num ml-auto min-w-0 truncate whitespace-nowrap text-[13px] text-ink-gray-5"
+              :title="new Intl.NumberFormat('cs-CZ').format(column.column.sum) + ' Kč'"
+            >{{ shortSum(column.column.sum) }}</span>
+            <button
+              v-if="isTerminal(column)"
+              type="button"
+              class="gl-kb-hit flex size-9 shrink-0 items-center justify-center rounded-full text-ink-gray-5 hover:bg-surface-gray-2"
+              :class="column.column.sum === undefined && 'ml-auto'"
+              :aria-label="__('Sbalit')"
+              :title="__('Sbalit')"
+              @click="setExpanded(column, false)"
+            >
+              <span class="lucide-minimize-2 size-4" aria-hidden="true" />
+            </button>
+            <Dropdown :options="actions(column)">
+              <template #default>
+                <Button
+                  class="gl-kb-hit !size-9 shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 pointer-events-none group-hover:pointer-events-auto focus-visible:pointer-events-auto transition-opacity"
+                  :class="column.column.sum === undefined && !isTerminal(column) && 'ml-auto'"
+                  icon="lucide-more-horizontal"
+                  variant="ghost"
+                />
+              </template>
+            </Dropdown>
           </div>
           <div class="overflow-y-auto flex flex-col gap-2 h-full">
             <Draggable
@@ -83,7 +105,8 @@
               ghost-class="gl3-kghost"
               chosen-class="gl3-kchosen"
               :data-column="column.column.name"
-              @end="updateColumn"
+              @start="dragging = true"
+              @end="onDragEnd"
             >
               <template #item="{ element: fields }">
                 <component
@@ -147,7 +170,7 @@
             </Draggable>
             <button
               v-if="options.onNewClick"
-              class="gl3-kadd flex h-11 items-center justify-center gap-2 rounded-[14px] text-[15px] font-medium"
+              class="gl3-kadd flex h-11 shrink-0 items-center justify-center gap-2 rounded-[14px] text-[15px] font-medium"
               @click="options.onNewClick(column)"
             >
               <span class="lucide-plus size-4" aria-hidden="true" />
@@ -167,7 +190,7 @@
       </template>
     </Draggable>
     <!-- design 3. kolo: přidání skrytého sloupce jako malé kulaté „+“, ať se vejde 5 fází -->
-    <div class="shrink-0">
+    <div class="shrink-0 pl-2">
       <Combobox
         :model-value="null"
         :options="deletedColumns"
@@ -175,7 +198,7 @@
       >
         <template #trigger="{ open, setOpen }">
           <button
-            class="gl-round mr-2 mt-1 flex size-10 items-center justify-center rounded-full text-ink-gray-5"
+            class="gl-round mr-2 mt-1 flex size-11 items-center justify-center rounded-full text-ink-gray-5"
             :aria-label="__('Add Column')"
             :title="__('Add Column')"
             @click="setOpen(!open)"
@@ -231,6 +254,8 @@ import { stageHex } from '@/utils/glStage'
 import Draggable from 'vuedraggable'
 import { Combobox, Dropdown, Popover } from 'frappe-ui'
 import GlIcon from '@/components/GlIcon.vue'
+import GlKanbanColumnCollapsed from '@/components/Kanban/GlKanbanColumnCollapsed.vue'
+import { statusesStore } from '@/stores/statuses'
 import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 
 defineProps({
@@ -274,6 +299,52 @@ onMounted(() => {
 })
 onBeforeUnmount(() => ro?.disconnect())
 watch(() => kanban.value?.data, () => nextTick(measure))
+
+// GrowUp (zadání 2027 E3): sbalení koncových fází (Vyhráno, Prohráno), stav se pamatuje v prohlížeči
+const { getLeadStatus } = statusesStore()
+const STORE_KEY = 'gl-kanban-expanded'
+function loadExpanded() {
+  try {
+    return JSON.parse(localStorage.getItem(STORE_KEY) || '{}') || {}
+  } catch (e) {
+    return {}
+  }
+}
+const expanded = ref(loadExpanded())
+const dragging = ref(false)
+function isTerminal(column) {
+  const name = column.column.name
+  const type = getLeadStatus(name)?.type
+  if (type) return type === 'Won' || type === 'Lost'
+  return /vyhr|prohr|^won$|^lost$/i.test(name || '')
+}
+function isCollapsed(column) {
+  return isTerminal(column) && !expanded.value[column.column.name]
+}
+function setExpanded(column, value) {
+  expanded.value = { ...expanded.value, [column.column.name]: value }
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(expanded.value))
+  } catch (e) {
+    /* bez úložiště se stav jen nepamatuje */
+  }
+  nextTick(measure)
+}
+const gridCols = computed(() =>
+  (columns.value || [])
+    .filter((c) => !c.column.delete)
+    .map((c) => (isCollapsed(c) ? '64px' : 'minmax(0, 1fr)'))
+    .join(' '),
+)
+function shortSum(s) {
+  if (s >= 1e6) return `${(s / 1e6).toFixed(1).replace('.', ',')} mil. Kč`
+  if (s >= 1000) return `${Math.round(s / 1000)} tis. Kč`
+  return `${s} Kč`
+}
+function onDragEnd(e) {
+  dragging.value = false
+  updateColumn(e)
+}
 
 const titleField = computed(() => {
   return kanban.value?.data?.title_field
@@ -352,3 +423,16 @@ function updateColumn(d, fetchNewColumns = false) {
   emit('update', data)
 }
 </script>
+<style>
+/* GrowUp (zadání 2027 E3): cílové plochy v Kanbanu aspoň 36 px, na dotykových zařízeních 44 px */
+.gl-kb-hit {
+  min-width: 36px;
+  min-height: 36px;
+}
+@media (pointer: coarse) {
+  .gl-kb-hit {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+}
+</style>

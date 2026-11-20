@@ -2,8 +2,8 @@
   <!-- GrowUp: teplota zakázky (Horká / Teplá / Studená). S `editable` jde jedním klikem přepnout. -->
   <Dropdown v-if="editable" :options="options" placement="left">
     <button
-      class="gl-temp inline-flex items-center gap-1 rounded-full font-bold uppercase tracking-wide"
-      :class="[tone.cls, size === 'sm' ? 'h-5 px-2 text-[10.5px]' : 'h-7 px-3 text-[12px]']"
+      class="gl-temp inline-flex min-h-[36px] items-center gap-1 rounded-full font-bold uppercase tracking-wide"
+      :class="[tone.cls, size === 'sm' ? 'h-6 px-2 text-[13px]' : 'h-7 px-3 text-[13px]']"
       :aria-label="__('Teplota zakázky')"
       @click.stop
     >
@@ -14,7 +14,7 @@
   <span
     v-else-if="value"
     class="gl-temp inline-flex shrink-0 items-center rounded-full font-bold uppercase tracking-wide"
-    :class="[tone.cls, size === 'sm' ? 'h-5 px-2 text-[10.5px]' : 'h-7 px-3 text-[12px]']"
+    :class="[tone.cls, size === 'sm' ? 'h-6 px-2 text-[13px]' : 'h-7 px-3 text-[13px]']"
   >
     {{ __(value) }}
   </span>

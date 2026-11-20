@@ -16,6 +16,8 @@
       </Button>
     </template>
   </LayoutHeader>
+  <!-- GrowUp (zadání 2027 E3): řada filtrů se zalamuje (styl dole), nic se neořízne -->
+  <div class="gl-filter-row">
   <ViewControls
     ref="viewControls"
     v-model="leads"
@@ -29,6 +31,7 @@
       allowedViews: ['list', 'group_by', 'kanban'],
     }"
   />
+  </div>
   <div v-if="leads.loading && !leads.data" class="px-4 pt-2"><GlSkeleton :rows="6" /></div>
   <!-- GrowUp (design 2. kolo, opravy 22, 23, 28): mobil = karty a pipeline po fázích -->
   <GlMobileLeads
@@ -733,3 +736,24 @@ function after(d, isNew = false) {
   }
 }
 </script>
+<style>
+/* GrowUp (zadání 2027 E3): řada filtrů nad Kanbanem i Seznamem se zalamuje místo posunu a oříznutí */
+.gl-filter-row > .justify-between {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.gl-filter-row > .justify-between > .overflow-x-auto {
+  flex-wrap: wrap;
+  overflow: visible;
+  height: auto;
+  min-width: 0;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+.gl-filter-row > .justify-between > .border-l {
+  display: none;
+}
+.gl-filter-row > .justify-between > .flex.items-center.gap-2:last-child {
+  flex-shrink: 0;
+}
+</style>

@@ -27,7 +27,8 @@
     <div class="mt-1.5 flex items-center justify-between gap-2">
       <div v-if="lead.order_value" class="num text-[17px] font-bold text-ink-gray-9">{{ money }}</div>
       <!-- oprava 7: bez hodnoty nenápadné „+ hodnota“ (otevře detail s kartou Detaily v úpravách) -->
-      <button v-else class="text-[13px] font-medium text-ink-gray-4 hover:text-[var(--accent-600)]" @click.stop.prevent="fillValue">+ {{ __('hodnota') }}</button>
+      <!-- GrowUp (zadání 2027 E3): cíl aspoň 36 px (44 px na dotyku), vzhled zůstává malý -->
+      <button v-else class="gl-kb-hit -mx-2 inline-flex items-center px-2 text-[13px] font-medium text-ink-gray-5 hover:text-[var(--accent-600)]" @click.stop.prevent="fillValue">+ {{ __('hodnota') }}</button>
       <span class="flex shrink-0 items-center gap-1.5">
         <GlTemperature :value="lead.temperature" size="sm" />
         <UserAvatar v-if="lead.lead_owner" :user="lead.lead_owner" size="md" />

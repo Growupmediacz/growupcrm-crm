@@ -1,6 +1,7 @@
 <template>
   <!-- GrowUp: hlavička seznamu (design): nadpis, přepínač Kanban/Seznam, uložené pohledy. -->
-  <div class="flex min-w-0 items-center gap-3">
+  <!-- GrowUp (zadání 2027 E3): řada se zalamuje, nic se neořízne -->
+  <div class="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
     <router-link :to="{ name: routeName }" class="gl-page-title text-lg-medium shrink-0 text-ink-gray-9">
       {{ title }}
     </router-link>
