@@ -13,7 +13,7 @@
           <GlIcon name="list" :size="16" />
         </button>
       </div>
-      <Button v-if="data?.is_manager" variant="solid" iconLeft="plus" @click="showNew = true">
+      <Button v-if="data?.is_manager" variant="solid" iconLeft="plus" class="max-md:!h-11 max-md:!min-w-11" @click="showNew = true">
         <span class="hidden sm:inline">{{ __('Nový klient') }}</span>
       </Button>
     </template>
@@ -25,14 +25,15 @@
   <div v-else class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
     <!-- design 3. kolo (16): ikona a název v řádku, velké číslo přes celou šířku; na užší obrazovce 2 × 2 -->
     <div class="grid grid-cols-2 gap-3 md:gap-4 xl:grid-cols-4">
-      <div v-for="(k, i) in cards" :key="k.label" class="gl-card flex min-w-0 flex-col gap-2 p-4 md:p-5">
-        <div class="flex min-w-0 items-center gap-3">
-          <span class="gl3-kpi-icon shrink-0" :class="`gl3-tone-${KPI_ICONS[i]?.[1] || 'gray'}`"><GlIcon :name="KPI_ICONS[i]?.[0] || 'chart'" :size="22" /></span>
-          <span class="line-clamp-2 min-w-0 flex-1 text-[16px] font-semibold leading-snug text-ink-gray-9">{{ k.label }}</span>
+      <div v-for="(k, i) in cards" :key="k.label" class="gl-card flex min-w-0 flex-col gap-2 p-3.5 md:p-5">
+        <div class="flex min-w-0 items-center gap-2 md:gap-3">
+          <span class="gl3-kpi-icon shrink-0 max-md:hidden" :class="`gl3-tone-${KPI_ICONS[i]?.[1] || 'gray'}`"><GlIcon :name="KPI_ICONS[i]?.[0] || 'chart'" :size="22" /></span>
+          <span class="line-clamp-2 min-w-0 flex-1 text-[15px] font-semibold leading-snug text-ink-gray-9 md:text-[16px]">{{ k.label }}</span>
           <span v-if="k.badge" class="shrink-0 rounded-full bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] px-2.5 py-0.5 text-[13px] font-semibold text-[var(--accent-700)]">{{ k.badge }}</span>
         </div>
-        <div class="num truncate text-[34px] font-bold leading-tight tracking-tight md:text-[44px]" :class="i === 3 && k.value ? 'text-[#e5484d]' : 'text-ink-gray-9'">{{ k.value }}</div>
-        <div class="truncate text-[15px] text-ink-gray-5">{{ k.sub }}</div>
+        <!-- telefon: zkrácená částka („66 tis. Kč“), celá hodnota v title; sloupec 2 × 2 je úzký -->
+        <div class="num break-words text-[26px] font-bold leading-tight tracking-tight tabular-nums md:truncate md:text-[44px]" :class="i === 3 && k.value ? 'text-[#e5484d]' : 'text-ink-gray-9'" :title="k.full" :aria-label="k.full">{{ k.value }}</div>
+        <div class="line-clamp-2 text-[14px] leading-snug text-ink-gray-5 md:truncate md:text-[15px]">{{ k.sub }}</div>
       </div>
     </div>
 
@@ -42,41 +43,41 @@
     </div>
 
     <!-- karty -->
-    <div v-if="layout === 'cards'" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-      <div v-for="c in data?.clients || []" :key="c.name" class="gl-card gl-lift flex flex-col gap-4 p-5">
+    <div v-if="effectiveLayout === 'cards'" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div v-for="c in data?.clients || []" :key="c.name" class="gl-card gl-lift flex min-w-0 flex-col gap-4 p-4 md:p-5">
         <div class="flex items-start gap-3">
           <img v-if="c.organization_logo" :src="c.organization_logo" class="size-12 shrink-0 rounded-2xl bg-white object-contain p-1.5" />
           <span v-else class="flex size-12 shrink-0 items-center justify-center rounded-2xl text-[15px] font-bold" :class="tone(c.organization_name)">
             {{ initials(c.organization_name) }}
           </span>
-          <router-link :to="{ name: 'Organization', params: { organizationId: c.name } }" class="min-w-0 flex-1">
-            <div class="truncate text-[17px] font-bold text-ink-gray-9 hover:text-[var(--accent-600)]">{{ c.organization_name || c.name }}</div>
+          <router-link :to="{ name: 'Organization', params: { organizationId: c.name } }" class="flex min-h-11 min-w-0 flex-1 flex-col justify-center">
+            <div class="line-clamp-2 break-words text-[17px] font-bold leading-snug text-ink-gray-9 hover:text-[var(--accent-600)] md:truncate">{{ c.organization_name || c.name }}</div>
             <div class="text-[13px] text-ink-gray-5">{{ sinceLabel(c.client_since) }}</div>
           </router-link>
           <Dropdown :options="menu(c)" placement="right">
-            <button class="flex size-8 items-center justify-center rounded-full text-ink-gray-5 hover:bg-white/70" :aria-label="__('Další akce')">
+            <button class="flex size-11 shrink-0 items-center justify-center rounded-full text-ink-gray-5 hover:bg-white/70 md:size-8" :aria-label="__('Další akce')">
               <GlIcon name="more" :size="18" />
             </button>
           </Dropdown>
         </div>
-        <div class="flex items-center gap-2 text-[15px]">
-          <span class="size-2.5 shrink-0 rounded-full" :style="{ background: HEALTH_COLORS[c.health] }" />
-          <span class="truncate" :class="c.health === 'V pořádku' ? 'text-ink-gray-9' : c.health === 'Ohrožený' ? 'text-[#c8321f]' : 'text-[#c77700]'">{{ __(c.health) }}<template v-if="c.health_note"> – <span class="text-[#c8321f]">{{ c.health_note }}</span></template></span>
+        <div class="flex min-h-6 items-start gap-2 text-[15px]">
+          <span class="mt-1.5 size-2.5 shrink-0 rounded-full" :style="{ background: HEALTH_COLORS[c.health] }" />
+          <span class="min-w-0 break-words" :class="c.health === 'V pořádku' ? 'text-ink-gray-9' : c.health === 'Ohrožený' ? 'text-[#c8321f]' : 'text-[#c77700]'">{{ __(c.health) }}<template v-if="c.health_note"> – <span class="text-[#c8321f]">{{ c.health_note }}</span></template></span>
         </div>
         <!-- design 16: ikona, popisek nad číslem, bez retaineru „—“ -->
         <div class="grid grid-cols-2 gap-2">
           <div class="flex items-start gap-2.5 rounded-2xl bg-[rgba(110,120,200,.075)] px-3 py-3">
             <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/70 text-[var(--accent-600)]"><GlIcon name="card" :size="16" /></span>
-            <span class="min-w-0"><span class="block text-[12.5px] text-ink-gray-5">{{ __('měsíčně') }}</span><span class="num block truncate text-[18px] font-bold text-ink-gray-9">{{ c.monthly ? money(c.monthly) : '—' }}</span></span>
+            <span class="min-w-0"><span class="block text-[13px] text-ink-gray-5 md:text-[12.5px]">{{ __('měsíčně') }}</span><span class="num block truncate text-[18px] font-bold text-ink-gray-9 tabular-nums" :title="c.monthly ? money(c.monthly) : ''">{{ c.monthly ? (isPhone ? moneyCompact(c.monthly) : money(c.monthly)) : '—' }}</span></span>
           </div>
-          <router-link :to="{ name: 'Projects' }" class="flex items-start gap-2.5 rounded-2xl bg-[rgba(110,120,200,.075)] px-3 py-3 hover:bg-[rgba(110,120,200,.12)]">
+          <router-link :to="{ name: 'Projects' }" class="flex min-h-11 items-start gap-2.5 rounded-2xl bg-[rgba(110,120,200,.075)] px-3 py-3 hover:bg-[rgba(110,120,200,.12)]">
             <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/70 text-[var(--accent-600)]"><GlIcon name="folder" :size="16" /></span>
-            <span class="min-w-0"><span class="block text-[12.5px] text-ink-gray-5">{{ __('aktivní projekty') }}</span><span class="num block text-[18px] font-bold text-ink-gray-9">{{ c.projects }}</span></span>
+            <span class="min-w-0"><span class="block text-[13px] text-ink-gray-5 md:text-[12.5px]">{{ __('aktivní projekty') }}</span><span class="num block text-[18px] font-bold text-ink-gray-9">{{ c.projects }}</span></span>
           </router-link>
         </div>
-        <div class="flex items-center gap-2 rounded-2xl border border-[var(--line)] px-3 py-2 text-[14px] text-ink-gray-7">
+        <div class="flex min-h-11 items-center gap-2 rounded-2xl border border-[var(--line)] px-3 py-2 text-[14px] text-ink-gray-7">
           <GlIcon name="cal" :size="16" class="shrink-0 text-ink-gray-5" />
-          <span class="min-w-0 flex-1 truncate">{{ c.next_event ? `${c.next_event.title} · ${shortDate(c.next_event.at)}` : __('Nic naplánovaného') }}</span>
+          <span class="min-w-0 flex-1 break-words md:truncate">{{ c.next_event ? `${c.next_event.title} · ${shortDate(c.next_event.at)}` : __('Nic naplánovaného') }}</span>
           <span class="flex -space-x-1.5">
             <GlUserAvatar v-for="u in c.team" :key="u" :user="u" class="size-8 border-2 border-white bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" />
           </span>
@@ -85,7 +86,7 @@
     </div>
 
     <!-- seznam -->
-    <div v-else class="gl-card overflow-x-auto p-2">
+    <div v-else class="gl-card overflow-x-auto p-2 max-md:hidden">
       <table class="w-full min-w-[640px] text-left text-[14px]">
         <thead class="text-[12px] font-bold text-ink-gray-5">
           <tr>
@@ -161,6 +162,7 @@ import GlNewProjectModal from '@/components/Modals/GlNewProjectModal.vue'
 import { sessionStore } from '@/stores/session'
 import { usersStore } from '@/stores/users'
 import { Button, Dialog, Dropdown, FormControl, call, createResource, toast, usePageMeta } from 'frappe-ui'
+import { isPhone } from '@/composables/glBreakpoint'
 import { useStorage } from '@vueuse/core'
 import { computed, h, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -171,6 +173,8 @@ const { getUser } = usersStore()
 const sessionUser = sessionStore().user
 
 const layout = useStorage('glClientsLayout', 'cards')
+// telefon: vždy karty (tabulka s min. šířkou 640 px by se posouvala vodorovně a přepínač je na telefonu schovaný)
+const effectiveLayout = computed(() => (isPhone.value ? 'cards' : layout.value))
 const overview = createResource({ url: 'growupcrm.clients.get_overview', auto: true })
 const data = computed(() => overview.data)
 const errorText = computed(() => overview.error?.messages?.[0] || __('Klienty se nepodařilo načíst.'))
@@ -178,6 +182,8 @@ const errorText = computed(() => overview.error?.messages?.[0] || __('Klienty se
 const HEALTH_COLORS = { 'V pořádku': '#22b35e', 'Potřebuje pozornost': '#e0a100', 'Ohrožený': '#e5484d' }
 
 const money = (n) => `${new Intl.NumberFormat('cs-CZ').format(Math.round(n || 0))} Kč`
+const compact = new Intl.NumberFormat('cs-CZ', { notation: 'compact', maximumFractionDigits: 1 })
+const moneyCompact = (n) => `${compact.format(Math.round(n || 0))} Kč`
 const thousands = (n) => (n >= 1000 ? `${new Intl.NumberFormat('cs-CZ').format(Math.round(n / 1000))} tis.` : String(n))
 const cards = computed(() => {
   const k = data.value?.kpis
@@ -187,7 +193,8 @@ const cards = computed(() => {
     { label: __('Aktivní klienti'), value: k.clients, sub: __('z toho {0} na retaineru', [k.on_retainer]) },
     {
       label: __('Měsíčně z retainerů'),
-      value: money(k.monthly),
+      value: isPhone.value ? moneyCompact(k.monthly) : money(k.monthly),
+      full: money(k.monthly),
       badge: k.monthly_new ? `↗ ${thousands(k.monthly_new)}` : '',
       sub: `${k.on_retainer} ${word(k.on_retainer, __('klient'), __('klienti'), __('klientů'))}`,
     },

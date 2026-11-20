@@ -11,7 +11,7 @@
       <Button iconLeft="refresh-cw" class="hidden md:inline-flex" @click="showOrganizationModal = true">
         {{ __('Načíst z ARES') }}
       </Button>
-      <Button variant="solid" iconLeft="plus" @click="showOrganizationModal = true">
+      <Button variant="solid" iconLeft="plus" class="max-md:!h-11 max-md:!min-w-11" @click="showOrganizationModal = true">
         <span class="hidden sm:inline">{{ __('Nová firma') }}</span>
       </Button>
     </template>
@@ -24,8 +24,16 @@
     v-model:updatedPageCount="updatedPageCount"
     doctype="CRM Organization"
   />
+  <!-- telefon: karty místo tabulky (bez zaškrtávátek a vodorovného posunu); hledání, filtr a řazení zůstávají ve ViewControls -->
+  <div v-if="isPhone && organizations.data && rows.length" class="flex min-w-0 flex-col gap-2 overflow-x-hidden px-3 pb-6 pt-2">
+    <GlFirmaCard v-for="row in rows" :key="row.name" :row="row" />
+    <div v-if="organizations.data.row_count < organizations.data.total_count" class="flex flex-col items-center gap-1 pt-2">
+      <span class="text-[13px] text-ink-gray-5">{{ organizations.data.row_count }} / {{ organizations.data.total_count }}</span>
+      <Button class="!h-11 w-full" @click="loadMore++">{{ __('Načíst další') }}</Button>
+    </div>
+  </div>
   <OrganizationsListView
-    v-if="organizations.data && rows.length"
+    v-else-if="organizations.data && rows.length"
     ref="organizationsListView"
     v-model="organizations.data.page_length_count"
     v-model:list="organizations"
@@ -64,6 +72,8 @@ import CustomActions from '@/components/CustomActions.vue'
 import OrganizationsIcon from '@/components/Icons/OrganizationsIcon.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import OrganizationModal from '@/components/Modals/OrganizationModal.vue'
+import GlFirmaCard from '@/components/Firma/GlFirmaCard.vue'
+import { isPhone } from '@/composables/glBreakpoint'
 import OrganizationsListView from '@/components/ListViews/OrganizationsListView.vue'
 import ViewControls from '@/components/ViewControls.vue'
 import { getMeta } from '@/stores/meta'

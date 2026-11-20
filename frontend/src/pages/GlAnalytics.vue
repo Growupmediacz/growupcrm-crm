@@ -25,7 +25,7 @@
       <div v-if="!isMobileView" class="gl-seg inline-flex">
         <button v-for="o in GRAINS" :key="o.value" class="gl-seg-btn !px-5" :class="grain === o.value && 'gl-seg-on !bg-[var(--accent-600)] !text-white'" @click="setGrain(o.value)">{{ o.label }}</button>
       </div>
-      <Button iconLeft="download" :disabled="!data?.won_rows?.length" @click="exportCsv">
+      <Button iconLeft="download" class="max-md:!h-11 max-md:!min-w-11" :disabled="!data?.won_rows?.length" @click="exportCsv">
         <span class="hidden sm:inline">{{ __('Export') }}</span>
       </Button>
     </template>
@@ -36,46 +36,47 @@
   <div v-else-if="!res.data" class="px-3 md:px-2"><GlSkeleton :rows="5" /></div>
   <div v-else class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
     <!-- oprava 26: na mobilu přepínač Měsíc / Čtvrtletí / Rok na celou šířku pod nadpisem -->
-    <div v-if="isMobileView" class="gl-seg flex w-full">
-      <button v-for="o in GRAINS" :key="o.value" class="gl-seg-btn flex-1 justify-center" :class="grain === o.value && 'gl-seg-on'" @click="setGrain(o.value)">{{ o.label }}</button>
+    <div v-if="isMobileView" class="gl-seg flex w-full flex-wrap">
+      <button v-for="o in GRAINS" :key="o.value" class="gl-seg-btn min-h-11 flex-1 justify-center" :class="grain === o.value && 'gl-seg-on'" @click="setGrain(o.value)">{{ o.label }}</button>
     </div>
     <!-- filtry v jedné řadě nad grafy -->
     <div v-if="isMobileView || custom" class="flex flex-wrap items-center gap-2">
       <template v-if="isMobileView">
       <Dropdown :options="periodMenu">
-        <button class="gl-chip flex h-9 items-center gap-1.5 rounded-full px-3.5 text-[14px]">
+        <button class="gl-chip flex min-h-11 max-w-full items-center gap-1.5 rounded-full px-3.5 text-[14px] md:h-9 md:min-h-0">
           <span class="opacity-75">{{ __('Období') }}:</span><b class="font-semibold">{{ periodLabel }}</b>
           <span class="lucide-chevron-down size-4 opacity-60" aria-hidden="true" />
         </button>
       </Dropdown>
       <Dropdown :options="userMenu">
-        <button class="gl-chip flex h-9 items-center gap-1.5 rounded-full px-3.5 text-[14px]" :class="user && 'gl-chip-on'">
+        <button class="gl-chip flex min-h-11 max-w-full items-center gap-1.5 rounded-full px-3.5 text-[14px] md:h-9 md:min-h-0" :class="user && 'gl-chip-on'">
           <span class="opacity-75">{{ __('Obchodník') }}:</span><b class="font-semibold">{{ user ? userName(user) : __('Celý tým') }}</b>
           <span class="lucide-chevron-down size-4 opacity-60" aria-hidden="true" />
         </button>
       </Dropdown>
       </template>
-      <span v-if="custom" class="flex items-center gap-2 text-[14px]">
-        <input v-model="customStart" type="date" class="h-9 px-3" />–<input v-model="customEnd" type="date" class="h-9 px-3" />
-        <Button variant="solid" :label="__('Použít')" @click="applyCustom" />
+      <span v-if="custom" class="flex flex-wrap items-center gap-2 text-[14px]">
+        <input v-model="customStart" type="date" class="h-11 min-w-0 px-3 md:h-9" />–<input v-model="customEnd" type="date" class="h-11 min-w-0 px-3 md:h-9" />
+        <Button variant="solid" class="max-md:!h-11" :label="__('Použít')" @click="applyCustom" />
       </span>
     </div>
 
     <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
       <!-- design 3. kolo (20): tučný název, velké číslo, popisek; trend jako štítek vpravo -->
-      <div v-for="k in kpis" :key="k.label" class="gl-card flex min-w-0 flex-col gap-1.5 p-5 md:p-6">
+      <div v-for="k in kpis" :key="k.label" class="gl-card flex min-w-0 flex-col gap-1.5 p-4 md:p-6">
         <div class="flex items-center justify-between gap-2">
-          <span class="truncate text-[17px] font-semibold text-ink-gray-9">{{ k.label }}</span>
+          <span class="line-clamp-2 min-w-0 text-[15px] font-semibold leading-snug text-ink-gray-9 md:text-[17px]">{{ k.label }}</span>
           <span v-if="k.badge" class="shrink-0 rounded-full px-2.5 py-0.5 text-[13px] font-semibold" :class="k.badgeUp ? 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]' : 'bg-[rgba(229,72,77,.12)] text-[#a82614]'">{{ k.badge }}</span>
         </div>
-        <div class="num truncate text-[34px] font-bold leading-tight tracking-tight text-ink-gray-9 md:text-[48px]">{{ k.value }}</div>
-        <div class="truncate text-[15px] text-ink-gray-5">{{ k.sub }}</div>
+        <!-- telefon: zkrácená čísla (66 tis.), celá hodnota v title; číslice stejně široké -->
+        <div class="num break-words text-[26px] font-bold leading-tight tracking-tight text-ink-gray-9 tabular-nums md:truncate md:text-[48px]" :title="k.full" :aria-label="k.full">{{ k.value }}</div>
+        <div class="line-clamp-2 text-[14px] leading-snug text-ink-gray-5 md:truncate md:text-[15px]">{{ k.sub }}</div>
       </div>
     </div>
 
     <div class="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
       <!-- tržby po měsících: jedna řada, aktuální měsíc zvýrazněný -->
-      <div class="gl-card p-6">
+      <div class="gl-card min-w-0 p-4 md:p-6">
         <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Tržby po měsících') }}</h2>
         <div class="text-[13px] text-ink-gray-5">{{ __('tis. Kč · zvýrazněn poslední měsíc období') }}</div>
         <!-- oprava 26: prázdný stav místo prázdného grafu -->
@@ -83,20 +84,20 @@
           <span class="flex size-14 items-center justify-center rounded-2xl bg-[rgba(110,120,200,.12)] text-ink-gray-7"><GlIcon name="chart" :size="26" /></span>
           <div class="text-[18px] font-bold text-ink-gray-9">{{ __('Zatím žádné vyhrané zakázky') }}</div>
           <p class="max-w-[300px] text-[14px] text-ink-gray-5">{{ __('Graf tržeb se ukáže po první výhře v tomto období. Zkuste jiné období.') }}</p>
-          <div class="flex gap-2">
-            <button class="gl-quick" @click="setGrain('year')">{{ __('Celý rok') }}</button>
-            <router-link :to="{ name: 'Leads' }" class="inline-flex h-9 items-center rounded-full bg-[var(--accent-600)] px-4 text-[14px] font-semibold text-white shadow-[0_6px_16px_-6px_rgba(91,91,246,.6)]">{{ __('Zakázky') }}</router-link>
+          <div class="flex flex-wrap justify-center gap-2">
+            <button class="gl-quick min-h-11 md:min-h-0" @click="setGrain('year')">{{ __('Celý rok') }}</button>
+            <router-link :to="{ name: 'Leads' }" class="inline-flex min-h-11 items-center rounded-full bg-[var(--accent-600)] px-4 md:h-9 md:min-h-0 text-[14px] font-semibold text-white shadow-[0_6px_16px_-6px_rgba(91,91,246,.6)]">{{ __('Zakázky') }}</router-link>
           </div>
         </div>
-        <div v-else class="relative mt-4 flex h-[230px] items-end gap-3 border-b border-[rgba(110,120,200,.18)] px-2">
+        <div v-else class="relative mt-4 flex h-[230px] items-end gap-1.5 border-b md:gap-3 border-[rgba(110,120,200,.18)] px-2">
           <div
             v-for="(m, i) in data?.by_month || []"
             :key="m.month"
-            class="group relative flex h-full flex-1 flex-col items-center justify-end"
+            class="group relative flex h-full min-w-0 flex-1 flex-col items-center justify-end"
             @mouseenter="hoverBar = i"
             @mouseleave="hoverBar = null"
           >
-            <span class="num mb-1 text-[13px] font-bold text-ink-gray-9">{{ k(m.value) }}</span>
+            <span class="num mb-1 max-w-full truncate text-[13px] font-bold text-ink-gray-9">{{ k(m.value) }}</span>
             <div
               class="w-full max-w-[46px] rounded-t-[4px] transition-all duration-500"
               :class="i === lastIndex ? 'bg-[var(--accent-600)]' : 'bg-[#c7c9f6] group-hover:bg-[#a5a8f0]'"
@@ -107,18 +108,18 @@
             </div>
           </div>
         </div>
-        <div v-if="hasRevenue" class="mt-2 flex gap-3 px-2">
-          <span v-for="m in data?.by_month || []" :key="m.month" class="flex-1 text-center text-[12px] text-ink-gray-5">{{ m.label }}</span>
+        <div v-if="hasRevenue" class="mt-2 flex gap-1.5 px-2 md:gap-3">
+          <span v-for="m in data?.by_month || []" :key="m.month" class="min-w-0 flex-1 truncate text-center text-[13px] text-ink-gray-5 md:text-[12px]">{{ m.label }}</span>
         </div>
       </div>
 
       <!-- trychtýř -->
-      <div class="gl-card p-6">
+      <div class="gl-card min-w-0 p-4 md:p-6">
         <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Trychtýř') }}</h2>
         <div class="text-[13px] text-ink-gray-5">{{ __('kolik zakázek z období dosáhlo aspoň dané fáze') }}</div>
         <div class="mt-4 flex flex-col gap-2.5">
           <div v-for="(f, i) in data?.funnel || []" :key="f.stage" class="flex items-center gap-3" :title="`${__(f.stage)}: ${f.count}`">
-            <span class="w-36 shrink-0 truncate text-[14px] text-ink-gray-9">{{ __(f.stage) }}</span>
+            <span class="w-24 shrink-0 text-[14px] leading-tight text-ink-gray-9 md:w-36 md:truncate">{{ __(f.stage) }}</span>
             <span class="h-3.5 flex-1 rounded-full bg-[rgba(110,120,200,.1)]">
               <span class="block h-full rounded-full" :style="{ width: `${funnelWidth(f.count)}%`, background: FUNNEL[i] || FUNNEL[FUNNEL.length - 1], minWidth: f.count ? '4px' : '0' }" />
             </span>
@@ -130,35 +131,35 @@
 
     <div class="grid gap-4 lg:grid-cols-[1.15fr_1fr_1.2fr]">
       <!-- design 3. kolo (20): zdroje jako sloupce, nejčastější zvýrazněný -->
-      <div class="gl-card p-6">
+      <div class="gl-card min-w-0 p-4 md:p-6">
         <h2 class="text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Zdroje zakázek') }}</h2>
         <div class="text-[13px] text-ink-gray-5">{{ __('vyhrané a otevřené v období') }}</div>
         <GlEmptyState v-if="!data?.sources?.length" class="mt-4" icon="brief" :title="__('Žádné zakázky v období')" :text="__('Zkuste delší období.')" />
         <template v-else>
-          <div class="mt-4 flex h-[150px] items-end gap-3 border-b border-[rgba(110,120,200,.18)] px-1">
+          <div class="mt-4 flex h-[150px] items-end gap-1.5 border-b md:gap-3 border-[rgba(110,120,200,.18)] px-1">
             <div v-for="(s, i) in data.sources.slice(0, 5)" :key="s.source" class="flex h-full flex-1 flex-col items-center justify-end" :title="`${__(s.source)}: ${s.count}`">
               <span class="num mb-1 text-[14px] font-semibold text-ink-gray-9">{{ s.count }}</span>
               <div class="w-full max-w-[64px] rounded-t-[6px]" :class="i === 0 ? 'bg-[var(--accent-600)]' : 'bg-[#c7c9f6]'" :style="{ height: `${(s.count * 100) / maxSource}%`, minHeight: '4px' }" />
             </div>
           </div>
-          <div class="mt-2 flex gap-3 px-1">
-            <span v-for="s in data.sources.slice(0, 5)" :key="s.source" class="flex-1 truncate text-center text-[13px] text-ink-gray-6">{{ __(s.source) }}</span>
+          <div class="mt-2 flex gap-1.5 px-1 md:gap-3">
+            <span v-for="s in data.sources.slice(0, 5)" :key="s.source" class="min-w-0 flex-1 truncate text-center text-[13px] text-ink-gray-6">{{ __(s.source) }}</span>
           </div>
         </template>
       </div>
       <!-- reakční doba: průměr, lhůta a podíl v limitu; podrobnosti níž -->
-      <div class="gl-card flex flex-col p-6">
+      <div class="gl-card flex min-w-0 flex-col p-4 md:p-6">
         <h2 class="text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Reakční doba') }}</h2>
         <template v-if="data?.response?.count">
-          <div class="num mt-3 text-[56px] font-bold leading-none tracking-tight text-ink-gray-9">{{ hoursOf(data.response.avg) }}</div>
+          <div class="num mt-3 text-[44px] font-bold leading-none md:text-[56px] tracking-tight text-ink-gray-9">{{ hoursOf(data.response.avg) }}</div>
           <div class="mt-2 text-[16px] text-ink-gray-5">{{ __('cíl {0} pracovní hodiny', [String(data.response.hours ?? 4).replace('.', ',')]) }}</div>
-          <span v-if="data.response.on_time_pct !== null" class="mt-4 inline-flex w-fit items-center gap-2 rounded-full px-3.5 py-1.5 text-[15px] font-semibold" :class="data.response.on_time_pct >= 80 ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[rgba(224,161,0,.16)] text-[#7a4400]'">
+          <span v-if="data.response.on_time_pct !== null" class="mt-4 inline-flex w-fit max-w-full flex-wrap items-center gap-2 rounded-full px-3.5 py-1.5 text-[15px] font-semibold" :class="data.response.on_time_pct >= 80 ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[rgba(224,161,0,.16)] text-[#7a4400]'">
             <GlIcon :name="data.response.on_time_pct >= 80 ? 'check' : 'alert'" :size="16" />{{ __('V limitu') }} {{ data.response.on_time_pct }} %
           </span>
         </template>
         <GlEmptyState v-else class="mt-2" icon="clock" :title="__('Zatím bez dat')" :text="__('Měří se příchozí zakázky z webu, formulářů a Facebooku.')" />
       </div>
-      <div class="gl-card p-6">
+      <div class="gl-card min-w-0 p-4 md:p-6">
         <h2 class="mb-3 text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Nejlepší klienti') }}</h2>
         <GlEmptyState v-if="!data?.clients?.length" icon="star" :title="__('Zatím žádná výhra')" :text="__('Nejlepší klienti se ukážou po první vyhrané zakázce v období.')" />
         <component
@@ -166,14 +167,14 @@
           v-for="c in data?.clients || []"
           :key="c.name"
           :to="c.organization ? { name: 'Organization', params: { organizationId: c.organization } } : undefined"
-          class="flex items-center gap-3 rounded-2xl py-2"
+          class="flex min-h-14 items-center gap-3 rounded-2xl py-2"
         >
-          <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#efe7ff] text-[12px] font-bold text-[#6d3fd0]">{{ initials(c.name) }}</span>
+          <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#efe7ff] text-[13px] font-bold text-[#6d3fd0]">{{ initials(c.name) }}</span>
           <span class="min-w-0 flex-1">
-            <span class="block truncate text-[15px] font-semibold text-ink-gray-9">{{ c.name }}</span>
-            <span class="block text-[12.5px] text-ink-gray-5">{{ clientSub(c) }}</span>
+            <span class="line-clamp-2 break-words text-[15px] font-semibold leading-snug text-ink-gray-9">{{ c.name }}</span>
+            <span class="block text-[13px] text-ink-gray-5">{{ clientSub(c) }}</span>
           </span>
-          <span class="num text-[16px] font-bold text-ink-gray-9">{{ money(c.value) }}</span>
+          <span class="num shrink-0 whitespace-nowrap text-[16px] font-bold text-ink-gray-9 tabular-nums" :title="money(c.value)">{{ isPhone ? moneyCompact(c.value) : money(c.value) }}</span>
         </component>
       </div>
     </div>
@@ -192,6 +193,7 @@ import GlForbidden from '@/components/GlForbidden.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import { isMobileView } from '@/composables/settings'
+import { isPhone } from '@/composables/glBreakpoint'
 import { usersStore } from '@/stores/users'
 import { Button, Dropdown, createResource, usePageMeta } from 'frappe-ui'
 import { computed, ref } from 'vue'
@@ -282,7 +284,11 @@ const userName = (u) => getUser(u)?.full_name || u
 
 const money = (n) => `${new Intl.NumberFormat('cs-CZ').format(Math.round(n || 0))} Kč`
 const k = (n) => new Intl.NumberFormat('cs-CZ').format(Math.round((n || 0) / 1000))
-const thousandsLabel = (n) => (n >= 1000 ? `${k(n)} tis.` : String(Math.round(n || 0)))
+// telefon: zkrácený zápis velkých částek („66 tis.“, „1,2 mil.“), jinak celé tisíce jako dřív
+const compact = new Intl.NumberFormat('cs-CZ', { notation: 'compact', maximumFractionDigits: 1 })
+const moneyCompact = (n) => `${compact.format(Math.round(n || 0))} Kč`
+const thousandsLabel = (n) => (isPhone.value ? compact.format(Math.round(n || 0)) : thousandsFull(n))
+const thousandsFull = (n) => (n >= 1000 ? `${k(n)} tis.` : String(Math.round(n || 0)))
 const kpis = computed(() => {
   const x = data.value?.kpis
   if (!x) return []
@@ -292,12 +298,13 @@ const kpis = computed(() => {
     {
       label: __('Tržby'),
       value: thousandsLabel(x.revenue),
+      full: money(x.revenue),
       badge: x.revenue_delta === null ? '' : `${x.revenue_delta >= 0 ? '↗' : '↘'} ${Math.abs(x.revenue_delta)} %`,
       badgeUp: x.revenue_delta >= 0,
       sub: `Kč · ${months(s)} – ${months(e)}`,
     },
     { label: __('Úspěšnost'), value: x.success === null ? __('Bez dat') : `${x.success} %`, sub: __('vyhráno {0} z {1} založených', [x.won, x.created]) },
-    { label: __('Průměrná zakázka'), value: thousandsLabel(x.avg_value), sub: __('Kč · vyhrané zakázky') },
+    { label: __('Průměrná zakázka'), value: thousandsLabel(x.avg_value), full: money(x.avg_value), sub: __('Kč · vyhrané zakázky') },
     { label: __('Délka obchodu'), value: x.cycle_days === null ? __('Bez dat') : __('{0} dní', [x.cycle_days]), sub: __('od založení po výhru') },
   ]
 })
