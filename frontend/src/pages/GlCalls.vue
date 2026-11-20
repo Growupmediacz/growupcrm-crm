@@ -14,49 +14,50 @@
     </LayoutHeader>
     <div v-if="res.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Hovory se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" /></div>
     <div v-else-if="!k" class="px-3 md:px-2"><GlSkeleton :rows="4" /></div>
-    <div v-else class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
+    <div v-else class="flex flex-col gap-4 px-3 pb-6 md:px-2">
       <!-- mobil (R2MHovory): bez souhrnu, nahoře Moje / Celý tým na celou šířku -->
       <div v-if="isMobileView && res.data?.is_manager" class="gl-seg flex w-full shrink-0">
         <button class="gl-seg-btn flex-1 justify-center" :class="scope === 'mine' && 'gl-seg-on'" @click="scope = 'mine'">{{ __('Moje') }}</button>
         <button class="gl-seg-btn flex-1 justify-center" :class="scope === 'team' && 'gl-seg-on'" @click="scope = 'team'">{{ __('Celý tým') }}</button>
       </div>
       <div class="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4" :class="isMobileView && 'hidden'">
-        <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-600)]"><GlIcon name="phone" :size="22" /></span><div class="min-w-0"><div class="text-[14px] text-ink-gray-7">{{ periodTitle }}</div><div class="num text-[34px] font-bold leading-tight text-ink-gray-9 md:text-[42px]">{{ k.total }}</div><div class="text-[13px] text-ink-gray-5">{{ __('{0} odchozích · {1} příchozích', [k.outgoing, k.incoming]) }}</div></div></div>
-        <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-[color-mix(in_srgb,var(--stage-vyhrano)_14%,transparent)] text-[var(--c-green-700-2)]"><GlIcon name="check" :size="22" /></span><div class="min-w-0"><div class="text-[14px] text-ink-gray-7">{{ __('Dovolal jsem se') }}</div><div class="num text-[34px] font-bold leading-tight text-ink-gray-9 md:text-[42px]">{{ k.reached }}</div><div class="text-[13px] text-ink-gray-5">{{ __('{0} % hovorů', [k.reached_pct]) }}</div></div></div>
-        <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-[color-mix(in_srgb,var(--c-blue-450)_12%,transparent)] text-[var(--c-blue-550)]"><GlIcon name="clock" :size="22" /></span><div class="min-w-0"><div class="text-[14px] text-ink-gray-7">{{ __('Průměrná délka') }}</div><div v-if="k.avg_seconds" class="num text-[34px] font-bold leading-tight text-ink-gray-9 md:text-[42px]">{{ mmss(k.avg_seconds) }}</div><div v-else class="mt-2 text-[20px] font-semibold text-[var(--empty-color)]">{{ __('Bez dat') }}</div><div class="text-[13px] text-ink-gray-5">{{ __('jen dovolané hovory') }}</div></div></div>
-        <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-[color-mix(in_srgb,var(--stage-nabidka)_16%,transparent)] text-[var(--c-amber-750)]"><GlIcon name="refresh" :size="22" /></span><div class="min-w-0"><div class="text-[14px] text-ink-gray-7">{{ __('Zavolat zpět') }}</div><div class="num text-[34px] font-bold leading-tight text-ink-gray-9 md:text-[42px]">{{ k.callbacks }}</div><div class="text-[13px] text-ink-gray-5">{{ k.next_callback ? __('nejbližší {0}', [whenLabel(k.next_callback)]) : __('nic nečeká') }}</div></div></div>
+        <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-600)]"><GlIcon name="phone" :size="22" /></span><div class="min-w-0"><div class="text-[14px] text-ink-gray-7">{{ periodTitle }}</div><div class="num text-[32px] font-medium leading-tight text-ink-gray-9"><GlNumber :value="k.total" /></div><div class="text-[13px] text-ink-gray-5">{{ __('{0} odchozích · {1} příchozích', [k.outgoing, k.incoming]) }}</div></div></div>
+        <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-[color-mix(in_srgb,var(--stage-vyhrano)_14%,transparent)] text-[var(--c-green-700-2)]"><GlIcon name="check" :size="22" /></span><div class="min-w-0"><div class="text-[14px] text-ink-gray-7">{{ __('Dovolal jsem se') }}</div><div class="num text-[32px] font-medium leading-tight text-ink-gray-9"><GlNumber :value="k.reached" /></div><div class="text-[13px] text-ink-gray-5">{{ __('{0} % hovorů', [k.reached_pct]) }}</div></div></div>
+        <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-[color-mix(in_srgb,var(--c-blue-450)_12%,transparent)] text-[var(--c-blue-550)]"><GlIcon name="clock" :size="22" /></span><div class="min-w-0"><div class="text-[14px] text-ink-gray-7">{{ __('Průměrná délka') }}</div><div v-if="k.avg_seconds" class="num text-[32px] font-medium leading-tight text-ink-gray-9">{{ mmss(k.avg_seconds) }}</div><div v-else class="mt-2 text-[20px] font-semibold text-[var(--empty-color)]">{{ __('Bez dat') }}</div><div class="text-[13px] text-ink-gray-5">{{ __('jen dovolané hovory') }}</div></div></div>
+        <div class="gl-card flex items-start gap-4 p-4 md:p-5"><span class="flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-[color-mix(in_srgb,var(--stage-nabidka)_16%,transparent)] text-[var(--c-amber-750)]"><GlIcon name="refresh" :size="22" /></span><div class="min-w-0"><div class="text-[14px] text-ink-gray-7">{{ __('Zavolat zpět') }}</div><div class="num text-[32px] font-medium leading-tight text-ink-gray-9"><GlNumber :value="k.callbacks" /></div><div class="text-[13px] text-ink-gray-5">{{ k.next_callback ? __('nejbližší {0}', [whenLabel(k.next_callback)]) : __('nic nečeká') }}</div></div></div>
       </div>
-      <div class="flex flex-wrap items-center justify-between gap-2 px-1" :class="isMobileView && 'hidden'">
+      <div class="flex flex-wrap items-center justify-between gap-2" :class="isMobileView && 'hidden'">
         <div class="flex flex-wrap gap-2">
-          <button v-for="o in OUTCOMES" :key="o.key" class="gl-chip flex h-10 items-center gap-1.5 rounded-full px-4 text-[14px] font-medium" :class="outcome === o.key && '!border-[var(--text-1)] !bg-[var(--text-1)] !text-white'" @click="outcome = o.key">{{ o.label }}</button>
+          <button v-for="o in OUTCOMES" :key="o.key" class="gl-chip flex min-h-[40px] items-center gap-2 rounded-full px-4 text-[14px] font-medium max-md:min-h-[44px]" :class="outcome === o.key && '!border-[var(--text-1)] !bg-[var(--text-1)] !text-white'" @click="outcome = o.key">{{ o.label }}</button>
         </div>
         <label class="flex items-center gap-2 text-[14px]"><span class="text-ink-gray-5">{{ __('Období') }}:</span>
-          <select v-model="period" class="gl-chip h-10 rounded-full px-3 text-[14px] font-semibold"><option value="week">{{ __('Tento týden') }}</option><option value="month">{{ __('30 dní') }}</option><option value="quarter">{{ __('90 dní') }}</option></select></label>
+          <select v-model="period" class="gl-chip min-h-[40px] rounded-full px-3 text-[14px] font-semibold"><option value="week">{{ __('Tento týden') }}</option><option value="month">{{ __('30 dní') }}</option><option value="quarter">{{ __('90 dní') }}</option></select></label>
       </div>
-      <div class="gl-card p-4 md:p-6">
-        <GlEmptyState v-if="!res.data.items.length" icon="phone" :title="__('Zatím žádné hovory')" :text="__('Hovory se zapisují z detailu zakázky nebo tlačítkem Zapsat hovor.')" :action="__('Zapsat hovor')" primary @action="showPick = true" />
-        <div v-else class="flex flex-col">
+      <!-- GrowUp (zadání 2027 kolo 2 V2): prázdný stav přímo, bez vnější karty (měl vlastní podbarvení) -->
+      <GlEmptyState v-if="!res.data.items.length" icon="phone" :title="__('Zatím žádné hovory')" :text="__('Hovory se zapisují z detailu zakázky nebo tlačítkem Zapsat hovor.')" :action="__('Zapsat hovor')" primary @action="showPick = true" />
+      <div v-else class="gl-card p-4 md:p-5">
+        <div class="flex flex-col">
           <!-- mobil: karta řádku – jméno a čas, firma, výsledek s délkou, poznámka -->
           <div v-if="isMobileView" class="flex flex-col">
             <component :is="c.lead ? 'router-link' : 'div'" v-for="c in res.data.items" :key="c.name" :to="c.lead ? { name: 'Lead', params: { leadId: c.lead } } : undefined" class="flex gap-3 border-t border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] py-3.5 first:border-0">
               <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[13px] font-bold text-[var(--c-blue-600)]">{{ initials(c.person || c.org) }}</span>
               <span class="min-w-0 flex-1">
-                <span class="flex items-baseline justify-between gap-2"><b class="truncate text-[18px] text-ink-gray-9">{{ c.person || c.org }}</b><span class="num shrink-0 text-[13px] text-ink-gray-5">{{ whenLabel(c.when) }}</span></span>
+                <span class="flex items-baseline justify-between gap-2"><b class="truncate text-[17px] font-semibold text-ink-gray-9">{{ c.person || c.org }}</b><span class="num shrink-0 text-[13px] text-ink-gray-5">{{ whenLabel(c.when) }}</span></span>
                 <span class="block truncate text-[14px] text-ink-gray-5">{{ c.org }}</span>
                 <span class="mt-1 flex items-center gap-2"><span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[13px] font-bold" :class="TONE[c.kind]">{{ LABEL[c.kind] }}</span><span class="num text-[14px] text-ink-gray-7">{{ c.duration ? mmss(c.duration) : '' }}</span></span>
                 <span class="gl-text mt-1 block text-[15px] text-ink-gray-9">{{ c.note || __('Bez poznámky') }}</span>
               </span>
             </component>
           </div>
-          <div v-else class="hidden grid-cols-[110px_1.4fr_50px_130px_70px_1.6fr_40px] gap-3 pb-2 text-[12px] font-semibold text-ink-gray-5 md:grid"><span>{{ __('Kdy') }}</span><span>{{ __('Kontakt') }}</span><span>{{ __('Směr') }}</span><span>{{ __('Výsledek') }}</span><span>{{ __('Délka') }}</span><span>{{ __('Poznámka') }}</span><span>{{ __('Kdo') }}</span></div>
+          <div v-else class="hidden grid-cols-[110px_1.4fr_50px_130px_70px_1.6fr_40px] gap-3 pb-2 text-[13px] font-semibold text-ink-gray-5 md:grid"><span>{{ __('Kdy') }}</span><span>{{ __('Kontakt') }}</span><span>{{ __('Směr') }}</span><span>{{ __('Výsledek') }}</span><span>{{ __('Délka') }}</span><span>{{ __('Poznámka') }}</span><span>{{ __('Kdo') }}</span></div>
           <component v-if="!isMobileView" :is="c.lead ? 'router-link' : 'div'" v-for="c in res.data.items" :key="c.name" :to="c.lead ? { name: 'Lead', params: { leadId: c.lead } } : undefined" class="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 border-t border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] py-3.5 md:grid-cols-[110px_1.4fr_50px_130px_70px_1.6fr_40px]">
             <span class="num hidden text-[13px] text-ink-gray-5 md:block">{{ whenLabel(c.when) }}</span>
-            <span class="flex min-w-0 items-center gap-3"><span class="flex size-10 shrink-0 items-center justify-center rounded-[12px] bg-[color-mix(in_srgb,var(--stage-jednani)_14%,transparent)] text-[var(--c-orange-600-2)]"><GlIcon name="phone" :size="18" /></span><span class="min-w-0"><span class="block truncate text-[15px] font-bold text-ink-gray-9">{{ c.person || c.org }}</span><span class="block truncate text-[13px] text-ink-gray-5">{{ c.org }}</span></span></span>
+            <span class="flex min-w-0 items-center gap-3"><span class="flex size-10 shrink-0 items-center justify-center rounded-[12px] bg-[color-mix(in_srgb,var(--stage-jednani)_14%,transparent)] text-[var(--c-orange-600-2)]"><GlIcon name="phone" :size="18" /></span><span class="min-w-0"><span class="block truncate text-[16px] font-semibold text-ink-gray-9">{{ c.person || c.org }}</span><span class="block truncate text-[13px] text-ink-gray-5">{{ c.org }}</span></span></span>
             <span class="hidden text-ink-gray-5 md:block"><GlIcon :name="c.incoming ? 'phone-incoming' : 'phone-outgoing'" :size="15" /></span>
-            <span><span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[12px] font-bold" :class="TONE[c.kind]">{{ LABEL[c.kind] }}</span></span>
+            <span><span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[13px] font-bold" :class="TONE[c.kind]">{{ LABEL[c.kind] }}</span></span>
             <span class="num hidden text-[14px] text-ink-gray-9 md:block">{{ c.duration ? mmss(c.duration) : '' }}</span>
-            <span class="gl-text col-span-2 truncate text-[13px] text-ink-gray-7 md:col-span-1">{{ c.note || __('Bez poznámky') }}</span>
-            <span class="hidden size-8 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[10px] font-bold text-[var(--c-blue-600)] md:flex" :title="userName(c.caller)">{{ initials(userName(c.caller)) }}</span>
+            <span class="gl-text col-span-2 truncate text-[14px] text-ink-gray-7 md:col-span-1">{{ c.note || __('Bez poznámky') }}</span>
+            <span class="hidden size-9 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[13px] font-bold text-[var(--c-blue-600)] md:flex" :title="userName(c.caller)">{{ initials(userName(c.caller)) }}</span>
           </component>
         </div>
         <GlListFooter v-if="res.data.items.length" class="mt-3" :modelValue="limit" :options="{ rowCount: res.data.items.length, totalCount: res.data.total }" @update:modelValue="(v) => (limit = v)" @loadMore="limit += 20" />
@@ -77,6 +78,7 @@ import GlEmptyState from '@/components/GlEmptyState.vue'
 import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import GlNumber from '@/components/GlNumber.vue'
 import GlListFooter from '@/components/GlListFooter.vue'
 import GlCallModal from '@/components/Modals/GlCallModal.vue'
 import Link from '@/components/Controls/Link.vue'

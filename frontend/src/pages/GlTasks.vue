@@ -22,54 +22,57 @@
       </template>
     </LayoutHeader>
 
-    <div class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-3 pb-6 md:px-2">
+    <div class="flex flex-col gap-4 px-3 pb-6 md:px-2">
       <div class="flex flex-wrap items-center justify-between gap-2 px-1">
-        <div class="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:overflow-visible md:px-0">
-          <button v-for="c in CHIPS" :key="c.key" class="gl-chip flex h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-4 text-[14px] font-medium" :class="chipClass(c)" @click="bucket = bucket === c.key ? 'all' : c.key">
+        <div class="flex flex-wrap gap-2">
+          <button v-for="c in CHIPS" :key="c.key" class="gl-chip flex min-h-[40px] items-center gap-2 rounded-full px-4 text-[14px] font-medium max-md:min-h-[44px]" :class="chipClass(c)" @click="bucket = bucket === c.key ? 'all' : c.key">
             {{ c.label }} <span class="num font-semibold"><GlNumber :value="counts[c.count] || 0" /></span>
           </button>
         </div>
         <label class="hidden items-center gap-2 text-[14px] md:flex"><span class="text-ink-gray-5">{{ __('Navázáno na') }}:</span>
-          <select v-model="kind" class="gl-chip h-10 rounded-full px-3 text-[14px] font-semibold"><option value="">{{ __('Vše') }}</option><option value="lead">{{ __('Zakázka') }}</option><option value="org">{{ __('Firma') }}</option><option value="project">{{ __('Projekt') }}</option><option value="contact">{{ __('Kontakt') }}</option></select>
+          <select v-model="kind" class="gl-chip min-h-[40px] rounded-full px-3 text-[14px] font-semibold"><option value="">{{ __('Vše') }}</option><option value="lead">{{ __('Zakázka') }}</option><option value="org">{{ __('Firma') }}</option><option value="project">{{ __('Projekt') }}</option><option value="contact">{{ __('Kontakt') }}</option></select>
         </label>
       </div>
 
-      <div class="gl-card p-3 md:p-4">
-        <form class="mb-2 flex items-center gap-3 rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] px-4" @submit.prevent="add">
-          <GlIcon name="plus" :size="17" class="text-ink-gray-5" />
-          <input ref="newEl" v-model="newTitle" class="h-12 flex-1 bg-transparent text-[15px] outline-none" :placeholder="__('Nový úkol – napište a stiskněte Enter')" />
-          <kbd class="rounded-md bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] px-1.5 text-[12px] text-ink-gray-5">↵</kbd>
-        </form>
+      <!-- GrowUp (zadání 2027 kolo 2 V2): rychlé přidání jako podbarvené pole, stavy bez vnější karty, seznam v jedné kartě -->
+      <form class="flex h-11 items-center gap-3 rounded-full bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] px-4" @submit.prevent="add">
+        <GlIcon name="plus" :size="17" class="text-ink-gray-5" />
+        <input ref="newEl" v-model="newTitle" class="h-full flex-1 bg-transparent text-[15px] outline-none" :aria-label="__('Nový úkol')" :placeholder="__('Nový úkol – napište a stiskněte Enter')" />
+        <kbd class="rounded-md bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] px-1.5 text-[13px] text-ink-gray-5">↵</kbd>
+      </form>
 
-        <GlErrorBanner v-if="res.error" class="my-2" :title="__('Úkoly se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" />
+        <GlErrorBanner v-if="res.error" :title="__('Úkoly se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" />
         <GlSkeleton v-else-if="!res.data" :rows="5" />
-        <GlEmptyState v-else-if="!items.length" class="my-3" icon="check" :title="bucket === 'all' && !kind ? __('Všechno hotovo') : __('Nic nenalezeno')" :text="bucket === 'all' && !kind ? __('Nemáte žádné otevřené úkoly. Pěkná práce.') : __('Filtru neodpovídá žádný úkol.')" :action="bucket === 'all' && !kind ? '' : __('Zrušit filtr')" @action="(bucket = 'all'), (kind = '')" />
+        <GlEmptyState v-else-if="!items.length" icon="check" :title="bucket === 'all' && !kind ? __('Všechno hotovo') : __('Nic nenalezeno')" :text="bucket === 'all' && !kind ? __('Nemáte žádné otevřené úkoly. Pěkná práce.') : __('Filtru neodpovídá žádný úkol.')" :action="bucket === 'all' && !kind ? '' : __('Zrušit filtr')" @action="(bucket = 'all'), (kind = '')" />
+        <div v-else class="gl-card p-3 md:p-5">
         <div v-gl-animate>
         <template v-for="g in grouped" :key="g.bucket">
           <div class="mb-1 mt-3 flex items-baseline gap-2 px-2 text-[13px]"><b :class="g.bucket === 'overdue' ? 'text-[var(--overdue)]' : 'text-ink-gray-9'">{{ g.label }}</b><span class="num text-ink-gray-5"><GlNumber :value="g.items.length" /></span></div>
-          <div v-for="t in g.items" :key="t.name" class="flex cursor-pointer items-center gap-3 rounded-2xl px-2 py-2.5 hover:bg-white/50" @click="(e) => !e.target.closest('button,a') && openTask(t.name)">
-            <button class="flex size-6 shrink-0 items-center justify-center rounded-full border-[1.75px] transition" :class="t.status === 'Done' ? 'border-[var(--accent-600)] bg-[var(--accent-600)] text-white' : 'border-[color-mix(in_srgb,var(--c-tint)_45%,transparent)] hover:border-[var(--accent-600)]'" :aria-label="t.status === 'Done' ? __('Hotovo') : __('Označit jako hotové')" @click="toggle(t)">
-              <GlIcon v-if="t.status === 'Done'" name="check" :size="14" />
+          <div v-for="t in g.items" :key="t.name" class="flex min-h-[56px] cursor-pointer items-center gap-2 rounded-2xl px-2 py-1.5 hover:bg-white/50" @click="(e) => !e.target.closest('button,a') && openTask(t.name)">
+            <button class="group flex size-9 shrink-0 items-center justify-center max-md:size-11" :aria-label="t.status === 'Done' ? __('Hotovo') : __('Označit jako hotové')" @click="toggle(t)">
+              <span class="flex size-6 items-center justify-center rounded-full border-[1.75px] transition" :class="t.status === 'Done' ? 'border-[var(--accent-600)] bg-[var(--accent-600)] text-white' : 'border-[color-mix(in_srgb,var(--c-tint)_45%,transparent)] group-hover:border-[var(--accent-600)]'">
+                <GlIcon v-if="t.status === 'Done'" name="check" :size="14" />
+              </span>
             </button>
             <!-- mobil (design R2MUkoly): název a pod ním „včera · Zakázka“ -->
             <span v-if="isMobileView" class="min-w-0 flex-1">
-              <span class="block text-[17px] leading-snug" :class="t.status === 'Done' ? 'text-ink-gray-5 line-through' : 'font-medium text-ink-gray-9'">{{ t.title }}</span>
+              <span class="block text-[16px] leading-snug" :class="t.status === 'Done' ? 'text-ink-gray-5 line-through' : 'font-medium text-ink-gray-9'">{{ t.title }}</span>
               <span class="block truncate text-[13px] text-ink-gray-5"><span :class="t.bucket === 'overdue' && 'font-semibold text-[var(--overdue)]'">{{ mobileDue(t) }}</span><template v-if="t.ref"> · {{ t.ref.label.split(' · ')[1] || t.ref.label }}</template></span>
             </span>
             <template v-else>
-              <span class="min-w-0 flex-1 truncate text-[15px]" :class="t.status === 'Done' ? 'text-ink-gray-5 line-through' : 'font-medium text-ink-gray-9'">{{ t.title }}<GlIcon v-if="t.flag && t.status !== 'Done'" name="flag" :size="13" class="ml-1.5 inline text-[var(--overdue)]" /></span>
-              <router-link v-if="t.ref" :to="refRoute(t.ref)" class="hidden max-w-[260px] shrink-0 truncate rounded-full px-2.5 py-0.5 text-[12px] font-bold sm:block" :class="REF_TONE[t.ref.kind]">{{ t.ref.label }}</router-link>
-              <span class="num w-16 shrink-0 text-right text-[13px]" :class="t.bucket === 'overdue' ? 'font-semibold text-[var(--overdue)]' : 'text-ink-gray-5'">{{ dueLabel(t) }}</span>
-              <img v-if="t.assigned_to && userImage(t.assigned_to)" :src="userImage(t.assigned_to)" class="size-7 shrink-0 rounded-full object-cover" :title="userName(t.assigned_to)" />
-              <span v-else-if="t.assigned_to" class="flex size-7 shrink-0 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[10px] font-bold text-[var(--c-blue-600)]" :title="userName(t.assigned_to)">{{ initials(userName(t.assigned_to)) }}</span>
-              <span v-else class="size-7 shrink-0" />
+              <span class="min-w-0 flex-1 truncate text-[16px]" :class="t.status === 'Done' ? 'text-ink-gray-5 line-through' : 'font-medium text-ink-gray-9'">{{ t.title }}<GlIcon v-if="t.flag && t.status !== 'Done'" name="flag" :size="13" class="ml-1.5 inline text-[var(--overdue)]" /></span>
+              <router-link v-if="t.ref" :to="refRoute(t.ref)" class="hidden max-w-[260px] shrink-0 truncate rounded-full px-2.5 py-0.5 text-[13px] font-bold sm:block" :class="REF_TONE[t.ref.kind]">{{ t.ref.label }}</router-link>
+              <span class="num w-20 shrink-0 text-right text-[14px]" :class="t.bucket === 'overdue' ? 'font-semibold text-[var(--overdue)]' : 'text-ink-gray-5'">{{ dueLabel(t) }}</span>
+              <img v-if="t.assigned_to && userImage(t.assigned_to)" :src="userImage(t.assigned_to)" class="size-8 shrink-0 rounded-full object-cover" :title="userName(t.assigned_to)" />
+              <span v-else-if="t.assigned_to" class="flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[13px] font-bold text-[var(--c-blue-600)]" :title="userName(t.assigned_to)">{{ initials(userName(t.assigned_to)) }}</span>
+              <span v-else class="size-8 shrink-0" />
             </template>
           </div>
         </template>
         </div>
+        <GlListFooter class="mt-4 px-2" :modelValue="limit" :options="{ rowCount: items.length, totalCount: res.data?.total }" @update:modelValue="(v) => (limit = v)" @loadMore="limit += 20" />
+        </div>
         <GlTaskModal v-if="showTask" v-model="showTask" :task="editTask" @saved="res.reload()" />
-        <GlListFooter v-if="items.length" class="mt-4 px-2" :modelValue="limit" :options="{ rowCount: items.length, totalCount: res.data?.total }" @update:modelValue="(v) => (limit = v)" @loadMore="limit += 20" />
-      </div>
     </div>
   </template>
 </template>
@@ -114,7 +117,7 @@ const CHIPS = [
   { key: 'week', label: __('Tento týden'), count: 'week' },
   { key: 'nodate', label: __('Bez termínu'), count: 'nodate' },
 ]
-const chipClass = (c) => (bucket.value === c.key ? (c.key === 'today' ? '!border-[var(--text-1)] !bg-[var(--text-1)] !text-white' : 'gl-chip-on') : c.key === 'overdue' && (counts.value.overdue || 0) ? '!bg-[color-mix(in_srgb,var(--c-red-550)_10%,transparent)] !text-[var(--overdue)]' : '')
+const chipClass = (c) => (bucket.value === c.key ? '!border-[var(--text-1)] !bg-[var(--text-1)] !text-white' : c.key === 'overdue' && (counts.value.overdue || 0) ? '!bg-[color-mix(in_srgb,var(--c-red-550)_10%,transparent)] !text-[var(--overdue)]' : '')
 
 const res = createResource({ url: 'growupcrm.worklists.get_tasks', params: params(), auto: true })
 function params() {

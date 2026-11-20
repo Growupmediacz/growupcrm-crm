@@ -2,30 +2,31 @@
   <!-- GrowUp (zadání 2027 E3): Faktury jen pro vedoucího. Data: growupcrm.invoices.list_invoices; vystavuje člověk (confirm). -->
   <LayoutHeader>
     <template #left-header>
-      <span class="gl-page-title text-lg-medium text-ink-gray-9">{{ __('Faktury') }}</span>
+      <h1 class="gl-page-title text-lg-medium">{{ __('Faktury') }}</h1>
     </template>
   </LayoutHeader>
 
   <GlForbidden v-if="!allowed" :message="__('Faktury vidí jen vedoucí obchodu.')" />
-  <div v-else class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
+  <div v-else class="flex flex-col gap-4 px-3 pb-6 md:px-2">
     <!-- záložky podle stavů -->
-    <div class="flex flex-wrap items-center gap-2" role="tablist" :aria-label="__('Stav faktury')">
+    <div class="flex flex-wrap items-center gap-2 px-1" role="tablist" :aria-label="__('Stav faktury')">
       <button
         v-for="t in tabs"
         :key="t.value"
         type="button"
         role="tab"
         :aria-selected="status === t.value"
-        class="gl-chip flex h-11 items-center gap-2 rounded-full px-4 text-[14px] font-medium md:h-9"
-        :class="status === t.value && 'gl-chip-on'"
+        class="gl-chip flex min-h-[40px] items-center gap-2 rounded-full px-4 text-[14px] font-medium max-md:min-h-[44px]"
+        :class="status === t.value && '!border-[var(--text-1)] !bg-[var(--text-1)] !text-white'"
         @click="setStatus(t.value)"
       >
         {{ t.label }}
-        <span class="text-[13px] tabular-nums opacity-75">{{ t.count }}</span>
+        <span class="num text-[13px] font-semibold tabular-nums opacity-75"><GlNumber :value="t.count" /></span>
       </button>
-      <div class="ml-auto w-full sm:w-64">
-        <FormControl v-model="query" type="text" :placeholder="__('Hledat číslo, firmu, popis')" @keyup.enter="reload" @blur="reload" />
-      </div>
+      <label class="flex h-11 w-full items-center gap-2 rounded-full bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] px-4 md:ml-auto md:w-[320px]">
+        <GlIcon name="search" :size="16" class="opacity-60" />
+        <input v-model="query" type="text" class="gl-chip-input w-full flex-1 bg-transparent text-[15px] outline-none" :aria-label="__('Hledat číslo, firmu, popis')" :placeholder="__('Hledat číslo, firmu, popis')" @keyup.enter="reload" @blur="reload" />
+      </label>
     </div>
 
     <GlErrorBanner v-if="error" :title="__('Faktury se nepodařilo načíst')" :text="error" @retry="reload" />
@@ -40,14 +41,14 @@
     <template v-else>
       <!-- telefon: karty -->
       <div v-if="isPhone" class="flex flex-col gap-3">
-        <div v-for="r in rows" :key="r.name" class="gl-card flex flex-col gap-2 p-4">
+        <div v-for="r in rows" :key="r.name" class="gl-card flex flex-col gap-2 p-5">
           <div class="flex items-start justify-between gap-3">
             <div class="min-w-0">
-              <div class="break-words text-[16px] font-bold text-ink-gray-9">{{ r.organization_name }}</div>
+              <div class="break-words text-[16px] font-semibold text-ink-gray-9">{{ r.organization_name }}</div>
               <div class="break-words text-[14px] text-ink-gray-7">{{ r.description || r.kind }}</div>
             </div>
             <div class="shrink-0 text-right">
-              <div class="text-[17px] font-bold tabular-nums text-ink-gray-9">{{ money(r.amount) }}</div>
+              <div class="text-[17px] font-semibold tabular-nums text-ink-gray-9">{{ money(r.amount) }}</div>
               <span class="inline-flex rounded-full px-2.5 py-0.5 text-[13px] font-semibold" :class="badge(r.status)">{{ stateLabel(r) }}</span>
             </div>
           </div>
@@ -66,7 +67,7 @@
       </div>
 
       <!-- desktop: tabulka -->
-      <div v-else class="gl-card overflow-x-auto p-2">
+      <div v-else class="gl-card overflow-x-auto p-3">
         <table class="w-full min-w-[860px] text-left text-[14.5px]">
           <thead class="text-[13px] font-semibold text-ink-gray-5">
             <tr>
@@ -99,9 +100,9 @@
               <td class="px-3 py-3 text-right tabular-nums" :class="r.days_overdue ? 'font-semibold text-[var(--c-red-550)]' : 'text-ink-gray-5'">{{ r.days_overdue ? overdueText(r.days_overdue) : '—' }}</td>
               <td class="px-3 py-2">
                 <div class="flex flex-wrap justify-end gap-2">
-                  <Button v-if="r.status === 'Návrh'" variant="solid" :label="__('Vystavit')" @click="openIssue(r)" />
-                  <Button v-if="canPay(r)" :label="__('Zaplaceno')" @click="openPaid(r)" />
-                  <Button v-if="canCancel(r)" :label="__('Storno')" @click="openCancel(r)" />
+                  <Button v-if="r.status === 'Návrh'" variant="solid" class="!h-9" :label="__('Vystavit')" @click="openIssue(r)" />
+                  <Button v-if="canPay(r)" class="!h-9" :label="__('Zaplaceno')" @click="openPaid(r)" />
+                  <Button v-if="canCancel(r)" class="!h-9" :label="__('Storno')" @click="openCancel(r)" />
                 </div>
               </td>
             </tr>
@@ -111,7 +112,7 @@
 
       <div class="flex items-center justify-center gap-3 text-[14px] text-ink-gray-5">
         <span class="tabular-nums">{{ __('Zobrazeno {0} z {1}', [rows.length, total]) }}</span>
-        <Button v-if="rows.length < total" :loading="loading" class="max-md:!h-11" :label="__('Načíst další')" @click="loadMore" />
+        <Button v-if="rows.length < total" :loading="loading" class="!h-9 max-md:!h-11" :label="__('Načíst další')" @click="loadMore" />
       </div>
     </template>
   </div>
@@ -193,6 +194,8 @@
 import GlEmptyState from '@/components/GlEmptyState.vue'
 import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import GlForbidden from '@/components/GlForbidden.vue'
+import GlIcon from '@/components/GlIcon.vue'
+import GlNumber from '@/components/GlNumber.vue'
 import GlSkeleton from '@/components/GlSkeleton.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import { isPhone } from '@/composables/glBreakpoint'

@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-full flex-col overflow-auto">
-    <div class="grid grid-cols-7 border-b border-outline-gray-2 text-center text-xs text-ink-gray-5">
+    <div class="grid grid-cols-7 border-b border-outline-gray-2 text-center text-[13px] text-ink-gray-6">
       <div v-for="d in days.slice(0, 7)" :key="d" class="py-2 capitalize">{{ weekdayShort(d) }}</div>
     </div>
     <div class="grid flex-1 grid-cols-7" :style="{ gridTemplateRows: `repeat(${days.length / 7}, minmax(96px, 1fr))` }">
@@ -35,7 +35,7 @@
         />
         <button
           v-if="itemsOnDay(items, d).length > MAX"
-          class="px-1 text-xs text-ink-gray-5 hover:text-ink-gray-8"
+          class="min-h-[24px] px-1 text-[13px] text-ink-gray-6 hover:text-ink-gray-8"
           @click.stop="$emit('dayClick', d)"
         >
           {{ __('+{0} dalších', [itemsOnDay(items, d).length - MAX]) }}

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mb-0.5 flex cursor-pointer items-center gap-1 truncate rounded border px-1 py-0.5 text-xs"
+    class="mb-0.5 flex cursor-pointer items-center gap-1 truncate rounded border px-1 py-0.5 text-[13px]"
     :class="itemClasses(item)"
     :title="item.title"
   >

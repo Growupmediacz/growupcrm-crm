@@ -26,7 +26,7 @@
         <button
           v-for="item in shownTop(d)"
           :key="item.key"
-          class="flex min-w-0 items-center gap-1.5 rounded-lg px-2 py-1 text-left text-[12px] font-semibold"
+          class="flex min-w-0 items-center gap-1.5 rounded-lg px-2 py-1 text-left text-[13px] font-semibold"
           :class="topClasses(item)"
           :title="item.title"
           @click="$emit('itemClick', item)"
@@ -41,7 +41,7 @@
         </button>
         <button
           v-if="!topExpanded && topItems(d).length > TOP_LIMIT"
-          class="rounded-lg px-2 py-0.5 text-left text-[12px] font-semibold text-ink-gray-5 hover:bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] hover:text-ink-gray-9"
+          class="rounded-lg px-2 py-0.5 text-left text-[13px] font-semibold text-ink-gray-6 hover:bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] hover:text-ink-gray-9"
           @click="topExpanded = true"
         >
           + {{ topItems(d).length - TOP_LIMIT }} {{ __('další') }}
@@ -55,7 +55,7 @@
           <div
             v-for="h in 24"
             :key="h"
-            class="absolute left-0 -translate-y-1/2 text-[12px] tabular-nums text-ink-gray-5"
+            class="absolute left-0 -translate-y-1/2 text-[13px] tabular-nums text-ink-gray-6"
             :style="{ top: (h - 1) * HOUR_HEIGHT + 'px' }"
           >
             {{ h - 1 }}:00
@@ -76,7 +76,7 @@
           <!-- výběr tažením myší (jako v Google kalendáři) -->
           <div
             v-if="drag && sameDay(drag.day, d)"
-            class="pointer-events-none absolute inset-x-1 z-30 overflow-hidden rounded-[10px] bg-[color-mix(in_srgb,var(--accent-600)_18%,transparent)] px-2 py-1 text-[12px] font-semibold text-[var(--accent-700)]"
+            class="pointer-events-none absolute inset-x-1 z-30 overflow-hidden rounded-[10px] bg-[color-mix(in_srgb,var(--accent-600)_18%,transparent)] px-2 py-1 text-[13px] font-semibold text-[var(--accent-700)]"
             :style="dragStyle"
           >
             {{ dragLabel }}
@@ -97,14 +97,14 @@
           <div
             v-for="b in layout(d)"
             :key="b.item.key"
-            class="gl3-evt absolute z-10 overflow-hidden rounded-[10px] px-2 py-1 text-[12px]"
+            class="gl3-evt absolute z-10 overflow-hidden rounded-[10px] px-2 py-1 text-[13px]"
             :class="itemClasses(b.item)"
             :style="b.style"
             :title="b.item.title"
             @pointerdown.stop
             @click.stop="$emit('itemClick', b.item)"
           >
-            <div class="gl-text line-clamp-2 font-semibold leading-tight">{{ b.item.title }}</div>
+            <div class="gl-text line-clamp-2 min-w-0 break-words font-semibold leading-tight" :style="{ WebkitLineClamp: b.lines }">{{ b.item.title }}</div>
             <div v-if="b.tall" class="truncate tabular-nums opacity-80">
               {{ timeLabel(b.item.start) }}<template v-if="b.item.kind === 'event'">–{{ timeLabel(b.item.end) }}</template>
             </div>
@@ -168,7 +168,7 @@ function layout(d) {
       let e = item.kind === 'task' ? new Date(item.start.getTime() + TASK_MINUTES * 60000) : item.end
       if (e > dayEnd) e = dayEnd
       const top = ((s - dayStart) / 3600000) * HOUR_HEIGHT
-      const height = Math.max(((e - s) / 3600000) * HOUR_HEIGHT, 22)
+      const height = Math.max(((e - s) / 3600000) * HOUR_HEIGHT, 24)
       return { item, s, e, top, height, col: 0, cols: 1 }
     })
     .sort((a, b) => a.s - b.s)
@@ -192,7 +192,9 @@ function layout(d) {
 
   return blocks.map((b) => ({
     item: b.item,
-    tall: b.height >= 44,
+    tall: b.height >= 48,
+    // počet řádků názvu podle výšky bloku (řádek 13 px ≈ 17 px, odpočet odsazení a řádku s časem)
+    lines: Math.max(1, Math.floor((b.height - 8 - (b.height >= 48 ? 17 : 0)) / 17)),
     style: {
       top: b.top + 'px',
       height: b.height + 'px',

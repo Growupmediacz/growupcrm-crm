@@ -10,11 +10,11 @@
         :aria-label="item.title"
       >
         <div class="flex items-start justify-between gap-3">
-          <span v-if="item.outreach" class="flex items-center gap-1 rounded-full bg-[color-mix(in_srgb,var(--c-cyan-650)_14%,transparent)] px-2.5 py-0.5 text-[12px] font-bold text-[var(--c-cyan-750-2)]">
+          <span v-if="item.outreach" class="flex items-center gap-1 rounded-full bg-[color-mix(in_srgb,var(--c-cyan-650)_14%,transparent)] px-2.5 py-0.5 text-[13px] font-bold text-[var(--c-cyan-750-2)]">
             <GlIcon name="mail" :size="13" />{{ __('Oslovení e-mailem') }}
           </span>
-          <span v-else class="rounded-full bg-[color-mix(in_srgb,var(--c-blue-400)_14%,transparent)] px-2.5 py-0.5 text-[12px] font-bold text-[var(--info)]">{{ __('Schůzka') }}</span>
-          <button class="flex size-8 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)]" :aria-label="__('Zavřít')" @click="close">
+          <span v-else class="rounded-full bg-[color-mix(in_srgb,var(--c-blue-400)_14%,transparent)] px-2.5 py-0.5 text-[13px] font-bold text-[var(--info)]">{{ __('Schůzka') }}</span>
+          <button class="flex size-9 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] max-md:size-11" :aria-label="__('Zavřít')" @click="close">
             <GlIcon name="x" :size="14" />
           </button>
         </div>
@@ -39,19 +39,19 @@
             <GlIcon name="building" :size="16" />{{ item.organization }}
           </router-link>
           <div v-if="item.assignedTo" class="flex items-center gap-2 text-ink-gray-7">
-            <span class="flex size-7 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[11px] font-bold text-[var(--c-blue-600)]">
+            <span class="flex size-7 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[13px] font-bold text-[var(--c-blue-600)]">
               {{ initials(userName) }}
             </span>
             {{ userName }}
           </div>
-          <div v-if="plain" class="line-clamp-3 text-[13px] text-ink-gray-5">{{ plain }}</div>
+          <div v-if="plain" class="line-clamp-3 text-[13px] text-ink-gray-6">{{ plain }}</div>
         </div>
 
         <div v-if="item.outreach" class="mt-4 flex items-center gap-2">
           <router-link :to="{ name: 'OutreachCampaign', params: { name: item.campaign } }" @click="close">
             <Button variant="solid" iconLeft="lucide-send" :label="__('Otevřít kampaň')" />
           </router-link>
-          <span class="text-[12px] text-ink-gray-5">{{ __('Plán odesílání, mění se v kampani.') }}</span>
+          <span class="text-[13px] text-ink-gray-6">{{ __('Plán odesílání, mění se v kampani.') }}</span>
         </div>
         <div v-else class="mt-4 flex items-center gap-2">
           <Button v-if="item.leadName" variant="solid" iconLeft="lucide-file-text" :label="__('Zapsat zápis')" @click="showNote = true" />
@@ -60,7 +60,7 @@
           <div class="flex-1" />
           <button
             v-if="item.canEdit"
-            class="flex size-9 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--c-red-550)_9%,transparent)] text-[var(--overdue)] hover:bg-[color-mix(in_srgb,var(--c-red-550)_16%,transparent)]"
+            class="flex size-9 items-center justify-center rounded-full max-md:size-11 bg-[color-mix(in_srgb,var(--c-red-550)_9%,transparent)] text-[var(--overdue)] hover:bg-[color-mix(in_srgb,var(--c-red-550)_16%,transparent)]"
             :aria-label="__('Smazat událost')"
             @click="remove"
           >

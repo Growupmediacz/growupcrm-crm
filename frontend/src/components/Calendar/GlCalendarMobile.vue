@@ -7,10 +7,10 @@
         <span class="text-[30px] font-bold tracking-tight text-ink-gray-9">{{ monthName }}</span>
       </div>
       <div class="flex items-center gap-1.5">
-        <button class="gl-round flex size-10 items-center justify-center rounded-full" :aria-label="__('Předchozí týden')" @click="$emit('move', -1)">
+        <button class="gl-round flex size-11 items-center justify-center rounded-full" :aria-label="__('Předchozí týden')" @click="$emit('move', -1)">
           <GlIcon name="left" :size="16" />
         </button>
-        <button class="gl-round flex size-10 items-center justify-center rounded-full" :aria-label="__('Další týden')" @click="$emit('move', 1)">
+        <button class="gl-round flex size-11 items-center justify-center rounded-full" :aria-label="__('Další týden')" @click="$emit('move', 1)">
           <GlIcon name="right" :size="16" />
         </button>
         <button class="gl-round flex size-11 items-center justify-center rounded-full" :aria-label="__('Nová událost')" @click="$emit('new', selected)">
@@ -21,7 +21,7 @@
 
     <div class="mt-3 grid grid-cols-7 gap-1">
       <button v-for="d in days" :key="d.getTime()" class="flex flex-col items-center gap-1 py-1" @click="$emit('select', d)">
-        <span class="text-[12px] font-semibold text-ink-gray-5">{{ dayShort(d) }}</span>
+        <span class="text-[13px] font-semibold text-ink-gray-6">{{ dayShort(d) }}</span>
         <span
           class="flex size-10 items-center justify-center rounded-full text-[17px] font-bold"
           :class="same(d, selected) ? 'bg-[var(--accent-600)] text-white shadow-[0_8px_18px_-8px_color-mix(in_srgb,var(--accent-600)_80%,transparent)]' : isToday(d) ? 'text-[var(--accent-600)]' : 'text-ink-gray-9'"
@@ -34,23 +34,23 @@
 
     <div class="mt-3 flex items-center justify-between px-1">
       <span class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ dayTitle }}</span>
-      <span class="text-[13px] text-ink-gray-5">{{ countLabel }}</span>
+      <span class="text-[13px] text-ink-gray-6">{{ countLabel }}</span>
     </div>
 
     <div class="mt-2 flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto pb-28">
       <div v-if="isToday(selected)" class="flex items-center gap-2 px-1">
-        <span class="num w-12 text-right text-[12px] font-bold text-[var(--c-red-400)]">{{ hhmm(now) }}</span>
+        <span class="num w-12 text-right text-[13px] font-bold text-[var(--c-red-400)]">{{ hhmm(now) }}</span>
         <span class="size-2 rounded-full bg-[var(--c-red-400)]" />
         <span class="h-px flex-1 bg-[var(--c-red-400)]" />
       </div>
       <!-- design 3. kolo (m3): celodenní položky a úkoly bez času v řádku „Celý den“ -->
       <div v-if="allDayItems.length" class="flex items-start gap-3 px-1">
-        <span class="w-12 shrink-0 pt-1.5 text-right text-[12px] font-semibold text-ink-gray-7">{{ __('Celý den') }}</span>
+        <span class="w-12 shrink-0 pt-1.5 text-right text-[13px] font-semibold text-ink-gray-7">{{ __('Celý den') }}</span>
         <span class="flex min-w-0 flex-1 flex-wrap gap-1.5">
           <button
             v-for="it in allDayItems"
             :key="it.key"
-            class="max-w-full truncate rounded-full px-3 py-1.5 text-[13px] font-semibold"
+            class="min-h-[44px] max-w-full truncate rounded-full px-3 py-1.5 text-[13px] font-semibold"
             :class="[tone(it), it.done && 'line-through']"
             @click="$emit('itemClick', it)"
           >
@@ -58,13 +58,11 @@
           </button>
         </span>
       </div>
-      <div v-if="!dayItems.length && !allDayItems.length" class="gl-card px-4 py-8 text-center text-[14px] text-ink-gray-5">
-        {{ __('Na tento den nic naplánovaného.') }}
-      </div>
-      <button v-for="it in dayItems" :key="it.key" class="flex items-stretch gap-3 text-left" @click="$emit('itemClick', it)">
+      <GlEmptyState v-if="!dayItems.length && !allDayItems.length" icon="calendar" :title="__('Na tento den nic naplánovaného.')" :text="__('Novou událost přidáte tlačítkem plus nahoře.')" />
+      <button v-for="it in dayItems" :key="it.key" class="flex min-h-[44px] shrink-0 items-stretch gap-3 text-left" @click="$emit('itemClick', it)">
         <span class="num flex w-12 shrink-0 flex-col items-end pt-2.5 leading-tight">
           <span class="text-[15px] font-bold text-ink-gray-9">{{ it.allDay ? __('Den') : hhmm(it.start) }}</span>
-          <span v-if="it.kind === 'event' && !it.allDay" class="text-[12px] text-ink-gray-5">{{ hhmm(it.end) }}</span>
+          <span v-if="it.kind === 'event' && !it.allDay" class="text-[13px] text-ink-gray-6">{{ hhmm(it.end) }}</span>
         </span>
         <span class="flex min-w-0 flex-1 flex-col rounded-2xl px-4 py-3" :class="tone(it)">
           <span class="truncate text-[16px] font-bold" :class="it.done && 'line-through'">{{ it.title }}</span>
@@ -76,6 +74,7 @@
 </template>
 <script setup>
 import GlIcon from '@/components/GlIcon.vue'
+import GlEmptyState from '@/components/GlEmptyState.vue'
 import { itemsOnDay } from '@/composables/calendar'
 import { computed, onBeforeUnmount, ref } from 'vue'
 

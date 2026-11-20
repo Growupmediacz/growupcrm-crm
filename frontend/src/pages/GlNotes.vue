@@ -12,10 +12,10 @@
         <Button variant="solid" iconLeft="lucide-plus" @click="createNote"><span class="hidden sm:inline">{{ __('Nový zápis') }}</span></Button>
       </template>
     </LayoutHeader>
-    <div class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
+    <div class="flex flex-col gap-4 px-3 pb-6 md:px-2">
       <!-- design 3. kolo (14): hledání · Období · Firma -->
       <div class="flex flex-wrap items-center gap-2 px-1">
-        <label class="gl-chip flex h-11 w-full items-center gap-2 rounded-full px-4 md:w-[420px]"><GlIcon name="search" :size="16" class="opacity-60" /><input v-model="q" class="gl-chip-input w-full bg-transparent text-[14px]" :placeholder="__('Hledat v zápisech')" /></label>
+        <label class="flex h-11 items-center gap-2 rounded-full bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] px-4 w-full md:w-[420px]"><GlIcon name="search" :size="16" class="opacity-60" /><input v-model="q" class="gl-chip-input w-full bg-transparent text-[15px] outline-none" :placeholder="__('Hledat v zápisech')" /></label>
         <label class="gl-chip hidden h-11 items-center gap-1.5 rounded-full pl-4 pr-2 text-[14px] md:flex"><span class="text-ink-gray-5">{{ __('Období') }}:</span>
           <select v-model="period" class="!h-auto cursor-pointer appearance-none !border-0 !bg-transparent !py-0 !pl-0 pr-5 font-semibold text-ink-gray-9 !shadow-none outline-none"><option v-for="o in PERIODS" :key="o.value" :value="o.value">{{ o.label }}</option></select>
         </label>
@@ -31,12 +31,12 @@
       <GlSkeleton v-else-if="!res.data" variant="cards" :rows="3" />
       <GlEmptyState v-else-if="!res.data.items.length" icon="doc" :title="q ? __('Nic nenalezeno') : __('Zatím žádné zápisy')" :text="q ? __('Zkuste jiné slovo nebo zrušte filtr.') : __('Zápisy vznikají u zakázek, firem a kontaktů.')" :action="q ? __('Zrušit hledání') : __('Nový zápis')" :primary="!q" @action="q ? (q = '') : createNote()" />
       <!-- design 3. kolo (14): na desktopu seznam vlevo a otevřený zápis vpravo, na mobilu karty -->
-      <div v-if="!isMobileView && res.data?.items.length" class="grid min-h-0 flex-1 grid-cols-12 gap-4">
-        <div v-gl-animate class="gl-card col-span-5 flex min-h-0 flex-col overflow-y-auto p-2">
+      <div v-if="!isMobileView && res.data?.items.length" class="grid grid-cols-12 items-start gap-4">
+        <div v-gl-animate class="gl-card col-span-5 flex flex-col p-2">
           <button
             v-for="n in res.data.items"
             :key="n.name"
-            class="flex items-start gap-3.5 rounded-[18px] p-3.5 text-left transition"
+            class="flex min-h-[56px] items-start gap-3.5 rounded-[18px] p-3.5 text-left transition"
             :class="selected === n.name ? 'bg-white shadow-[inset_3px_0_0_var(--accent-600),0_6px_18px_-10px_color-mix(in_srgb,var(--c-shadow-3)_30%,transparent)]' : 'hover:bg-white/60'"
             @click="selected = n.name"
           >
@@ -48,14 +48,14 @@
             </span>
           </button>
         </div>
-        <div class="gl-card col-span-7 flex min-h-0 flex-col overflow-y-auto p-7">
+        <div class="gl-card col-span-7 flex flex-col p-7">
           <template v-if="current">
             <div class="flex items-start justify-between gap-4">
               <h2 lang="cs" class="text-[28px] font-bold leading-tight tracking-[-0.02em] text-ink-gray-9">{{ current.title }}</h2>
               <div class="flex shrink-0 gap-2">
-                <Button iconLeft="lucide-pencil-line" :label="__('Upravit')" @click="editNote(current.name)" />
+                <Button class="!h-9" iconLeft="lucide-pencil-line" :label="__('Upravit')" @click="editNote(current.name)" />
                 <Dropdown :options="[{ label: __('Smazat'), icon: 'lucide-trash-2', theme: 'red', onClick: () => remove(current.name) }]" placement="right">
-                  <Button icon="lucide-ellipsis" :aria-label="__('Další akce')" />
+                  <Button class="!h-9 !w-9" icon="lucide-ellipsis" :aria-label="__('Další akce')" />
                 </Dropdown>
               </div>
             </div>
@@ -69,7 +69,7 @@
               <span class="flex items-center gap-1.5 rounded-full border border-[var(--line)] bg-white/70 px-3 py-1.5 text-[13.5px] font-medium text-ink-gray-7"><GlIcon name="cal" :size="15" />{{ fullDate(current.modified) }}</span>
               <span class="ml-1 flex items-center gap-2 text-[14px] text-ink-gray-8">
                 <img v-if="userImage(current.owner)" :src="userImage(current.owner)" class="size-7 rounded-full object-cover" />
-                <span v-else class="flex size-7 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[10px] font-bold text-[var(--c-blue-600)]">{{ initials(userName(current.owner)) }}</span>{{ userName(current.owner) }}
+                <span v-else class="flex size-7 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[13px] font-bold text-[var(--c-blue-600)]">{{ initials(userName(current.owner)) }}</span>{{ userName(current.owner) }}
               </span>
             </div>
             <div class="mt-5 border-t border-[var(--line)]">
@@ -82,7 +82,7 @@
                 <div v-if="parsed.next" class="mt-1 flex items-center gap-3 rounded-[18px] border border-[color-mix(in_srgb,var(--stage-nabidka)_35%,transparent)] bg-[color-mix(in_srgb,var(--stage-nabidka)_10%,transparent)] px-4 py-3">
                   <GlIcon name="clock" :size="22" class="shrink-0 text-[var(--c-amber-600)]" />
                   <span class="min-w-0 flex-1 text-[15px] text-ink-gray-9"><b class="text-[var(--c-amber-650)]">{{ __('Další krok') }}:</b> {{ parsed.next }}</span>
-                  <Button variant="solid" iconLeft="lucide-check" :label="__('Vytvořit úkol')" @click="taskFromNote" />
+                  <Button variant="solid" class="!h-9" iconLeft="lucide-check" :label="__('Vytvořit úkol')" @click="taskFromNote" />
                 </div>
               </template>
               <GlSkeleton v-else class="pt-5" :rows="4" />
@@ -93,17 +93,17 @@
       <div v-else v-gl-animate class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         <div v-for="n in res.data?.items || []" :key="n.name" class="gl-card gl-lift flex min-h-[200px] cursor-pointer flex-col gap-2.5 p-5" @click="editNote(n.name)">
           <div class="flex items-start justify-between gap-2">
-            <div lang="cs" class="gl-text line-clamp-2 text-[17px] font-bold leading-snug text-ink-gray-9">{{ n.title }}</div>
+            <div lang="cs" class="gl-text line-clamp-2 text-[17px] font-semibold leading-snug text-ink-gray-9">{{ n.title }}</div>
             <Dropdown :options="[{ label: __('Smazat'), icon: 'lucide-trash-2', theme: 'red', onClick: () => remove(n.name) }]" placement="right">
-              <button class="flex size-8 shrink-0 items-center justify-center rounded-full text-ink-gray-5 hover:bg-white/70" :aria-label="__('Další akce')" @click.stop><GlIcon name="more" :size="18" /></button>
+              <button class="flex size-9 shrink-0 items-center justify-center rounded-full text-ink-gray-5 hover:bg-white/70 max-md:size-11" :aria-label="__('Další akce')" @click.stop><GlIcon name="more" :size="18" /></button>
             </Dropdown>
           </div>
-          <div lang="cs" class="gl-text line-clamp-4 flex-1 whitespace-pre-line text-[14px] leading-relaxed text-ink-gray-7">{{ n.content }}</div>
+          <div lang="cs" class="gl-text line-clamp-4 flex-1 whitespace-pre-line text-[15px] leading-relaxed text-ink-gray-7">{{ n.content }}</div>
           <div class="flex flex-wrap gap-1.5">
-            <span v-if="n.ref" class="max-w-full truncate rounded-full px-2.5 py-0.5 text-[12px] font-bold" :class="REF_TONE[n.ref.kind]">{{ n.ref.label }}</span>
-            <span v-if="n.org && n.ref?.kind !== 'org'" class="max-w-full truncate rounded-full bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] px-2.5 py-0.5 text-[12px] font-semibold text-[var(--c-blue-650)]">{{ n.org }}</span>
+            <span v-if="n.ref" class="max-w-full truncate rounded-full px-2.5 py-0.5 text-[13px] font-bold" :class="REF_TONE[n.ref.kind]">{{ n.ref.label }}</span>
+            <span v-if="n.org && n.ref?.kind !== 'org'" class="max-w-full truncate rounded-full bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] px-2.5 py-0.5 text-[13px] font-semibold text-[var(--c-blue-650)]">{{ n.org }}</span>
           </div>
-          <div class="flex items-center gap-2 text-[13px] text-ink-gray-5"><span class="flex size-6 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[9px] font-bold text-[var(--c-blue-600)]">{{ initials(userName(n.owner)) }}</span>{{ whenLabel(n.modified) }}</div>
+          <div class="flex items-center gap-2 text-[13px] text-ink-gray-5"><span class="flex size-7 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[13px] font-bold text-[var(--c-blue-600)]">{{ initials(userName(n.owner)) }}</span>{{ whenLabel(n.modified) }}</div>
         </div>
       </div>
       <GlTaskModal v-if="showTask" v-model="showTask" :defaults="taskDefaults" @saved="toast.success(__('Úkol je v seznamu Úkoly a v kalendáři.'))" />

@@ -14,35 +14,38 @@
     <Transition name="gl-palette">
       <div
         v-if="show"
-        class="fixed inset-0 z-50 flex items-start justify-center bg-[var(--scrim)] px-4 pt-[12vh] backdrop-blur-[6px]"
+        class="fixed inset-0 z-50 flex items-start justify-center bg-[var(--scrim)] px-4 pt-[12vh] backdrop-blur-[6px] max-md:p-0"
         @mousedown.self="close"
       >
         <div
-          class="gl-sheet flex max-h-[70vh] w-full max-w-[640px] flex-col overflow-hidden rounded-[28px]"
+          class="gl-sheet flex max-h-[70vh] w-full max-w-[640px] flex-col overflow-hidden rounded-[28px] max-md:h-full max-md:max-h-none max-md:max-w-none max-md:rounded-none"
           role="dialog"
           aria-modal="true"
           :aria-label="__('Hledání')"
         >
-          <div class="flex items-center gap-3 px-5 py-4">
+          <div class="flex h-[52px] items-center gap-3 px-5 box-content py-2">
             <GlIcon name="search" :size="20" class="text-ink-gray-5" />
             <input
               ref="input"
               v-model="q"
-              class="gl-palette-input flex-1 text-[19px] text-ink-gray-9"
+              class="gl-palette-input flex-1 text-[17px] text-ink-gray-9"
               :placeholder="__('Hledat firmu, IČO, osobu, zakázku…')"
               @keydown.down.prevent="move(1)"
               @keydown.up.prevent="move(-1)"
               @keydown.enter.prevent="pick(flat[active], $event)"
               @keydown.esc.prevent="close"
             />
-            <kbd class="rounded-md bg-[var(--outline-gray-1)] px-1.5 py-0.5 text-[11px] font-semibold text-ink-gray-5">esc</kbd>
+            <kbd class="rounded-md bg-[var(--outline-gray-1)] px-1.5 py-0.5 text-[13px] font-semibold text-ink-gray-5 max-md:hidden">esc</kbd>
+            <button class="hidden size-11 shrink-0 items-center justify-center rounded-full text-ink-gray-6 max-md:flex" :aria-label="__('Zavřít')" @click="close">
+              <GlIcon name="x" :size="20" />
+            </button>
           </div>
           <!-- design 3. kolo (21): filtr typu výsledků -->
-          <div class="flex gap-2 px-5 pb-3">
+          <div class="flex flex-wrap gap-2 px-5 pb-3">
             <button
               v-for="f in FILTERS"
               :key="f.key"
-              class="h-8 rounded-full px-3.5 text-[13px] font-semibold transition"
+              class="h-9 rounded-full px-3.5 text-[13px] font-semibold transition max-md:h-11"
               :class="kind === f.key ? 'bg-[var(--accent-600)] text-white' : 'bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] text-ink-gray-7 hover:bg-[var(--line)]'"
               @click="(kind = f.key), (active = 0), input?.focus()"
             >
@@ -51,35 +54,38 @@
           </div>
           <div class="mx-4 h-px bg-[var(--line)]" />
 
-          <div class="overflow-y-auto px-2 py-2">
-            <div v-if="q.trim().length >= 2 && !loading && !results.length" class="px-3 py-4 text-[14px] text-ink-gray-5">
-              {{ __('Nic nenalezeno.') }}
+          <div class="min-h-0 flex-1 overflow-y-auto px-2 py-2">
+            <GlErrorBanner v-if="error" :title="__('Hledání se nepovedlo')" :text="error" @retry="runSearch(q)" />
+            <div v-else-if="loading && !results.length" class="px-3 py-3"><GlSkeleton :rows="3" /></div>
+            <div v-else-if="q.trim().length >= 2 && !loading && !results.length && !flat.length" class="px-3 py-3">
+              <GlEmptyState icon="search" :title="__('Nic jsme nenašli')" :text="__('Zkuste kratší výraz, jiné slovo nebo IČO firmy.')" />
             </div>
             <template v-for="g in groups" :key="g.label">
-              <div class="px-3 pb-1 pt-3 text-[12px] font-bold uppercase tracking-[0.06em] text-ink-gray-5">{{ __(g.label) }}</div>
+              <div class="px-3 pb-1 pt-3 text-[13px] font-semibold text-ink-gray-6">{{ __(g.label) }}</div>
               <button
                 v-for="item in g.items"
                 :key="item.type + item.name"
-                class="flex w-full items-center gap-3 rounded-2xl px-3 py-2 text-left"
-                :class="flat[active] === item ? 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)]' : 'hover:bg-white/60'"
+                class="flex min-h-[52px] w-full items-center gap-3 rounded-2xl px-3 py-2 text-left max-md:min-h-[56px]"
+                :class="flat[active] === item ? 'bg-[var(--accent-soft)]' : 'hover:bg-white/60'"
                 @mouseenter="active = flat.indexOf(item)"
                 @click="pick(item, $event)"
               >
-                <div class="flex size-9 shrink-0 items-center justify-center rounded-xl" :class="TONE[item.type]">
-                  <GlIcon :name="item.icon || ICON[item.type]" :size="17" />
+                <div class="flex size-9 shrink-0 items-center justify-center rounded-full" :class="TONE[item.type]">
+                  <GlIcon :name="item.icon || ICON[item.type]" :size="18" />
                 </div>
                 <div class="min-w-0 flex-1">
                   <div class="truncate text-[15px] font-semibold text-ink-gray-9"><template v-for="(part, i) in highlight(item.title)" :key="i"><mark v-if="part.hit" class="rounded-[4px] bg-[color-mix(in_srgb,var(--accent-600)_16%,transparent)] px-0.5 text-[var(--accent-700)]">{{ part.text }}</mark><template v-else>{{ part.text }}</template></template></div>
-                  <div v-if="item.sub" class="truncate text-[12.5px] text-ink-gray-5">{{ item.sub }}</div>
+                  <div v-if="item.sub" class="truncate text-[14px] text-ink-gray-6">{{ item.sub }}</div>
                 </div>
-                <span v-if="flat[active] === item" class="text-[13px] text-ink-gray-5">↵ {{ item.hint || __('otevřít') }}</span>
-                <kbd v-else-if="item.shortcut" class="rounded-md bg-[var(--outline-gray-1)] px-1.5 py-0.5 text-[13px] font-semibold text-ink-gray-5">{{ item.shortcut }}</kbd>
+                <span v-if="flat[active] === item" class="shrink-0 text-[13px] text-ink-gray-6 max-md:hidden">↵ {{ item.hint || __('otevřít') }}</span>
+                <kbd v-else-if="item.shortcut" class="shrink-0 rounded-md bg-[var(--outline-gray-1)] px-1.5 py-0.5 text-[13px] font-semibold text-ink-gray-5 max-md:hidden">{{ item.shortcut }}</kbd>
+                <span v-else-if="TYPE_LABEL[item.type]" class="shrink-0 text-[13px] text-ink-gray-5 max-md:hidden">{{ TYPE_LABEL[item.type] }}</span>
               </button>
             </template>
           </div>
 
-          <div class="flex gap-4 border-t border-[var(--line)] px-5 py-2.5 text-[12px] text-ink-gray-5">
-            <span>↑↓ {{ __('pohyb') }}</span>
+          <div class="flex flex-wrap gap-x-4 gap-y-1 border-t border-[var(--line)] px-5 py-2.5 text-[13px] text-ink-gray-6 max-md:hidden">
+            <span>↑↓ {{ __('výběr') }}</span>
             <span>↵ {{ __('otevřít') }}</span>
             <span>⌘↵ {{ __('v novém okně') }}</span>
             <span>Esc {{ __('zavřít') }}</span>
@@ -93,6 +99,9 @@
 </template>
 <script setup>
 import GlIcon from '@/components/GlIcon.vue'
+import GlEmptyState from '@/components/GlEmptyState.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
+import GlSkeleton from '@/components/GlSkeleton.vue'
 import LeadModal from '@/components/Modals/GlNewLeadModal.vue'
 import { statusesStore } from '@/stores/statuses'
 import { usersStore } from '@/stores/users'
@@ -114,11 +123,13 @@ const q = ref('')
 const input = ref(null)
 const results = ref([])
 const loading = ref(false)
+const error = ref('')
 const active = ref(0)
 const showLeadModal = ref(false)
 const leadDefaults = computed(() => ({ status: leadStatuses.data?.[0]?.name || 'Nová' }))
 
-const ICON = { organization: 'building', contact: 'user', lead: 'brief', action: 'plus', calendar: 'cal' }
+const ICON = { organization: 'building', contact: 'user', lead: 'kanban', action: 'plus', calendar: 'calendar' }
+const TYPE_LABEL = { organization: __('Firma'), contact: __('Kontakt'), lead: __('Zakázka'), action: __('Akce'), calendar: __('Kalendář') }
 const TONE = {
   organization: 'bg-[var(--outline-gray-1)] text-[var(--c-indigo-600)]',
   contact: 'bg-[var(--c-blue-50-2)] text-[var(--c-blue-600)]',
@@ -203,21 +214,26 @@ let seq = 0
 watch(q, (value) => {
   clearTimeout(timer)
   active.value = 0
+  error.value = ''
   if (value.trim().length < 2) {
     results.value = []
     return
   }
-  timer = setTimeout(async () => {
-    const mine = ++seq
-    loading.value = true
-    try {
-      const data = await call('growupcrm.search.search', { q: value })
-      if (mine === seq) results.value = data || []
-    } finally {
-      if (mine === seq) loading.value = false
-    }
-  }, 180)
+  timer = setTimeout(() => runSearch(value), 180)
 })
+async function runSearch(value) {
+  const mine = ++seq
+  loading.value = true
+  error.value = ''
+  try {
+    const data = await call('growupcrm.search.search', { q: value })
+    if (mine === seq) results.value = data || []
+  } catch (e) {
+    if (mine === seq) error.value = e?.messages?.[0] || e?.message || __('Zkuste to prosím znovu.')
+  } finally {
+    if (mine === seq) loading.value = false
+  }
+}
 
 watch(glSearchRequest, () => open())
 
@@ -226,6 +242,7 @@ function open() {
   kind.value = ''
   q.value = ''
   results.value = []
+  error.value = ''
   active.value = 0
   nextTick(() => input.value?.focus())
   loadAgentStatus()

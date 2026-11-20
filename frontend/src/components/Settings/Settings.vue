@@ -1,33 +1,30 @@
 <template>
   <!-- GrowUp (design 3. kolo, 07 a 26–34): Nastavení jako celá stránka místo okna.
        Desktop: vlevo skupiny sekcí, vpravo obsah. Mobil: seznam sekcí, po výběru obsah se „‹ Nastavení“. -->
-  <div class="flex min-h-0 flex-1 flex-col gap-5">
-    <div class="flex shrink-0 items-end justify-between gap-4 px-1 pt-1">
-      <div>
-        <button v-if="isMobileView && mobileOpen" class="mb-1 flex min-h-[44px] items-center text-[15px] font-semibold text-[var(--accent-600)]" @click="backToList">‹ {{ __('Nastavení') }}</button>
-        <!-- mobil v sekci: nadpis nese karta sekce, nahoře jen „‹ Nastavení“ (jinak by byl nadpis dvakrát) -->
-        <h1 v-if="!hideTitle && !(isMobileView && mobileOpen)" class="text-[32px] font-bold leading-tight tracking-[-0.025em] text-ink-gray-9 md:text-[40px]">{{ __('Nastavení') }}</h1>
-        <div v-if="!(isMobileView && mobileOpen)" class="text-[15px] text-ink-gray-5">{{ subtitle }}</div>
-      </div>
-      <button v-if="!isMobileView" class="gl-round flex size-10 items-center justify-center rounded-full" :aria-label="__('Zavřít nastavení')" :title="__('Zavřít')" @click="close">
-        <span class="lucide-x size-4" aria-hidden="true" />
-      </button>
+  <div class="flex min-h-0 flex-1 flex-col gap-4 px-3 pb-6 md:px-2">
+    <!-- GrowUp (zadání 2027 kolo 2 V2): nadpis a štítek tarifu nese hlavička stránky (GlSettings), tady jen „‹ Nastavení“ na telefonu -->
+    <div v-if="!hideTitle || (isMobileView && mobileOpen)" class="shrink-0">
+      <button v-if="isMobileView && mobileOpen" class="-ml-1 flex min-h-[44px] items-center px-1 text-[15px] font-semibold text-[var(--accent-600)]" @click="backToList">‹ {{ __('Nastavení') }}</button>
+      <template v-else>
+        <h1 class="gl-page-title text-lg-medium text-ink-gray-9">{{ __('Nastavení') }}</h1>
+        <div class="text-[15px] text-ink-gray-5">{{ subtitle }}</div>
+      </template>
     </div>
-    <div class="flex min-h-0 flex-1 gap-5">
+    <div class="flex min-w-0 flex-1 items-start gap-4">
       <nav
         v-if="!isMobileView || !mobileOpen"
         ref="sidebarContainer"
-        class="gl-card flex shrink-0 flex-col overflow-y-auto p-3"
-        :class="isMobileView ? 'w-full' : 'w-[280px]'"
+        class="gl-card flex shrink-0 flex-col p-3"
+        :class="isMobileView ? 'w-full' : 'sticky top-0 w-[280px] self-start'"
       >
         <template v-for="tab in tabs" :key="tab.label">
-          <div class="px-3 pb-1.5 pt-3 text-[12px] font-bold uppercase tracking-[0.06em] text-ink-gray-5">{{ tab.label }}</div>
+          <div class="px-3 pb-1 pt-3 text-[13px] font-semibold text-ink-gray-5">{{ tab.label }}</div>
           <button
             v-for="item in tab.items"
             :key="item.label"
             :data-page="item.label"
             class="flex min-h-[44px] w-full items-center gap-3 rounded-[14px] px-3 text-left text-[15px] transition"
-            :class="!isMobileView && activeTab?.label == item.label ? 'bg-white font-semibold text-[var(--accent-700)] shadow-[0_4px_14px_-8px_color-mix(in_srgb,var(--c-shadow)_30%,transparent)]' : 'text-ink-gray-8 hover:bg-white/60'"
+            :class="!isMobileView && activeTab?.label == item.label ? 'bg-[var(--accent-soft)] font-semibold text-[var(--accent-700)]' : 'text-ink-gray-8 hover:bg-[var(--accent-soft)]'"
             @click="openPage(item.label)"
           >
             <Icon :icon="item.icon" class="size-[18px] shrink-0" :class="!isMobileView && activeTab?.label == item.label ? 'text-[var(--accent-600)]' : 'text-ink-gray-6'" />
@@ -36,7 +33,8 @@
           </button>
         </template>
       </nav>
-      <div v-if="!isMobileView || mobileOpen" class="gl3-settings gl-card flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto">
+      <!-- jeden posuvník na stránku: panel nemá pevnou výšku ani vnitřní posuvník, sekce (h-full overflow-y-auto) se přirozeně natáhnou -->
+      <div v-if="!isMobileView || mobileOpen" class="gl3-settings gl-card flex min-w-0 flex-1 flex-col">
         <component :is="activeTab.component" v-if="activeTab" v-bind="activeTab.props || {}" />
       </div>
     </div>
@@ -104,7 +102,8 @@ const { isManager, getUser } = usersStore()
 const user = computed(() => getUser() || {})
 const { brand } = getSettings()
 // tarif do podtitulku („GrowUpMedia · tarif Agentura“)
-const plan = createResource({ url: 'growupcrm.plans.seat_usage', auto: isManager() })
+// hlavička stránky (GlSettings) si štítek tarifu načítá sama, tady jen když se nadpis kreslí v Settings
+const plan = createResource({ url: 'growupcrm.plans.seat_usage', auto: isManager() && !props.hideTitle })
 
 const tabs = computed(() => {
   // GrowUp (design 2. kolo, C6): skupiny Účet · Tým · Komunikace · Práce · Systém.
@@ -258,11 +257,6 @@ function backToList() {
   router.push({ name: 'Settings' })
 }
 
-function close() {
-  if (window.history.state?.back) router.back()
-  else router.push({ name: 'Today' })
-}
-
 // Scroll the settings sidebar so the active page is in view (e.g. when opened
 // deep-linked from onboarding, so the user sees where they landed).
 function scrollActiveIntoView() {
@@ -298,3 +292,11 @@ watch(
   { immediate: true },
 )
 </script>
+<style>
+/* GrowUp (zadání 2027 kolo 2 V2): nadpis sekce 24 px váha 650 (přebíjí 28 px z gl3.css) */
+.gl3-settings.gl3-settings h2.text-2xl-semibold,
+.gl3-settings.gl3-settings h1.text-2xl-semibold {
+  font-size: 24px;
+  font-weight: 650;
+}
+</style>
