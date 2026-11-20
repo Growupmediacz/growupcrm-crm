@@ -7,13 +7,14 @@
           <button v-for="m in months" :key="m.value" class="gl-seg-btn" :class="month === m.value && 'gl-seg-on'" @click="month = m.value">{{ m.label }}</button>
         </div>
         <div class="overflow-x-auto">
-          <table class="w-full min-w-[620px] text-[14px]">
+          <table class="w-full min-w-[760px] text-[14px]">
             <thead class="text-left text-[12px] font-bold text-ink-gray-5">
               <tr>
                 <th class="py-2">{{ __('Obchodník') }}</th>
                 <th class="py-2">{{ __('Zakázky') }}</th>
                 <th class="py-2">{{ __('Schůzky') }}</th>
-                <th class="py-2">{{ __('Tržby (tis. Kč)') }}</th>
+                <th class="py-2">{{ __('Obrat (tis. Kč)') }}</th>
+                <th class="py-2">{{ __('Z toho pravidelné (tis. Kč)') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -66,6 +67,7 @@ const FIELDS = [
   { key: 'won', step: 1 },
   { key: 'meetings', step: 1 },
   { key: 'revenue_k', step: 10 },
+  { key: 'recurring_k', step: 5 },
 ]
 const month = ref(props.initial || props.months[0]?.value)
 const rows = ref([])
@@ -75,7 +77,7 @@ const monthLabel = computed(() => (props.months.find((m) => m.value === month.va
 
 async function load() {
   const data = await call('growupcrm.goals.get_targets', { month: month.value })
-  rows.value = data.rows.map((r) => ({ ...r, revenue_k: Math.round((r.revenue || 0) / 1000) }))
+  rows.value = data.rows.map((r) => ({ ...r, revenue_k: Math.round((r.revenue || 0) / 1000), recurring_k: Math.round((r.recurring || 0) / 1000) }))
 }
 watch(month, load, { immediate: true })
 
@@ -90,7 +92,7 @@ async function save() {
   try {
     await call('growupcrm.goals.save_targets', {
       month: month.value,
-      rows: rows.value.map((r) => ({ user: r.user, won: r.won, meetings: r.meetings, revenue: (Number(r.revenue_k) || 0) * 1000 })),
+      rows: rows.value.map((r) => ({ user: r.user, won: r.won, meetings: r.meetings, revenue: (Number(r.revenue_k) || 0) * 1000, recurring: (Number(r.recurring_k) || 0) * 1000 })),
     })
     toast.success(__('Cíle jsou uložené'))
     show.value = false

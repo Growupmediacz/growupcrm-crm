@@ -96,7 +96,7 @@
               <th class="py-2">{{ __('Obchodník') }}</th>
               <th class="py-2">{{ __('Zakázky') }}</th>
               <th class="py-2">{{ __('Schůzky') }}</th>
-              <th class="py-2">{{ __('Tržby') }}</th>
+              <th class="py-2">{{ __('Obrat') }}</th>
               <th class="py-2">{{ __('Plnění') }}</th>
             </tr>
           </thead>
@@ -110,7 +110,10 @@
               </td>
               <td class="num py-4">{{ r.actual.won }}<span v-if="r.target.won" class="text-ink-gray-5"> / {{ r.target.won }}</span></td>
               <td class="num py-4">{{ r.actual.meetings }}<span v-if="r.target.meetings" class="text-ink-gray-5"> / {{ r.target.meetings }}</span></td>
-              <td class="num py-4">{{ thousands(r.actual.revenue) }}</td>
+              <td class="num py-4">
+                {{ thousands(r.actual.revenue) }}
+                <span v-if="r.actual.recurring" class="block text-[13px] text-ink-gray-5">{{ __('z toho pravidelné {0}', [thousands(r.actual.recurring)]) }}</span>
+              </td>
               <td class="py-4">
                 <span v-if="r.progress !== null" class="flex items-center gap-3">
                   <span class="h-2 w-36 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]">
@@ -187,17 +190,20 @@ const p = computed(() => plan.data)
 
 // barvy řad ověřené validátorem palety (CVD, kontrast); u kruhů je vždy legenda s hodnotami
 const SERIES = [
-  { key: 'won', label: __('Zakázky'), color: 'var(--accent-600)', radius: 76 },
-  { key: 'meetings', label: __('Schůzky'), color: '#3b9bf6', radius: 59 },
-  { key: 'revenue', label: __('Tržby (tis.)'), color: '#8b5cf6', radius: 42 },
+// growup: obrat = vyhrané zakázky + pravidelné tržby z klientů (retainery); pravidelné mají vlastní cíl (Ivan 2026-11-20)
+  { key: 'won', label: __('Zakázky'), color: 'var(--accent-600)', radius: 78 },
+  { key: 'meetings', label: __('Schůzky'), color: '#3b9bf6', radius: 63 },
+  { key: 'revenue', label: __('Obrat (tis.)'), color: '#8b5cf6', radius: 48 },
+  { key: 'recurring', label: __('Pravidelné (tis.)'), color: '#22b35e', radius: 33 },
 ]
+const MONEY = ['revenue', 'recurring']
 const rings = computed(() =>
   SERIES.map((s) => {
-    const actual = p.value.team.actual[s.key]
-    const target = p.value.team.target[s.key]
+    const actual = p.value.team.actual[s.key] || 0
+    const target = p.value.team.target[s.key] || 0
     const percent = p.value.team.percent[s.key]
     const circumference = 2 * Math.PI * s.radius
-    const fmt = (v) => (s.key === 'revenue' ? new Intl.NumberFormat('cs-CZ').format(Math.round(v / 1000)) : v)
+    const fmt = (v) => (MONEY.includes(s.key) ? new Intl.NumberFormat('cs-CZ').format(Math.round(v / 1000)) : v)
     return {
       ...s,
       circumference,
