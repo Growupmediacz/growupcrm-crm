@@ -30,6 +30,7 @@ import GlIcon from '@/components/GlIcon.vue'
 import { countPlaceholders, PLACEHOLDER_RE } from '@/composables/glMail'
 import { decideProposal } from '@/composables/glAgentProposals'
 import { sanitizeHTML } from '@/utils'
+import { toast } from 'frappe-ui'
 import { computed, ref } from 'vue'
 
 const props = defineProps({ proposal: { type: Object, required: true } })
@@ -65,8 +66,12 @@ function approve() {
   else emit('send', props.proposal)
 }
 async function reject() {
-  await decideProposal(props.proposal, 'rejected')
-  emit('rejected', props.proposal)
+  try {
+    await decideProposal(props.proposal, 'rejected')
+    emit('rejected', props.proposal)
+  } catch (e) {
+    toast.error(e?.messages?.[0] || __('Návrh se nepodařilo zahodit'))
+  }
 }
 </script>
 <style scoped>

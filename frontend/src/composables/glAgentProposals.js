@@ -1,6 +1,6 @@
 // GrowUp (zadání 2027 E1): rozhraní pro návrhy agenta pod vláknem.
-// Skutečné návrhy dodá tým agenta (D/F) funkcemi proposals.for_thread / proposals.decide; do té doby
-// se ukázkový návrh zobrazí jen s ?agent=ukazka v adrese (nikdy samovolně).
+// Skutečné návrhy: growupcrm.proposals.for_thread / proposals.decide (D2, napojeno v E3);
+// ukázkový návrh se zobrazí jen s ?agent=ukazka v adrese (nikdy samovolně).
 //
 // Tvar návrhu (dohoda s týmem agenta):
 // {
@@ -18,8 +18,20 @@ export function demoEnabled() {
 }
 
 export async function proposalForThread(reference, thread) {
-  // TODO(tým agenta): až bude growupcrm.proposals.for_thread, vrátit jeho výsledek místo ukázky.
-  if (!demoEnabled() || !thread || thread.state !== 'us') return null
+  // zadání 2027 E3: skutečné návrhy z growupcrm.proposals.for_thread (D2); ukázka jen s ?agent=ukazka
+  if (!demoEnabled()) {
+    if (!thread?.id || reference?.doctype !== 'CRM Lead') return null
+    try {
+      return (await call('growupcrm.proposals.for_thread', {
+        reference_doctype: reference.doctype,
+        reference_name: reference.name,
+        thread_id: thread.id,
+      })) || null
+    } catch {
+      return null // bez práv ke kampaním (obchodník) se návrh neukáže
+    }
+  }
+  if (!thread || thread.state !== 'us') return null
   const last = [...(thread.messages || [])].reverse().find((m) => m.sent_or_received === 'Received' && !m.automated)
   if (!last) return null
   const surname = (last.sender_name || '').split(' ').slice(-1)[0]
@@ -44,9 +56,6 @@ export async function proposalForThread(reference, thread) {
 
 export async function decideProposal(proposal, result, finalHtml = '') {
   if (proposal.demo) return
-  try {
-    await call('growupcrm.proposals.decide', { name: proposal.id, result, final_html: finalHtml })
-  } catch {
-    /* funkce zatím není */
-  }
+  // výsledek se zapíše do učení agenta; nic neodesílá (odeslání proběhlo editorem přes mail_threads.send)
+  await call('growupcrm.proposals.decide', { name: proposal.id, result, ...(finalHtml ? { final_html: finalHtml } : {}) })
 }
