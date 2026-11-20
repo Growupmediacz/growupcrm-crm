@@ -145,15 +145,14 @@ const leadsOnlyMode = useLeadsOnlyMode()
 import DeleteLinkedDocModal from '@/components/DeleteLinkedDocModal.vue'
 import ErrorPage from '@/components/ErrorPage.vue'
 import Icon from '@/components/Icon.vue'
-import DetailsIcon from '@/components/Icons/DetailsIcon.vue'
-import ActivityIcon from '@/components/Icons/ActivityIcon.vue'
-import CommentIcon from '@/components/Icons/CommentIcon.vue'
-import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
-import TaskIcon from '@/components/Icons/TaskIcon.vue'
-import NoteIcon from '@/components/Icons/NoteIcon.vue'
-import AttachmentIcon from '@/components/Icons/AttachmentIcon.vue'
+import DetailsIcon from '~icons/lucide/layout-list'
+import ActivityIcon from '~icons/lucide/history'
+import CommentIcon from '~icons/lucide/message-square-text'
+import PhoneIcon from '~icons/lucide/phone'
+import TaskIcon from '~icons/lucide/square-check-big'
+import NoteIcon from '~icons/lucide/notebook-pen'
+import AttachmentIcon from '~icons/lucide/paperclip'
 import WhatsAppIcon from '@/components/Icons/WhatsAppIcon.vue'
-import IndicatorIcon from '@/components/Icons/IndicatorIcon.vue'
 import LostReasonModal from '@/components/Modals/LostReasonModal.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlMobileLeadHeader from '@/components/Lead/GlMobileLeadHeader.vue'
@@ -482,21 +481,21 @@ const moreOptions = computed(() => [
   {
     group: __('Přidat'),
     items: [
-      { label: __('Naplánovat'), icon: 'cal', onClick: () => (showSchedule.value = true) },
-      { label: __('Zápis'), icon: 'doc', onClick: () => activities.value?.modalRef?.showNote() },
+      { label: __('Naplánovat'), icon: 'lucide-calendar-plus', onClick: () => (showSchedule.value = true) },
+      { label: __('Zápis'), icon: 'lucide-notebook-pen', onClick: () => activities.value?.modalRef?.showNote() },
     ],
   },
   {
     group: __('Zakázka'),
     items: [
-      { label: __('Všechny detaily'), icon: 'sliders', onClick: () => openDetails(false) },
+      { label: __('Všechny detaily'), icon: 'lucide-sliders-horizontal', onClick: () => openDetails(false) },
       !leadsOnlyMode.value && {
         label: __('Convert to Deal'),
-        icon: 'repeat',
+        icon: 'lucide-repeat',
         condition: () => !isLeadConversionDisabled.value,
         onClick: () => (showConvertToDealModal.value = true),
       },
-      { label: __('Smazat zakázku'), icon: 'trash-2', theme: 'red', onClick: deleteLead },
+      { label: __('Smazat zakázku'), icon: 'lucide-trash-2', theme: 'red', onClick: deleteLead },
     ].filter(Boolean),
   },
 ])

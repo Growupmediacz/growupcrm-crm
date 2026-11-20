@@ -92,7 +92,7 @@ const confirmingDelete = ref(false)
 const menuOptions = computed(() => [
   {
     label: __('Edit'),
-    icon: 'edit-2',
+    icon: 'lucide-pencil',
     onClick: startEdit,
   },
   ...ConfirmDelete({

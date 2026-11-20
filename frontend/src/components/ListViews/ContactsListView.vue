@@ -171,8 +171,8 @@
 <script setup>
 import GlSelectBanner from '@/components/GlSelectBanner.vue'
 import ListFooter from '@/components/GlListFooter.vue'
-import HeartIcon from '@/components/Icons/HeartIcon.vue'
-import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
+import HeartIcon from '~icons/lucide/heart'
+import PhoneIcon from '~icons/lucide/phone'
 import RatingInput from '@/components/Controls/RatingInput.vue'
 import ListBulkActions from '@/components/ListBulkActions.vue'
 import ListRows from '@/components/ListViews/ListRows.vue'

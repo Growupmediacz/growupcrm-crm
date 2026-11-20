@@ -15,7 +15,7 @@
       v-if="all_activities?.loading"
       class="flex flex-1 flex-col items-center justify-center gap-3 text-2xl-medium text-ink-gray-4"
     >
-      <LoadingIndicator class="h-6 w-6" />
+      <LoadingIndicator class="h-6 w-6 animate-spin" />
       <span>{{ __('Loading...') }}</span>
     </div>
     <div
@@ -59,7 +59,7 @@
               <div
                 class="flex h-8 w-7 items-center justify-center bg-surface-base"
               >
-                <CommentIcon class="text-ink-gray-8" />
+                <CommentIcon class="size-4 text-ink-gray-8" />
               </div>
             </div>
             <CommentArea
@@ -89,14 +89,15 @@
               >
                 <MissedCallIcon
                   v-if="call.status == 'No Answer'"
-                  class="text-ink-red-8"
+                  class="size-4 text-ink-red-8"
                 />
-                <DeclinedCallIcon v-else-if="call.status == 'Busy'" />
+                <DeclinedCallIcon v-else-if="call.status == 'Busy'" class="size-4" />
                 <component
                   :is="
                     call.type == 'Incoming' ? InboundCallIcon : OutboundCallIcon
                   "
                   v-else
+                  class="size-4"
                 />
               </div>
             </div>
@@ -157,7 +158,7 @@
                     activity.activity_type,
                   ) && activity.status == 'No Answer'
                 "
-                class="text-ink-red-8"
+                class="size-4 text-ink-red-8"
               />
               <DeclinedCallIcon
                 v-else-if="
@@ -165,6 +166,7 @@
                     activity.activity_type,
                   ) && activity.status == 'Busy'
                 "
+                class="size-4"
               />
               <component
                 :is="activity.icon"
@@ -446,27 +448,27 @@ import TaskArea from '@/components/Activities/TaskArea.vue'
 import AttachmentArea from '@/components/Activities/AttachmentArea.vue'
 import DataFields from '@/components/Activities/DataFields.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
-import ActivityIcon from '@/components/Icons/ActivityIcon.vue'
-import EmailIcon from '@/components/Icons/EmailIcon.vue'
-import DetailsIcon from '@/components/Icons/DetailsIcon.vue'
-import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
-import NoteIcon from '@/components/Icons/NoteIcon.vue'
-import TaskIcon from '@/components/Icons/TaskIcon.vue'
-import AttachmentIcon from '@/components/Icons/AttachmentIcon.vue'
+import ActivityIcon from '~icons/lucide/history'
+import EmailIcon from '~icons/lucide/mail'
+import DetailsIcon from '~icons/lucide/layout-list'
+import PhoneIcon from '~icons/lucide/phone'
+import NoteIcon from '~icons/lucide/notebook-pen'
+import TaskIcon from '~icons/lucide/square-check-big'
+import AttachmentIcon from '~icons/lucide/paperclip'
 import WhatsAppIcon from '@/components/Icons/WhatsAppIcon.vue'
 import WhatsAppArea from '@/components/Activities/WhatsAppArea.vue'
 import WhatsAppBox from '@/components/Activities/WhatsAppBox.vue'
-import LoadingIndicator from '@/components/Icons/LoadingIndicator.vue'
+import LoadingIndicator from '~icons/lucide/loader-circle'
 import EmptyState from '@/components/ListViews/EmptyState.vue'
-import LeadsIcon from '@/components/Icons/LeadsIcon.vue'
-import DealsIcon from '@/components/Icons/DealsIcon.vue'
-import DotIcon from '@/components/Icons/DotIcon.vue'
-import CommentIcon from '@/components/Icons/CommentIcon.vue'
-import SelectIcon from '@/components/Icons/SelectIcon.vue'
-import MissedCallIcon from '@/components/Icons/MissedCallIcon.vue'
-import DeclinedCallIcon from '@/components/Icons/DeclinedCallIcon.vue'
-import InboundCallIcon from '@/components/Icons/InboundCallIcon.vue'
-import OutboundCallIcon from '@/components/Icons/OutboundCallIcon.vue'
+import LeadsIcon from '~icons/lucide/user'
+import DealsIcon from '~icons/lucide/briefcase'
+import DotIcon from '~icons/lucide/dot'
+import CommentIcon from '~icons/lucide/message-square-text'
+import SelectIcon from '~icons/lucide/chevrons-up-down'
+import MissedCallIcon from '~icons/lucide/phone-missed'
+import DeclinedCallIcon from '~icons/lucide/phone-off'
+import InboundCallIcon from '~icons/lucide/phone-incoming'
+import OutboundCallIcon from '~icons/lucide/phone-outgoing'
 import FadedScrollableDiv from '@/components/FadedScrollableDiv.vue'
 import CommunicationArea from '@/components/CommunicationArea.vue'
 import WhatsappTemplateSelectorModal from '@/components/Modals/WhatsappTemplateSelectorModal.vue'
@@ -805,7 +807,7 @@ const emptyTextIcon = computed(() => {
   } else if (title.value == 'WhatsApp') {
     icon = WhatsAppIcon
   }
-  return h(icon, { class: 'text-ink-gray-4' })
+  return h(icon, { class: 'size-5 text-ink-gray-4' })
 })
 
 function timelineIcon(activity_type, is_lead) {

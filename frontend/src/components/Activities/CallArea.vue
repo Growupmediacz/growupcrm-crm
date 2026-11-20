@@ -53,12 +53,12 @@
       <div class="flex items-center flex-wrap gap-2">
         <Badge :label="formatDate(call.creation, 'MMM D, dddd')">
           <template #prefix>
-            <CalendarIcon class="size-3" />
+            <CalendarIcon class="size-4" />
           </template>
         </Badge>
         <Badge v-if="call.status == 'Completed'" :label="call._duration">
           <template #prefix>
-            <DurationIcon class="size-3" />
+            <DurationIcon class="size-4" />
           </template>
         </Badge>
         <Badge
@@ -68,7 +68,7 @@
           @click.stop="call.show_recording = !call.show_recording"
         >
           <template #prefix>
-            <PlayIcon class="size-3" />
+            <PlayIcon class="size-4" />
           </template>
         </Badge>
         <Badge
@@ -95,9 +95,9 @@
   </div>
 </template>
 <script setup>
-import PlayIcon from '@/components/Icons/PlayIcon.vue'
-import CalendarIcon from '@/components/Icons/CalendarIcon.vue'
-import DurationIcon from '@/components/Icons/DurationIcon.vue'
+import PlayIcon from '~icons/lucide/play'
+import CalendarIcon from '~icons/lucide/calendar'
+import DurationIcon from '~icons/lucide/clock'
 import MultipleAvatar from '@/components/MultipleAvatar.vue'
 import AudioPlayer from '@/components/Activities/AudioPlayer.vue'
 import CallLogDetailModal from '@/components/Modals/CallLogDetailModal.vue'

@@ -12,14 +12,14 @@
             : __('Group By: ') + groupByValue?.label
         "
         :iconLeft="DetailsIcon"
-        :iconRight="open ? 'chevron-up' : 'chevron-down'"
+        :iconRight="open ? 'lucide-chevron-up' : 'lucide-chevron-down'"
         @click="setOpen(!open)"
       />
     </template>
   </Combobox>
 </template>
 <script setup>
-import DetailsIcon from '@/components/Icons/DetailsIcon.vue'
+import DetailsIcon from '~icons/lucide/rows-3'
 import { Combobox, createResource } from 'frappe-ui'
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
 

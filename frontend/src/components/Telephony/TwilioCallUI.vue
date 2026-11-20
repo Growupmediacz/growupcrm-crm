@@ -43,7 +43,7 @@
         </div>
         <div v-if="onCall" class="flex gap-2">
           <Button
-            :icon="muted ? 'mic-off' : 'mic'"
+            :icon="muted ? 'lucide-mic-off' : 'lucide-mic'"
             class="rounded-full"
             @click="toggleMute"
           />
@@ -59,9 +59,9 @@
             @click="openNoteModal"
           />
           <Button
-            class="rounded-full bg-surface-red-7 hover:bg-surface-red-8 rotate-[135deg] text-ink-base"
+            class="rounded-full bg-surface-red-7 hover:bg-surface-red-8 text-ink-base"
             :tooltip="__('Hang Up')"
-            :icon="PhoneIcon"
+            :icon="PhoneOffIcon"
             @click="hangUpCall"
           />
         </div>
@@ -76,7 +76,7 @@
             @click="cancelCall"
           >
             <template #prefix>
-              <PhoneIcon class="rotate-[135deg]" />
+              <PhoneOffIcon />
             </template>
           </Button>
         </div>
@@ -99,7 +99,7 @@
             @click="rejectIncomingCall"
           >
             <template #prefix>
-              <PhoneIcon class="rotate-[135deg]" />
+              <PhoneOffIcon />
             </template>
           </Button>
         </div>
@@ -130,8 +130,8 @@
       <Button
         variant="solid"
         theme="red"
-        class="!h-6 !w-6 rounded-full rotate-[135deg] text-ink-base"
-        :icon="PhoneIcon"
+        class="!h-6 !w-6 rounded-full text-ink-base"
+        :icon="PhoneOffIcon"
         @click.stop="hangUpCall"
       />
     </div>
@@ -142,8 +142,8 @@
       <Button
         variant="solid"
         theme="red"
-        class="!h-6 !w-6 rounded-full rotate-[135deg] text-ink-base"
-        :icon="PhoneIcon"
+        class="!h-6 !w-6 rounded-full text-ink-base"
+        :icon="PhoneOffIcon"
         @click.stop="cancelCall"
       />
     </div>
@@ -159,9 +159,9 @@
       <Button
         variant="solid"
         theme="red"
-        class="!h-6 !w-6 rounded-full rotate-[135deg] text-ink-base"
+        class="!h-6 !w-6 rounded-full text-ink-base"
         :tooltip="__('Reject Call')"
-        :icon="PhoneIcon"
+        :icon="PhoneOffIcon"
         @click.stop="rejectIncomingCall"
       />
     </div>
@@ -169,9 +169,10 @@
 </template>
 
 <script setup>
-import NoteIcon from '@/components/Icons/NoteIcon.vue'
-import MinimizeIcon from '@/components/Icons/MinimizeIcon.vue'
-import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
+import NoteIcon from '~icons/lucide/notebook-pen'
+import MinimizeIcon from '~icons/lucide/minimize-2'
+import PhoneIcon from '~icons/lucide/phone'
+import PhoneOffIcon from '~icons/lucide/phone-off'
 import CountUpTimer from '@/components/CountUpTimer.vue'
 import { useDoctypeModal } from '@/composables/doctypeModal'
 import { Device } from '@twilio/voice-sdk'

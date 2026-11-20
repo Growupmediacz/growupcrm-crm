@@ -183,10 +183,10 @@
 
 <script setup>
 import IconPicker from '@/components/IconPicker.vue'
-import CheckIcon from '@/components/Icons/CheckIcon.vue'
-import DoubleCheckIcon from '@/components/Icons/DoubleCheckIcon.vue'
-import DocumentIcon from '@/components/Icons/DocumentIcon.vue'
-import ReactIcon from '@/components/Icons/ReactIcon.vue'
+import CheckIcon from '~icons/lucide/check'
+import DoubleCheckIcon from '~icons/lucide/check-check'
+import DocumentIcon from '~icons/lucide/file-text'
+import ReactIcon from '~icons/lucide/smile-plus'
 import { formatDate, sanitizeHTML } from '@/utils'
 import { useTelemetry } from 'frappe-ui/frappe'
 import { Tooltip, Dropdown, createResource, toast } from 'frappe-ui'

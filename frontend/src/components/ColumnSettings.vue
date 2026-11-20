@@ -66,7 +66,7 @@
                   class="w-full !justify-start !text-ink-gray-5"
                   variant="ghost"
                   :label="__('Add Column')"
-                  iconLeft="plus"
+                  iconLeft="lucide-plus"
                   @click="setOpen(!open)"
                 />
               </template>
@@ -141,9 +141,9 @@
 <script setup>
 import { glLucide } from '@/components/glIcons'
 const ColumnsIcon = glLucide('columns-3') // GrowUp V1: Lucide
-import EditIcon from '@/components/Icons/EditIcon.vue'
-import DragIcon from '@/components/Icons/DragIcon.vue'
-import ReloadIcon from '@/components/Icons/ReloadIcon.vue'
+import EditIcon from '~icons/lucide/pencil-line'
+import DragIcon from '~icons/lucide/grip-vertical'
+import ReloadIcon from '~icons/lucide/refresh-cw'
 import { isTouchScreenDevice } from '@/utils'
 import { getMeta } from '@/stores/meta'
 import { Combobox, Popover } from 'frappe-ui'

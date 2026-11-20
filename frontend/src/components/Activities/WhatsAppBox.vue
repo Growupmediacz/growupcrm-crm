@@ -71,7 +71,7 @@
 
 <script setup>
 import IconPicker from '@/components/IconPicker.vue'
-import SmileIcon from '@/components/Icons/SmileIcon.vue'
+import SmileIcon from '~icons/lucide/smile'
 import { sanitizeHTML } from '@/utils'
 import { useTelemetry } from 'frappe-ui/frappe'
 import {
@@ -150,7 +150,7 @@ function uploadOptions(openFileSelector) {
   return [
     {
       label: __('Upload Document'),
-      icon: 'file',
+      icon: 'lucide-file',
       onClick: () => {
         fileType.value = 'document'
         openFileSelector()
@@ -158,7 +158,7 @@ function uploadOptions(openFileSelector) {
     },
     {
       label: __('Upload Image'),
-      icon: 'image',
+      icon: 'lucide-image',
       onClick: () => {
         fileType.value = 'image'
         openFileSelector('image/*')
@@ -166,7 +166,7 @@ function uploadOptions(openFileSelector) {
     },
     {
       label: __('Upload Video'),
-      icon: 'video',
+      icon: 'lucide-video',
       onClick: () => {
         fileType.value = 'video'
         openFileSelector('video/*')

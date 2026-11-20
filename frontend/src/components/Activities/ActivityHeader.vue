@@ -11,14 +11,14 @@
       v-if="title == 'Emails'"
       variant="solid"
       :label="__('New Email')"
-      iconLeft="plus"
+      iconLeft="lucide-plus"
       @click="emailBox.show = true"
     />
     <Button
       v-else-if="title == 'Comments'"
       variant="solid"
       :label="__('New Comment')"
-      iconLeft="plus"
+      iconLeft="lucide-plus"
       @click="emailBox.showComment = true"
     />
     <MultiActionButton
@@ -30,21 +30,21 @@
       v-else-if="title == 'Notes'"
       variant="solid"
       :label="__('New Note')"
-      iconLeft="plus"
+      iconLeft="lucide-plus"
       @click="modalRef.showNote()"
     />
     <Button
       v-else-if="title == 'Tasks'"
       variant="solid"
       :label="__('New Task')"
-      iconLeft="plus"
+      iconLeft="lucide-plus"
       @click="modalRef.showTask()"
     />
     <Button
       v-else-if="title == 'Attachments'"
       variant="solid"
       :label="__('Upload Attachment')"
-      iconLeft="plus"
+      iconLeft="lucide-plus"
       @click="showFilesUploader = true"
     />
     <div v-else-if="title == 'WhatsApp'" class="flex gap-2 shrink-0">
@@ -55,7 +55,7 @@
       <Button
         variant="solid"
         :label="__('New Message')"
-        iconLeft="plus"
+        iconLeft="lucide-plus"
         @click="whatsappBox.show()"
       />
     </div>
@@ -65,8 +65,8 @@
           variant="solid"
           class="flex items-center gap-1"
           :label="__('New')"
-          iconLeft="plus"
-          :iconRight="open ? 'chevron-up' : 'chevron-down'"
+          iconLeft="lucide-plus"
+          :iconRight="open ? 'lucide-chevron-up' : 'lucide-chevron-down'"
         />
       </template>
     </Dropdown>
@@ -74,12 +74,12 @@
 </template>
 <script setup>
 import MultiActionButton from '@/components/MultiActionButton.vue'
-import Email2Icon from '@/components/Icons/Email2Icon.vue'
-import CommentIcon from '@/components/Icons/CommentIcon.vue'
-import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
-import NoteIcon from '@/components/Icons/NoteIcon.vue'
-import TaskIcon from '@/components/Icons/TaskIcon.vue'
-import AttachmentIcon from '@/components/Icons/AttachmentIcon.vue'
+import Email2Icon from '~icons/lucide/mail'
+import CommentIcon from '~icons/lucide/message-square-text'
+import PhoneIcon from '~icons/lucide/phone'
+import NoteIcon from '~icons/lucide/notebook-pen'
+import TaskIcon from '~icons/lucide/square-check-big'
+import AttachmentIcon from '~icons/lucide/paperclip'
 import WhatsAppIcon from '@/components/Icons/WhatsAppIcon.vue'
 import { globalStore } from '@/stores/global'
 import { whatsappEnabled } from '@/composables/whatsapp'
@@ -107,7 +107,7 @@ const emailBox = defineModel('emailBox', { type: Object, default: () => ({}) })
 const defaultActions = computed(() => {
   let actions = [
     {
-      icon: h(Email2Icon, { class: 'h-4 w-4' }),
+      icon: h(Email2Icon, { class: 'size-4' }),
       label: __('Email'),
       onClick: () => (emailBox.value.show = true),
     },
@@ -162,7 +162,7 @@ const callActions = computed(() => {
   let actions = [
     {
       label: __('Log a Call'),
-      icon: 'plus',
+      icon: 'lucide-plus',
       onClick: () => props.modalRef.createCallLog(),
     },
     {

@@ -15,20 +15,20 @@
               {{ getUser(task.assigned_to).full_name }}
             </div>
             <div v-if="task.due_date" class="flex items-center justify-center">
-              <DotIcon class="h-2.5 w-2.5 text-ink-gray-5" :radius="2" />
+              <DotIcon class="size-4 text-ink-gray-5" />
             </div>
             <div v-if="task.due_date">
               <Tooltip
                 :text="formatDate(task.due_date, 'ddd, MMM D, YYYY | hh:mm a')"
               >
                 <div class="flex gap-2">
-                  <CalendarIcon />
+                  <CalendarIcon class="size-4" />
                   <div>{{ formatDate(task.due_date, 'D MMM, hh:mm a') }}</div>
                 </div>
               </Tooltip>
             </div>
             <div class="flex items-center justify-center">
-              <DotIcon class="h-2.5 w-2.5 text-ink-gray-5" :radius="2" />
+              <DotIcon class="size-4 text-ink-gray-5" />
             </div>
             <div class="flex gap-2">
               <TaskPriorityIcon class="!h-2 !w-2" :priority="task.priority" />
@@ -46,14 +46,14 @@
               class="hover:bg-surface-gray-4"
               @click.stop.prevent
             >
-              <TaskStatusIcon :status="task.status" />
+              <component :is="taskStatusIcons[task.status] || CircleIcon" class="size-4 text-ink-gray-7" :aria-label="task.status" />
             </Button>
           </Dropdown>
           <Dropdown
             :options="[
               {
                 label: __('Delete'),
-                icon: 'trash-2',
+                icon: 'lucide-trash-2',
                 onClick: () => {
                   $dialog({
                     title: __('Delete Task'),
@@ -91,11 +91,22 @@
   </div>
 </template>
 <script setup>
-import CalendarIcon from '@/components/Icons/CalendarIcon.vue'
-import TaskStatusIcon from '@/components/Icons/TaskStatusIcon.vue'
+import CalendarIcon from '~icons/lucide/calendar'
+import CircleDashedIcon from '~icons/lucide/circle-dashed'
+import CircleIcon from '~icons/lucide/circle'
+import CircleDotIcon from '~icons/lucide/circle-dot'
+import CircleCheckIcon from '~icons/lucide/circle-check'
+import CircleXIcon from '~icons/lucide/circle-x'
 import TaskPriorityIcon from '@/components/Icons/TaskPriorityIcon.vue'
-import DotIcon from '@/components/Icons/DotIcon.vue'
+import DotIcon from '~icons/lucide/dot'
 import UserAvatar from '@/components/UserAvatar.vue'
+const taskStatusIcons = {
+  Backlog: CircleDashedIcon,
+  Todo: CircleIcon,
+  'In Progress': CircleDotIcon,
+  Done: CircleCheckIcon,
+  Canceled: CircleXIcon,
+}
 import { formatDate, taskStatusOptions } from '@/utils'
 import { usersStore } from '@/stores/users'
 import { globalStore } from '@/stores/global'

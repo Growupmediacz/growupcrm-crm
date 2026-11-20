@@ -82,12 +82,12 @@
 </template>
 
 <script setup>
-import PlayIcon from '@/components/Icons/PlayIcon.vue'
-import PauseIcon from '@/components/Icons/PauseIcon.vue'
-import VolumnLowIcon from '@/components/Icons/VolumnLowIcon.vue'
-import VolumnHighIcon from '@/components/Icons/VolumnHighIcon.vue'
-import MuteIcon from '@/components/Icons/MuteIcon.vue'
-import PlaybackSpeedIcon from '@/components/Icons/PlaybackSpeedIcon.vue'
+import PlayIcon from '~icons/lucide/play'
+import PauseIcon from '~icons/lucide/pause'
+import VolumnLowIcon from '~icons/lucide/volume-1'
+import VolumnHighIcon from '~icons/lucide/volume-2'
+import MuteIcon from '~icons/lucide/volume-x'
+import PlaybackSpeedIcon from '~icons/lucide/gauge'
 import PlaybackSpeedOption from '@/components/Activities/PlaybackSpeedOption.vue'
 import Dropdown from '@/components/frappe-ui/Dropdown.vue'
 import { computed, h, ref } from 'vue'
@@ -162,7 +162,7 @@ const options = computed(() => {
   })
   let _options = [
     {
-      icon: 'download',
+      icon: 'lucide-download',
       label: __('Download'),
       onClick: () => {
         const a = document.createElement('a')

@@ -17,7 +17,7 @@
       </div>
       <div class="flex items-center gap-1">
         <button v-if="unread" class="rounded-full px-2 py-1 text-[13px] font-semibold text-[var(--accent-700)] hover:bg-[var(--accent-soft)] whitespace-nowrap" @click="markAllAsRead">{{ __('Přečíst vše') }}</button>
-        <Button :tooltip="__('Close')" icon="x" variant="ghost" @click="() => toggle()" />
+        <Button :tooltip="__('Close')" icon="lucide-x" variant="ghost" @click="() => toggle()" />
       </div>
     </div>
     <div class="px-6 pb-3">
@@ -64,8 +64,8 @@
 </template>
 <script setup>
 import WhatsAppIcon from '@/components/Icons/WhatsAppIcon.vue'
-import MarkAsDoneIcon from '@/components/Icons/MarkAsDoneIcon.vue'
-import NotificationsIcon from '@/components/Icons/NotificationsIcon.vue'
+import MarkAsDoneIcon from '~icons/lucide/check-check'
+import NotificationsIcon from '~icons/lucide/bell'
 import EmptyState from '@/components/ListViews/EmptyState.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import { formatDateCz, formatTimeCz, relativeCz } from '@/utils/glDate'

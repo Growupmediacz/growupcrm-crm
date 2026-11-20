@@ -119,7 +119,7 @@
               class="whitespace-nowrap mr-2"
               variant="ghost"
               :label="__('Add Filter')"
-              iconLeft="plus"
+              iconLeft="lucide-plus"
               @click="setOpen(!open)"
             />
           </template>
@@ -327,17 +327,17 @@
 </template>
 <script setup>
 import Icon from '@/components/Icon.vue'
-import ListIcon from '@/components/Icons/ListIcon.vue'
-import KanbanIcon from '@/components/Icons/KanbanIcon.vue'
-import GroupByIcon from '@/components/Icons/GroupByIcon.vue'
+import ListIcon from '~icons/lucide/list'
+import KanbanIcon from '~icons/lucide/kanban'
+import GroupByIcon from '~icons/lucide/rows-3'
 import GlQuickFilter from '@/components/GlQuickFilter.vue'
-import EditIcon from '@/components/Icons/EditIcon.vue'
-import DuplicateIcon from '@/components/Icons/DuplicateIcon.vue'
-import CheckIcon from '@/components/Icons/CheckIcon.vue'
-import PinIcon from '@/components/Icons/PinIcon.vue'
-import UnpinIcon from '@/components/Icons/UnpinIcon.vue'
-import ExportIcon from '@/components/Icons/ExportIcon.vue'
-import QuickFilterIcon from '@/components/Icons/QuickFilterIcon.vue'
+import EditIcon from '~icons/lucide/pencil-line'
+import DuplicateIcon from '~icons/lucide/copy'
+import CheckIcon from '~icons/lucide/check'
+import PinIcon from '~icons/lucide/pin'
+import UnpinIcon from '~icons/lucide/pin-off'
+import ExportIcon from '~icons/lucide/download'
+import QuickFilterIcon from '~icons/lucide/list-filter'
 import ViewModal from '@/components/Modals/ViewModal.vue'
 import GlImportModal from '@/components/Modals/GlImportModal.vue'
 import SortBy from '@/components/SortBy.vue'
@@ -360,7 +360,6 @@ import {
   Dropdown,
   toast,
   call,
-  FeatherIcon,
   usePageMeta,
 } from 'frappe-ui'
 import { computed, ref, watch, h, markRaw } from 'vue'
@@ -369,6 +368,8 @@ import { isMobileView } from '@/composables/settings'
 import Draggable from 'vuedraggable'
 import _ from 'lodash'
 import ImportIcon from '~icons/lucide/import'
+import LockIcon from '~icons/lucide/lock'
+import UnlockIcon from '~icons/lucide/lock-open'
 
 const { getLeadStatus } = statusesStore()
 const leadStatusType = (name) => getLeadStatus(name)?.type
@@ -771,7 +772,7 @@ const viewsDropdownOptions = computed(() => {
     items: [
       {
         label: __('Create View'),
-        icon: 'plus',
+        icon: 'lucide-plus',
         onClick: () => createView(),
       },
     ],
@@ -1233,8 +1234,7 @@ const viewActions = (view, close) => {
       actions[0].items.push({
         label: _view.public ? __('Make Private') : __('Make Public'),
         icon: () =>
-          h(FeatherIcon, {
-            name: _view.public ? 'lock' : 'unlock',
+          h(_view.public ? LockIcon : UnlockIcon, {
             class: 'h-4 w-4',
           }),
         onClick: () => publicView(_view),
@@ -1247,7 +1247,7 @@ const viewActions = (view, close) => {
       items: [
         {
           label: __('Delete'),
-          icon: 'trash-2',
+          icon: 'lucide-trash-2',
           onClick: () =>
             $dialog({
               title: __('Delete View'),

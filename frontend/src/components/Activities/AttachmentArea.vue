@@ -44,9 +44,9 @@
               "
             >
               <template #icon>
-                <FeatherIcon
-                  :name="attachment.is_private ? 'lock' : 'unlock'"
-                  class="size-3 text-ink-gray-7"
+                <component
+                  :is="attachment.is_private ? LockIcon : UnlockIcon"
+                  class="size-4 text-ink-gray-7"
                 />
               </template>
             </Button>
@@ -73,9 +73,11 @@
   </div>
 </template>
 <script setup>
-import FileAudioIcon from '@/components/Icons/FileAudioIcon.vue'
-import FileTextIcon from '@/components/Icons/FileTextIcon.vue'
-import FileVideoIcon from '@/components/Icons/FileVideoIcon.vue'
+import LockIcon from '~icons/lucide/lock'
+import UnlockIcon from '~icons/lucide/lock-open'
+import FileAudioIcon from '~icons/lucide/file-audio'
+import FileTextIcon from '~icons/lucide/file-text'
+import FileVideoIcon from '~icons/lucide/file-video'
 import { globalStore } from '@/stores/global'
 import { call } from 'frappe-ui'
 import TimelineTimestamp from '@/components/Activities/TimelineTimestamp.vue'

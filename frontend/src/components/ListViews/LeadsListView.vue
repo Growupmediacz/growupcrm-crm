@@ -285,9 +285,9 @@ const nextWhen = (row) => {
   return `${x.d.getDate()}. ${x.d.getMonth() + 1}.`
 }
 const orgLabel = (row) => (typeof row.organization === 'object' ? row.organization?.label : row.organization) || ''
-import HeartIcon from '@/components/Icons/HeartIcon.vue'
-import IndicatorIcon from '@/components/Icons/IndicatorIcon.vue'
-import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
+import HeartIcon from '~icons/lucide/heart'
+import IndicatorIcon from '~icons/lucide/circle'
+import PhoneIcon from '~icons/lucide/phone'
 import RatingInput from '@/components/Controls/RatingInput.vue'
 import MultipleAvatar from '@/components/MultipleAvatar.vue'
 import ListBulkActions from '@/components/ListBulkActions.vue'

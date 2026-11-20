@@ -225,11 +225,11 @@
   </div>
 </template>
 <script setup>
-import ArrowUpRightIcon from '@/components/Icons/ArrowUpRightIcon.vue'
-import AvatarIcon from '@/components/Icons/AvatarIcon.vue'
-import MinimizeIcon from '@/components/Icons/MinimizeIcon.vue'
-import NoteIcon from '@/components/Icons/NoteIcon.vue'
-import TaskIcon from '@/components/Icons/TaskIcon.vue'
+import ArrowUpRightIcon from '~icons/lucide/arrow-up-right'
+import AvatarIcon from '~icons/lucide/user'
+import MinimizeIcon from '~icons/lucide/minimize-2'
+import NoteIcon from '~icons/lucide/notebook-pen'
+import TaskIcon from '~icons/lucide/square-check-big'
 import TaskPanel from '@/components/Telephony/TaskPanel.vue'
 import CountUpTimer from '@/components/CountUpTimer.vue'
 import RichTextField from '@/components/RichTextField.vue'

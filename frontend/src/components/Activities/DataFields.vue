@@ -31,7 +31,7 @@
     v-if="document.get.loading"
     class="flex flex-1 flex-col items-center justify-center gap-3 text-2xl-medium text-ink-gray-6"
   >
-    <LoadingIndicator class="h-6 w-6" />
+    <LoadingIndicator class="h-6 w-6 animate-spin" />
     <span>{{ __('Loading...') }}</span>
   </div>
   <div v-else class="pb-8">
@@ -58,11 +58,11 @@
 </template>
 
 <script setup>
-import EditIcon from '@/components/Icons/EditIcon.vue'
+import EditIcon from '~icons/lucide/pencil'
 import DataFieldsModal from '@/components/Modals/DataFieldsModal.vue'
 import FieldLayout from '@/components/FieldLayout/FieldLayout.vue'
 import { Badge, createResource } from 'frappe-ui'
-import LoadingIndicator from '@/components/Icons/LoadingIndicator.vue'
+import LoadingIndicator from '~icons/lucide/loader-circle'
 import { usersStore } from '@/stores/users'
 import { useDocument } from '@/data/document'
 import { isMobileView } from '@/composables/settings'

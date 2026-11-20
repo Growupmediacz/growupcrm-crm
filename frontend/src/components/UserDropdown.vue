@@ -64,7 +64,7 @@
 <script setup>
 import BrandLogo from '@/components/BrandLogo.vue'
 import FrappeCloudIcon from '@/components/Icons/FrappeCloudIcon.vue'
-import AppsIcon from '@/components/Icons/AppsIcon.vue'
+import AppsIcon from '~icons/lucide/layout-grid'
 import { sessionStore } from '@/stores/session'
 import { usersStore } from '@/stores/users'
 import { getSettings } from '@/stores/settings'
@@ -121,10 +121,10 @@ const footerItems = computed(() => [
     group: 'profile',
     hideLabel: true,
     items: [
-      { icon: 'user', label: __('Můj profil'), onClick: () => openSettingsPage(__('Profile')) },
-      { icon: 'settings', label: __('Nastavení'), onClick: () => openSettingsPage() },
+      { icon: 'lucide-user', label: __('Můj profil'), onClick: () => openSettingsPage(__('Profile')) },
+      { icon: 'lucide-settings', label: __('Nastavení'), onClick: () => openSettingsPage() },
       {
-        icon: 'users',
+        icon: 'lucide-users',
         label: __('Tým a role'),
         onClick: () => openSettingsPage(__('Users')),
         condition: () => ['System Manager', 'Sales Manager'].includes(user.value.role),
@@ -135,8 +135,8 @@ const footerItems = computed(() => [
     group: 'session',
     hideLabel: true,
     items: [
-      { icon: 'help-circle', label: __('Nápověda a podpora'), onClick: () => (showAboutModal.value = true) },
-      { icon: 'log-out', label: __('Odhlásit se'), onClick: () => logout.submit() },
+      { icon: 'lucide-circle-help', label: __('Nápověda a podpora'), onClick: () => (showAboutModal.value = true) },
+      { icon: 'lucide-log-out', label: __('Odhlásit se'), onClick: () => logout.submit() },
     ],
   },
 ])
@@ -175,7 +175,7 @@ const dropdownItems = computed(() => {
 
 function dropdownItemObj(item) {
   let _item = JSON.parse(JSON.stringify(item))
-  let icon = _item.icon || 'external-link'
+  let icon = _item.icon || 'lucide-external-link'
   if (typeof icon === 'string' && icon.startsWith('<svg')) {
     icon = markRaw(h('div', { innerHTML: icon }))
   }

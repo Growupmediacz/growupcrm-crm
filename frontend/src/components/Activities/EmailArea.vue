@@ -76,8 +76,8 @@
   </div>
 </template>
 <script setup>
-import ReplyIcon from '@/components/Icons/ReplyIcon.vue'
-import ReplyAllIcon from '@/components/Icons/ReplyAllIcon.vue'
+import ReplyIcon from '~icons/lucide/reply'
+import ReplyAllIcon from '~icons/lucide/reply-all'
 import AttachmentItem from '@/components/AttachmentItem.vue'
 import EmailContent from '@/components/Activities/EmailContent.vue'
 import { Badge } from 'frappe-ui'

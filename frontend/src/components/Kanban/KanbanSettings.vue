@@ -82,7 +82,7 @@
             <Button
               class="w-full mt-2"
               :label="__('Add Field')"
-              iconLeft="plus"
+              iconLeft="lucide-plus"
               @click="setOpen(!open)"
             />
           </template>
@@ -108,7 +108,7 @@
   </Dialog>
 </template>
 <script setup>
-import DragVerticalIcon from '@/components/Icons/DragVerticalIcon.vue'
+import DragVerticalIcon from '~icons/lucide/grip-vertical'
 import { glLucide } from '@/components/glIcons'
 const KanbanIcon = glLucide('kanban') // GrowUp V1: Lucide
 import { getMeta } from '@/stores/meta'

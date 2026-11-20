@@ -107,7 +107,7 @@
                       class="flex w-full items-center justify-between rounded-l-none !text-ink-gray-5"
                       size="md"
                       :label="displayValue"
-                      :iconRight="open ? 'chevron-down' : 'chevron-up'"
+                      :iconRight="open ? 'lucide-chevron-down' : 'lucide-chevron-up'"
                       @click="setOpen(!open)"
                     />
                   </template>
@@ -134,7 +134,7 @@
                   class="!text-ink-gray-5"
                   :label="__('Add Sort')"
                   variant="ghost"
-                  iconLeft="plus"
+                  iconLeft="lucide-plus"
                   @click="setOpen(!open)"
                 />
               </template>
@@ -154,11 +154,11 @@
 </template>
 
 <script setup>
-import AscendingIcon from '@/components/Icons/AscendingIcon.vue'
-import DesendingIcon from '@/components/Icons/DesendingIcon.vue'
+import AscendingIcon from '~icons/lucide/arrow-up-narrow-wide'
+import DesendingIcon from '~icons/lucide/arrow-down-wide-narrow'
 import { glLucide } from '@/components/glIcons'
 const SortIcon = glLucide('arrow-up-down') // GrowUp V1: Lucide
-import DragIcon from '@/components/Icons/DragIcon.vue'
+import DragIcon from '~icons/lucide/grip-vertical'
 import { useSortable } from '@vueuse/integrations/useSortable'
 import { Combobox, createResource, Popover } from 'frappe-ui'
 import { computed, nextTick, onMounted } from 'vue'
