@@ -83,7 +83,7 @@ function links(w) {
     { key: 'live', url: w.live_url, icon: 'globe', title: __('Ostrý web') },
     { key: 'repo', url: w.repo_url, icon: 'link', title: __('Repozitář') },
     { key: 'drive', url: w.drive_url, icon: 'folder', title: __('Drive') },
-  ].filter((l) => l.url)
+  ].filter((l) => /^https?:\/\//i.test(l.url || '')) // jen http(s): žádné javascript: odkazy
 }
 function daysLabel(n) {
   if (n == null) return ''
