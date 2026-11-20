@@ -39,6 +39,8 @@ export async function sendWithUndo(payload, { draftKey, snapshot, recipientLabel
           await writeDraft(key, snapshot)
           restoredDraft.value = { key, at: Date.now() }
           toast.success(__('Odeslání vráceno, text je zpět v konceptu'))
+        } else if (r.reason === 'not_found') {
+          toast.error(__('E-mail už ve frontě není'))
         } else {
           toast.error(__('E-mail už odešel, nejde vrátit'))
         }

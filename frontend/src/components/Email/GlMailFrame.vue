@@ -40,12 +40,18 @@ function token(name, fallback) {
 
 // vzdálené obrázky (sledovací pixely) se načtou až po kliknutí
 const prepared = computed(() => {
-  const clean = sanitizeHTML(props.html || '', { FORBID_TAGS: ['form', 'input', 'button', 'textarea', 'select'], ADD_ATTR: ['target'] })
+  const clean = sanitizeHTML(props.html || '', { FORBID_TAGS: ['form', 'input', 'button', 'textarea', 'select', 'style'], FORBID_ATTR: ['srcset', 'background'], ADD_ATTR: ['target'] })
   const doc = new DOMParser().parseFromString(clean, 'text/html')
   let count = 0
   doc.querySelectorAll('img[src]').forEach((img) => {
     const src = img.getAttribute('src') || ''
-    if (/^(https?:)?\/\//i.test(src) && !src.startsWith(location.origin)) {
+    let origin = ''
+    try {
+      origin = new URL(src, location.href).origin
+    } catch {
+      origin = ''
+    }
+    if (/^(https?:)?\/\//i.test(src) && origin !== location.origin) {
       count++
       if (!showImages.value) {
         img.setAttribute('data-gl-src', src)
@@ -63,7 +69,9 @@ const srcdoc = computed(() => {
   const link = token('--accent-700', 'blue')
   const line = token('--line', 'silver')
   const muted = token('--text-2', 'gray')
-  return `<!DOCTYPE html><html lang="cs"><head><meta charset="utf-8"><base target="_blank"><style>
+  // dokud uživatel nepovolí obrázky, rámec nenačte nic zvenku (ani přes CSS url())
+  const csp = showImages.value ? '' : `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: ${location.origin}; style-src 'unsafe-inline'; font-src data:">`
+  return `<!DOCTYPE html><html lang="cs"><head><meta charset="utf-8">${csp}<base target="_blank"><style>
 html,body{margin:0;padding:0;background:transparent}
 body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.6;color:${ink};
   overflow-wrap:break-word;word-break:normal;-webkit-text-size-adjust:100%}

@@ -36,7 +36,28 @@ const props = defineProps({ proposal: { type: Object, required: true } })
 const emit = defineEmits(['edit', 'send', 'rejected'])
 const whyOpen = ref(false)
 const placeholders = computed(() => countPlaceholders(props.proposal.html))
-const previewHtml = computed(() => sanitizeHTML(props.proposal.html || '').replace(PLACEHOLDER_RE, (m) => `<mark class="gl-ph">${m}</mark>`))
+// zvýraznění jen v textových uzlech (ne řetězcovou náhradou v HTML), pak ještě jednou čištění
+const previewHtml = computed(() => {
+  const doc = new DOMParser().parseFromString(sanitizeHTML(props.proposal.html || ''), 'text/html')
+  const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT)
+  const nodes = []
+  while (walker.nextNode()) if (new RegExp(PLACEHOLDER_RE.source).test(walker.currentNode.nodeValue)) nodes.push(walker.currentNode)
+  nodes.forEach((n) => {
+    const frag = doc.createDocumentFragment()
+    let last = 0
+    for (const m of n.nodeValue.matchAll(new RegExp(PLACEHOLDER_RE.source, 'g'))) {
+      frag.append(n.nodeValue.slice(last, m.index))
+      const mark = doc.createElement('mark')
+      mark.className = 'gl-ph'
+      mark.textContent = m[0]
+      frag.append(mark)
+      last = m.index + m[0].length
+    }
+    frag.append(n.nodeValue.slice(last))
+    n.replaceWith(frag)
+  })
+  return sanitizeHTML(doc.body.innerHTML)
+})
 
 function approve() {
   // návrh s místem k doplnění se nejdřív otevře v editoru; jinak jde k odeslání stejnou cestou jako ruční e-mail

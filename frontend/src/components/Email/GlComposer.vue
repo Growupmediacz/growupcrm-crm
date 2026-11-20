@@ -306,6 +306,7 @@ async function send() {
     return
   }
   sending.value = true
+  forgetLocal() // zastaví odložené uložení konceptu, aby se po odeslání znovu nevytvořil
   const snap = snapshot()
   try {
     const result = await sendWithUndo(
@@ -330,6 +331,7 @@ async function send() {
     emit('sent', result)
   } catch (e) {
     error.value = e?.messages?.[0] || e?.message || __('zkuste to znovu')
+    save() // neodeslaný text zůstane v konceptu
   } finally {
     sending.value = false
   }
