@@ -78,7 +78,7 @@
       </div>
       <div v-if="s.auto_send" class="flex flex-wrap items-center justify-between gap-3 text-[14px] text-ink-gray-7">
         <span>{{ __('Schválil {0}', [s.approved_by]) }} {{ formatDate(s.approved_at) }}<template v-if="s.plan.count"> · {{ __('naplánováno do {0}', [formatDate(s.plan.last)]) }}</template></span>
-        <Button v-if="s.status === 'Běží'" iconLeft="pause" :label="__('Pozastavit odesílání')" @click="pause" />
+        <Button v-if="s.status === 'Běží'" iconLeft="lucide-pause" :label="__('Pozastavit odesílání')" @click="pause" />
       </div>
     </template>
   </div>

@@ -5,13 +5,13 @@
       <Breadcrumbs class="gl-crumbs" :items="[{ label: __('Projekty'), route: { name: 'Projects' } }, { label: p?.project_name || '…' }]" />
     </template>
     <template #right-header>
-      <Button class="hidden sm:inline-flex" iconLeft="edit-2" :label="__('Upravit')" @click="openEdit" />
+      <Button class="hidden sm:inline-flex" iconLeft="lucide-pencil-line" :label="__('Upravit')" @click="openEdit" />
       <Dropdown v-if="p" :options="statusOptions">
-        <Button :label="statusLabel" iconRight="chevron-down" class="hidden sm:inline-flex">
+        <Button :label="statusLabel" iconRight="lucide-chevron-down" class="hidden sm:inline-flex">
           <template #prefix><span class="size-2 rounded-full" :style="{ background: STATUS_COLORS[p.status === 'Čeká' ? 'Čeká' : p.display_status] }" /></template>
         </Button>
       </Dropdown>
-      <Button variant="solid" iconLeft="plus" @click="openTask('')"><span class="hidden sm:inline">{{ __('Přidat úkol') }}</span></Button>
+      <Button variant="solid" iconLeft="lucide-plus" @click="openTask('')"><span class="hidden sm:inline">{{ __('Přidat úkol') }}</span></Button>
     </template>
   </LayoutHeader>
 

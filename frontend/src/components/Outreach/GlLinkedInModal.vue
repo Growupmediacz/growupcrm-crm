@@ -32,7 +32,7 @@
     <template #actions>
       <div class="flex justify-end gap-2">
         <Button :label="__('Přeskočit')" @click="$emit('skip'), (show = false)" />
-        <Button variant="solid" iconLeft="check" :label="__('Označit jako hotové')" @click="$emit('done'), (show = false)" />
+        <Button variant="solid" iconLeft="lucide-check" :label="__('Označit jako hotové')" @click="$emit('done'), (show = false)" />
       </div>
     </template>
   </Dialog>

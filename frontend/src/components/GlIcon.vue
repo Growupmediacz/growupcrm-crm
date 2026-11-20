@@ -1,20 +1,27 @@
 <template>
-  <span class="gl-icon inline-flex shrink-0 items-center justify-center" :style="{ width: px, height: px }" v-html="svg" aria-hidden="true" />
+  <span class="gl-icon inline-flex shrink-0 items-center justify-center" :style="{ width: px, height: px }" aria-hidden="true">
+    <component :is="icon" v-if="icon" width="100%" height="100%" :stroke-width="stroke" focusable="false" />
+  </span>
 </template>
 <script setup>
-// GrowUp: ikony z designového balíčku (24 px, tah 1,75, currentColor). Název = soubor v assets/gl-icons.
+// GrowUp (zadání 2027, kolo 2 – V1): kresby jsou Lucide (ISC), rozhraní zůstává: <GlIcon name="…" :size="18" />.
+// `name` = původní krátký název (alert, cal, brief…) nebo přímo název Lucide (circle-check, wand-sparkles…), viz glIcons.js.
+// Tah 1,8 (v mřížce 24 px), velikosti 18 px v textu a 22 px v lištách.
 import { computed } from 'vue'
+import { glIconComponent } from './glIcons'
 
 const props = defineProps({
   name: { type: String, required: true },
   size: { type: [Number, String], default: 18 },
+  strokeWidth: { type: [Number, String], default: 1.8 },
 })
 
-const icons = import.meta.glob('@/assets/gl-icons/*.svg', { query: '?raw', import: 'default', eager: true })
-const svg = computed(() => {
-  const key = Object.keys(icons).find((k) => k.endsWith(`/${props.name}.svg`))
-  return key ? icons[key] : ''
+const icon = computed(() => {
+  const c = glIconComponent(props.name)
+  if (!c && import.meta.env.DEV && props.name) console.warn(`[GlIcon] neznámá ikona "${props.name}" – doplň ji do glIcons.js`)
+  return c
 })
+const stroke = computed(() => props.strokeWidth)
 const px = computed(() => `${props.size}px`)
 </script>
 <style>

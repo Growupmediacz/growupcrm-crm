@@ -54,11 +54,11 @@
       </GlThread>
 
       <div class="mt-4 flex flex-wrap gap-2">
-        <Button variant="solid" iconLeft="briefcase" :loading="busy === 'lead'" :disabled="!!current.lead" @click="createLead">{{ current.lead ? __('Zakázka založena') : __('Vytvořit zakázku') }}</Button>
-        <Button iconLeft="calendar" @click="showEvent = true">{{ __('Naplánovat schůzku') }}</Button>
-        <Button iconLeft="corner-up-left" @click="replyOpen = true">{{ __('Odpovědět') }}</Button>
-        <Button variant="subtle" theme="red" iconLeft="x" @click="unsub">{{ __('Odhlásit') }}</Button>
-        <Button iconLeft="check" @click="resolve">{{ __('Vyřízeno') }}</Button>
+        <Button variant="solid" iconLeft="lucide-briefcase" :loading="busy === 'lead'" :disabled="!!current.lead" @click="createLead">{{ current.lead ? __('Zakázka založena') : __('Vytvořit zakázku') }}</Button>
+        <Button iconLeft="lucide-calendar" @click="showEvent = true">{{ __('Naplánovat schůzku') }}</Button>
+        <Button iconLeft="lucide-reply" @click="replyOpen = true">{{ __('Odpovědět') }}</Button>
+        <Button variant="subtle" theme="red" iconLeft="lucide-x" @click="unsub">{{ __('Odhlásit') }}</Button>
+        <Button iconLeft="lucide-check" @click="resolve">{{ __('Vyřízeno') }}</Button>
       </div>
       <p class="mt-3 text-[13px] text-ink-gray-5">{{ __('Zakázka se založí s firmou, kontaktem a celým vláknem. Kontakt se z kampaně vyřadí automaticky – odpověď sekvenci zastavila.') }}</p>
     </div>

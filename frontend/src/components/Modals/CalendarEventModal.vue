@@ -109,7 +109,7 @@
       <div class="flex items-center justify-between gap-2">
         <div><ErrorMessage :message="error" /></div>
         <div class="flex gap-2">
-          <Button v-if="!isNew && canEdit" variant="subtle" theme="red" iconLeft="trash-2" :label="__('Smazat')" @click="remove" />
+          <Button v-if="!isNew && canEdit" variant="subtle" theme="red" iconLeft="lucide-trash-2" :label="__('Smazat')" @click="remove" />
           <Button :label="__('Zrušit')" @click="show = false" />
           <Button v-if="canEdit" variant="solid" :label="__('Uložit')" :loading="saving" @click="save" />
         </div>

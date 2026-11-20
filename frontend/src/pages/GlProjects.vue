@@ -14,11 +14,11 @@
     </template>
     <template #right-header>
       <router-link :to="{ name: 'ProjectTemplates' }" class="hidden sm:inline-flex">
-        <Button iconLeft="layers" :label="__('Šablony')" />
+        <Button iconLeft="lucide-layers" :label="__('Šablony')" />
       </router-link>
       <Popover placement="bottom-end">
         <template #target="{ togglePopover }">
-          <Button iconLeft="filter" :class="activeFilters && '!bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] !text-[var(--accent-700)]'" @click="togglePopover()">
+          <Button iconLeft="lucide-list-filter" :class="activeFilters && '!bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] !text-[var(--accent-700)]'" @click="togglePopover()">
             <span class="hidden sm:inline">{{ __('Filtr') }}</span><span v-if="activeFilters"> · {{ activeFilters }}</span>
           </Button>
         </template>
@@ -42,7 +42,7 @@
           </div>
         </template>
       </Popover>
-      <Button variant="solid" iconLeft="plus" @click="showNew = true">
+      <Button variant="solid" iconLeft="lucide-plus" @click="showNew = true">
         <span class="hidden sm:inline">{{ __('Nový projekt') }}</span>
       </Button>
     </template>
@@ -153,7 +153,7 @@
             <div v-if="p.waiting_note" class="text-[14px] text-ink-gray-5">{{ p.waiting_note }}</div>
           </div>
           <div class="mt-3 flex justify-center">
-            <Button iconLeft="mail" :label="__('Připomenout klientovi')" :loading="reminding" @click="remindOverdue" />
+            <Button iconLeft="lucide-mail" :label="__('Připomenout klientovi')" :loading="reminding" @click="remindOverdue" />
           </div>
         </template>
         <div v-else class="mt-2 flex flex-col items-center gap-2 rounded-[18px] bg-[color-mix(in_srgb,var(--stage-vyhrano)_7%,transparent)] py-6 text-center">

@@ -9,7 +9,7 @@
           <button class="gl-seg-btn" :class="scope === 'mine' && 'gl-seg-on'" @click="scope = 'mine'">{{ __('Moje') }}</button>
           <button class="gl-seg-btn" :class="scope === 'all' && 'gl-seg-on'" @click="scope = 'all'">{{ __('Celý tým') }}</button>
         </div>
-        <Button variant="solid" iconLeft="plus" @click="createNote"><span class="hidden sm:inline">{{ __('Nový zápis') }}</span></Button>
+        <Button variant="solid" iconLeft="lucide-plus" @click="createNote"><span class="hidden sm:inline">{{ __('Nový zápis') }}</span></Button>
       </template>
     </LayoutHeader>
     <div class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
@@ -53,9 +53,9 @@
             <div class="flex items-start justify-between gap-4">
               <h2 lang="cs" class="text-[28px] font-bold leading-tight tracking-[-0.02em] text-ink-gray-9">{{ current.title }}</h2>
               <div class="flex shrink-0 gap-2">
-                <Button iconLeft="edit-2" :label="__('Upravit')" @click="editNote(current.name)" />
-                <Dropdown :options="[{ label: __('Smazat'), icon: 'trash-2', theme: 'red', onClick: () => remove(current.name) }]" placement="right">
-                  <Button icon="more-horizontal" :aria-label="__('Další akce')" />
+                <Button iconLeft="lucide-pencil-line" :label="__('Upravit')" @click="editNote(current.name)" />
+                <Dropdown :options="[{ label: __('Smazat'), icon: 'lucide-trash-2', theme: 'red', onClick: () => remove(current.name) }]" placement="right">
+                  <Button icon="lucide-ellipsis" :aria-label="__('Další akce')" />
                 </Dropdown>
               </div>
             </div>
@@ -82,7 +82,7 @@
                 <div v-if="parsed.next" class="mt-1 flex items-center gap-3 rounded-[18px] border border-[color-mix(in_srgb,var(--stage-nabidka)_35%,transparent)] bg-[color-mix(in_srgb,var(--stage-nabidka)_10%,transparent)] px-4 py-3">
                   <GlIcon name="clock" :size="22" class="shrink-0 text-[var(--c-amber-600)]" />
                   <span class="min-w-0 flex-1 text-[15px] text-ink-gray-9"><b class="text-[var(--c-amber-650)]">{{ __('Další krok') }}:</b> {{ parsed.next }}</span>
-                  <Button variant="solid" iconLeft="check" :label="__('Vytvořit úkol')" @click="taskFromNote" />
+                  <Button variant="solid" iconLeft="lucide-check" :label="__('Vytvořit úkol')" @click="taskFromNote" />
                 </div>
               </template>
               <GlSkeleton v-else class="pt-5" :rows="4" />
@@ -94,7 +94,7 @@
         <div v-for="n in res.data?.items || []" :key="n.name" class="gl-card gl-lift flex min-h-[200px] cursor-pointer flex-col gap-2.5 p-5" @click="editNote(n.name)">
           <div class="flex items-start justify-between gap-2">
             <div lang="cs" class="gl-text line-clamp-2 text-[17px] font-bold leading-snug text-ink-gray-9">{{ n.title }}</div>
-            <Dropdown :options="[{ label: __('Smazat'), icon: 'trash-2', theme: 'red', onClick: () => remove(n.name) }]" placement="right">
+            <Dropdown :options="[{ label: __('Smazat'), icon: 'lucide-trash-2', theme: 'red', onClick: () => remove(n.name) }]" placement="right">
               <button class="flex size-8 shrink-0 items-center justify-center rounded-full text-ink-gray-5 hover:bg-white/70" :aria-label="__('Další akce')" @click.stop><GlIcon name="more" :size="18" /></button>
             </Dropdown>
           </div>

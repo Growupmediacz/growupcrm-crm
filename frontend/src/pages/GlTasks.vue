@@ -18,7 +18,7 @@
           <button class="gl-seg-btn" :class="scope === 'mine' && 'gl-seg-on'" @click="scope = 'mine'">{{ __('Moje') }}</button>
           <button class="gl-seg-btn" :class="scope === 'team' && 'gl-seg-on'" @click="scope = 'team'">{{ __('Celý tým') }}</button>
         </div>
-        <Button variant="solid" iconLeft="plus" @click="openTask('')"><span class="hidden sm:inline">{{ __('Nový úkol') }}</span></Button>
+        <Button variant="solid" iconLeft="lucide-plus" @click="openTask('')"><span class="hidden sm:inline">{{ __('Nový úkol') }}</span></Button>
       </template>
     </LayoutHeader>
 

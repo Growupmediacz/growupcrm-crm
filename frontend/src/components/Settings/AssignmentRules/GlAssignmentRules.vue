@@ -3,7 +3,7 @@
        zapnutí přepínačem, úprava v editoru CRM. Data: growupcrm.assignment.get_rules / set_order. -->
   <SettingsLayoutBase :title="__('Pravidla přiřazení')" :description="__('Kdo dostane novou zakázku. Pravidla se zkoušejí shora dolů.')">
     <template #header-actions>
-      <Button variant="solid" iconLeft="plus" :label="__('Nové pravidlo')" @click="updateStep('view', null)" />
+      <Button variant="solid" iconLeft="lucide-plus" :label="__('Nové pravidlo')" @click="updateStep('view', null)" />
     </template>
     <template #content>
       <div v-if="rules.loading && !rules.data" class="py-6"><GlSkeleton :rows="3" /></div>
@@ -40,7 +40,7 @@
               </div>
               <Switch :modelValue="!r.disabled" :aria-label="__('Zapnuto')" @update:modelValue="(v) => toggle(r, v)" />
               <Dropdown :options="menu(r)" placement="right">
-                <Button icon="more-horizontal" variant="ghost" :aria-label="__('Další akce')" />
+                <Button icon="lucide-ellipsis" variant="ghost" :aria-label="__('Další akce')" />
               </Dropdown>
             </div>
           </template>
@@ -123,10 +123,10 @@ async function saveOrder() {
 }
 function menu(r) {
   return [
-    { label: __('Upravit'), icon: 'edit-2', onClick: () => updateStep('view', { name: r.name }) },
+    { label: __('Upravit'), icon: 'lucide-pencil-line', onClick: () => updateStep('view', { name: r.name }) },
     {
       label: __('Smazat'),
-      icon: 'trash-2',
+      icon: 'lucide-trash-2',
       theme: 'red',
       onClick: async () => {
         if (!window.confirm(__('Smazat pravidlo {0}?', [r.name]))) return

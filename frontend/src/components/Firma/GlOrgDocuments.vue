@@ -14,7 +14,7 @@
       <div class="ml-auto flex items-center gap-2">
         <input v-model="search" class="gl-field h-9 w-48" :placeholder="__('Hledat dokument…')" />
         <Dropdown :options="uploadOptions" placement="right">
-          <Button variant="solid" iconLeft="upload" :label="__('Nahrát dokument')" :loading="uploading" />
+          <Button variant="solid" iconLeft="lucide-upload" :label="__('Nahrát dokument')" :loading="uploading" />
         </Dropdown>
       </div>
     </div>
@@ -60,7 +60,7 @@
           <span class="text-ink-gray-5"> · {{ sizeFmt(d.file_size) }}</span>
         </div>
       </div>
-      <Button v-if="d.source === 'organization'" variant="ghost" icon="trash-2" :aria-label="__('Smazat')" @click="remove(d)" />
+      <Button v-if="d.source === 'organization'" variant="ghost" icon="lucide-trash-2" :aria-label="__('Smazat')" @click="remove(d)" />
     </div>
   </div>
 </template>

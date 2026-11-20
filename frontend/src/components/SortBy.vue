@@ -156,7 +156,8 @@
 <script setup>
 import AscendingIcon from '@/components/Icons/AscendingIcon.vue'
 import DesendingIcon from '@/components/Icons/DesendingIcon.vue'
-import SortIcon from '@/components/Icons/SortIcon.vue'
+import { glLucide } from '@/components/glIcons'
+const SortIcon = glLucide('arrow-up-down') // GrowUp V1: Lucide
 import DragIcon from '@/components/Icons/DragIcon.vue'
 import { useSortable } from '@vueuse/integrations/useSortable'
 import { Combobox, createResource, Popover } from 'frappe-ui'

@@ -11,7 +11,7 @@
       <Button
         variant="solid"
         :label="__('Nový kontakt')"
-        iconLeft="plus"
+        iconLeft="lucide-plus"
         @click="showContactModal = true"
       />
     </template>

@@ -25,7 +25,7 @@
       <div v-if="!isMobileView" class="gl-seg inline-flex">
         <button v-for="o in GRAINS" :key="o.value" class="gl-seg-btn !px-5" :class="grain === o.value && 'gl-seg-on !bg-[var(--accent-600)] !text-white'" @click="setGrain(o.value)">{{ o.label }}</button>
       </div>
-      <Button iconLeft="download" class="max-md:!h-11 max-md:!min-w-11" :disabled="!data?.won_rows?.length" @click="exportCsv">
+      <Button iconLeft="lucide-download" class="max-md:!h-11 max-md:!min-w-11" :disabled="!data?.won_rows?.length" @click="exportCsv">
         <span class="hidden sm:inline">{{ __('Export') }}</span>
       </Button>
     </template>

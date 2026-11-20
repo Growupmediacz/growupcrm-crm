@@ -6,7 +6,7 @@
     </template>
     <template #right-header>
       <!-- GrowUp: přidává se v sekci (Aktivita → typ, Zakázky, Kontakty, Pobočky), horní „Nová zakázka“ není -->
-      <Button v-if="isMobileView && headerAdd" variant="solid" icon="plus" :aria-label="headerAdd.label" @click="headerAdd.onClick" />
+      <Button v-if="isMobileView && headerAdd" variant="solid" icon="lucide-plus" :aria-label="headerAdd.label" @click="headerAdd.onClick" />
       <template v-else>
       <Button
         v-if="organization.doc.ico"
@@ -158,9 +158,9 @@
             </button>
             <div v-if="!isMobileView" class="ml-auto">
               <Dropdown v-if="kind === 'all'" :options="addOptions" placement="right">
-                <Button iconLeft="plus" :label="__('Přidat')" />
+                <Button iconLeft="lucide-plus" :label="__('Přidat')" />
               </Dropdown>
-              <Button v-else-if="addByKind[kind]" iconLeft="plus" :label="addByKind[kind].label" @click="addByKind[kind].onClick" />
+              <Button v-else-if="addByKind[kind]" iconLeft="lucide-plus" :label="addByKind[kind].label" @click="addByKind[kind].onClick" />
             </div>
           </div>
           <GlEmptyState v-if="!timeline.length" class="my-8" icon="clock" :title="__('Zatím žádná aktivita')" :text="__('Zápisy, hovory, schůzky a úkoly u zakázek této firmy se zobrazí tady.')" />
@@ -212,7 +212,7 @@
         <!-- Zakázky -->
         <div v-else-if="tab === 'leads'">
           <div class="mb-3 flex justify-end">
-            <Button :label="__('Nová zakázka')" iconLeft="plus" @click="showLeadModal = true" />
+            <Button :label="__('Nová zakázka')" iconLeft="lucide-plus" @click="showLeadModal = true" />
           </div>
           <GlEmptyState v-if="!leads.length" class="my-6" icon="brief" :title="__('Zatím žádná zakázka')" :text="__('Firma zatím nemá žádnou zakázku.')" :action="__('Nová zakázka')" primary @action="showLeadModal = true" />
           <table v-else class="w-full text-left text-sm">
@@ -245,7 +245,7 @@
         <!-- Kontakty -->
         <div v-else-if="tab === 'contacts'">
           <div class="mb-3 flex justify-end">
-            <Button :label="__('Přidat kontakt')" iconLeft="plus" @click="showContactDialog = true" />
+            <Button :label="__('Přidat kontakt')" iconLeft="lucide-plus" @click="showContactDialog = true" />
           </div>
           <div v-if="!contacts.length" class="py-16 text-center text-sm text-ink-gray-5">
             {{ __('Zatím tu nejsou žádné kontakty. Přidejte třeba účetní nebo technika.') }}
@@ -279,7 +279,7 @@
         <!-- Pobočky -->
         <div v-else-if="tab === 'branches'">
           <div class="mb-3 flex justify-end">
-            <Button :label="__('Přidat pobočku')" iconLeft="plus" @click="editBranch(null)" />
+            <Button :label="__('Přidat pobočku')" iconLeft="lucide-plus" @click="editBranch(null)" />
           </div>
           <div v-if="!branches.length" class="py-16 text-center text-sm text-ink-gray-5">
             {{ __('Firma zatím nemá pobočky. Pobočka určuje kraj a odpovědného obchodníka zakázky.') }}

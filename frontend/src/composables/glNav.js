@@ -12,9 +12,10 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 // routes = trasy, které patří ke stránce (seznam, detail, podstránky)
+// ikony: názvy Lucide (zadání 2027 kolo 2 V1, podle návrhů design/navrhy a KOMPONENTY.md)
 const PAGES = [
-  { key: 'Today', label: 'Dnes', icon: 'home', routes: ['Today', 'Dashboard'] },
-  { key: 'Leads', label: 'Zakázky', icon: 'brief', routes: ['Leads', 'Lead', 'Deals', 'Deal'] },
+  { key: 'Today', label: 'Dnes', icon: 'layout-dashboard', routes: ['Today', 'Dashboard'] },
+  { key: 'Leads', label: 'Zakázky', icon: 'kanban', routes: ['Leads', 'Lead', 'Deals', 'Deal'] },
   { key: 'Organizations', label: 'Firmy', icon: 'building', routes: ['Organizations', 'Organization'] },
   { key: 'ContactsCards', label: 'Kontakty', icon: 'users', routes: ['ContactsCards', 'Contacts', 'Contact'] },
   {
@@ -24,10 +25,10 @@ const PAGES = [
     routes: ['Outreach', 'OutreachReview', 'OutreachCampaign', 'OutreachTemplate', 'WeekApprove'],
     condition: () => outreachEnabled.value,
   },
-  { key: 'Agent', label: 'Agent', icon: 'sparkles', routes: ['Agent', 'AgentLog'], condition: () => agentEnabled.value },
-  { key: 'Tasks', label: 'Úkoly', icon: 'check', routes: ['Tasks'] },
+  { key: 'Agent', label: 'Agent', icon: 'bot', routes: ['Agent', 'AgentLog'], condition: () => agentEnabled.value },
+  { key: 'Tasks', label: 'Úkoly', icon: 'circle-check', routes: ['Tasks'] },
   { key: 'Calendar', label: 'Kalendář', icon: 'cal', routes: ['Calendar'] },
-  { key: 'Notes', label: 'Zápisy', icon: 'doc', routes: ['Notes'] },
+  { key: 'Notes', label: 'Zápisy', icon: 'notebook-pen', routes: ['Notes'] },
   { key: 'Call Logs', label: 'Hovory', icon: 'phone', routes: ['Call Logs'] },
   { key: 'Clients', label: 'Klienti', icon: 'star', routes: ['Clients'], condition: () => agencyEnabled.value },
   {
@@ -40,15 +41,15 @@ const PAGES = [
   { key: 'Webs', label: 'Weby', icon: 'globe', routes: ['Webs'], condition: () => agencyEnabled.value },
   { key: 'Plans', label: 'Plány', icon: 'target', routes: ['Plans'], condition: () => agencyEnabled.value },
   // zadání 2027 E3 (G): faktury jen pro vedoucího obchodu / správce (obchodník je nevidí ani v navigaci; API je chrání samo)
-  { key: 'Invoices', label: 'Faktury', icon: 'doc', routes: ['Invoices'], condition: () => agencyEnabled.value && isManager() },
+  { key: 'Invoices', label: 'Faktury', icon: 'file-text', routes: ['Invoices'], condition: () => agencyEnabled.value && isManager() },
   { key: 'Analytics', label: 'Analytika', icon: 'chart', routes: ['Analytics'], condition: () => analyticsEnabled.value },
 ]
 
 const GROUPS = [
-  { key: 'today', label: 'Dnes', icon: 'grid', pages: ['Today', 'Leads', 'Organizations', 'ContactsCards', 'Outreach', 'Agent'] },
-  { key: 'sales', label: 'Prodej', icon: 'brief', pages: ['Leads', 'Organizations', 'ContactsCards', 'Outreach', 'Agent'] },
-  { key: 'work', label: 'Práce', icon: 'check', pages: ['Tasks', 'Calendar', 'Notes', 'Call Logs'] },
-  { key: 'delivery', label: 'Dodání', icon: 'folder', pages: ['Clients', 'Projects', 'Webs', 'Plans', 'Invoices', 'Analytics'] },
+  { key: 'today', label: 'Dnes', icon: 'layout-dashboard', pages: ['Today', 'Leads', 'Organizations', 'ContactsCards', 'Outreach', 'Agent'] },
+  { key: 'sales', label: 'Prodej', icon: 'handshake', pages: ['Leads', 'Organizations', 'ContactsCards', 'Outreach', 'Agent'] },
+  { key: 'work', label: 'Práce', icon: 'circle-check', pages: ['Tasks', 'Calendar', 'Notes', 'Call Logs'] },
+  { key: 'delivery', label: 'Dodání', icon: 'archive', pages: ['Clients', 'Projects', 'Webs', 'Plans', 'Invoices', 'Analytics'] },
 ]
 
 // naposledy navštívená stránka každé skupiny (klik na skupinu tam vrátí)

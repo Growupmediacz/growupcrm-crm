@@ -158,7 +158,8 @@
   </Popover>
 </template>
 <script setup>
-import FilterIcon from '@/components/Icons/FilterIcon.vue'
+import { glLucide } from '@/components/glIcons'
+const FilterIcon = glLucide('list-filter') // GrowUp V1: Lucide
 import Link from '@/components/Controls/Link.vue'
 import DurationInput from '@/components/Controls/DurationInput.vue'
 import RatingInput from '@/components/Controls/RatingInput.vue'

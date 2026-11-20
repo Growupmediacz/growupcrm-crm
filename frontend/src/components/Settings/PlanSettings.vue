@@ -8,7 +8,7 @@
     <SeatUsage />
     <div class="flex items-center justify-between">
       <h3 class="text-[18px] font-bold text-ink-gray-9">{{ __('Uživatelé a role') }}</h3>
-      <Button variant="solid" iconLeft="plus" :label="__('Pozvat uživatele')" @click="activeSettingsPage = __('Invite User')" />
+      <Button variant="solid" iconLeft="lucide-plus" :label="__('Pozvat uživatele')" @click="activeSettingsPage = __('Invite User')" />
     </div>
     <div class="rounded-[20px] bg-[color-mix(in_srgb,var(--c-tint)_7%,transparent)] p-2">
       <div v-for="u in people" :key="u.name" class="flex items-center gap-3 rounded-2xl px-3 py-2.5">

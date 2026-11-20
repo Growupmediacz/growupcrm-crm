@@ -29,7 +29,7 @@
           </label>
         </div>
         <div class="flex flex-wrap items-center gap-3">
-          <Button iconLeft="refresh-cw" :loading="testing" @click="test">{{ __('Otestovat spojení') }}</Button>
+          <Button iconLeft="lucide-refresh-cw" :loading="testing" @click="test">{{ __('Otestovat spojení') }}</Button>
           <span class="text-[13px] text-ink-gray-5">{{ __('Pošleme testovací e-mail sami sobě') }}</span>
         </div>
         <div v-if="result" class="flex items-start gap-3 rounded-2xl px-4 py-3" :class="result.ok ? 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_14%,transparent)]' : 'bg-[color-mix(in_srgb,var(--c-red-550)_10%,transparent)]'">

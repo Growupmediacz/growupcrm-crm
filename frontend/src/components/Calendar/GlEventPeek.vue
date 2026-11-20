@@ -49,14 +49,14 @@
 
         <div v-if="item.outreach" class="mt-4 flex items-center gap-2">
           <router-link :to="{ name: 'OutreachCampaign', params: { name: item.campaign } }" @click="close">
-            <Button variant="solid" iconLeft="send" :label="__('Otevřít kampaň')" />
+            <Button variant="solid" iconLeft="lucide-send" :label="__('Otevřít kampaň')" />
           </router-link>
           <span class="text-[12px] text-ink-gray-5">{{ __('Plán odesílání, mění se v kampani.') }}</span>
         </div>
         <div v-else class="mt-4 flex items-center gap-2">
-          <Button v-if="item.leadName" variant="solid" iconLeft="file-text" :label="__('Zapsat zápis')" @click="showNote = true" />
-          <Button v-if="item.canEdit" iconLeft="clock" :label="__('Přesunout')" @click="emit('edit', item)" />
-          <Button v-else iconLeft="eye" :label="__('Detail')" @click="emit('edit', item)" />
+          <Button v-if="item.leadName" variant="solid" iconLeft="lucide-file-text" :label="__('Zapsat zápis')" @click="showNote = true" />
+          <Button v-if="item.canEdit" iconLeft="lucide-clock" :label="__('Přesunout')" @click="emit('edit', item)" />
+          <Button v-else iconLeft="lucide-eye" :label="__('Detail')" @click="emit('edit', item)" />
           <div class="flex-1" />
           <button
             v-if="item.canEdit"

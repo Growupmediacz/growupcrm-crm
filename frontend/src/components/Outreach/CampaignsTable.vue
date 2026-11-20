@@ -10,7 +10,7 @@
     </div>
     <div v-if="!shown.length" class="flex flex-col items-center gap-3 py-8 text-center">
       <p class="text-[14px] text-ink-gray-5">{{ rows.length ? __('Žádná aktivní kampaň.') : __('Zatím žádná kampaň. Založte první a přidejte do ní kontakty z CRM.') }}</p>
-      <Button variant="solid" iconLeft="plus" :label="__('Nová kampaň')" @click="$emit('new')" />
+      <Button variant="solid" iconLeft="lucide-plus" :label="__('Nová kampaň')" @click="$emit('new')" />
     </div>
     <div v-else class="flex flex-col">
       <div class="hidden grid-cols-[minmax(0,1fr)_120px_90px_80px_150px] gap-3 border-b border-[var(--line)] pb-2 text-[14px] text-ink-gray-5 lg:grid">

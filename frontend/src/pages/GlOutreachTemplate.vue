@@ -5,7 +5,7 @@
       <Breadcrumbs class="gl-crumbs" :items="[{ label: __('Outreach'), route: { name: 'Outreach' } }, { label: __('Šablony'), route: { name: 'Outreach', params: { tab: 'templates' } } }, { label: form.template_name || __('Nová šablona') }]" />
     </template>
     <template #right-header>
-      <Button v-if="!isNew" variant="subtle" theme="red" iconLeft="trash-2" :label="__('Smazat')" @click="remove" />
+      <Button v-if="!isNew" variant="subtle" theme="red" iconLeft="lucide-trash-2" :label="__('Smazat')" @click="remove" />
       <Button :label="__('Zrušit')" @click="router.push({ name: 'Outreach', params: { tab: 'templates' } })" />
       <Button variant="solid" :loading="saving" :label="__('Uložit šablonu')" @click="save" />
     </template>

@@ -84,7 +84,7 @@
     </template>
     <template #actions>
       <div class="flex flex-wrap items-center justify-between gap-2">
-        <Button v-if="task && canDelete" variant="ghost" theme="red" iconLeft="trash-2" :label="__('Smazat')" @click="remove" />
+        <Button v-if="task && canDelete" variant="ghost" theme="red" iconLeft="lucide-trash-2" :label="__('Smazat')" @click="remove" />
         <span v-else />
         <div class="flex gap-2">
           <Button :label="__('Zrušit')" @click="show = false" />

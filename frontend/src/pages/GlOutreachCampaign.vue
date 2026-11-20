@@ -5,10 +5,10 @@
       <Breadcrumbs class="gl-crumbs" :items="[{ label: __('Outreach'), route: { name: 'Outreach' } }, { label: __('Kampaně'), route: { name: 'Outreach', params: { tab: 'campaigns' } } }, { label: d?.campaign_name || '…' }]" />
     </template>
     <template #right-header>
-      <Button iconLeft="edit-2" class="hidden sm:inline-flex" :label="__('Upravit sekvenci')" @click="showEdit = true" />
-      <Button v-if="d?.status === 'Běží'" iconLeft="pause" :label="__('Pozastavit')" class="hidden sm:inline-flex" @click="setStatus('Pozastaveno')" />
-      <Button v-else-if="d" iconLeft="play" :label="d.status === 'Koncept' ? __('Spustit') : __('Obnovit')" @click="setStatus('Běží')" />
-      <Button variant="solid" iconLeft="plus" @click="showAdd = true"><span class="hidden sm:inline">{{ __('Přidat kontakty') }}</span></Button>
+      <Button iconLeft="lucide-pencil-line" class="hidden sm:inline-flex" :label="__('Upravit sekvenci')" @click="showEdit = true" />
+      <Button v-if="d?.status === 'Běží'" iconLeft="lucide-pause" :label="__('Pozastavit')" class="hidden sm:inline-flex" @click="setStatus('Pozastaveno')" />
+      <Button v-else-if="d" iconLeft="lucide-play" :label="d.status === 'Koncept' ? __('Spustit') : __('Obnovit')" @click="setStatus('Běží')" />
+      <Button variant="solid" iconLeft="lucide-plus" @click="showAdd = true"><span class="hidden sm:inline">{{ __('Přidat kontakty') }}</span></Button>
     </template>
   </LayoutHeader>
 

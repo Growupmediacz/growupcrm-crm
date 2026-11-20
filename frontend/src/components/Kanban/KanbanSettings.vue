@@ -109,7 +109,8 @@
 </template>
 <script setup>
 import DragVerticalIcon from '@/components/Icons/DragVerticalIcon.vue'
-import KanbanIcon from '@/components/Icons/KanbanIcon.vue'
+import { glLucide } from '@/components/glIcons'
+const KanbanIcon = glLucide('kanban') // GrowUp V1: Lucide
 import { getMeta } from '@/stores/meta'
 import { Combobox, Dialog } from 'frappe-ui'
 import Draggable from 'vuedraggable'

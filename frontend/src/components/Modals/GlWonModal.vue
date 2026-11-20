@@ -152,7 +152,7 @@
       </div>
       <div v-else class="flex justify-end gap-2">
         <Button class="max-md:!h-11" :label="__('Zrušit')" @click="show = false" />
-        <Button variant="solid" class="max-md:!h-11" iconLeft="check" :label="__('Potvrdit výhru')" :loading="saving" :disabled="managerMode && !d.lead" @click="confirm" />
+        <Button variant="solid" class="max-md:!h-11" iconLeft="lucide-check" :label="__('Potvrdit výhru')" :loading="saving" :disabled="managerMode && !d.lead" @click="confirm" />
       </div>
     </template>
   </Dialog>

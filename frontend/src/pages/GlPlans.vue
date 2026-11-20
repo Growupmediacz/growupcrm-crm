@@ -10,8 +10,8 @@
           {{ o.label }}
         </button>
       </div>
-      <Button v-if="plan.data?.can_edit && isMobileView" icon="edit-2" :aria-label="__('Upravit cíle')" @click="showTargets = true" />
-      <Button v-else-if="plan.data?.can_edit" iconLeft="edit-2" :label="__('Upravit cíle')" class="!border !border-[color-mix(in_srgb,var(--accent-600)_45%,transparent)] !text-[var(--accent-700)]" @click="showTargets = true" />
+      <Button v-if="plan.data?.can_edit && isMobileView" icon="lucide-pencil-line" :aria-label="__('Upravit cíle')" @click="showTargets = true" />
+      <Button v-else-if="plan.data?.can_edit" iconLeft="lucide-pencil-line" :label="__('Upravit cíle')" class="!border !border-[color-mix(in_srgb,var(--accent-600)_45%,transparent)] !text-[var(--accent-700)]" @click="showTargets = true" />
     </template>
   </LayoutHeader>
 

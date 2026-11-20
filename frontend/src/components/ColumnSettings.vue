@@ -139,7 +139,8 @@
 </template>
 
 <script setup>
-import ColumnsIcon from '@/components/Icons/ColumnsIcon.vue'
+import { glLucide } from '@/components/glIcons'
+const ColumnsIcon = glLucide('columns-3') // GrowUp V1: Lucide
 import EditIcon from '@/components/Icons/EditIcon.vue'
 import DragIcon from '@/components/Icons/DragIcon.vue'
 import ReloadIcon from '@/components/Icons/ReloadIcon.vue'

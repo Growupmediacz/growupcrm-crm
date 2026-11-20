@@ -5,7 +5,7 @@
       <Breadcrumbs class="gl-crumbs" :items="[{ label: __('Projekty'), route: { name: 'Projects' } }, { label: __('Šablony projektů') }]" />
     </template>
     <template #right-header>
-      <Button iconLeft="plus" :label="__('Nová šablona')" @click="newTemplate" />
+      <Button iconLeft="lucide-plus" :label="__('Nová šablona')" @click="newTemplate" />
       <Button variant="solid" :loading="saving" :disabled="!form" :label="__('Uložit změny')" @click="save" />
     </template>
   </LayoutHeader>
@@ -29,7 +29,7 @@
       <div v-for="(ph, pi) in phases" :key="ph.id" class="rounded-[22px] bg-[color-mix(in_srgb,var(--c-tint)_7%,transparent)] p-4">
         <div class="mb-2 flex items-center gap-2">
           <input v-model="ph.name" class="gl-field !w-[240px] !font-bold" :aria-label="__('Název fáze')" />
-          <Dropdown :options="[{ label: __('Smazat fázi'), icon: 'trash-2', theme: 'red', onClick: () => phases.splice(pi, 1) }]" placement="right" class="ml-auto">
+          <Dropdown :options="[{ label: __('Smazat fázi'), icon: 'lucide-trash-2', theme: 'red', onClick: () => phases.splice(pi, 1) }]" placement="right" class="ml-auto">
             <button class="flex size-9 items-center justify-center rounded-full text-ink-gray-5 hover:bg-white/70" :aria-label="__('Další akce')"><GlIcon name="more" :size="18" /></button>
           </Dropdown>
         </div>
@@ -44,7 +44,7 @@
       </div>
       <button class="gl-quick self-start" @click="phases.push({ id: ++uid, name: '', tasks: [mkTask()] })"><GlIcon name="plus" :size="15" />{{ __('Přidat fázi') }}</button>
       <p class="text-[13px] text-ink-gray-5">{{ __('Termíny úkolů se při založení projektu dopočítají od data začátku. Role „Klient“ označí úkol jako čekající na klienta.') }}</p>
-      <div v-if="current" class="flex justify-start"><Button variant="subtle" theme="red" iconLeft="trash-2" :label="__('Smazat šablonu')" @click="remove" /></div>
+      <div v-if="current" class="flex justify-start"><Button variant="subtle" theme="red" iconLeft="lucide-trash-2" :label="__('Smazat šablonu')" @click="remove" /></div>
       <ErrorMessage :message="error" />
     </div>
   </div>

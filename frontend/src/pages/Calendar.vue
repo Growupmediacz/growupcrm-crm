@@ -26,8 +26,8 @@
           {{ b.label }}
         </button>
       </div>
-      <Button :label="__('Naplánovat týden')" iconLeft="calendar" @click="showPlan = true" />
-      <Button v-if="!narrow" variant="solid" :label="__('Nová událost')" iconLeft="plus" @click="newEvent(null)" />
+      <Button :label="__('Naplánovat týden')" iconLeft="lucide-calendar" @click="showPlan = true" />
+      <Button v-if="!narrow" variant="solid" :label="__('Nová událost')" iconLeft="lucide-plus" @click="newEvent(null)" />
     </template>
   </LayoutHeader>
   <!-- GrowUp: mobil podle designu – týden a program dne -->

@@ -83,7 +83,7 @@
             <div class="mb-1 text-xs text-ink-gray-5">{{ r.label }}</div>
             <div class="flex items-center gap-2">
               <code class="min-w-0 flex-1 truncate rounded-lg bg-white/80 px-2 py-1.5">{{ r.value }}</code>
-              <Button icon="copy" variant="ghost" :aria-label="__('Kopírovat')" @click="copy(r.value)" />
+              <Button icon="lucide-copy" variant="ghost" :aria-label="__('Kopírovat')" @click="copy(r.value)" />
             </div>
           </div>
           <p class="text-ink-gray-6">{{ __('Hlavička požadavku: Authorization: token <klíč>:<tajemství>, tělo JSON s poli first_name, last_name, email, mobile_no, organization, website, order_value, source.') }}</p>

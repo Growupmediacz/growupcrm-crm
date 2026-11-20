@@ -9,7 +9,7 @@
           <button class="gl-seg-btn" :class="scope === 'mine' && 'gl-seg-on'" @click="scope = 'mine'">{{ __('Moje') }}</button>
           <button class="gl-seg-btn" :class="scope === 'team' && 'gl-seg-on'" @click="scope = 'team'">{{ __('Celý tým') }}</button>
         </div>
-        <Button variant="solid" iconLeft="phone" @click="showPick = true"><span class="hidden sm:inline">{{ __('Zapsat hovor') }}</span></Button>
+        <Button variant="solid" iconLeft="lucide-phone" @click="showPick = true"><span class="hidden sm:inline">{{ __('Zapsat hovor') }}</span></Button>
       </template>
     </LayoutHeader>
     <div v-if="res.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Hovory se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" /></div>

@@ -62,8 +62,8 @@
           </div>
         </div>
         <div v-if="sg?.rows?.length" class="flex items-center gap-2">
-          <Button variant="solid" iconLeft="check" :label="selected.length ? __('Přijmout vybrané ({0})', [selected.length]) : __('Přijmout vše')" :loading="busy" @click="decideBulk('accept')" />
-          <Button iconLeft="x" theme="red" :label="selected.length ? __('Zamítnout vybrané') : __('Zamítnout vše')" :loading="busy" @click="decideBulk('reject')" />
+          <Button variant="solid" iconLeft="lucide-check" :label="selected.length ? __('Přijmout vybrané ({0})', [selected.length]) : __('Přijmout vše')" :loading="busy" @click="decideBulk('accept')" />
+          <Button iconLeft="lucide-x" theme="red" :label="selected.length ? __('Zamítnout vybrané') : __('Zamítnout vše')" :loading="busy" @click="decideBulk('reject')" />
         </div>
       </div>
       <GlEmptyState v-if="sg && !sg.rows.length" class="mt-4" icon="users" :title="sgEmail && sg.without_email ? __('Všechny návrhy s e-mailem jsou vyřízené') : __('Žádné návrhy')"

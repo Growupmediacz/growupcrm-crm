@@ -63,7 +63,7 @@
         :class="route.name === 'Settings' && 'is-active'"
         :aria-current="route.name === 'Settings' ? 'page' : undefined"
       >
-        <span class="gl3-rail-icon"><GlIcon name="sliders" :size="22" /></span>
+        <span class="gl3-rail-icon"><GlIcon name="settings" :size="22" /></span>
         <span class="gl3-rail-label">{{ __('Nastavení') }}</span>
       </router-link>
     </nav>

@@ -11,7 +11,7 @@
       <span v-if="summary" class="num mr-1 hidden whitespace-nowrap text-[14px] text-ink-gray-5 lg:inline">
         <b class="font-semibold text-ink-gray-9">{{ summary.count }}</b>{{ summary.sum }}
       </span>
-      <Button variant="solid" iconLeft="plus" @click="showLeadModal = true">
+      <Button variant="solid" iconLeft="lucide-plus" @click="showLeadModal = true">
         <span class="hidden sm:inline">{{ __('Nová zakázka') }}</span>
       </Button>
     </template>

@@ -7,7 +7,7 @@
       </div>
     </template>
     <template #right-header>
-      <Button variant="solid" iconLeft="plus" @click="showLeadModal = true"
+      <Button variant="solid" iconLeft="lucide-plus" @click="showLeadModal = true"
         ><span class="hidden md:inline">{{ __('Nová zakázka') }}</span></Button
       >
     </template>

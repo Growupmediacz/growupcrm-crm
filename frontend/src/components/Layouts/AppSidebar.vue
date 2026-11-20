@@ -349,7 +349,7 @@ const isFCSite = ref(window.is_fc_site)
 const leadsOnlyMode = useLeadsOnlyMode()
 const isDemoSite = ref(window.is_demo_site)
 
-// GrowUp: ikony z designu (assets/gl-icons) jako komponenty pro <Icon :icon>
+// GrowUp: ikony přes GlIcon (Lucide) jako komponenty pro <Icon :icon>
 const gl = (name) =>
   markRaw(
     defineComponent({

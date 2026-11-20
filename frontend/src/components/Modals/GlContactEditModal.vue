@@ -120,7 +120,7 @@
     </template>
     <template #actions>
       <div class="flex flex-wrap items-center justify-between gap-2">
-        <Button v-if="data?.can_delete" variant="ghost" theme="red" iconLeft="trash-2" :label="__('Smazat kontakt')" @click="removeContact" />
+        <Button v-if="data?.can_delete" variant="ghost" theme="red" iconLeft="lucide-trash-2" :label="__('Smazat kontakt')" @click="removeContact" />
         <span v-else />
         <div class="flex gap-2">
           <Button :label="__('Zrušit')" @click="show = false" />

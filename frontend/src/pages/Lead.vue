@@ -22,19 +22,19 @@
         <Button variant="solid" :label="__('Hotovo')" iconLeft="check" @click="allFields = false" />
       </template>
       <template v-else>
-        <Button :label="__('Upravit')" iconLeft="edit-2" @click="editing = true" />
-        <Button :label="__('Naplánovat')" iconLeft="calendar" @click="showSchedule = true" />
+        <Button :label="__('Upravit')" iconLeft="lucide-pencil-line" @click="editing = true" />
+        <Button :label="__('Naplánovat')" iconLeft="lucide-calendar" @click="showSchedule = true" />
         <!-- design 3. kolo (04): název další fáze přímo v tlačítku -->
         <Button
           v-if="nextStage"
           variant="solid"
-          iconLeft="arrow-right"
+          iconLeft="lucide-arrow-right"
           :label="__('Posunout do {0}', [nextStage.label])"
           @click="nextStage.onClick()"
         />
       </template>
       <Dropdown :options="moreOptions" placement="right">
-        <Button icon="more-horizontal" :aria-label="__('Další akce')" />
+        <Button icon="lucide-ellipsis" :aria-label="__('Další akce')" />
       </Dropdown>
     </template>
   </LayoutHeader>

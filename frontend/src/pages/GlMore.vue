@@ -56,7 +56,7 @@
     <!-- design 3. kolo (m1/m4): Nastavení a odhlášení na konci -->
     <nav class="gl-card mt-4 overflow-hidden !rounded-[22px]">
       <button class="flex min-h-[53px] w-full items-center gap-3.5 px-4 text-left active:bg-white/60" @click="showSettings = true">
-        <span class="flex size-9 items-center justify-center rounded-[11px] bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-ink-gray-7"><GlIcon name="sliders" :size="18" /></span>
+        <span class="flex size-9 items-center justify-center rounded-[11px] bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-ink-gray-7"><GlIcon name="settings" :size="18" /></span>
         <span class="flex-1 text-[17px] font-medium text-ink-gray-9">{{ __('Nastavení') }}</span>
         <GlIcon name="right" :size="16" class="text-ink-gray-4" />
       </button>
@@ -107,14 +107,14 @@ const groups = computed(() => {
       items: [
         { label: __('Kontakty'), icon: 'users', route: 'ContactsCards' },
         outreachEnabled.value && { label: __('Outreach'), icon: 'send', route: 'Outreach', count: counts.data?.outreach },
-        agentEnabled.value && { label: __('Agent'), icon: 'sparkles', route: 'Agent' },
+        agentEnabled.value && { label: __('Agent'), icon: 'bot', route: 'Agent' },
       ].filter(Boolean),
     },
     {
       name: __('Práce'),
       items: [
-        { label: __('Úkoly'), icon: 'check', route: 'Tasks', count: counts.data?.overdue_tasks, hot: true },
-        { label: __('Zápisy'), icon: 'doc', route: 'Notes' },
+        { label: __('Úkoly'), icon: 'circle-check', route: 'Tasks', count: counts.data?.overdue_tasks, hot: true },
+        { label: __('Zápisy'), icon: 'notebook-pen', route: 'Notes' },
         { label: __('Hovory'), icon: 'phone', route: 'Call Logs' },
       ],
     },
@@ -139,8 +139,8 @@ const profileOptions = computed(() => [
   {
     group: user.value.full_name || '',
     items: [
-      { icon: 'help-circle', label: __('Nápověda a podpora'), onClick: () => (showAboutModal.value = true) },
-      { icon: 'log-out', label: __('Odhlásit se'), onClick: () => logout.submit() },
+      { icon: 'lucide-circle-help', label: __('Nápověda a podpora'), onClick: () => (showAboutModal.value = true) },
+      { icon: 'lucide-log-out', label: __('Odhlásit se'), onClick: () => logout.submit() },
     ],
   },
 ])

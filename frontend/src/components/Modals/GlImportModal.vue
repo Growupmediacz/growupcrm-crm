@@ -83,7 +83,7 @@
           <Button v-if="step > 0 && step < 3" :label="__('Zpět')" @click="step--" />
           <Button v-if="step < 3" :label="__('Zrušit')" @click="show = false" />
           <Button v-if="step < 2" variant="solid" :disabled="!canNext" :label="__('Pokračovat')" :loading="busy" @click="next" />
-          <Button v-else-if="step === 2" variant="solid" iconLeft="upload" :loading="busy" :label="__('Importovat {0} řádků', [rows.length])" @click="run" />
+          <Button v-else-if="step === 2" variant="solid" iconLeft="lucide-upload" :loading="busy" :label="__('Importovat {0} řádků', [rows.length])" @click="run" />
           <Button v-else variant="solid" :label="__('Hotovo')" @click="done" />
         </div>
       </div>

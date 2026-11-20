@@ -13,7 +13,7 @@
           <GlIcon name="list" :size="16" />
         </button>
       </div>
-      <Button v-if="data?.is_manager" variant="solid" iconLeft="plus" class="max-md:!h-11 max-md:!min-w-11" @click="showNew = true">
+      <Button v-if="data?.is_manager" variant="solid" iconLeft="lucide-plus" class="max-md:!h-11 max-md:!min-w-11" @click="showNew = true">
         <span class="hidden sm:inline">{{ __('Nový klient') }}</span>
       </Button>
     </template>
@@ -236,9 +236,9 @@ function menu(c) {
       group: __('Klient'),
       hideLabel: true,
       items: [
-        { label: __('Otevřít firmu'), icon: 'external-link', onClick: () => router.push({ name: 'Organization', params: { organizationId: c.name } }) },
-        { label: __('Nový projekt'), icon: 'folder-plus', onClick: () => ((projectFor.value = c.name), (showProject.value = true)) },
-        { label: __('Naplánovat schůzku'), icon: 'calendar', onClick: () => ((eventFor.value = c), (showEvent.value = true)) },
+        { label: __('Otevřít firmu'), icon: 'lucide-external-link', onClick: () => router.push({ name: 'Organization', params: { organizationId: c.name } }) },
+        { label: __('Nový projekt'), icon: 'lucide-folder-plus', onClick: () => ((projectFor.value = c.name), (showProject.value = true)) },
+        { label: __('Naplánovat schůzku'), icon: 'lucide-calendar', onClick: () => ((eventFor.value = c), (showEvent.value = true)) },
       ],
     },
     { group: __('Stav vztahu'), items: health },
@@ -247,7 +247,7 @@ function menu(c) {
     groups.push({
       group: __('Konec'),
       hideLabel: true,
-      items: [{ label: __('Ukončit spolupráci'), icon: 'x', theme: 'red', onClick: () => endCooperation(c) }],
+      items: [{ label: __('Ukončit spolupráci'), icon: 'lucide-x', theme: 'red', onClick: () => endCooperation(c) }],
     })
   }
   return groups

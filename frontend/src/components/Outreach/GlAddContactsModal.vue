@@ -71,7 +71,7 @@
         <span class="hidden text-[13px] text-ink-gray-5 sm:block">{{ __('Odhlášené a duplicity nikdy nepřidáme.') }}</span>
         <div class="ml-auto flex gap-2">
           <Button :label="__('Zrušit')" @click="show = false" />
-          <Button variant="solid" iconLeft="plus" :loading="saving" :disabled="!canAdd" :label="addLabel" @click="add" />
+          <Button variant="solid" iconLeft="lucide-plus" :loading="saving" :disabled="!canAdd" :label="addLabel" @click="add" />
         </div>
       </div>
     </template>

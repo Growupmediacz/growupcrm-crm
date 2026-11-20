@@ -15,8 +15,8 @@
       </div>
     </template>
     <template #right-header>
-      <Button iconLeft="upload" class="hidden md:inline-flex" @click="openImport">{{ __('Importovat') }}</Button>
-      <Button variant="solid" iconLeft="plus" @click="showContactModal = true">
+      <Button iconLeft="lucide-upload" class="hidden md:inline-flex" @click="openImport">{{ __('Importovat') }}</Button>
+      <Button variant="solid" iconLeft="lucide-plus" @click="showContactModal = true">
         <span class="hidden sm:inline">{{ __('Nový kontakt') }}</span>
       </Button>
     </template>

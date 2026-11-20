@@ -25,7 +25,7 @@
         <template v-else>{{ __('Připojit schránku') }}</template>
         <span class="lucide-chevron-down size-4 opacity-60" aria-hidden="true" />
       </button>
-      <Button variant="solid" iconLeft="plus" @click="$emit('newCampaign')">
+      <Button variant="solid" iconLeft="lucide-plus" @click="$emit('newCampaign')">
         <span class="hidden sm:inline">{{ __('Nová kampaň') }}</span>
       </Button>
     </template>
