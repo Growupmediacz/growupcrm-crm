@@ -17,13 +17,13 @@
   <GlForbidden v-if="overview.error && isForbidden(overview.error)" :message="overview.error.messages?.[0]" />
   <div v-else-if="overview.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Agenta se nepodařilo načíst')" :text="overview.error.messages?.[0]" @retry="overview.reload()" /></div>
   <div v-else-if="!ov" class="px-3 md:px-2"><GlSkeleton :rows="5" /></div>
-  <div v-else class="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
+  <div v-else class="flex flex-col gap-4 px-3 pb-6 md:px-2">
     <div v-if="!ov.configured" class="gl-card !rounded-[18px] px-5 py-3.5 text-[14px] text-ink-gray-7">
       <b class="text-ink-gray-9">{{ __('Firecrawl zatím není nastavený.') }}</b> {{ __('Chybí API klíč, obraťte se na správce.') }}
     </div>
 
     <!-- GrowUp (zadání 2027 kolo 2 V2): stav a vypínač agenta + „Co smí agent sám“ (tabulka samostatnosti) -->
-    <div class="grid grid-cols-1 items-start gap-4 xl:grid-cols-[400px_minmax(0,1fr)]">
+    <div class="grid grid-cols-1 items-start gap-4 xl:grid-cols-[repeat(auto-fit,minmax(400px,1fr))]">
       <GlAgentStatus />
       <GlAgentAutonomy />
     </div>

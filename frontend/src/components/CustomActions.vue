@@ -7,7 +7,8 @@
       @click="action.onClick(close)"
     >
       <template v-if="action.icon" #prefix>
-        <GlIcon :name="action.icon" :size="16" />
+        <GlIcon v-if="glIconComponent(action.icon)" :name="action.icon" :size="16" />
+        <FeatherIcon v-else :name="action.icon" class="size-4" />
       </template>
     </Button>
   </template>
@@ -19,7 +20,7 @@
       <Dropdown v-slot="{ open }" :options="g.action">
         <Button
           :label="g.label"
-          :iconRight="open ? 'chevron-up' : 'chevron-down'"
+          :iconRight="open ? 'lucide-chevron-up' : 'lucide-chevron-down'"
         />
       </Dropdown>
     </div>
@@ -29,7 +30,8 @@
 <script setup>
 import GlIcon from '@/components/GlIcon.vue'
 import { computed } from 'vue'
-import { Dropdown } from 'frappe-ui'
+import { Dropdown, FeatherIcon } from 'frappe-ui'
+import { glIconComponent } from '@/components/glIcons'
 import { isMobileView } from '@/composables/settings'
 
 const props = defineProps({

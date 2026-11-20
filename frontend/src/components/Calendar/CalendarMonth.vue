@@ -35,7 +35,7 @@
         />
         <button
           v-if="itemsOnDay(items, d).length > MAX"
-          class="min-h-[24px] px-1 text-[13px] text-ink-gray-6 hover:text-ink-gray-8"
+          class="min-h-[36px] px-2 text-[13px] text-ink-gray-6 hover:text-ink-gray-8"
           @click.stop="$emit('dayClick', d)"
         >
           {{ __('+{0} dalších', [itemsOnDay(items, d).length - MAX]) }}

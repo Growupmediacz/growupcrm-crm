@@ -48,7 +48,7 @@
             </span>
           </button>
         </div>
-        <div class="gl-card col-span-7 flex flex-col p-7">
+        <div class="gl-card col-span-7 flex flex-col self-start p-7 md:sticky md:top-0">
           <template v-if="current">
             <div class="flex items-start justify-between gap-4">
               <h2 lang="cs" class="text-[28px] font-bold leading-tight tracking-[-0.02em] text-ink-gray-9">{{ current.title }}</h2>

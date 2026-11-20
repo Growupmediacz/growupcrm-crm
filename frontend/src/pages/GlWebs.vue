@@ -26,7 +26,7 @@
   <div v-else class="flex min-h-0 flex-1 flex-col gap-4 px-3 pb-6 md:flex-row md:items-start md:gap-3 md:overflow-x-auto md:px-2">
     <!-- telefon: fáze pod sebou, prázdné sbalené do jednoho řádku; desktop: sloupce jako Kanban -->
     <p v-if="emptyPhases.length" class="text-[13px] text-ink-gray-5 md:hidden">
-      {{ __('Bez webu') }}: {{ emptyPhases.map((c) => `${c.count} ${c.label}`).join(', ') }}
+      {{ __('Prázdné fáze') }}: {{ emptyPhases.map((c) => c.label).join(', ') }}
     </p>
     <section
       v-for="(phase, i) in columns"
@@ -44,7 +44,7 @@
         v-for="w in phase.items"
         :key="w.name"
         :to="{ name: 'Project', params: { projectId: w.name } }"
-        class="block rounded-[16px] border border-outline-gray-1 bg-surface-white p-3 transition-colors duration-[var(--t-fast)] hover:border-[var(--accent-300)]"
+        class="block rounded-[16px] border border-outline-gray-1 bg-surface-white p-3 transition-colors duration-[var(--t-fast)] hover:border-[var(--accent-400)]"
       >
         <div class="truncate text-[16px] font-semibold text-ink-gray-9">{{ w.organization_name || w.project_name }}</div>
         <div class="mt-0.5 truncate text-[14px] text-ink-gray-5">{{ w.web_slug }}</div>

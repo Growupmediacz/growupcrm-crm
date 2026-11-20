@@ -76,7 +76,7 @@
             @click="cancelCall"
           >
             <template #prefix>
-              <PhoneOffIcon />
+              <PhoneOffIcon class="size-4" />
             </template>
           </Button>
         </div>
@@ -99,7 +99,7 @@
             @click="rejectIncomingCall"
           >
             <template #prefix>
-              <PhoneOffIcon />
+              <PhoneOffIcon class="size-4" />
             </template>
           </Button>
         </div>
