@@ -2,7 +2,7 @@
   <!-- GrowUp (zadání 2027 E3): plovoucí lišta hromadných akcí dole v obsahu (sticky, nepřekrývá konec stránky) -->
   <div class="gl-bulk" role="region" :aria-label="__('Hromadné akce')">
     <div class="gl-bulk-info">
-      <b class="num">{{ __('{0} e-mailů', [total]) }}</b>
+      <b class="num">{{ __('E-maily: {0}', [total]) }}</b>
       <span class="num"> · {{ __('{0} bez výhrad', [clean]) }}</span>
       <span v-if="warned" class="gl-bulk-warn num"> · {{ __('{0} s upozorněním zůstane čekat', [warned]) }}</span>
     </div>
@@ -15,7 +15,7 @@
         type="button"
         class="gl-bulk-btn gl-bulk-primary"
         :disabled="disabled || !clean"
-        :aria-label="warned ? __('Schválit {0} e-mailů bez výhrad, {1} s upozorněním zůstane čekat', [clean, warned]) : undefined"
+        :aria-label="warned ? __('Schválit e-maily bez výhrad ({0}), s upozorněním počkají ({1})', [clean, warned]) : undefined"
         @click="$emit('approve-clean')"
       >
         <GlIcon name="check" :size="16" />{{ __('Schválit vše bez výhrad ({0})', [clean]) }}

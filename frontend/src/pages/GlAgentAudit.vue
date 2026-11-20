@@ -68,7 +68,7 @@
               v-for="r in rows"
               :key="r.name"
               tabindex="0"
-              class="cursor-pointer border-t border-[rgba(110,120,200,.12)] align-top hover:bg-white/60 focus-visible:bg-white/60"
+              class="cursor-pointer border-t border-[var(--outline-gray-1)] align-top hover:bg-white/60 focus-visible:bg-white/60"
               @click="openEntry(r)"
               @keydown.enter="openEntry(r)"
             >
@@ -99,7 +99,7 @@
   <Dialog v-model:open="showEntry" :options="{ title: __('Detail záznamu'), size: 'lg' }">
     <template #default>
       <GlSkeleton v-if="entryLoading" :rows="3" />
-      <div v-else-if="entryError" class="text-[14px] text-[#a82614]" role="alert">{{ entryError }}</div>
+      <div v-else-if="entryError" class="text-[14px] text-[var(--overdue)]" role="alert">{{ entryError }}</div>
       <dl v-else-if="entry" class="grid grid-cols-1 gap-x-4 gap-y-3 text-[14.5px] sm:grid-cols-[150px_1fr]">
         <template v-for="f in entryFields" :key="f.label">
           <dt class="text-[13px] font-semibold text-ink-gray-5">{{ f.label }}</dt>
@@ -185,8 +185,8 @@ const badge = (s) =>
   s === 'OK'
     ? 'bg-[rgba(34,179,94,.14)] text-[#15803d]'
     : s === 'Odmítnuto'
-      ? 'bg-[rgba(224,161,0,.16)] text-[#7a4400]'
-      : 'bg-[rgba(200,50,31,.12)] text-[#a82614]'
+      ? 'bg-[rgba(224,161,0,.16)] text-[var(--warning)]'
+      : 'bg-[rgba(200,50,31,.12)] text-[var(--overdue)]'
 function refRoute(r) {
   if (!r.reference_name) return null
   if (r.reference_doctype === 'CRM Lead') return { name: 'Lead', params: { leadId: r.reference_name } }

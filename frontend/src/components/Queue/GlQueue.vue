@@ -20,7 +20,7 @@
     <div v-else-if="res.loading && !res.data" class="mt-3">
       <GlSkeleton variant="rows" :rows="3" />
     </div>
-    <TransitionGroup v-else tag="div" name="gl-q" class="mt-3 flex flex-col gap-3" @keydown="onKey">
+    <TransitionGroup v-else tag="div" name="gl-q" class="mt-3 flex flex-col gap-3">
       <GlQueueCard
         v-for="(it, i) in shown"
         :key="it.key"
@@ -56,6 +56,7 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 const emit = defineEmits(['count'])
 const res = createResource({ url: 'growupcrm.today_queue.get', auto: true, onSuccess: (d) => emit('count', d.total) })
 const hidden = reactive(new Set())
+const pending = new Map() // klíč karty → časovač odeslání
 const filter = ref('all')
 const cards = []
 
@@ -87,14 +88,15 @@ function unhide(it) {
 }
 async function reload() {
   await res.reload()
-  hidden.clear()
+  // karty, jejichž odeslání ještě čeká (10 s), zůstanou skryté; jinak by šly vyřídit podruhé
+  for (const k of [...hidden]) if (!pending.has(k)) hidden.delete(k)
 }
 
 // Odeslání konceptu agenta: 10 s na „Vrátit zpět“, pak outreach.approve s textem, který byl na kartě vidět.
 // Zavření stránky během zdržení = nic neodejde, koncept zůstane ve frontě.
 const UNDO_S = 10
-const pending = new Map()
 function send({ item, payload }) {
+  if (pending.has(item.key)) return // dvojí stisk: jeden časovač na kartu
   hide(item)
   const fire = async () => {
     pending.delete(item.key)
@@ -149,8 +151,13 @@ function focusCard(i) {
 function onKey(e) {
   const t = e.target
   if (t?.closest?.('input, textarea, select, [contenteditable="true"], [role="dialog"]')) return
-  const card = cards[focusIndex]
-  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') return card?.primary?.(), e.preventDefault()
+  if (e.repeat) return
+  // akce jen nad kartou, která má fokus (ne nad naposledy vybranou klávesou J/K)
+  const el = document.activeElement?.closest?.('.gl-qc')
+  const idx = el ? [...document.querySelectorAll('.gl-qc')].indexOf(el) : -1
+  if (idx >= 0) focusIndex = idx
+  const card = idx >= 0 ? cards[idx] : null
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') return card && (card.primary?.(), e.preventDefault())
   if (e.metaKey || e.ctrlKey || e.altKey) return
   const k = e.key.toLowerCase()
   if (k === 'j') focusCard(focusIndex + 1), e.preventDefault()

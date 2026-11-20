@@ -81,7 +81,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="r in rows" :key="r.name" class="border-t border-[rgba(110,120,200,.12)] align-top">
+            <tr v-for="r in rows" :key="r.name" class="border-t border-[var(--outline-gray-1)] align-top">
               <td class="px-3 py-3 tabular-nums">
                 <div class="font-semibold text-ink-gray-9">{{ r.number || '—' }}</div>
                 <span class="mt-1 inline-flex rounded-full px-2.5 py-0.5 text-[13px] font-semibold" :class="badge(r.status)">{{ stateLabel(r) }}</span>
@@ -120,7 +120,7 @@
   <Dialog v-model:open="showIssue" :options="{ title: __('Vystavit fakturu'), size: 'md' }">
     <template #default>
       <div v-if="current" class="flex flex-col gap-4">
-        <div class="rounded-[16px] bg-[rgba(110,120,200,.075)] px-4 py-3">
+        <div class="rounded-[16px] bg-[var(--fill-tinted)] px-4 py-3">
           <div class="text-[15px] font-semibold text-ink-gray-9">{{ current.organization_name }}</div>
           <div class="break-words text-[14px] text-ink-gray-7">{{ current.description || current.kind }}</div>
           <div class="mt-1 text-[22px] font-medium tabular-nums text-ink-gray-9">{{ money(current.amount) }}</div>
@@ -174,7 +174,7 @@
     <template #default>
       <div v-if="current" class="flex flex-col gap-4">
         <div class="text-[15px] text-ink-gray-7">{{ current.organization_name }} · {{ current.number || __('návrh') }} · <span class="tabular-nums">{{ money(current.amount) }}</span></div>
-        <div v-if="current.status !== 'Návrh'" class="rounded-[14px] bg-[rgba(224,161,0,.14)] px-3.5 py-2.5 text-[14px] text-[#7a4400]">
+        <div v-if="current.status !== 'Návrh'" class="rounded-[14px] bg-[rgba(224,161,0,.14)] px-3.5 py-2.5 text-[14px] text-[var(--warning)]">
           {{ __('Faktura je vystavená. Storno se v UOL musí opravit dobropisem ručně.') }}
         </div>
         <FormControl v-model="reason" type="textarea" :rows="2" :label="__('Důvod storna')" required />
@@ -263,9 +263,9 @@ const overdueText = (n) => (n === 1 ? __('1 den') : n <= 4 ? __('{0} dny', [n]) 
 const stateLabel = (r) => (r.status === 'Po splatnosti' ? `! ${__(r.status)}` : r.status === 'Zaplaceno' ? `✓ ${__(r.status)}` : __(r.status))
 const badge = (s) =>
   ({
-    Návrh: 'bg-[rgba(110,120,200,.14)] text-[#3b4377]',
+    Návrh: 'bg-[var(--line)] text-[#3b4377]',
     Vystaveno: 'bg-[rgba(59,155,246,.14)] text-[#1d5fa8]',
-    'Po splatnosti': 'bg-[rgba(200,50,31,.12)] text-[#a82614]',
+    'Po splatnosti': 'bg-[rgba(200,50,31,.12)] text-[var(--overdue)]',
     Zaplaceno: 'bg-[rgba(34,179,94,.14)] text-[#15803d]',
     Storno: 'bg-[rgba(110,120,200,.1)] text-[#5a6080] line-through',
   })[s] || ''

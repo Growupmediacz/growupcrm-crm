@@ -72,7 +72,7 @@
       <template v-if="isMobileView">
         <div class="-mb-2 px-1 text-[13px] font-semibold text-[var(--text-3,#464c70)]">{{ __('Obchodníci') }}</div>
         <div class="gl-card !rounded-[22px] px-4">
-          <div v-for="(r, i) in p.people" :key="r.user" class="flex items-center gap-3 py-3" :class="i && 'border-t border-[rgba(110,120,200,.12)]'">
+          <div v-for="(r, i) in p.people" :key="r.user" class="flex items-center gap-3 py-3" :class="i && 'border-t border-[var(--outline-gray-1)]'">
             <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2440a6]">{{ initials(r.full_name) }}</span>
             <span class="min-w-0 flex-1">
               <span class="block truncate text-[17px] font-bold text-ink-gray-9">{{ r.full_name }}</span>
@@ -116,7 +116,7 @@
               </td>
               <td class="py-4">
                 <span v-if="r.progress !== null" class="flex items-center gap-3">
-                  <span class="h-2 w-36 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]">
+                  <span class="h-2 w-36 overflow-hidden rounded-full bg-[var(--line)]">
                     <span class="block h-full rounded-full" :class="r.progress < 60 ? 'bg-[#f2b630]' : 'bg-[var(--accent-600)]'" :style="{ width: `${Math.min(r.progress, 100)}%` }" />
                   </span>
                   <span class="num text-[15px] text-ink-gray-9">{{ r.progress }} %</span>
@@ -156,22 +156,22 @@
     <div v-if="vp" class="gl-card flex flex-col gap-4 p-5 md:p-6">
       <div class="flex flex-wrap items-center justify-between gap-2">
         <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Kolik firem oslovit') }}</h2>
-        <span v-if="vp.observed?.small_sample" class="inline-flex items-center gap-1.5 rounded-full bg-[rgba(224,161,0,.16)] px-3 py-1 text-[13px] font-semibold text-[#7a4400]">
+        <span v-if="vp.observed?.small_sample" class="inline-flex items-center gap-1.5 rounded-full bg-[rgba(224,161,0,.16)] px-3 py-1 text-[13px] font-semibold text-[var(--warning)]">
           <GlIcon name="alert" :size="14" />{{ __('Málo dat, hrubý odhad') }}
         </span>
       </div>
       <div class="grid gap-3 sm:grid-cols-3">
-        <div class="flex flex-col gap-1 rounded-[18px] bg-[rgba(110,120,200,.075)] px-4 py-3.5">
+        <div class="flex flex-col gap-1 rounded-[18px] bg-[var(--fill-tinted)] px-4 py-3.5">
           <span class="text-[14px] text-ink-gray-5">{{ __('Doporučeno týdně') }}</span>
           <span class="text-[30px] font-medium leading-tight tabular-nums text-ink-gray-9">{{ vp.recommended_per_week ?? '—' }}</span>
           <span class="text-[13px] text-ink-gray-5">{{ __('firem k oslovení') }}</span>
         </div>
-        <div class="flex flex-col gap-1 rounded-[18px] bg-[rgba(110,120,200,.075)] px-4 py-3.5">
+        <div class="flex flex-col gap-1 rounded-[18px] bg-[var(--fill-tinted)] px-4 py-3.5">
           <span class="text-[14px] text-ink-gray-5">{{ __('Webů ještě potřeba') }}</span>
           <span class="text-[30px] font-medium leading-tight tabular-nums text-ink-gray-9">{{ czNumber(vp.webs_needed ?? 0) }}</span>
           <span class="text-[13px] text-ink-gray-5">{{ __('do konce roku {0}', [vp.year]) }}</span>
         </div>
-        <div class="flex flex-col gap-1 rounded-[18px] bg-[rgba(110,120,200,.075)] px-4 py-3.5">
+        <div class="flex flex-col gap-1 rounded-[18px] bg-[var(--fill-tinted)] px-4 py-3.5">
           <span class="text-[14px] text-ink-gray-5">{{ __('Zbývá týdnů') }}</span>
           <span class="text-[30px] font-medium leading-tight tabular-nums text-ink-gray-9">{{ vp.weeks_left ?? '—' }}</span>
           <span v-if="vp.pool_weeks" class="text-[13px] text-ink-gray-5">{{ __('zásoba firem vystačí na {0} týdnů', [czNumber(vp.pool_weeks)]) }}</span>
@@ -200,7 +200,7 @@
           {{ p.projection ?? 0 }}<span v-if="p.team.target.won" class="text-[32px] text-ink-gray-5"> / {{ p.team.target.won }}</span>
         </div>
         <div class="text-[16px] text-ink-gray-5">{{ p.projection !== null ? __('při současném tempu') : __('období už skončilo nebo ještě nezačalo') }}</div>
-        <span v-if="p.projection !== null && p.team.target.won" class="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[14px] font-semibold" :class="p.on_track ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[rgba(224,161,0,.16)] text-[#7a4400]'">
+        <span v-if="p.projection !== null && p.team.target.won" class="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[14px] font-semibold" :class="p.on_track ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[rgba(224,161,0,.16)] text-[var(--warning)]'">
           <GlIcon name="arrow" :size="15" />{{ p.on_track ? __('na dobré cestě') : __('pod plánem') }}
         </span>
       </div>
@@ -273,8 +273,8 @@ const SERIES = [
 // growup: obrat = vyhrané zakázky + pravidelné tržby z klientů (retainery); pravidelné mají vlastní cíl (Ivan 2026-11-20)
   { key: 'won', label: __('Zakázky'), color: 'var(--accent-600)', radius: 78 },
   { key: 'meetings', label: __('Schůzky'), color: '#3b9bf6', radius: 63 },
-  { key: 'revenue', label: __('Obrat (tis.)'), color: '#8b5cf6', radius: 48 },
-  { key: 'recurring', label: __('Pravidelné (tis.)'), color: '#22b35e', radius: 33 },
+  { key: 'revenue', label: __('Obrat (tis.)'), color: 'var(--stage-kontaktovano)', radius: 48 },
+  { key: 'recurring', label: __('Pravidelné (tis.)'), color: 'var(--stage-vyhrano)', radius: 33 },
 ]
 const MONEY = ['revenue', 'recurring']
 const rings = computed(() =>

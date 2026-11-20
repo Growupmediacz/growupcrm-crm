@@ -331,7 +331,7 @@ async function send() {
     done = true
     forgetLocal()
     hadDraft = false
-    emit('sent', result)
+    emit('sent', { ...result, html: snap?.html ?? draft.html }) // zadání 2027 E3: odeslaný text pro učení agenta
   } catch (e) {
     error.value = e?.messages?.[0] || e?.message || __('zkuste to znovu')
     save() // neodeslaný text zůstane v konceptu

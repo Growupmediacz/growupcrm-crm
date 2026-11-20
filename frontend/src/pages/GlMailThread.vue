@@ -44,7 +44,7 @@ import GlThread from '@/components/Email/GlThread.vue'
 import GlComposer from '@/components/Email/GlComposer.vue'
 import GlAgentDraft from '@/components/Agent/GlAgentDraft.vue'
 import { replyDraft, restoredDraft } from '@/composables/glMail'
-import { decideProposal, proposalForThread } from '@/composables/glAgentProposals'
+import { decideAfterUndo, proposalForThread } from '@/composables/glAgentProposals'
 import { createResource, usePageMeta } from 'frappe-ui'
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -90,9 +90,9 @@ function editProposal(p) {
   const m = [...(thread.data?.messages || [])].reverse().find((x) => x.sent_or_received === 'Received' && !x.automated)
   composer.value = { proposal: p, title: __('Návrh agenta'), defaults: { to: p.to || [], subject: p.subject, in_reply_to: m?.name || '', html: p.html }, quote: m || null }
 }
-async function afterSent() {
+async function afterSent(result) {
   const p = composer.value?.proposal // zadání 2027 E3: uzavřít návrh agenta (proposals.decide)
-  if (p) decideProposal(p, 'edited').catch(() => {})
+  if (p) decideAfterUndo(p, result)
   composer.value = null
   proposal.value = null
   hasDraft.value = false

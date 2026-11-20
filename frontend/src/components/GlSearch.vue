@@ -14,7 +14,7 @@
     <Transition name="gl-palette">
       <div
         v-if="show"
-        class="fixed inset-0 z-50 flex items-start justify-center bg-[rgba(30,34,80,.18)] px-4 pt-[12vh] backdrop-blur-[6px]"
+        class="fixed inset-0 z-50 flex items-start justify-center bg-[var(--scrim)] px-4 pt-[12vh] backdrop-blur-[6px]"
         @mousedown.self="close"
       >
         <div
@@ -35,7 +35,7 @@
               @keydown.enter.prevent="pick(flat[active], $event)"
               @keydown.esc.prevent="close"
             />
-            <kbd class="rounded-md bg-[rgba(110,120,200,.12)] px-1.5 py-0.5 text-[11px] font-semibold text-ink-gray-5">esc</kbd>
+            <kbd class="rounded-md bg-[var(--outline-gray-1)] px-1.5 py-0.5 text-[11px] font-semibold text-ink-gray-5">esc</kbd>
           </div>
           <!-- design 3. kolo (21): filtr typu výsledků -->
           <div class="flex gap-2 px-5 pb-3">
@@ -43,13 +43,13 @@
               v-for="f in FILTERS"
               :key="f.key"
               class="h-8 rounded-full px-3.5 text-[13px] font-semibold transition"
-              :class="kind === f.key ? 'bg-[var(--accent-600)] text-white' : 'bg-[rgba(110,120,200,.1)] text-ink-gray-7 hover:bg-[rgba(110,120,200,.16)]'"
+              :class="kind === f.key ? 'bg-[var(--accent-600)] text-white' : 'bg-[rgba(110,120,200,.1)] text-ink-gray-7 hover:bg-[var(--line)]'"
               @click="(kind = f.key), (active = 0), input?.focus()"
             >
               {{ f.label }}
             </button>
           </div>
-          <div class="mx-4 h-px bg-[rgba(110,120,200,.14)]" />
+          <div class="mx-4 h-px bg-[var(--line)]" />
 
           <div class="overflow-y-auto px-2 py-2">
             <div v-if="q.trim().length >= 2 && !loading && !results.length" class="px-3 py-4 text-[14px] text-ink-gray-5">
@@ -73,12 +73,12 @@
                   <div v-if="item.sub" class="truncate text-[12.5px] text-ink-gray-5">{{ item.sub }}</div>
                 </div>
                 <span v-if="flat[active] === item" class="text-[13px] text-ink-gray-5">↵ {{ item.hint || __('otevřít') }}</span>
-                <kbd v-else-if="item.shortcut" class="rounded-md bg-[rgba(110,120,200,.12)] px-1.5 py-0.5 text-[13px] font-semibold text-ink-gray-5">{{ item.shortcut }}</kbd>
+                <kbd v-else-if="item.shortcut" class="rounded-md bg-[var(--outline-gray-1)] px-1.5 py-0.5 text-[13px] font-semibold text-ink-gray-5">{{ item.shortcut }}</kbd>
               </button>
             </template>
           </div>
 
-          <div class="flex gap-4 border-t border-[rgba(110,120,200,.14)] px-5 py-2.5 text-[12px] text-ink-gray-5">
+          <div class="flex gap-4 border-t border-[var(--line)] px-5 py-2.5 text-[12px] text-ink-gray-5">
             <span>↑↓ {{ __('pohyb') }}</span>
             <span>↵ {{ __('otevřít') }}</span>
             <span>⌘↵ {{ __('v novém okně') }}</span>
@@ -120,11 +120,11 @@ const leadDefaults = computed(() => ({ status: leadStatuses.data?.[0]?.name || '
 
 const ICON = { organization: 'building', contact: 'user', lead: 'brief', action: 'plus', calendar: 'cal' }
 const TONE = {
-  organization: 'bg-[rgba(110,120,200,.12)] text-[#4b5280]',
+  organization: 'bg-[var(--outline-gray-1)] text-[#4b5280]',
   contact: 'bg-[#e6ecff] text-[#2440a6]',
   lead: 'bg-[#efe7ff] text-[#6d3fd0]',
   action: 'bg-[#dcf5e6] text-[#0f6b32]',
-  calendar: 'bg-[#e6ecff] text-[#1f48b8]',
+  calendar: 'bg-[#e6ecff] text-[var(--info)]',
 }
 
 // zadání 2027 E3: skupina „Akce“ (prázdný dotaz i shoda textu)

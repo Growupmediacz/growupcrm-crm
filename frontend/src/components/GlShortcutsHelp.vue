@@ -4,7 +4,7 @@
     <Transition name="gl-palette">
       <div
         v-if="open"
-        class="fixed inset-0 z-[60] flex items-start justify-center bg-[rgba(30,34,80,.18)] px-4 pt-[12vh] backdrop-blur-[6px]"
+        class="fixed inset-0 z-[60] flex items-start justify-center bg-[var(--scrim)] px-4 pt-[12vh] backdrop-blur-[6px]"
         @mousedown.self="emit('close')"
       >
         <div
@@ -34,7 +34,7 @@
                 <kbd
                   v-for="k in row.keys"
                   :key="k"
-                  class="rounded-md bg-[rgba(110,120,200,.12)] px-2 py-0.5 text-[13px] font-semibold text-ink-gray-7"
+                  class="rounded-md bg-[var(--outline-gray-1)] px-2 py-0.5 text-[13px] font-semibold text-ink-gray-7"
                   >{{ k }}</kbd
                 >
               </dd>

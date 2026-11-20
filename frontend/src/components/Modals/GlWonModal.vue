@@ -5,7 +5,7 @@
       <!-- design 3. kolo (25): vycentrovaná hlavička s pohárem, názvem a hodnotou zakázky -->
       <div class="relative flex w-full flex-col items-center pt-2 text-center">
         <div class="pointer-events-none absolute -top-10 left-1/2 h-40 w-72 -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(34,179,94,.22),transparent)]" aria-hidden="true" />
-        <span class="relative flex size-16 items-center justify-center rounded-[20px] bg-[#22b35e] text-white shadow-[0_10px_24px_-10px_rgba(34,179,94,.8)]">
+        <span class="relative flex size-16 items-center justify-center rounded-[20px] bg-[var(--stage-vyhrano)] text-white shadow-[0_10px_24px_-10px_rgba(34,179,94,.8)]">
           <GlIcon name="star" :size="30" />
         </span>
         <h3 class="relative mt-3 text-[28px] font-bold leading-tight tracking-[-0.02em] text-ink-gray-9">{{ __('Zakázka vyhrána') }}</h3>
@@ -32,10 +32,10 @@
         >
           <GlIcon name="card" :size="15" />{{ __('Návrh faktury') }}
         </router-link>
-        <div v-if="warning" class="rounded-[14px] bg-[rgba(224,161,0,.14)] px-3.5 py-2.5 text-[14px] text-[#7a4400]">{{ warning }}</div>
+        <div v-if="warning" class="rounded-[14px] bg-[rgba(224,161,0,.14)] px-3.5 py-2.5 text-[14px] text-[var(--warning)]">{{ warning }}</div>
       </div>
       <div v-else-if="managerMode" class="flex flex-col gap-4">
-        <div v-if="d.already_won" class="rounded-[14px] bg-[rgba(224,161,0,.14)] px-3.5 py-2.5 text-[14px] text-[#7a4400]">
+        <div v-if="d.already_won" class="rounded-[14px] bg-[rgba(224,161,0,.14)] px-3.5 py-2.5 text-[14px] text-[var(--warning)]">
           {{ __('Zakázka už je vyhraná. Opakované potvrzení nic nezdvojí.') }}
         </div>
         <div>
@@ -48,7 +48,7 @@
               role="radio"
               :aria-checked="tier === t.tier"
               class="gl-chip flex h-11 items-center rounded-full px-4 text-[14px] font-medium tabular-nums md:h-9"
-              :class="tier === t.tier && '!bg-[#0e1330] !text-white'"
+              :class="tier === t.tier && '!bg-[var(--text-1)] !text-white'"
               @click="pickTier(t)"
             >
               {{ t.tier }} · {{ money(t.price) }}
@@ -116,7 +116,7 @@
                   :key="t.name"
                   type="button"
                   class="gl-chip flex h-8 items-center rounded-full px-3 text-[13px] font-medium"
-                  :class="template === t.name && '!bg-[#0e1330] !text-white'"
+                  :class="template === t.name && '!bg-[var(--text-1)] !text-white'"
                   @click="template = t.name"
                 >
                   {{ __(t.name) }}
@@ -139,7 +139,7 @@
             </label>
           </div>
           <div v-if="lead.organization" class="flex items-center gap-2 rounded-[14px] bg-[rgba(34,179,94,.1)] px-3.5 py-2.5 text-[13px] text-[#15803d]">
-            <span class="size-2 rounded-full bg-[#22b35e]" />{{ __('Firma {0} se přesune mezi Klienty.', [lead.organization]) }}
+            <span class="size-2 rounded-full bg-[var(--stage-vyhrano)]" />{{ __('Firma {0} se přesune mezi Klienty.', [lead.organization]) }}
           </div>
         </div>
         <FormControl v-model="note" type="textarea" :rows="3" :label="__('Poznámka')" :placeholder="__('Např. podpis na schůzce, fakturace 50 % předem')" />

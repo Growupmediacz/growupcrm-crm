@@ -153,8 +153,8 @@
     <Dialog :open="!!confirm" :options="{ title: __('Schválit e-maily?'), size: 'md' }" @update:open="(v) => !v && !busy && (confirm = null)">
       <template #default>
         <div v-if="confirm" class="flex flex-col gap-3">
-          <p class="text-[15px] leading-relaxed text-ink-gray-8">{{ __('Schválíte {0} e-mailů. Odesílání začne {1}, nejvýš {2} denně.', [confirm.names ? confirm.names.length : d.rows.length, startLabel, d.daily_limit]) }}</p>
-          <p v-if="confirm.left" class="text-[14px] leading-relaxed text-ink-gray-6">{{ __('Dalších {0} e-mailů zůstane čekat na schválení.', [confirm.left]) }}</p>
+          <p class="text-[15px] leading-relaxed text-ink-gray-8">{{ __('Ke schválení: {0} (e-maily). Odesílání začne {1}, nejvýš {2} denně.', [confirm.names ? confirm.names.length : d.rows.length, startLabel, d.daily_limit]) }}</p>
+          <p v-if="confirm.left" class="text-[14px] leading-relaxed text-ink-gray-6">{{ __('Na schválení dál počká: {0} (e-maily).', [confirm.left]) }}</p>
           <div class="mt-1 flex flex-wrap justify-end gap-2">
             <button type="button" class="wk-btn" :disabled="busy" @click="confirm = null">{{ __('Zrušit') }}</button>
             <button type="button" class="wk-btn wk-btn-primary" :disabled="busy || locked" @click="runApprove(confirm.names)"><GlIcon name="check" :size="16" />{{ __('Schválit') }}</button>
@@ -167,7 +167,7 @@
     <Dialog :open="!!excl" :options="{ title: __('Vyřadit z týdne'), size: 'md' }" @update:open="(v) => !v && !busy && (excl = null)">
       <template #default>
         <div v-if="excl" class="flex flex-col gap-3">
-          <p class="text-[15px] leading-relaxed text-ink-gray-8">{{ __('Vyřadíte {0} firem z tohoto týdne. Nic jim neodejde a rozloučení nevznikne.', [excl.names.length]) }}</p>
+          <p class="text-[15px] leading-relaxed text-ink-gray-8">{{ __('Vyřadit z tohoto týdne: {0} (firmy). Nic jim neodejde a rozloučení nevznikne.', [excl.names.length]) }}</p>
           <label class="flex flex-col gap-1 text-[14px] text-ink-gray-7">{{ __('Důvod (nepovinné)') }}
             <textarea v-model="excl.reason" rows="3" maxlength="300" class="wk-textarea" />
           </label>
@@ -273,7 +273,7 @@ const afterText = computed(() => {
 const emptyText = computed(() => {
   const x = d.value
   if (x?.campaign && x.auto_send && x.scheduled > 0) {
-    return __('Schváleno {0}, naplánováno {1} e-mailů.', [fDT(x.approved_at) || '–', x.scheduled])
+    return __('Schváleno {0}, naplánované e-maily: {1}.', [fDT(x.approved_at) || '–', x.scheduled])
   }
   return __('Až agent připraví další týden, objeví se tady.')
 })
@@ -335,7 +335,7 @@ async function runApprove(names) {
     const n = out?.approved ?? (names ? names.length : x.rows.length)
     leaving.value = new Set(names || rows.value.map((r) => r.name))
     confirm.value = null
-    toast.success(__('Schváleno {0} e-mailů, první odejde {1}', [n, fDT(out?.first) || startLabel.value]))
+    toast.success(__('Schválené e-maily: {0}, první odejde {1}', [n, fDT(out?.first) || startLabel.value]))
     if (!reduced()) await sleep(160)
     checked.value = checked.value.filter((c) => !(names || []).includes(c))
     stale.value = true
@@ -364,7 +364,7 @@ async function runExclude() {
     await call('growupcrm.week_review.exclude', { campaign: d.value.campaign, names: JSON.stringify(names), reason: reason.trim() })
     leaving.value = new Set(names)
     excl.value = null
-    toast.success(__('Vyřazeno {0} firem z týdne', [names.length]))
+    toast.success(__('Vyřazené firmy: {0}', [names.length]))
     if (!reduced()) await sleep(160)
     checked.value = checked.value.filter((c) => !names.includes(c))
     await load()
@@ -384,7 +384,8 @@ function onKey(e) {
   const t = e.target
   if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return
   if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-    if (cur.value) { e.preventDefault(); approveOne(cur.value) }
+    // na telefonu jen z otevřeného detailu: schválit smí jen e-mail, který je vidět
+    if (cur.value && (!isPhone.value || phoneDetail.value)) { e.preventDefault(); approveOne(cur.value) }
     return
   }
   if (e.metaKey || e.ctrlKey || e.altKey) return

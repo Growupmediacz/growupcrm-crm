@@ -59,3 +59,22 @@ export async function decideProposal(proposal, result, finalHtml = '') {
   // výsledek se zapíše do učení agenta; nic neodesílá (odeslání proběhlo editorem přes mail_threads.send)
   await call('growupcrm.proposals.decide', { name: proposal.id, result, ...(finalHtml ? { final_html: finalHtml } : {}) })
 }
+
+// zadání 2027 E3: rozhodnutí o návrhu zapsat až po uplynutí „Vrátit zpět“ (když člověk odeslání vrátí,
+// návrh zůstane čekat) a s odeslaným textem; „approved“ jen když se text nezměnil.
+const norm = (h) => String(h || '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim()
+export function decideAfterUndo(proposal, sent, { onDone } = {}) {
+  if (!proposal || proposal.demo || !sent?.name) return
+  const waitMs = sent.send_after ? Math.max(0, new Date(String(sent.send_after).replace(' ', 'T')) - new Date()) + 3000 : 0
+  setTimeout(async () => {
+    try {
+      const still = await call('frappe.client.get_value', { doctype: 'Communication', filters: { name: sent.name }, fieldname: 'name' })
+      if (!still?.name) return // odeslání vráceno: návrh zůstává ve frontě
+      const result = norm(sent.html) === norm(proposal.html) ? 'approved' : 'edited'
+      await call('growupcrm.proposals.decide', { name: proposal.id, result, final_html: sent.html || '' })
+      onDone?.()
+    } catch {
+      /* záchranná síť: proposals.for_thread návrh srovná při dalším otevření vlákna */
+    }
+  }, waitMs)
+}

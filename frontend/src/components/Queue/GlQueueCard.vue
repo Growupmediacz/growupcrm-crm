@@ -145,6 +145,7 @@ import GlSnoozeMenu from '@/components/Queue/GlSnoozeMenu.vue'
 import { countPlaceholders, PLACEHOLDER_RE } from '@/composables/glMail'
 import { useRouter } from 'vue-router'
 import { completeTaskWithUndo } from '@/composables/glTaskDone'
+import { decideAfterUndo } from '@/composables/glAgentProposals'
 import { sanitizeHTML } from '@/utils'
 import { call, toast } from 'frappe-ui'
 import { computed, ref } from 'vue'
@@ -228,16 +229,12 @@ function edit() {
   }
   editing.value = true
 }
-async function afterEditSent() {
-  // odesláno z editoru (mail_threads.send, se zdržením a vrácením z E1): návrh agenta uzavřít jako upravený
+function afterEditSent(sent) {
+  // odesláno z editoru (mail_threads.send, se zdržením a vrácením z E1); návrh se uzavře až po uplynutí
+  // „Vrátit zpět“ a s odeslaným textem (decideAfterUndo); při vrácení zůstane ve frontě
   editing.value = false
-  try {
-    await call('growupcrm.proposals.decide', { name: props.item.id, result: 'edited' })
-  } catch (e) {
-    err(e)
-  }
   emit('done', props.item)
-  emit('reload')
+  decideAfterUndo({ id: props.item.id, html: props.item.html }, sent, { onDone: () => emit('reload') })
 }
 async function run(fn, okText) {
   busy.value = true

@@ -4,7 +4,7 @@
   <section v-if="status.data && !status.error" class="gl-card flex min-w-0 flex-col gap-4" :class="compact ? 'p-4' : 'p-5 md:p-6'" :aria-label="__('Agent')">
     <div class="flex items-center gap-3">
       <span class="relative flex size-3 shrink-0" aria-hidden="true">
-        <span class="size-3 rounded-full" :class="enabled ? 'bg-[#22b35e]' : 'bg-[#9aa0bd]'" />
+        <span class="size-3 rounded-full" :class="enabled ? 'bg-[var(--stage-vyhrano)]' : 'bg-[#9aa0bd]'" />
       </span>
       <div class="min-w-0 flex-1">
         <h2 class="text-[16px] font-bold text-ink-gray-9">{{ enabled ? __('Agent běží') : __('Agent je vypnutý') }}</h2>
@@ -36,11 +36,11 @@
     </div>
 
     <div class="grid grid-cols-2 gap-3">
-      <div class="rounded-[16px] bg-[rgba(110,120,200,.075)] px-3.5 py-2.5">
+      <div class="rounded-[16px] bg-[var(--fill-tinted)] px-3.5 py-2.5">
         <div class="text-[13px] text-ink-gray-5">{{ __('Volání dnes') }}</div>
         <div class="text-[24px] font-medium leading-tight tabular-nums text-ink-gray-9">{{ status.data.calls_today ?? 0 }}</div>
       </div>
-      <div class="rounded-[16px] bg-[rgba(110,120,200,.075)] px-3.5 py-2.5">
+      <div class="rounded-[16px] bg-[var(--fill-tinted)] px-3.5 py-2.5">
         <div class="text-[13px] text-ink-gray-5">{{ __('Odmítnuto dnes') }}</div>
         <div class="text-[24px] font-medium leading-tight tabular-nums" :class="status.data.refused_today ? 'text-[#c8321f]' : 'text-ink-gray-9'">{{ status.data.refused_today ?? 0 }}</div>
       </div>
@@ -77,6 +77,7 @@
   </section>
 </template>
 <script setup>
+import { usersStore } from '@/stores/users'
 import { Button, Dialog, ErrorMessage, call, createResource, toast } from 'frappe-ui'
 import { computed, ref } from 'vue'
 
@@ -88,8 +89,10 @@ defineProps({
 })
 const emit = defineEmits(['changed'])
 
-const status = createResource({ url: 'growupcrm.agent_tools.status', auto: true })
-const recent = createResource({ url: 'growupcrm.audit.recent', params: { limit: 5 }, auto: true })
+// jen vedoucí obchodu / správce (obchodník by dostal chybu práv; karta se mu vůbec nenačte)
+const manager = usersStore().isManager()
+const status = createResource({ url: 'growupcrm.agent_tools.status', auto: manager })
+const recent = createResource({ url: 'growupcrm.audit.recent', params: { limit: 5 }, auto: manager })
 
 const enabled = computed(() => Boolean(status.data?.enabled))
 const busy = ref(false)

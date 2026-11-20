@@ -46,7 +46,7 @@ import { computed } from 'vue'
 
 const props = defineProps({
   column: { type: Object, required: true },
-  color: { type: String, default: '#9ca3af' },
+  color: { type: String, default: 'var(--stage-prohrano)' },
   dragging: { type: Boolean, default: false },
 })
 const emit = defineEmits(['expand', 'end'])
