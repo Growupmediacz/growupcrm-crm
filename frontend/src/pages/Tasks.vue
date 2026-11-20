@@ -40,7 +40,7 @@
     <template #title="{ titleField, itemName }">
       <div class="flex items-center gap-2">
         <div v-if="titleField === 'status'">
-          <TaskStatusIcon :status="getRow(itemName, titleField).label" />
+          <component :is="taskStatusIcons[getRow(itemName, titleField).label] || CircleIcon" class="size-4" />
         </div>
         <div v-else-if="titleField === 'priority'">
           <TaskPriorityIcon :priority="getRow(itemName, titleField).label" />
@@ -77,9 +77,9 @@
         class="truncate flex items-center gap-2"
       >
         <div v-if="fieldName === 'status'">
-          <TaskStatusIcon
-            class="size-3"
-            :status="getRow(itemName, fieldName).label"
+          <component
+            :is="taskStatusIcons[getRow(itemName, fieldName).label] || CircleIcon"
+            class="size-4"
           />
         </div>
         <div v-else-if="fieldName === 'priority'">
@@ -202,10 +202,14 @@
 <script setup>
 import ViewBreadcrumbs from '@/components/ViewBreadcrumbs.vue'
 import CustomActions from '@/components/CustomActions.vue'
-import ArrowUpRightIcon from '@/components/Icons/ArrowUpRightIcon.vue'
-import TaskStatusIcon from '@/components/Icons/TaskStatusIcon.vue'
+import ArrowUpRightIcon from '~icons/lucide/arrow-up-right'
+import CircleDashedIcon from '~icons/lucide/circle-dashed'
+import CircleIcon from '~icons/lucide/circle'
+import CircleDotIcon from '~icons/lucide/circle-dot'
+import CircleCheckIcon from '~icons/lucide/circle-check'
+import CircleXIcon from '~icons/lucide/circle-x'
 import TaskPriorityIcon from '@/components/Icons/TaskPriorityIcon.vue'
-import Email2Icon from '@/components/Icons/Email2Icon.vue'
+import Email2Icon from '~icons/lucide/mail'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import ViewControls from '@/components/ViewControls.vue'
 import TasksListView from '@/components/ListViews/TasksListView.vue'
@@ -221,6 +225,15 @@ import { useOnboarding, useTelemetry } from 'frappe-ui/frappe'
 import { Tooltip, Avatar, Dropdown, call } from 'frappe-ui'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
+
+const taskStatusIcons = {
+  Backlog: CircleDashedIcon,
+  Todo: CircleIcon,
+  'In Progress': CircleDotIcon,
+  Done: CircleCheckIcon,
+  Canceled: CircleXIcon,
+}
+
 
 const { getFormattedPercent, getFormattedFloat, getFormattedCurrency } =
   getMeta('CRM Task')

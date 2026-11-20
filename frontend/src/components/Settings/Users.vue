@@ -29,7 +29,7 @@
           ]"
           :button="{
             label: __('New'),
-            iconLeft: 'plus',
+            iconLeft: 'lucide-plus',
             variant: 'solid',
           }"
           placement="right"
@@ -111,7 +111,7 @@
               <Dropdown
                 :options="getMoreOptions(user)"
                 :button="{
-                  icon: 'more-horizontal',
+                  icon: 'lucide-ellipsis',
                   onblur: (e) => {
                     e.stopPropagation()
                     confirmRemove = false
@@ -130,13 +130,13 @@
                 :options="getDropdownOptions(user)"
                 :button="{
                   label: roleMap[user.role],
-                  iconRight: 'chevron-down',
+                  iconRight: 'lucide-chevron-down',
                   iconLeft:
                     user.role === 'System Manager'
-                      ? 'shield'
+                      ? 'lucide-shield'
                       : user.role === 'Sales Manager'
-                        ? 'briefcase'
-                        : 'user-check',
+                        ? 'lucide-briefcase'
+                        : 'lucide-user-check',
                 }"
                 placement="right"
               />

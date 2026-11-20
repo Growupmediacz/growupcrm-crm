@@ -127,9 +127,9 @@
   </div>
 </template>
 <script setup>
-import FileTextIcon from '@/components/Icons/FileTextIcon.vue'
-import FileAudioIcon from '@/components/Icons/FileAudioIcon.vue'
-import FileVideoIcon from '@/components/Icons/FileVideoIcon.vue'
+import FileTextIcon from '~icons/lucide/file-text'
+import FileAudioIcon from '~icons/lucide/file-audio'
+import FileVideoIcon from '~icons/lucide/file-video'
 import { formatDate, convertSize } from '@/utils'
 import {
   FormControl,

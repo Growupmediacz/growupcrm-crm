@@ -48,7 +48,7 @@
 
 <script setup>
 import FieldLayout from '@/components/FieldLayout/FieldLayout.vue'
-import EditIcon from '@/components/Icons/EditIcon.vue'
+import EditIcon from '~icons/lucide/pencil-line'
 import { usersStore } from '@/stores/users'
 import { getMeta } from '@/stores/meta'
 import { useDocument } from '@/data/document'

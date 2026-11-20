@@ -7,7 +7,7 @@
       @click="action.onClick(close)"
     >
       <template v-if="action.icon" #prefix>
-        <FeatherIcon :name="action.icon" class="h-4 w-4" />
+        <GlIcon :name="action.icon" :size="16" />
       </template>
     </Button>
   </template>
@@ -27,6 +27,7 @@
 </template>
 
 <script setup>
+import GlIcon from '@/components/GlIcon.vue'
 import { computed } from 'vue'
 import { Dropdown } from 'frappe-ui'
 import { isMobileView } from '@/composables/settings'

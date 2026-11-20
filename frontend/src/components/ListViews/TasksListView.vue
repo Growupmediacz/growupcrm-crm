@@ -59,7 +59,7 @@
       >
         <template #prefix>
           <div v-if="column.key === 'status'">
-            <TaskStatusIcon :status="item" />
+            <component :is="taskStatusIcons[item] || CircleIcon" class="size-4 text-ink-gray-7" :aria-label="item" />
           </div>
           <div v-else-if="column.key === 'priority'">
             <TaskPriorityIcon :priority="item" />
@@ -178,10 +178,21 @@
 <script setup>
 import GlSelectBanner from '@/components/GlSelectBanner.vue'
 import ListFooter from '@/components/GlListFooter.vue'
-import HeartIcon from '@/components/Icons/HeartIcon.vue'
-import TaskStatusIcon from '@/components/Icons/TaskStatusIcon.vue'
+import HeartIcon from '~icons/lucide/heart'
+import CircleDashedIcon from '~icons/lucide/circle-dashed'
+import CircleIcon from '~icons/lucide/circle'
+import CircleDotIcon from '~icons/lucide/circle-dot'
+import CircleCheckIcon from '~icons/lucide/circle-check'
+import CircleXIcon from '~icons/lucide/circle-x'
+const taskStatusIcons = {
+  Backlog: CircleDashedIcon,
+  Todo: CircleIcon,
+  'In Progress': CircleDotIcon,
+  Done: CircleCheckIcon,
+  Canceled: CircleXIcon,
+}
 import TaskPriorityIcon from '@/components/Icons/TaskPriorityIcon.vue'
-import CalendarIcon from '@/components/Icons/CalendarIcon.vue'
+import CalendarIcon from '~icons/lucide/calendar'
 import RatingInput from '@/components/Controls/RatingInput.vue'
 import ListBulkActions from '@/components/ListBulkActions.vue'
 import ListRows from '@/components/ListViews/ListRows.vue'

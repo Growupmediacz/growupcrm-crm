@@ -9,7 +9,7 @@
     v-else-if="assignmentRulesList.data?.length === 0"
     :title="__('No Assignment Rules Found')"
     :description="__('Add one to get started.')"
-    :icon="h(SettingsIcon2, { class: 'rotate-90' })"
+    :icon="h(SettingsIcon2, { class: 'size-4 rotate-90' })"
   />
   <div v-else class="w-full">
     <div class="flex items-center p-2 text-sm text-ink-gray-5">
@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import SettingsIcon2 from '@/components/Icons/SettingsIcon2.vue'
+import SettingsIcon2 from '~icons/lucide/settings'
 import AssignmentRuleListItem from './AssignmentRuleListItem.vue'
 import EmptyState from '@/components/ListViews/EmptyState.vue'
 import { LoadingIndicator } from 'frappe-ui'

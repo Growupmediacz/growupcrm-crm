@@ -57,8 +57,15 @@
                     ]"
                     @click="item.onClick"
                   >
+                    <!-- GrowUp (kolo 2 V2): řetězec lucide-<nazev> kreslí Lucide (GlIcon), ne feather -->
+                    <GlIcon
+                      v-if="typeof item.icon === 'string' && item.icon.startsWith('lucide-')"
+                      :name="item.icon.slice(7)"
+                      :size="16"
+                      class="mr-2 flex-shrink-0 text-ink-gray-7"
+                    />
                     <FeatherIcon
-                      v-if="item.icon && typeof item.icon === 'string'"
+                      v-else-if="item.icon && typeof item.icon === 'string'"
                       :name="item.icon"
                       class="mr-2 h-4 w-4 flex-shrink-0 text-ink-gray-7"
                       aria-hidden="true"
@@ -86,6 +93,7 @@
 </template>
 
 <script setup>
+import GlIcon from '@/components/GlIcon.vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { Popover, Button, FeatherIcon } from 'frappe-ui'
 import { computed, useSlots } from 'vue'

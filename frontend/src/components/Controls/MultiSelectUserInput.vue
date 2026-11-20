@@ -15,9 +15,8 @@
         @keydown.delete.capture.stop="removeLastValue"
       >
         <template #suffix>
-          <FeatherIcon
+          <XIcon
             class="h-3.5"
-            name="x"
             @click.stop="removeValue(value)"
           />
         </template>
@@ -62,9 +61,8 @@
                       v-if="!options.length"
                       class="flex gap-2 rounded px-2 py-1 text-base text-ink-gray-5"
                     >
-                      <FeatherIcon
+                      <SearchIcon
                         v-if="fetchUsers"
-                        name="search"
                         class="h-4"
                       />
                       {{
@@ -119,6 +117,8 @@
 </template>
 
 <script setup>
+import XIcon from '~icons/lucide/x'
+import SearchIcon from '~icons/lucide/search'
 import {
   Combobox,
   ComboboxInput,

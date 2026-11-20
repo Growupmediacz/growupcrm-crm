@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import EditIcon from '@/components/Icons/EditIcon.vue'
+import EditIcon from '~icons/lucide/pencil-line'
 import FieldLayout from '@/components/FieldLayout/FieldLayout.vue'
 import CustomActions from '@/components/CustomActions.vue'
 import { useDocument } from '@/data/document'

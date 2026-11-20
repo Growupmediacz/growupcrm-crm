@@ -96,7 +96,7 @@
   </Dialog>
 </template>
 <script setup>
-import DragVerticalIcon from '@/components/Icons/DragVerticalIcon.vue'
+import DragVerticalIcon from '~icons/lucide/grip-vertical'
 import { getMeta } from '@/stores/meta'
 import Draggable from 'vuedraggable'
 import { Combobox, Dialog, ErrorMessage } from 'frappe-ui'

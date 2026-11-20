@@ -149,7 +149,7 @@
   </div>
 </template>
 <script setup>
-import EmailTemplateIcon from '@/components/Icons/EmailTemplateIcon.vue'
+import EmailTemplateIcon from '~icons/lucide/file-pen-line'
 import EmptyState from '../../ListViews/EmptyState.vue'
 import { useBroadcast } from '@/composables/useBroadcast'
 import { TextInput, FormControl, Switch, Dropdown, toast } from 'frappe-ui'

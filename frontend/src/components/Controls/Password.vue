@@ -28,9 +28,9 @@
           </div>
         </template>
         <div>
-          <FeatherIcon
+          <component
+            :is="show ? EyeOffIcon : EyeIcon"
             v-show="showEye"
-            :name="show ? 'eye-off' : 'eye'"
             class="h-3 cursor-pointer mr-1"
             @click="show = !show"
           />
@@ -40,6 +40,8 @@
   </FormControl>
 </template>
 <script setup>
+import EyeIcon from '~icons/lucide/eye'
+import EyeOffIcon from '~icons/lucide/eye-off'
 import KeyboardShortcut from '@/components/KeyboardShortcut.vue'
 import { FormControl, Tooltip } from 'frappe-ui'
 import { ref, computed } from 'vue'

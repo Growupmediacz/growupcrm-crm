@@ -139,8 +139,8 @@
   </div>
 </template>
 <script setup>
-import EditIcon from '@/components/Icons/EditIcon.vue'
-import DragVerticalIcon from '@/components/Icons/DragVerticalIcon.vue'
+import EditIcon from '~icons/lucide/pencil-line'
+import DragVerticalIcon from '~icons/lucide/grip-vertical'
 import { getRandom } from '@/utils'
 import { getMeta } from '@/stores/meta'
 import Draggable from 'vuedraggable'

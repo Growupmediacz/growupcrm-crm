@@ -69,7 +69,7 @@
 <script setup>
 import { Avatar, LoadingIndicator, TextInput } from 'frappe-ui'
 import { computed, ref } from 'vue'
-import CheckIcon from '@/components/Icons/CheckIcon.vue'
+import CheckIcon from '~icons/lucide/check'
 const props = defineProps({
   showMail: { type: Boolean, default: false },
   candidates: { type: Array, default: () => [] },

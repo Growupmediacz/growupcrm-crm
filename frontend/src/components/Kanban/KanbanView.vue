@@ -247,7 +247,7 @@
   </div>
 </template>
 <script setup>
-import RefreshIcon from '@/components/Icons/RefreshIcon.vue'
+import RefreshIcon from '~icons/lucide/refresh-cw'
 import IndicatorIcon from '@/components/Icons/IndicatorIcon.vue'
 import { isTouchScreenDevice, colors, parseColor } from '@/utils'
 

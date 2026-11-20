@@ -53,7 +53,7 @@
             />
           </div>
           <div v-else-if="['type', 'duration'].includes(column.key)">
-            <FeatherIcon :name="item.icon" class="h-3 w-3" />
+            <GlIcon :name="item.icon" :size="16" />
           </div>
         </template>
         <template #default="{ label }">
@@ -175,9 +175,10 @@
   />
 </template>
 <script setup>
+import GlIcon from '@/components/GlIcon.vue'
 import GlSelectBanner from '@/components/GlSelectBanner.vue'
 import ListFooter from '@/components/GlListFooter.vue'
-import HeartIcon from '@/components/Icons/HeartIcon.vue'
+import HeartIcon from '~icons/lucide/heart'
 import ListBulkActions from '@/components/ListBulkActions.vue'
 import ListRows from '@/components/ListViews/ListRows.vue'
 import RatingInput from '@/components/Controls/RatingInput.vue'

@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import Email2Icon from '@/components/Icons/Email2Icon.vue'
+import Email2Icon from '~icons/lucide/mail'
 import EmptyState from '../ListViews/EmptyState.vue'
 import EmailAccountCard from './EmailAccountCard.vue'
 import { createListResource } from 'frappe-ui'

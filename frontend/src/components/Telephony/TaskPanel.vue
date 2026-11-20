@@ -21,7 +21,7 @@
             class="bg-surface-gray-9 text-ink-base hover:bg-surface-gray-8"
           >
             <template #prefix>
-              <TaskStatusIcon :status="task.status" />
+              <component :is="taskStatusIcons[task.status] || CircleIcon" class="size-4 text-ink-gray-7" :aria-label="task.status" />
             </template>
           </Button>
         </Dropdown>
@@ -73,7 +73,18 @@
   </div>
 </template>
 <script setup>
-import TaskStatusIcon from '@/components/Icons/TaskStatusIcon.vue'
+import CircleDashedIcon from '~icons/lucide/circle-dashed'
+import CircleIcon from '~icons/lucide/circle'
+import CircleDotIcon from '~icons/lucide/circle-dot'
+import CircleCheckIcon from '~icons/lucide/circle-check'
+import CircleXIcon from '~icons/lucide/circle-x'
+const taskStatusIcons = {
+  Backlog: CircleDashedIcon,
+  Todo: CircleIcon,
+  'In Progress': CircleDotIcon,
+  Done: CircleCheckIcon,
+  Canceled: CircleXIcon,
+}
 import TaskPriorityIcon from '@/components/Icons/TaskPriorityIcon.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import Link from '@/components/Controls/Link.vue'

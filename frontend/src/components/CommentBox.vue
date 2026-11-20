@@ -65,8 +65,8 @@
 </template>
 <script setup>
 import IconPicker from '@/components/IconPicker.vue'
-import SmileIcon from '@/components/Icons/SmileIcon.vue'
-import AttachmentIcon from '@/components/Icons/AttachmentIcon.vue'
+import SmileIcon from '~icons/lucide/smile'
+import AttachmentIcon from '~icons/lucide/paperclip'
 import AttachmentItem from '@/components/AttachmentItem.vue'
 import {
   buildEditorExtensions,

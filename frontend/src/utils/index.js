@@ -1,11 +1,19 @@
 import LucideCheck from '~icons/lucide/check'
-import TaskStatusIcon from '@/components/Icons/TaskStatusIcon.vue'
+import LucideCircleDashed from '~icons/lucide/circle-dashed'
+import LucideCircle from '~icons/lucide/circle'
+import LucideCircleDot from '~icons/lucide/circle-dot'
+import LucideCircleCheck from '~icons/lucide/circle-check'
+import LucideCircleX from '~icons/lucide/circle-x'
+import LucideShield from '~icons/lucide/shield'
+import LucideBriefcase from '~icons/lucide/briefcase'
+import LucideUserCheck from '~icons/lucide/user-check'
+import LucideTrash2 from '~icons/lucide/trash-2'
 import TaskPriorityIcon from '@/components/Icons/TaskPriorityIcon.vue'
 import { usersStore } from '@/stores/users'
 import { getMeta } from '@/stores/meta'
 import { gemoji } from 'gemoji'
 import DOMPurify from 'dompurify'
-import { toast, dayjsLocal, dayjs, getConfig, FeatherIcon } from 'frappe-ui'
+import { toast, dayjsLocal, dayjs, getConfig } from 'frappe-ui'
 import { h } from 'vue'
 
 export function formatTime(seconds) {
@@ -241,7 +249,7 @@ export function taskStatusOptions(action, data) {
   }
   return options.map((status) => {
     return {
-      icon: () => h(TaskStatusIcon, { status }),
+      icon: () => h(taskStatusIcons[status] || LucideCircle, { class: 'size-4' }),
       label: status,
       onClick: () => action && action(status, data),
     }
@@ -537,6 +545,22 @@ export function runSequentially(functions) {
   }, Promise.resolve())
 }
 
+const taskStatusIcons = {
+  Backlog: LucideCircleDashed,
+  Todo: LucideCircle,
+  'In Progress': LucideCircleDot,
+  Done: LucideCircleCheck,
+  Canceled: LucideCircleX,
+}
+
+// názvy ikon používané v DropdownOption / TemplateOption (Lucide)
+const optionIcons = {
+  shield: LucideShield,
+  briefcase: LucideBriefcase,
+  'user-check': LucideUserCheck,
+  'trash-2': LucideTrash2,
+}
+
 export function DropdownOption({ option, icon, selected, onClick }) {
   return h(
     'button',
@@ -548,8 +572,7 @@ export function DropdownOption({ option, icon, selected, onClick }) {
     [
       h('div', { class: 'flex gap-2' }, [
         icon
-          ? h(FeatherIcon, {
-              name: icon,
+          ? h(optionIcons[icon] || LucideCircle, {
               class: ['h-4 w-4 shrink-0'],
               'aria-hidden': true,
             })
@@ -801,8 +824,7 @@ export function TemplateOption({ active, option, variant, icon, onClick }) {
     },
     [
       icon
-        ? h(FeatherIcon, {
-            name: icon,
+        ? h(optionIcons[icon] || LucideCircle, {
             class: ['h-4 w-4 shrink-0'],
             'aria-hidden': true,
           })

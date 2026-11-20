@@ -11,8 +11,8 @@
           {{ placeholder }}
         </div>
         <template #suffix>
-          <FeatherIcon
-            :name="isOpen ? 'chevron-up' : 'chevron-down'"
+          <component
+            :is="isOpen ? ChevronUpIcon : ChevronDownIcon"
             class="h-4 text-ink-gray-5"
           />
         </template>
@@ -57,6 +57,8 @@
 </template>
 
 <script setup>
+import ChevronUpIcon from '~icons/lucide/chevron-up'
+import ChevronDownIcon from '~icons/lucide/chevron-down'
 import PrimaryDropdownItem from '@/components/PrimaryDropdownItem.vue'
 import { Popover } from 'frappe-ui'
 import { ref } from 'vue'

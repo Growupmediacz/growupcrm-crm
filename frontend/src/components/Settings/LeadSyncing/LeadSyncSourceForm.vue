@@ -181,8 +181,8 @@ import Link from '@/components/Controls/Link.vue'
 import Grid from '@/components/Controls/Grid.vue'
 import LucideCircleQuestionMark from '~icons/lucide/circle-question-mark'
 import FailureLogs from './FailureLogs.vue'
-import DetailsIcon from '@/components/Icons/DetailsIcon.vue'
-import RefreshIcon from '@/components/Icons/RefreshIcon.vue'
+import DetailsIcon from '~icons/lucide/layout-list'
+import RefreshIcon from '~icons/lucide/refresh-cw'
 import { formatDate } from '@/utils'
 
 const props = defineProps({

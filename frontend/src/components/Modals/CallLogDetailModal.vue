@@ -169,16 +169,18 @@
 </template>
 
 <script setup>
-import EditIcon from '@/components/Icons/EditIcon.vue'
-import ArrowUpRightIcon from '@/components/Icons/ArrowUpRightIcon.vue'
-import DurationIcon from '@/components/Icons/DurationIcon.vue'
-import ContactsIcon from '@/components/Icons/ContactsIcon.vue'
-import LeadsIcon from '@/components/Icons/LeadsIcon.vue'
-import Dealsicon from '@/components/Icons/DealsIcon.vue'
-import CalendarIcon from '@/components/Icons/CalendarIcon.vue'
-import NoteIcon from '@/components/Icons/NoteIcon.vue'
-import TaskIcon from '@/components/Icons/TaskIcon.vue'
-import CheckCircleIcon from '@/components/Icons/CheckCircleIcon.vue'
+import EditIcon from '~icons/lucide/pencil-line'
+import ArrowUpRightIcon from '~icons/lucide/arrow-up-right'
+import DurationIcon from '~icons/lucide/timer'
+import ContactsIcon from '~icons/lucide/contact'
+import LeadsIcon from '~icons/lucide/user-round-search'
+import Dealsicon from '~icons/lucide/handshake'
+import CalendarIcon from '~icons/lucide/calendar'
+import GlIcon from '@/components/GlIcon.vue'
+import CirclePlayIcon from '~icons/lucide/circle-play'
+import NoteIcon from '~icons/lucide/notebook-pen'
+import TaskIcon from '~icons/lucide/square-check-big'
+import CheckCircleIcon from '~icons/lucide/circle-check'
 import FadedScrollableDiv from '@/components/FadedScrollableDiv.vue'
 import { getCallLogDetail } from '@/utils/callLog'
 import { sanitizeHTML } from '@/utils'
@@ -186,7 +188,7 @@ import { isMobileView } from '@/composables/settings'
 import { useDoctypeModal } from '@/composables/doctypeModal'
 import { useDocument } from '@/data/document'
 import { useOnboarding, useTelemetry } from 'frappe-ui/frappe'
-import { FeatherIcon, Dropdown, Avatar, Tooltip, call, toast } from 'frappe-ui'
+import { Dropdown, Avatar, Tooltip, call, toast } from 'frappe-ui'
 import { ref, computed, h, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -270,9 +272,9 @@ const detailFields = computed(() => {
   }
   let details = [
     {
-      icon: h(FeatherIcon, {
+      icon: h(GlIcon, {
         name: data.type.icon,
-        class: 'h-3.5 w-3.5',
+        size: 14,
       }),
       name: 'type',
       value: data.type.label + ' Call',
@@ -322,8 +324,7 @@ const detailFields = computed(() => {
       color: data.status.color,
     },
     {
-      icon: h(FeatherIcon, {
-        name: 'play-circle',
+      icon: h(CirclePlayIcon, {
         class: 'h-4 w-4 mt-2',
       }),
       name: 'recording_url_path',

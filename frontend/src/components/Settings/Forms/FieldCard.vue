@@ -183,7 +183,7 @@
 <script setup>
 import { computed, nextTick, ref } from 'vue'
 import { Switch, Button, FormControl, Tooltip } from 'frappe-ui'
-import DragVerticalIcon from '@/components/Icons/DragVerticalIcon.vue'
+import DragVerticalIcon from '~icons/lucide/grip-vertical'
 import LucideX from '~icons/lucide/x'
 import LucideLock from '~icons/lucide/lock'
 import LucidePencil from '~icons/lucide/pencil'

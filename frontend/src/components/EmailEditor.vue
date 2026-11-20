@@ -181,9 +181,9 @@
 
 <script setup>
 import IconPicker from '@/components/IconPicker.vue'
-import SmileIcon from '@/components/Icons/SmileIcon.vue'
-import EmailTemplateIcon from '@/components/Icons/EmailTemplateIcon.vue'
-import AttachmentIcon from '@/components/Icons/AttachmentIcon.vue'
+import SmileIcon from '~icons/lucide/smile'
+import EmailTemplateIcon from '~icons/lucide/file-pen-line'
+import AttachmentIcon from '~icons/lucide/paperclip'
 import AttachmentItem from '@/components/AttachmentItem.vue'
 import MultiSelectEmailInput from '@/components/Controls/MultiSelectEmailInput.vue'
 import EmailTemplateSelectorModal from '@/components/Modals/EmailTemplateSelectorModal.vue'

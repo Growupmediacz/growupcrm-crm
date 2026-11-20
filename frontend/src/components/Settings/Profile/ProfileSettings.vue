@@ -136,7 +136,7 @@
 <script setup>
 import GlProfileConnections from '@/components/Settings/Profile/GlProfileConnections.vue'
 import GlProfileSecurity from '@/components/Settings/Profile/GlProfileSecurity.vue'
-import EditIcon from '@/components/Icons/EditIcon.vue'
+import EditIcon from '~icons/lucide/pencil-line'
 import SettingsLayoutBase from '@/components/Layouts/SettingsLayoutBase.vue'
 import ChangePasswordModal from '@/components/Modals/ChangePasswordModal.vue'
 import { useKeyboardShortcuts } from '@/composables/useKeyboardShortcuts'

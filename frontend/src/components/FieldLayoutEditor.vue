@@ -272,7 +272,7 @@
   </div>
 </template>
 <script setup>
-import DragVerticalIcon from '@/components/Icons/DragVerticalIcon.vue'
+import DragVerticalIcon from '~icons/lucide/grip-vertical'
 import Draggable from 'vuedraggable'
 import { getRandom } from '@/utils'
 import { getMeta } from '@/stores/meta'

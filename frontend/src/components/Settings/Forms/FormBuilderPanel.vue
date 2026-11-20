@@ -673,7 +673,7 @@ import {
 import FieldCard from '@/components/Settings/Forms/FieldCard.vue'
 import { fieldTypeIcon } from '@/components/Settings/Forms/fieldTypeIcon'
 import { evaluateDependsOnValue } from '@/utils/expressions'
-import DragVerticalIcon from '@/components/Icons/DragVerticalIcon.vue'
+import DragVerticalIcon from '~icons/lucide/grip-vertical'
 import LucideCopy from '~icons/lucide/copy'
 import Draggable from 'vuedraggable'
 import LucideShare2 from '~icons/lucide/share-2'

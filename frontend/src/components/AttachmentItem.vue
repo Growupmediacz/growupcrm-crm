@@ -30,11 +30,11 @@
 <script setup>
 import { ref } from 'vue'
 import mime from 'mime'
-import FileTypeIcon from '@/components/Icons/FileTypeIcon.vue'
-import FileImageIcon from '@/components/Icons/FileImageIcon.vue'
-import FileTextIcon from '@/components/Icons/FileTextIcon.vue'
-import FileSpreadsheetIcon from '@/components/Icons/FileSpreadsheetIcon.vue'
-import FileIcon from '@/components/Icons/FileIcon.vue'
+import FileTypeIcon from '~icons/lucide/file-type'
+import FileImageIcon from '~icons/lucide/file-image'
+import FileTextIcon from '~icons/lucide/file-text'
+import FileSpreadsheetIcon from '~icons/lucide/file-spreadsheet'
+import FileIcon from '~icons/lucide/file'
 
 const props = defineProps({
   label: { type: String, default: null },

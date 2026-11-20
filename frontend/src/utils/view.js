@@ -1,6 +1,6 @@
-import ListIcon from '@/components/Icons/ListIcon.vue'
-import GroupByIcon from '@/components/Icons/GroupByIcon.vue'
-import KanbanIcon from '@/components/Icons/KanbanIcon.vue'
+import ListIcon from '~icons/lucide/list'
+import GroupByIcon from '~icons/lucide/rows-3'
+import KanbanIcon from '~icons/lucide/kanban'
 import { viewsStore } from '@/stores/views'
 import { markRaw } from 'vue'
 
