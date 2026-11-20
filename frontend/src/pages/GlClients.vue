@@ -32,7 +32,7 @@
           <span v-if="k.badge" class="shrink-0 rounded-full bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] px-2.5 py-0.5 text-[13px] font-semibold text-[var(--accent-700)]">{{ k.badge }}</span>
         </div>
         <!-- telefon: zkrácená částka („66 tis. Kč“), celá hodnota v title; sloupec 2 × 2 je úzký -->
-        <div class="num break-words text-[26px] font-bold leading-tight tracking-tight tabular-nums md:truncate md:text-[44px]" :class="i === 3 && k.value ? 'text-[#e5484d]' : 'text-ink-gray-9'" :title="k.full" :aria-label="k.full">{{ k.value }}</div>
+        <div class="num break-words text-[26px] font-bold leading-tight tracking-tight tabular-nums md:truncate md:text-[44px]" :class="i === 3 && k.value ? 'text-[var(--c-red-400)]' : 'text-ink-gray-9'" :title="k.full" :aria-label="k.full">{{ k.value }}</div>
         <div class="line-clamp-2 text-[14px] leading-snug text-ink-gray-5 md:truncate md:text-[15px]">{{ k.sub }}</div>
       </div>
     </div>
@@ -62,15 +62,15 @@
         </div>
         <div class="flex min-h-6 items-start gap-2 text-[15px]">
           <span class="mt-1.5 size-2.5 shrink-0 rounded-full" :style="{ background: HEALTH_COLORS[c.health] }" />
-          <span class="min-w-0 break-words" :class="c.health === 'V pořádku' ? 'text-ink-gray-9' : c.health === 'Ohrožený' ? 'text-[#c8321f]' : 'text-[#c77700]'">{{ __(c.health) }}<template v-if="c.health_note"> – <span class="text-[#c8321f]">{{ c.health_note }}</span></template></span>
+          <span class="min-w-0 break-words" :class="c.health === 'V pořádku' ? 'text-ink-gray-9' : c.health === 'Ohrožený' ? 'text-[var(--c-red-550)]' : 'text-[var(--c-amber-600-2)]'">{{ __(c.health) }}<template v-if="c.health_note"> – <span class="text-[var(--c-red-550)]">{{ c.health_note }}</span></template></span>
         </div>
         <!-- design 16: ikona, popisek nad číslem, bez retaineru „—“ -->
         <div class="grid grid-cols-2 gap-2">
-          <div class="flex items-start gap-2.5 rounded-2xl bg-[rgba(110,120,200,.075)] px-3 py-3">
+          <div class="flex items-start gap-2.5 rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_7.5%,transparent)] px-3 py-3">
             <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/70 text-[var(--accent-600)]"><GlIcon name="card" :size="16" /></span>
             <span class="min-w-0"><span class="block text-[13px] text-ink-gray-5 md:text-[12.5px]">{{ __('měsíčně') }}</span><span class="num block truncate text-[18px] font-bold text-ink-gray-9 tabular-nums" :title="c.monthly ? money(c.monthly) : ''">{{ c.monthly ? (isPhone ? moneyCompact(c.monthly) : money(c.monthly)) : '—' }}</span></span>
           </div>
-          <router-link :to="{ name: 'Projects' }" class="flex min-h-11 items-start gap-2.5 rounded-2xl bg-[rgba(110,120,200,.075)] px-3 py-3 hover:bg-[rgba(110,120,200,.12)]">
+          <router-link :to="{ name: 'Projects' }" class="flex min-h-11 items-start gap-2.5 rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_7.5%,transparent)] px-3 py-3 hover:bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)]">
             <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/70 text-[var(--accent-600)]"><GlIcon name="folder" :size="16" /></span>
             <span class="min-w-0"><span class="block text-[13px] text-ink-gray-5 md:text-[12.5px]">{{ __('aktivní projekty') }}</span><span class="num block text-[18px] font-bold text-ink-gray-9">{{ c.projects }}</span></span>
           </router-link>
@@ -79,7 +79,7 @@
           <GlIcon name="cal" :size="16" class="shrink-0 text-ink-gray-5" />
           <span class="min-w-0 flex-1 break-words md:truncate">{{ c.next_event ? `${c.next_event.title} · ${shortDate(c.next_event.at)}` : __('Nic naplánovaného') }}</span>
           <span class="flex -space-x-1.5">
-            <GlUserAvatar v-for="u in c.team" :key="u" :user="u" class="size-8 border-2 border-white bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" />
+            <GlUserAvatar v-for="u in c.team" :key="u" :user="u" class="size-8 border-2 border-white bg-[var(--c-blue-50)] text-[10px] font-bold text-[var(--c-blue-600)]" />
           </span>
         </div>
       </div>
@@ -99,7 +99,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="c in data?.clients || []" :key="c.name" class="border-t border-[rgba(110,120,200,.12)]">
+          <tr v-for="c in data?.clients || []" :key="c.name" class="border-t border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)]">
             <td class="px-3 py-2.5">
               <router-link :to="{ name: 'Organization', params: { organizationId: c.name } }" class="font-semibold text-ink-gray-9 hover:text-[var(--accent-600)]">{{ c.organization_name }}</router-link>
               <div class="text-[12px] text-ink-gray-5">{{ sinceLabel(c.client_since) }}</div>
@@ -179,7 +179,7 @@ const overview = createResource({ url: 'growupcrm.clients.get_overview', auto: t
 const data = computed(() => overview.data)
 const errorText = computed(() => overview.error?.messages?.[0] || __('Klienty se nepodařilo načíst.'))
 
-const HEALTH_COLORS = { 'V pořádku': '#22b35e', 'Potřebuje pozornost': '#e0a100', 'Ohrožený': '#e5484d' }
+const HEALTH_COLORS = { 'V pořádku': 'var(--stage-vyhrano)', 'Potřebuje pozornost': 'var(--stage-nabidka)', 'Ohrožený': 'var(--c-red-400)' }
 
 const money = (n) => `${new Intl.NumberFormat('cs-CZ').format(Math.round(n || 0))} Kč`
 const compact = new Intl.NumberFormat('cs-CZ', { notation: 'compact', maximumFractionDigits: 1 })
@@ -275,7 +275,7 @@ async function endCooperation(c) {
 }
 
 const userName = (u) => getUser(u)?.full_name || u
-const TONES = ['bg-[#dde6ff] text-[#2440a6]', 'bg-[#ffe9d6] text-[#b4560f]', 'bg-[#dcf5e6] text-[#0f6b32]', 'bg-[#efe7ff] text-[#6d3fd0]']
+const TONES = ['bg-[var(--c-blue-50)] text-[var(--c-blue-600)]', 'bg-[var(--c-orange-100)] text-[var(--c-orange-600)]', 'bg-[var(--c-green-100)] text-[var(--success)]', 'bg-[var(--c-violet-50)] text-[var(--c-violet-450)]']
 const tone = (s) => TONES[[...(s || '')].reduce((a, ch) => a + ch.charCodeAt(0), 0) % TONES.length]
 const initials = (s) =>
   (s || '?')

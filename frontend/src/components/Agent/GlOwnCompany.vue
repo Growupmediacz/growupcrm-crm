@@ -7,7 +7,7 @@
         <p class="mt-1 text-[14px] text-ink-gray-6">{{ __('Služby, ceny a oborové ukázky z našeho webu. Agent z nich bere argumenty a čísla pro oslovení firem podle oboru.') }}</p>
       </div>
       <div class="flex items-center gap-2">
-        <input v-model="website" class="h-9 w-[260px] rounded-[10px] border border-[rgba(110,120,200,.25)] bg-white/70 px-3 text-[14px] outline-none" :placeholder="__('https://…')" />
+        <input v-model="website" class="h-9 w-[260px] rounded-[10px] border border-[color-mix(in_srgb,var(--c-tint)_25%,transparent)] bg-white/70 px-3 text-[14px] outline-none" :placeholder="__('https://…')" />
         <Button variant="solid" :label="busySync ? __('Načítám…') : __('Načíst z webu')" :loading="busySync" @click="startSync" />
       </div>
     </div>
@@ -19,27 +19,27 @@
 
     <template v-if="p?.summary">
       <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <div v-for="f in FIELDS" v-show="p[f.key]" :key="f.key" class="rounded-[14px] bg-[rgba(110,120,200,.06)] px-3 py-2">
+        <div v-for="f in FIELDS" v-show="p[f.key]" :key="f.key" class="rounded-[14px] bg-[color-mix(in_srgb,var(--c-tint)_6%,transparent)] px-3 py-2">
           <div class="text-[12px] font-semibold uppercase tracking-wide text-ink-gray-5">{{ f.label }}</div>
           <div class="whitespace-pre-line text-[14px] leading-snug text-ink-gray-8">{{ p[f.key] }}</div>
         </div>
       </div>
 
-      <div v-if="p.uncovered?.length" class="rounded-[14px] bg-[rgba(214,130,20,.1)] px-4 py-3 text-[14px] text-[#8a4b00]">
+      <div v-if="p.uncovered?.length" class="rounded-[14px] bg-[color-mix(in_srgb,var(--c-amber-550-2)_10%,transparent)] px-4 py-3 text-[14px] text-[var(--c-orange-750)]">
         <b>{{ __('Obory bez ukázky:') }}</b>
         {{ p.uncovered.map((u) => `${u.industry} (${u.count})`).join(', ') }}.
         {{ __('Firmám z nich agent pošle jen obecný profil. Přiřaďte je k ukázce níže nebo doplňte ukázku na web.') }}
       </div>
 
       <h4 class="text-[15px] font-bold text-ink-gray-9">{{ __('Oborové ukázky') }}</h4>
-      <div v-for="(pitch, i) in pitches" :key="pitch.url || i" class="rounded-[16px] border border-[rgba(110,120,200,.16)] p-4">
+      <div v-for="(pitch, i) in pitches" :key="pitch.url || i" class="rounded-[16px] border border-[color-mix(in_srgb,var(--c-tint)_16%,transparent)] p-4">
         <div class="flex flex-wrap items-baseline justify-between gap-2">
           <a :href="pitch.url" target="_blank" class="text-[15px] font-bold text-ink-gray-9 hover:underline">{{ pitch.obor }}</a>
           <span class="text-[13px] text-ink-gray-5">{{ pitch.target }}</span>
         </div>
         <div class="mt-2 flex flex-wrap gap-1.5">
           <button v-for="ind in p.industries" :key="ind" class="rounded-full px-3 py-1 text-[12px] font-semibold"
-            :class="has(pitch, ind) ? 'bg-[#0e1330] text-white' : 'bg-[color-mix(in_srgb,var(--accent-600)_8%,transparent)] text-[var(--accent-700)]'" @click="toggle(pitch, ind)">{{ ind }}</button>
+            :class="has(pitch, ind) ? 'bg-[var(--text-1)] text-white' : 'bg-[color-mix(in_srgb,var(--accent-600)_8%,transparent)] text-[var(--accent-700)]'" @click="toggle(pitch, ind)">{{ ind }}</button>
         </div>
         <div v-if="pitch.hook" class="mt-2 text-[14px] italic text-ink-gray-8">„{{ pitch.hook }}“</div>
         <details class="mt-2 text-[13px] text-ink-gray-7">

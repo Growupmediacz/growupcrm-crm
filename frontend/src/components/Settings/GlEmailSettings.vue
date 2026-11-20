@@ -23,8 +23,8 @@
           {{ __('Oslovení z Outreach odcházejí z vašeho Gmailu (Můj e-mail), odpovědi chodí zpět do CRM.') }}
         </p>
       </div>
-      <div v-if="gmail.data?.connected" class="flex items-center gap-2 rounded-[16px] bg-[rgba(34,179,94,.08)] px-4 py-3 text-[13px] text-[#178a4a]">
-        <span class="size-2 rounded-full bg-[#22b35e]" />
+      <div v-if="gmail.data?.connected" class="flex items-center gap-2 rounded-[16px] bg-[color-mix(in_srgb,var(--stage-vyhrano)_8%,transparent)] px-4 py-3 text-[13px] text-[var(--c-green-700)]">
+        <span class="size-2 rounded-full bg-[var(--stage-vyhrano)]" />
         {{ __('Outreach odesílá z {0}.', [gmail.data.email]) }}
       </div>
       <details class="group" :open="!gmail.data?.connected">

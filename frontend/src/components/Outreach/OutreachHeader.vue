@@ -20,7 +20,7 @@
     </template>
     <template #right-header>
       <button class="gl-chip hidden h-9 items-center gap-2 rounded-full px-3.5 text-[14px] sm:flex" @click="$emit('mailbox')">
-        <span class="size-2 rounded-full" :class="connected ? 'bg-[#22b35e]' : 'bg-[#e0a100]'" />
+        <span class="size-2 rounded-full" :class="connected ? 'bg-[var(--stage-vyhrano)]' : 'bg-[var(--stage-nabidka)]'" />
         <template v-if="connected">{{ __('Schránka') }}: <b class="font-semibold">{{ sender || __('připojena') }}</b></template>
         <template v-else>{{ __('Připojit schránku') }}</template>
         <span class="lucide-chevron-down size-4 opacity-60" aria-hidden="true" />

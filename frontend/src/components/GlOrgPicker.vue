@@ -5,7 +5,7 @@
       v-if="modelValue"
       class="flex h-10 items-center gap-2 rounded-[var(--r-field,12px)] border border-white/90 bg-white/70 pl-2 pr-1.5"
     >
-      <span class="flex size-7 shrink-0 items-center justify-center rounded-lg bg-[#efe7ff] text-[11px] font-bold text-[#6d3fd0]">
+      <span class="flex size-7 shrink-0 items-center justify-center rounded-lg bg-[var(--c-violet-50)] text-[11px] font-bold text-[var(--c-violet-450)]">
         {{ initials(modelValue.label) }}
       </span>
       <span class="min-w-0 flex-1 truncate text-[14px] font-semibold text-ink-gray-9">{{ modelValue.label }}</span>
@@ -35,7 +35,7 @@
         @mouseenter="active = i"
         @click="pick(o)"
       >
-        <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[#dde6ff] text-[11px] font-bold text-[#2440a6]">{{ initials(o.organization_name) }}</span>
+        <span class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[var(--c-blue-50)] text-[11px] font-bold text-[var(--c-blue-600)]">{{ initials(o.organization_name) }}</span>
         <span class="min-w-0 flex-1">
           <span class="block truncate text-[14px] font-semibold text-ink-gray-9">{{ o.organization_name || o.name }}</span>
           <span class="block truncate text-[12px] text-ink-gray-5">{{ [o.ico && `IČO ${o.ico}`, o.city].filter(Boolean).join(' · ') }}</span>

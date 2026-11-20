@@ -4,20 +4,20 @@
   <Teleport to="body">
     <div v-if="menu" class="fixed inset-0 z-[95]" @click="close" @contextmenu.prevent="close">
       <div ref="box" class="gl-sheet absolute w-[260px] rounded-[18px] p-1.5 text-[14px]" :style="{ left: `${pos.x}px`, top: `${pos.y}px` }" role="menu" @click.stop>
-        <button v-for="it in items" :key="it.key" class="gl-menu-item" :class="[it.danger && '!text-[#a82614]', it.sub && sub && 'bg-white/70']" role="menuitem" @click="it.sub ? (sub = !sub) : run(it)" @mouseenter="it.sub ? (sub = true) : (sub = false)">
+        <button v-for="it in items" :key="it.key" class="gl-menu-item" :class="[it.danger && '!text-[var(--overdue)]', it.sub && sub && 'bg-white/70']" role="menuitem" @click="it.sub ? (sub = !sub) : run(it)" @mouseenter="it.sub ? (sub = true) : (sub = false)">
           <GlIcon :name="it.icon" :size="16" class="shrink-0 opacity-70" />
           <span class="flex-1 truncate text-left">{{ it.label }}</span>
           <span v-if="it.hint" class="text-[12px] text-ink-gray-5">{{ it.hint }}</span>
           <GlIcon v-if="it.sub" name="right" :size="14" class="opacity-60" />
         </button>
-        <hr class="my-1 border-[rgba(110,120,200,.16)]" />
+        <hr class="my-1 border-[color-mix(in_srgb,var(--c-tint)_16%,transparent)]" />
         <button class="gl-menu-item" role="menuitem" @click="run({ key: 'duplicate' })"><GlIcon name="copy" :size="16" class="opacity-70" /><span class="flex-1 text-left">{{ __('Duplikovat') }}</span><span class="text-[12px] text-ink-gray-5">⌘D</span></button>
-        <button class="gl-menu-item !text-[#a82614]" role="menuitem" @click="run({ key: 'delete' })"><GlIcon name="trash" :size="16" /><span class="flex-1 text-left">{{ __('Smazat') }}</span></button>
+        <button class="gl-menu-item !text-[var(--overdue)]" role="menuitem" @click="run({ key: 'delete' })"><GlIcon name="trash" :size="16" /><span class="flex-1 text-left">{{ __('Smazat') }}</span></button>
 
         <!-- podmenu Posunout do -->
         <div v-if="sub" class="gl-sheet absolute top-[88px] w-[210px] rounded-[16px] p-1.5" :class="flip ? 'right-full mr-1' : 'left-full ml-1'" role="menu" @mouseleave="sub = false">
           <button v-for="s in stages" :key="s.name" class="gl-menu-item" role="menuitem" @click="run({ key: 'move', status: s.name })">
-            <span class="size-2.5 shrink-0 rounded-full" :style="{ background: COLORS[s.name] || '#9ca3af' }" />
+            <span class="size-2.5 shrink-0 rounded-full" :style="{ background: COLORS[s.name] || 'var(--stage-prohrano)' }" />
             <span class="flex-1 text-left">{{ __(s.name) }}</span>
             <GlIcon v-if="s.name === menu.lead.status" name="check" :size="15" class="text-[var(--accent-600)]" />
           </button>
@@ -36,7 +36,7 @@ const props = defineProps({ menu: { type: Object, default: null } }) // { x, y, 
 const emit = defineEmits(['close', 'action'])
 const { leadStatuses } = statusesStore()
 const stages = computed(() => leadStatuses.data || [])
-const COLORS = { 'Nová': '#3b82f6', 'Kontaktováno': '#8b5cf6', 'Nabídka odeslána': '#e0a100', 'Jednání': '#f97316', 'Vyhráno': '#22b35e', 'Prohráno': '#9ca3af' }
+const COLORS = { 'Nová': 'var(--stage-nova)', 'Kontaktováno': 'var(--stage-kontaktovano)', 'Nabídka odeslána': 'var(--stage-nabidka)', 'Jednání': 'var(--stage-jednani)', 'Vyhráno': 'var(--stage-vyhrano)', 'Prohráno': 'var(--stage-prohrano)' }
 const sub = ref(false)
 const flip = ref(false)
 const box = ref(null)

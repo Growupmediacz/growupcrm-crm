@@ -55,7 +55,7 @@
             <span v-if="r.number" class="tabular-nums">{{ __('č. {0}', [r.number]) }}</span>
             <span>{{ dateLabel(r) }}</span>
             <span v-if="r.due_date">{{ __('splatnost {0}', [shortDate(r.due_date)]) }}</span>
-            <span v-if="r.days_overdue" class="font-semibold text-[#c8321f]">{{ overdueText(r.days_overdue) }}</span>
+            <span v-if="r.days_overdue" class="font-semibold text-[var(--c-red-550)]">{{ overdueText(r.days_overdue) }}</span>
           </div>
           <div class="flex flex-wrap gap-2 pt-1">
             <Button v-if="r.status === 'Návrh'" variant="solid" class="!h-11" :label="__('Vystavit')" @click="openIssue(r)" />
@@ -96,7 +96,7 @@
               <td class="px-3 py-3 text-right font-semibold tabular-nums text-ink-gray-9">{{ money(r.amount) }}</td>
               <td class="px-3 py-3 tabular-nums text-ink-gray-7">{{ dateLabel(r) }}</td>
               <td class="px-3 py-3 tabular-nums text-ink-gray-7">{{ r.due_date ? shortDate(r.due_date) : '—' }}</td>
-              <td class="px-3 py-3 text-right tabular-nums" :class="r.days_overdue ? 'font-semibold text-[#c8321f]' : 'text-ink-gray-5'">{{ r.days_overdue ? overdueText(r.days_overdue) : '—' }}</td>
+              <td class="px-3 py-3 text-right tabular-nums" :class="r.days_overdue ? 'font-semibold text-[var(--c-red-550)]' : 'text-ink-gray-5'">{{ r.days_overdue ? overdueText(r.days_overdue) : '—' }}</td>
               <td class="px-3 py-2">
                 <div class="flex flex-wrap justify-end gap-2">
                   <Button v-if="r.status === 'Návrh'" variant="solid" :label="__('Vystavit')" @click="openIssue(r)" />
@@ -174,7 +174,7 @@
     <template #default>
       <div v-if="current" class="flex flex-col gap-4">
         <div class="text-[15px] text-ink-gray-7">{{ current.organization_name }} · {{ current.number || __('návrh') }} · <span class="tabular-nums">{{ money(current.amount) }}</span></div>
-        <div v-if="current.status !== 'Návrh'" class="rounded-[14px] bg-[rgba(224,161,0,.14)] px-3.5 py-2.5 text-[14px] text-[var(--warning)]">
+        <div v-if="current.status !== 'Návrh'" class="rounded-[14px] bg-[color-mix(in_srgb,var(--stage-nabidka)_14%,transparent)] px-3.5 py-2.5 text-[14px] text-[var(--warning)]">
           {{ __('Faktura je vystavená. Storno se v UOL musí opravit dobropisem ručně.') }}
         </div>
         <FormControl v-model="reason" type="textarea" :rows="2" :label="__('Důvod storna')" required />
@@ -263,11 +263,11 @@ const overdueText = (n) => (n === 1 ? __('1 den') : n <= 4 ? __('{0} dny', [n]) 
 const stateLabel = (r) => (r.status === 'Po splatnosti' ? `! ${__(r.status)}` : r.status === 'Zaplaceno' ? `✓ ${__(r.status)}` : __(r.status))
 const badge = (s) =>
   ({
-    Návrh: 'bg-[var(--line)] text-[#3b4377]',
-    Vystaveno: 'bg-[rgba(59,155,246,.14)] text-[#1d5fa8]',
-    'Po splatnosti': 'bg-[rgba(200,50,31,.12)] text-[var(--overdue)]',
-    Zaplaceno: 'bg-[rgba(34,179,94,.14)] text-[#15803d]',
-    Storno: 'bg-[rgba(110,120,200,.1)] text-[#5a6080] line-through',
+    Návrh: 'bg-[var(--line)] text-[var(--c-indigo-650)]',
+    Vystaveno: 'bg-[color-mix(in_srgb,var(--c-sky-400)_14%,transparent)] text-[var(--c-sky-600-2)]',
+    'Po splatnosti': 'bg-[color-mix(in_srgb,var(--c-red-550)_12%,transparent)] text-[var(--overdue)]',
+    Zaplaceno: 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_14%,transparent)] text-[var(--c-green-700-2)]',
+    Storno: 'bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] text-[var(--c-blue-550-2)] line-through',
   })[s] || ''
 const canPay = (r) => r.status === 'Vystaveno' || r.status === 'Po splatnosti'
 const canCancel = (r) => r.status !== 'Storno'

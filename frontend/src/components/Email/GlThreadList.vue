@@ -52,7 +52,7 @@ defineEmits(['select'])
   border-radius: 16px;
   text-align: left;
 }
-.gl-tl-row:hover { background: var(--fill-tinted, rgba(110, 120, 200, 0.075)); }
+.gl-tl-row:hover { background: var(--fill-tinted, color-mix(in srgb, var(--c-tint) 7.5%, transparent)); }
 .gl-tl-row.is-on { background: var(--accent-soft); }
 .gl-tl-row:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 .gl-tl-chip {

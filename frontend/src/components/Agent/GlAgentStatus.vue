@@ -4,7 +4,7 @@
   <section v-if="status.data && !status.error" class="gl-card flex min-w-0 flex-col gap-4" :class="compact ? 'p-4' : 'p-5 md:p-6'" :aria-label="__('Agent')">
     <div class="flex items-center gap-3">
       <span class="relative flex size-3 shrink-0" aria-hidden="true">
-        <span class="size-3 rounded-full" :class="enabled ? 'bg-[var(--stage-vyhrano)]' : 'bg-[#9aa0bd]'" />
+        <span class="size-3 rounded-full" :class="enabled ? 'bg-[var(--stage-vyhrano)]' : 'bg-[var(--c-blue-350)]'" />
       </span>
       <div class="min-w-0 flex-1">
         <h2 class="text-[16px] font-bold text-ink-gray-9">{{ enabled ? __('Agent běží') : __('Agent je vypnutý') }}</h2>
@@ -23,7 +23,7 @@
         :disabled="busy"
         @click="toggle"
       >
-        <span class="relative h-7 w-12 rounded-full transition-colors" :class="enabled ? 'bg-[var(--accent-600)]' : 'bg-[#c3c8dd]'">
+        <span class="relative h-7 w-12 rounded-full transition-colors" :class="enabled ? 'bg-[var(--accent-600)]' : 'bg-[var(--c-blue-200)]'">
           <span class="absolute left-0.5 top-0.5 size-6 rounded-full bg-white shadow transition-transform" :class="enabled && 'translate-x-5'" />
         </span>
       </button>
@@ -42,7 +42,7 @@
       </div>
       <div class="rounded-[16px] bg-[var(--fill-tinted)] px-3.5 py-2.5">
         <div class="text-[13px] text-ink-gray-5">{{ __('Odmítnuto dnes') }}</div>
-        <div class="text-[24px] font-medium leading-tight tabular-nums" :class="status.data.refused_today ? 'text-[#c8321f]' : 'text-ink-gray-9'">{{ status.data.refused_today ?? 0 }}</div>
+        <div class="text-[24px] font-medium leading-tight tabular-nums" :class="status.data.refused_today ? 'text-[var(--c-red-550)]' : 'text-ink-gray-9'">{{ status.data.refused_today ?? 0 }}</div>
       </div>
     </div>
 

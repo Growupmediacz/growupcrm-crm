@@ -75,7 +75,7 @@ const sumText = computed(() => {
   transition: background-color var(--t-fast, 120ms);
 }
 .gl-kcol-btn:hover {
-  background: rgba(255, 255, 255, 0.9);
+  background: color-mix(in srgb, var(--c-white) 90%, transparent);
 }
 .gl-kcol-btn:focus-visible {
   outline: none;

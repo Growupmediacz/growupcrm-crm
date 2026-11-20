@@ -136,7 +136,7 @@ onBeforeUnmount(() => observer?.disconnect())
   font-size: 14px;
   font-weight: 500;
   color: var(--text-2);
-  background: var(--fill-tinted, rgba(110, 120, 200, 0.075));
+  background: var(--fill-tinted, color-mix(in srgb, var(--c-tint) 7.5%, transparent));
 }
 .gl-mail-imgbtn:hover { color: var(--text-1); }
 .gl-mail-imgbtn:focus-visible { outline: none; box-shadow: var(--focus-ring); }

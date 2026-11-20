@@ -38,7 +38,7 @@
               :key="s"
               type="button"
               class="gl-chip flex h-9 items-center rounded-full px-3.5 text-[14px] font-medium"
-              :class="services.includes(s) && '!bg-[#0e1330] !text-white'"
+              :class="services.includes(s) && '!bg-[var(--text-1)] !text-white'"
               @click="toggle(s)"
             >
               {{ __(s) }}

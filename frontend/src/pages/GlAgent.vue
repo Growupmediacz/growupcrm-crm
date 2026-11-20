@@ -5,7 +5,7 @@
     <template #left-header>
       <!-- design 3. kolo (12): ikona agenta, nadpis a podtitulek -->
       <div class="flex min-w-0 items-center gap-4">
-        <span class="hidden size-14 shrink-0 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,color-mix(in_srgb,var(--accent-600)_80%,white),var(--accent-600))] text-white shadow-[0_8px_20px_-8px_rgba(91,91,246,.6)] md:flex"><GlIcon name="sparkles" :size="26" /></span>
+        <span class="hidden size-14 shrink-0 items-center justify-center rounded-[18px] bg-[linear-gradient(135deg,color-mix(in_srgb,var(--accent-600)_80%,white),var(--accent-600))] text-white shadow-[0_8px_20px_-8px_color-mix(in_srgb,var(--accent-600)_60%,transparent)] md:flex"><GlIcon name="sparkles" :size="26" /></span>
         <div class="min-w-0">
           <span class="gl-page-title text-lg-medium text-ink-gray-9">{{ __('Agent') }}</span>
           <div class="hidden truncate text-[15px] text-ink-gray-5 md:block">{{ __('Obohacuje firmy z webu, hledá rozhodující osoby a nové firmy.') }}</div>
@@ -30,7 +30,7 @@
         <div class="flex min-w-0 flex-1 flex-col gap-1">
           <div class="text-[14px] font-semibold text-ink-gray-9 md:truncate md:text-[17px]">{{ k.label }}</div>
           <div class="num text-[26px] font-bold leading-tight tracking-tight text-ink-gray-9 md:truncate md:text-[40px]">{{ k.value }}<span v-if="k.of" class="text-[15px] font-medium text-ink-gray-5 md:text-[22px]"> / {{ k.of }}</span></div>
-          <div v-if="k.bar !== undefined" class="h-2 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><div class="h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${Math.min(100, k.bar)}%` }" /></div>
+          <div v-if="k.bar !== undefined" class="h-2 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--c-tint)_16%,transparent)]"><div class="h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${Math.min(100, k.bar)}%` }" /></div>
           <div class="text-[13px] text-ink-gray-5 md:truncate md:text-[14px]">{{ k.sub }}</div>
         </div>
       </div>
@@ -95,18 +95,18 @@
               <td class="py-3">
                 <span v-if="r.email" class="flex items-center gap-2">
                   <span class="truncate text-ink-gray-8">{{ r.email }}</span>
-                  <span v-if="r.email_verified" class="flex shrink-0 items-center gap-1 rounded-full bg-[rgba(34,179,94,.12)] px-2.5 py-0.5 text-[12.5px] font-medium text-[#178a4a]"><GlIcon name="check" :size="13" />{{ __('Ověřeno') }}</span>
+                  <span v-if="r.email_verified" class="flex shrink-0 items-center gap-1 rounded-full bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] px-2.5 py-0.5 text-[12.5px] font-medium text-[var(--c-green-700)]"><GlIcon name="check" :size="13" />{{ __('Ověřeno') }}</span>
                 </span>
                 <span v-else class="text-ink-gray-5">—</span>
-                <span v-if="r.action === 'Doplnit kontakt'" class="mt-1 block text-[12px] font-medium text-[#178a4a]">{{ __('doplní e-mail ke kontaktu') }}</span>
+                <span v-if="r.action === 'Doplnit kontakt'" class="mt-1 block text-[12px] font-medium text-[var(--c-green-700)]">{{ __('doplní e-mail ke kontaktu') }}</span>
               </td>
               <td class="py-3">
-                <span class="inline-flex items-center gap-1.5 rounded-full bg-[rgba(110,120,200,.1)] px-2.5 py-1 text-[13px] text-ink-gray-7"><GlIcon :name="SOURCE_ICON[r.source] || 'doc'" :size="14" />{{ r.source || __('Web') }}</span>
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] px-2.5 py-1 text-[13px] text-ink-gray-7"><GlIcon :name="SOURCE_ICON[r.source] || 'doc'" :size="14" />{{ r.source || __('Web') }}</span>
               </td>
               <td class="py-3">
                 <span class="flex justify-end gap-2">
-                  <button class="flex size-9 items-center justify-center rounded-full bg-[rgba(34,179,94,.12)] text-[#178a4a] hover:bg-[rgba(34,179,94,.2)]" :aria-label="__('Přijmout')" :title="__('Přijmout')" @click="decideOne('accept', r.name)"><GlIcon name="check" :size="17" /></button>
-                  <button class="flex size-9 items-center justify-center rounded-full bg-[rgba(110,120,200,.1)] text-ink-gray-6 hover:bg-[rgba(229,72,77,.12)] hover:text-[#c8321f]" :aria-label="__('Zamítnout')" :title="__('Zamítnout')" @click="decideOne('reject', r.name)"><GlIcon name="x" :size="16" /></button>
+                  <button class="flex size-9 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)] hover:bg-[color-mix(in_srgb,var(--stage-vyhrano)_20%,transparent)]" :aria-label="__('Přijmout')" :title="__('Přijmout')" @click="decideOne('accept', r.name)"><GlIcon name="check" :size="17" /></button>
+                  <button class="flex size-9 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] text-ink-gray-6 hover:bg-[color-mix(in_srgb,var(--c-red-400)_12%,transparent)] hover:text-[var(--c-red-550)]" :aria-label="__('Zamítnout')" :title="__('Zamítnout')" @click="decideOne('reject', r.name)"><GlIcon name="x" :size="16" /></button>
                 </span>
               </td>
             </tr>
@@ -131,7 +131,7 @@
             <FormControl type="select" :label="__('Stav')" v-model="filters.relationship" :options="opt(['Prospekt', 'Klient', 'Bývalý klient'])" />
           </div>
           <label class="flex items-center gap-2 text-[14px] text-ink-gray-7"><input v-model="filters.include_done" type="checkbox" class="rounded" />{{ __('Znovu i už obohacené firmy') }}</label>
-          <div class="flex flex-wrap items-center justify-between gap-3 rounded-[16px] bg-[rgba(110,120,200,.07)] px-4 py-3">
+          <div class="flex flex-wrap items-center justify-between gap-3 rounded-[16px] bg-[color-mix(in_srgb,var(--c-tint)_7%,transparent)] px-4 py-3">
             <div class="text-[14px] text-ink-gray-8">
               <template v-if="est.data">
                 <b>{{ est.data.count }}</b> {{ __('firem') }} · ~<b>{{ est.data.credits }}</b> {{ __('kreditů') }}
@@ -159,7 +159,7 @@
     <div class="gl-card flex flex-col p-5">
       <h3 class="mb-3 text-[18px] font-bold text-ink-gray-9">{{ __('Poslední úlohy') }}</h3>
       <GlEmptyState v-if="!ov.runs.length" icon="sparkles" :title="__('Agent zatím nic nedělal')" :text="__('Vyberte firmy a spusťte obohacení.')" />
-      <div v-for="r in ov.runs" :key="r.name" class="flex items-center gap-3 border-t border-[rgba(110,120,200,.12)] py-2.5 first:border-0">
+      <div v-for="r in ov.runs" :key="r.name" class="flex items-center gap-3 border-t border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] py-2.5 first:border-0">
         <span class="size-2 shrink-0 rounded-full" :style="{ background: STATUS_COLOR[r.status] }" />
         <router-link v-if="r.organization" :to="{ name: 'Organization', params: { organizationId: r.organization } }" class="min-w-0 flex-1 truncate text-[14px] font-semibold text-ink-gray-9 hover:underline">{{ r.organization }}</router-link>
         <span v-else class="min-w-0 flex-1 truncate text-[14px] font-semibold text-ink-gray-9">{{ r.kind === 'Hledání firem' ? __('Hledání nových firem') : __('GrowUpMedia (náš web)') }}</span>
@@ -196,7 +196,7 @@ import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 
 usePageMeta(() => ({ title: __('Agent') }))
 
-const STATUS_COLOR = { 'Čeká': '#a3a8c3', 'Probíhá': 'var(--accent-600)', 'Hotovo': '#22b35e', 'Chyba': '#d0362a', 'Přeskočeno': '#d6a01d' }
+const STATUS_COLOR = { 'Čeká': 'var(--c-blue-300)', 'Probíhá': 'var(--accent-600)', 'Hotovo': 'var(--stage-vyhrano)', 'Chyba': 'var(--c-red-500)', 'Přeskočeno': 'var(--c-amber-500)' }
 
 const overview = createResource({ url: 'growupcrm.research.get_overview', auto: true })
 const ov = computed(() => overview.data)
@@ -209,7 +209,7 @@ const starting = ref(false)
 
 // návrhy kontaktů (etapa 2)
 const PRIORITIES = [{ label: __('Vše'), value: '' }, { label: __('Vysoká'), value: 'Vysoká' }, { label: __('Střední'), value: 'Střední' }, { label: __('Nízká'), value: 'Nízká' }]
-const PRIORITY_COLOR = { 'Vysoká': 'var(--accent-600)', 'Střední': '#0ea5e9', 'Nízká': '#a3a8c3' }
+const PRIORITY_COLOR = { 'Vysoká': 'var(--accent-600)', 'Střední': 'var(--c-cyan-500)', 'Nízká': 'var(--c-blue-300)' }
 const sgPriority = ref('Vysoká')  // Rozhodující = vysoká priorita
 const sgEmail = ref(true)
 const pageLength = ref(50)
@@ -279,15 +279,15 @@ const kpis = computed(() => {
   const f = finder.data || {}
   return [
     { label: __('Obohacené firmy'), icon: 'building', tone: 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-600)]', value: nf(o.enriched), of: nf(o.with_web), bar: o.with_web ? (o.enriched * 100) / o.with_web : 0, sub: o.with_web ? `${Math.round((o.enriched * 100) / o.with_web)} %` : __('zatím žádná firma s webem') },
-    { label: __('Návrhy kontaktů'), icon: 'users', tone: 'bg-[rgba(139,92,246,.12)] text-[#7c3aed]', value: nf(pendingTotal.value), sub: __('čeká na schválení') },
-    { label: __('Dohledané e-maily'), icon: 'mail', tone: 'bg-[rgba(59,110,246,.12)] text-[#2a5bd7]', value: nf(f.found), sub: f.searched ? __('z {0} firem', [nf(f.searched)]) : __('zatím nic nehledáno') },
+    { label: __('Návrhy kontaktů'), icon: 'users', tone: 'bg-[color-mix(in_srgb,var(--stage-kontaktovano)_12%,transparent)] text-[var(--c-violet-400)]', value: nf(pendingTotal.value), sub: __('čeká na schválení') },
+    { label: __('Dohledané e-maily'), icon: 'mail', tone: 'bg-[color-mix(in_srgb,var(--c-blue-400)_12%,transparent)] text-[var(--c-blue-500)]', value: nf(f.found), sub: f.searched ? __('z {0} firem', [nf(f.searched)]) : __('zatím nic nehledáno') },
     { label: __('Kredity tento měsíc'), icon: 'server', tone: 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-600)]', value: nf(o.credits_used), of: nf(o.credits_cap), bar: o.credits_cap ? (o.credits_used * 100) / o.credits_cap : 0, sub: o.credits_cap ? `${Math.round((o.credits_used * 100) / o.credits_cap)} %${o.queued ? ' · ' + __('ve frontě {0}', [o.queued]) : ''}` : '' },
   ]
 })
 const actions = computed(() => [
   { key: 'enrich', icon: 'building', tone: 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-600)]', title: __('Obohatit firmy'), text: __('Web, obor, velikost a popis z webu firmy.'), button: est.data?.count ? __('Spustit pro {0} firem', [est.data.count]) : __('Vybrat firmy'), disabled: !ov.value?.configured },
-  { key: 'discover', icon: 'search', tone: 'bg-[rgba(59,110,246,.12)] text-[#2a5bd7]', title: __('Najít nové firmy'), text: __('Podle oboru a kraje, jen firmy s IČO z ARES.'), button: __('Nové hledání') },
-  { key: 'emails', icon: 'mail', tone: 'bg-[rgba(34,179,94,.12)] text-[#178a4a]', title: __('Dohledat e-maily'), text: __('Ověřené e-maily jednatelů a rozhodujících osob.'), button: finder.data?.account_credits !== null && finder.data?.account_credits !== undefined ? __('Dohledat (zbývá {0} kreditů)', [nf(finder.data.account_credits)]) : __('Dohledat'), disabled: finder.data && !finder.data.configured },
+  { key: 'discover', icon: 'search', tone: 'bg-[color-mix(in_srgb,var(--c-blue-400)_12%,transparent)] text-[var(--c-blue-500)]', title: __('Najít nové firmy'), text: __('Podle oboru a kraje, jen firmy s IČO z ARES.'), button: __('Nové hledání') },
+  { key: 'emails', icon: 'mail', tone: 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)]', title: __('Dohledat e-maily'), text: __('Ověřené e-maily jednatelů a rozhodujících osob.'), button: finder.data?.account_credits !== null && finder.data?.account_credits !== undefined ? __('Dohledat (zbývá {0} kreditů)', [nf(finder.data.account_credits)]) : __('Dohledat'), disabled: finder.data && !finder.data.configured },
 ])
 const SOURCE_ICON = { ARES: 'globe', Web: 'doc', Anymailfinder: 'mail' }
 const initials = (s) => (s || '?').replace(/^(Ing|Mgr|MUDr|MDDr|JUDr|PhDr|RNDr|Bc|PharmDr|MgA)\.\s*/i, '').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('')

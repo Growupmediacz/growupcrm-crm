@@ -55,7 +55,7 @@ defineProps({
   transition: transform var(--t-press) var(--ease-out);
 }
 .gl-actionbar-btn:active { transform: scale(0.97); }
-.gl-actionbar-btn.is-primary { flex: 1.4; color: #fff; background: var(--accent-600); }
+.gl-actionbar-btn.is-primary { flex: 1.4; color: var(--c-white); background: var(--accent-600); }
 .gl-actionbar-btn:disabled { opacity: 0.5; }
 .gl-actionbar-btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 @media (prefers-reduced-motion: reduce) { .gl-actionbar-btn { transition: none; } }

@@ -16,10 +16,10 @@
       </div>
     </div>
 
-    <div v-if="st && !st.configured" class="rounded-[14px] bg-[rgba(214,160,29,.12)] px-4 py-2.5 text-[14px] text-ink-gray-8">
+    <div v-if="st && !st.configured" class="rounded-[14px] bg-[color-mix(in_srgb,var(--c-amber-500)_12%,transparent)] px-4 py-2.5 text-[14px] text-ink-gray-8">
       <b>{{ __('Anymailfinder zatím není nastavený.') }}</b> {{ __('Chybí API klíč, obraťte se na správce.') }}
     </div>
-    <div v-else-if="st?.account_error" class="rounded-[14px] bg-[rgba(208,54,42,.10)] px-4 py-2.5 text-[14px] text-[#b42318]">{{ st.account_error }}</div>
+    <div v-else-if="st?.account_error" class="rounded-[14px] bg-[color-mix(in_srgb,var(--c-red-500)_10%,transparent)] px-4 py-2.5 text-[14px] text-[var(--c-red-600)]">{{ st.account_error }}</div>
 
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
       <FormControl type="select" :label="__('Obor')" v-model="filters.industry" :options="opt(industries)" />
@@ -27,7 +27,7 @@
       <FormControl type="select" :label="__('Kontaktní e-mail')" v-model="filters.contact_coverage" :options="[{ label: __('Jen obecný i bez e-mailu'), value: '' }, { label: __('Jen obecný e-mail'), value: 'Jen obecný e-mail' }, { label: __('Bez e-mailu'), value: 'Bez e-mailu' }]" />
     </div>
 
-    <div class="flex flex-wrap items-center justify-between gap-3 rounded-[16px] bg-[rgba(110,120,200,.07)] px-4 py-3">
+    <div class="flex flex-wrap items-center justify-between gap-3 rounded-[16px] bg-[color-mix(in_srgb,var(--c-tint)_7%,transparent)] px-4 py-3">
       <div class="text-[14px] text-ink-gray-8">
         <template v-if="est.data">
           <b>{{ est.data.count }}</b> {{ __('firem') }} · {{ __('nejvýš') }} <b>{{ est.data.max_credits }}</b> {{ __('kreditů') }}
@@ -43,7 +43,7 @@
       {{ __('Prohledáno {0} firem, nalezeno {1} ověřených e-mailů. Firmy se znovu nabídnou po 30 dnech.', [st.searched, st.found]) }}
     </div>
 
-    <div class="flex flex-wrap items-center justify-between gap-3 rounded-[16px] bg-[rgba(110,120,200,.07)] px-4 py-3">
+    <div class="flex flex-wrap items-center justify-between gap-3 rounded-[16px] bg-[color-mix(in_srgb,var(--c-tint)_7%,transparent)] px-4 py-3">
       <div class="text-[14px] text-ink-gray-8">
         <div class="font-semibold">{{ __('Osobní e-maily ve firmě') }}</div>
         <div class="text-[13px] text-ink-gray-6">{{ __('U firem bez e-mailu na jednatele vypíše osobní adresy na doméně. Adresa jednatele ho doplní, ostatní lidé přibudou jako návrhy. 1 kredit za firmu, jen když něco najde.') }}</div>

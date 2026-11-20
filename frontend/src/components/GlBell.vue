@@ -10,7 +10,7 @@
     <GlIcon name="bell" :size="18" />
     <span
       v-if="unreadNotificationsCount"
-      class="absolute right-2 top-2 size-2.5 rounded-full border-2 border-white bg-[#e5484d]"
+      class="absolute right-2 top-2 size-2.5 rounded-full border-2 border-white bg-[var(--c-red-400)]"
     />
   </button>
 </template>

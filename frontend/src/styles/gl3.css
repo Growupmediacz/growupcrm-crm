@@ -4,6 +4,226 @@
    s rádiusem 24, živější indigo var(--accent-600), levá lišta (GlRail) a spodní lišta (GlTabBar).
    ===================================================================== */
 
+/* ---------------------------------------------------------------------
+   Tokeny barev (zadání 2027 kolo 2 V1). Jediné místo, kde smí být hex / rgb.
+   1) základní tokeny Denního skla (dřív :root v theme.css; níže je gl3 dál přepisuje),
+   2) paleta stavů, štítků a grafů --c-<odstín>-<světlost> (hodnoty beze změny z obrazovek),
+      průhlednost se skládá přes color-mix(in srgb, var(--c-…) N %, transparent).
+   --------------------------------------------------------------------- */
+:root {
+  /* akcent Indigo */
+  --accent-50: #eef0ff;
+  --accent-200: #c7c9f6;
+  --accent-400: #8b8ff8;
+  --accent-600: #5b5bf6;
+  --accent-700: #4644d9;
+  --accent-900: #312e81;
+  --accent-soft: rgba(91, 91, 246, 0.12);
+  --focus-ring: 0 0 0 4px color-mix(in srgb, var(--accent-600) 18%, transparent);
+
+  /* text a linky */
+  --text-1: #0e1330;
+  --text-2: #3d4466;
+  --text-3: #464c70;
+  --text-placeholder: #5e6486;
+  --text-disabled: #8a90ae;
+  --control-border: #8a90ae; /* WCAG 1.4.11: hranice ovládacího prvku ≥ 3 : 1 */
+  --line: rgba(110, 120, 200, 0.14);
+  --fill-tinted: rgba(110, 120, 200, 0.075);
+
+  /* signály a fáze */
+  --overdue: #a82614;
+  --warning: #7a4400;
+  --info: #1f48b8;
+  --success: #0f6b32;
+  --stage-nova: #3b82f6;
+  --stage-kontaktovano: #8b5cf6;
+  --stage-nabidka: #e0a100;
+  --stage-jednani: #f97316;
+  --stage-vyhrano: #22b35e;
+  --stage-prohrano: #9ca3af;
+
+  /* materiály */
+  --mat-nav-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.56)); /* stejné sklo jako karty */
+  --mat-nav-blur: blur(40px) saturate(200%);
+  --mat-card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.56));
+  --mat-card-blur: blur(36px) saturate(180%);
+  --mat-card-border: 1px solid rgba(255, 255, 255, 0.8);
+  --mat-card-shadow: inset 0 1px 0 #fff, 0 14px 44px -16px rgba(64, 72, 160, 0.24), 0 2px 6px rgba(64, 72, 160, 0.05);
+  --mat-sheet-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82));
+  --mat-sheet-blur: blur(50px) saturate(200%);
+  --mat-sheet-shadow: inset 0 1px 0 #fff, 0 40px 90px -30px rgba(40, 44, 120, 0.45);
+  --scrim: rgba(40, 44, 90, 0.18);
+
+  /* tvar a pohyb */
+  --r-field: 14px;
+  --r-row: 16px;
+  --r-card-m: 22px;
+  --r-card: 26px;
+  --r-modal: 30px;
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --sidebar-w: 264px;
+  /* 2. kolo – doplňky (design/growupcrm-design-2kolo/tokens) */
+  --brand-grad: linear-gradient(145deg, #6e6af6 0%, var(--accent-600) 55%, #3b32c4 100%);
+  --brand-media-text: #0f6b32;
+  --cst-waiting: #9ca3af;
+  --cst-sent: #3b82f6;
+  --cst-opened: #8b5cf6;
+  --cst-replied: #22b35e;
+  --cst-unsub: #a82614;
+  --cst-done: var(--accent-700);
+  --nav-item-h: 36px;
+  --nav-item-fs: 14.5px;
+  --nav-head-fs: 12px;
+  --empty-color: #464c70;
+  --empty-fs: 13px;
+  --row-selected: color-mix(in srgb, var(--accent-600) 7%, transparent);
+  --check-square-radius: 6px;
+  --skeleton: rgba(110, 120, 200, 0.12);
+  --skeleton-shine: rgba(255, 255, 255, 0.55);
+  --dur-skeleton: 1.4s;
+
+  --font-gl: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'InterVar', Inter, system-ui, sans-serif;
+
+  /* frappe-ui: šedá škála a povrchy → indigo tóny a sklo */
+  --surface-base: rgba(255, 255, 255, 0.66);
+  --surface-white: rgba(255, 255, 255, 0.66);
+  --surface-gray-1: rgba(110, 120, 200, 0.05);
+  --surface-gray-2: rgba(110, 120, 200, 0.085);
+  --surface-gray-3: rgba(110, 120, 200, 0.125);
+  --surface-gray-4: rgba(110, 120, 200, 0.18);
+  --surface-gray-5: rgba(110, 120, 200, 0.26);
+  --surface-gray-7: #464c70;
+  --surface-gray-8: #3d4466;
+  --surface-gray-9: #262c52;
+  --surface-gray-10: var(--accent-600);
+  --surface-sidebar: transparent;
+  --surface-elevation-1: rgba(255, 255, 255, 0.94);
+  --surface-elevation-2: rgba(255, 255, 255, 0.96);
+  --surface-elevation-3: rgba(255, 255, 255, 0.98);
+  --surface-modal: rgba(255, 255, 255, 0.9);
+  --surface-menu-bar: rgba(255, 255, 255, 0.94);
+  --surface-cards: rgba(255, 255, 255, 0.66);
+  --ink-gray-1: #f4f5ff;
+  --ink-gray-2: #c9cde6;
+  --ink-gray-3: #8a90ae;
+  --ink-gray-4: #5e6486;
+  --ink-gray-5: #464c70;
+  --ink-gray-6: #4a5174;
+  --ink-gray-7: #3d4466;
+  --ink-gray-8: #1c2242;
+  --ink-gray-9: #0e1330;
+  --outline-gray-1: rgba(110, 120, 200, 0.12);
+  --outline-gray-2: rgba(110, 120, 200, 0.17);
+  --outline-gray-3: rgba(110, 120, 200, 0.28);
+  --outline-gray-4: color-mix(in srgb, var(--accent-600) 55%, transparent);
+  --outline-elevation-1: rgba(110, 120, 200, 0.12);
+  --outline-elevation-2: rgba(110, 120, 200, 0.22);
+  --ink-blue-3: var(--accent-600);
+  --ink-blue-5: var(--accent-700);
+  --ink-blue-6: var(--accent-700);
+  --ink-blue-7: #3730a3;
+}
+:root {
+  /* společné odstíny */
+  --c-tint: #6e78c8;
+  --c-white: #ffffff;
+  --c-shadow: #283278;
+  --c-shadow-2: #4048a0;
+  --c-shadow-3: #282878;
+  /* paleta */
+  --c-amber-350: #ffd84d;
+  --c-amber-450: #f2b630;
+  --c-amber-500: #d6a01d;
+  --c-amber-550: #eaaa08;
+  --c-amber-550-2: #d68214;
+  --c-amber-600: #d48a00;
+  --c-amber-600-2: #c77700;
+  --c-amber-650: #b06d00;
+  --c-amber-700: #9a5b00;
+  --c-amber-700-2: #a06a00;
+  --c-amber-750: #8a5300;
+  --c-amber-800: #5c3d00;
+  --c-blue-50: #dde6ff;
+  --c-blue-50-2: #e6ecff;
+  --c-blue-200: #c3c8dd;
+  --c-blue-300: #a3a8c3;
+  --c-blue-350: #9aa0bd;
+  --c-blue-400: #3b6ef6;
+  --c-blue-400-2: #4285f4;
+  --c-blue-450: #2e6be6;
+  --c-blue-450-2: #6e78a0;
+  --c-blue-450-3: #3e63dd;
+  --c-blue-450-4: #7a819e;
+  --c-blue-500: #2a5bd7;
+  --c-blue-500-2: #646e96;
+  --c-blue-500-3: #6b7194;
+  --c-blue-550: #2453c9;
+  --c-blue-550-2: #5a6080;
+  --c-blue-550-3: #5b6280;
+  --c-blue-600: #2440a6;
+  --c-blue-650: #4a5173;
+  --c-blue-650-2: #454c6b;
+  --c-blue-700: #3d4466;
+  --c-blue-850: #1f2430;
+  --c-cyan-100: #d9f1f6;
+  --c-cyan-500: #0ea5e9;
+  --c-cyan-550: #06b6d4;
+  --c-cyan-600: #14a0be;
+  --c-cyan-650: #0891b2;
+  --c-cyan-750: #08626f;
+  --c-cyan-750-2: #0b5f73;
+  --c-gray-200: #cccccc;
+  --c-gray-600: #555c6b;
+  --c-gray-900: #14181f;
+  --c-green-100: #dcf5e6;
+  --c-green-650: #1e9e58;
+  --c-green-700: #178a4a;
+  --c-green-700-2: #15803d;
+  --c-indigo-50: #e4e1ff;
+  --c-indigo-50-2: #eceaff;
+  --c-indigo-150: #c7c9f6;
+  --c-indigo-200: #a5a8f0;
+  --c-indigo-300: #a3a8cc;
+  --c-indigo-500: #3b32c4;
+  --c-indigo-600: #4b5280;
+  --c-indigo-650: #3b4377;
+  --c-indigo-750: #1e196e;
+  --c-indigo-750-2: #2a2f52;
+  --c-indigo-800: #1e2250;
+  --c-orange-50: #fde8dc;
+  --c-orange-100: #ffe9d6;
+  --c-orange-100-2: #ffe8d6;
+  --c-orange-500: #e8590c;
+  --c-orange-600: #b4560f;
+  --c-orange-600-2: #c2410c;
+  --c-orange-600-3: #b4500d;
+  --c-orange-650: #a3360a;
+  --c-orange-700: #8a3b0a;
+  --c-orange-750: #8a4b00;
+  --c-pink-400: #ec4899;
+  --c-red-400: #e5484d;
+  --c-red-400-2: #ef4444;
+  --c-red-500: #d0362a;
+  --c-red-500-2: #d23a2a;
+  --c-red-550: #c8321f;
+  --c-red-600: #b42318;
+  --c-red-600-2: #b02a19;
+  --c-sky-400: #3b9bf6;
+  --c-sky-600: #0a66c2;
+  --c-sky-600-2: #1d5fa8;
+  --c-teal-600: #14b8a6;
+  --c-teal-650: #0e9f8e;
+  --c-violet-50: #efe7ff;
+  --c-violet-50-2: #eadcff;
+  --c-violet-400: #7c3aed;
+  --c-violet-450: #6d3fd0;
+  --c-violet-450-2: #6a3fd4;
+  --c-violet-450-3: #6d3fd6;
+  --c-violet-550: #5a2fc0;
+}
+
 :root {
   --accent-50: #eef0ff;
   --accent-200: #c9cbfb;

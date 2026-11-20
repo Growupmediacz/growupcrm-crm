@@ -21,7 +21,7 @@
           v-for="(c, i) in columns"
           :key="c.column.name"
           class="gl-chip flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-[14px] font-semibold"
-          :class="i === stage && '!border-[#0e1330] !bg-[#0e1330] !text-white'"
+          :class="i === stage && '!border-[var(--text-1)] !bg-[var(--text-1)] !text-white'"
           @click="scrollTo(i)"
         >
           <span class="size-2 rounded-full" :style="{ background: dot(c.column) }" />
@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="flex shrink-0 justify-center gap-1.5" aria-hidden="true">
-        <span v-for="(c, i) in columns" :key="c.column.name" class="h-1.5 rounded-full transition-all" :class="i === stage ? 'w-4 bg-[var(--accent-600)]' : 'w-1.5 bg-[rgba(110,120,200,.3)]'" />
+        <span v-for="(c, i) in columns" :key="c.column.name" class="h-1.5 rounded-full transition-all" :class="i === stage ? 'w-4 bg-[var(--accent-600)]' : 'w-1.5 bg-[color-mix(in_srgb,var(--c-tint)_30%,transparent)]'" />
       </div>
       <p class="shrink-0 px-1 text-[13px] text-ink-gray-5">{{ __('Přejetím do strany na další fázi. Dlouhý stisk karty → Posunout fázi.') }}</p>
     </template>
@@ -62,30 +62,30 @@
     <!-- Filtr (spodní panel, design MFiltr) -->
     <Teleport to="body">
       <div v-if="showFilter" class="fixed inset-0 z-[90]">
-        <div class="absolute inset-0 bg-[rgba(30,34,80,.35)]" @click="showFilter = false" />
+        <div class="absolute inset-0 bg-[color-mix(in_srgb,var(--c-indigo-800)_35%,transparent)]" @click="showFilter = false" />
         <div class="gl-sheet absolute inset-x-0 bottom-0 flex max-h-[88vh] flex-col rounded-t-[26px] p-5 pb-6">
-          <div class="mx-auto mb-3 h-1.5 w-10 rounded-full bg-[rgba(110,120,200,.3)]" />
+          <div class="mx-auto mb-3 h-1.5 w-10 rounded-full bg-[color-mix(in_srgb,var(--c-tint)_30%,transparent)]" />
           <div class="mb-3 flex items-center justify-between"><h2 class="text-[22px] font-bold text-ink-gray-9">{{ __('Filtr') }}</h2><button class="text-[15px] font-semibold text-[var(--accent-600)]" @click="clearDraft">{{ __('Vymazat') }}</button></div>
           <div class="flex-1 overflow-y-auto">
             <div class="mb-1.5 text-[13px] font-semibold text-ink-gray-7">{{ __('Vlastník') }}</div>
             <div class="mb-4 flex flex-wrap gap-2">
-              <button v-for="u in owners" :key="u.name" class="gl-chip flex h-10 items-center gap-2 rounded-full pl-1.5 pr-3.5 text-[14px]" :class="draft.owners.includes(u.name) && '!border-[#0e1330] !bg-[#0e1330] !text-white'" @click="toggle(draft.owners, u.name)">
-                <span class="flex size-7 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]">{{ (u.full_name || '?').split(' ').map((w) => w[0]).slice(0, 2).join('') }}</span>{{ (u.full_name || '').split(' ')[0] }}
+              <button v-for="u in owners" :key="u.name" class="gl-chip flex h-10 items-center gap-2 rounded-full pl-1.5 pr-3.5 text-[14px]" :class="draft.owners.includes(u.name) && '!border-[var(--text-1)] !bg-[var(--text-1)] !text-white'" @click="toggle(draft.owners, u.name)">
+                <span class="flex size-7 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[10px] font-bold text-[var(--c-blue-600)]">{{ (u.full_name || '?').split(' ').map((w) => w[0]).slice(0, 2).join('') }}</span>{{ (u.full_name || '').split(' ')[0] }}
               </button>
             </div>
             <div class="mb-1.5 text-[13px] font-semibold text-ink-gray-7">{{ __('Fáze') }}</div>
             <div class="mb-4 flex flex-wrap gap-2">
-              <button v-for="s in statusList" :key="s.name" class="gl-chip flex h-10 items-center gap-2 rounded-full px-3.5 text-[14px]" :class="draft.stages.includes(s.name) && '!border-[#0e1330] !bg-[#0e1330] !text-white'" @click="toggle(draft.stages, s.name)">
-                <span class="size-2 rounded-full" :style="{ background: STAGE_COLORS[s.name] || '#9ca3af' }" />{{ __(s.name) }}
+              <button v-for="s in statusList" :key="s.name" class="gl-chip flex h-10 items-center gap-2 rounded-full px-3.5 text-[14px]" :class="draft.stages.includes(s.name) && '!border-[var(--text-1)] !bg-[var(--text-1)] !text-white'" @click="toggle(draft.stages, s.name)">
+                <span class="size-2 rounded-full" :style="{ background: STAGE_COLORS[s.name] || 'var(--stage-prohrano)' }" />{{ __(s.name) }}
               </button>
             </div>
             <div class="gl-card !rounded-[18px] px-4">
-              <label class="flex min-h-[56px] items-center gap-3"><span class="flex size-9 items-center justify-center rounded-[11px] bg-[rgba(110,120,200,.12)]"><GlIcon name="pin" :size="17" /></span><span class="flex-1 text-[16px] text-ink-gray-9">{{ __('Kraj') }}</span>
+              <label class="flex min-h-[56px] items-center gap-3"><span class="flex size-9 items-center justify-center rounded-[11px] bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)]"><GlIcon name="pin" :size="17" /></span><span class="flex-1 text-[16px] text-ink-gray-9">{{ __('Kraj') }}</span>
                 <select v-model="draft.territory" class="max-w-[170px] appearance-none border-0 bg-transparent text-right text-[15px] text-ink-gray-7 shadow-none outline-none"><option value="">{{ __('Vše') }}</option><option v-for="t in territories" :key="t" :value="t">{{ t }}</option></select></label>
-              <div class="flex min-h-[56px] items-center gap-3 border-t border-[rgba(110,120,200,.14)]"><span class="flex size-9 items-center justify-center rounded-[11px] bg-[rgba(224,161,0,.16)] text-[#7a4400]"><GlIcon name="clock" :size="17" /></span><span class="flex-1 text-[16px] text-ink-gray-9">{{ __('Jen po termínu') }}</span><Switch v-model="draft.overdue" /></div>
+              <div class="flex min-h-[56px] items-center gap-3 border-t border-[color-mix(in_srgb,var(--c-tint)_14%,transparent)]"><span class="flex size-9 items-center justify-center rounded-[11px] bg-[color-mix(in_srgb,var(--stage-nabidka)_16%,transparent)] text-[var(--warning)]"><GlIcon name="clock" :size="17" /></span><span class="flex-1 text-[16px] text-ink-gray-9">{{ __('Jen po termínu') }}</span><Switch v-model="draft.overdue" /></div>
             </div>
           </div>
-          <button class="mt-4 h-14 w-full rounded-full bg-[var(--accent-600)] text-[17px] font-bold text-white shadow-[0_10px_24px_-10px_rgba(91,91,246,.7)]" @click="applyFilter">{{ __('Zobrazit {0}', [zakazkyWord(draftCount)]) }}</button>
+          <button class="mt-4 h-14 w-full rounded-full bg-[var(--accent-600)] text-[17px] font-bold text-white shadow-[0_10px_24px_-10px_color-mix(in_srgb,var(--accent-600)_70%,transparent)]" @click="applyFilter">{{ __('Zobrazit {0}', [zakazkyWord(draftCount)]) }}</button>
         </div>
       </div>
     </Teleport>
@@ -93,7 +93,7 @@
     <!-- Posunout fázi (spodní panel) -->
     <Teleport to="body">
       <div v-if="moving" class="fixed inset-0 z-[90]" @click.self="moving = null">
-        <div class="absolute inset-0 bg-[rgba(30,34,80,.35)]" @click="moving = null" />
+        <div class="absolute inset-0 bg-[color-mix(in_srgb,var(--c-indigo-800)_35%,transparent)]" @click="moving = null" />
         <div class="gl-sheet absolute inset-x-0 bottom-0 rounded-t-[26px] p-5 pb-8">
           <div class="mb-1 text-[18px] font-bold text-ink-gray-9">{{ __('Posunout fázi') }}</div>
           <div class="mb-3 truncate text-[14px] text-ink-gray-5">{{ moving.order_title || moving.lead_name || moving.name }}</div>
@@ -104,7 +104,7 @@
             :class="s.name === moving.status && 'bg-white/60 font-bold'"
             @click="move(s)"
           >
-            <span class="size-2.5 rounded-full" :style="{ background: STAGE_COLORS[s.name] || '#9ca3af' }" />{{ __(s.name) }}
+            <span class="size-2.5 rounded-full" :style="{ background: STAGE_COLORS[s.name] || 'var(--stage-prohrano)' }" />{{ __(s.name) }}
           </button>
         </div>
       </div>
@@ -182,10 +182,10 @@ const pageLength = computed(() => data.value?.page_length_count || 20)
 const statusList = computed(() => leadStatuses.data || [])
 
 const STAGE_COLORS = {
-  'Nová': '#3b82f6', 'Kontaktováno': '#8b5cf6', 'Nabídka odeslána': '#e0a100',
-  'Jednání': '#f97316', 'Vyhráno': '#22b35e', 'Prohráno': '#9ca3af',
+  'Nová': 'var(--stage-nova)', 'Kontaktováno': 'var(--stage-kontaktovano)', 'Nabídka odeslána': 'var(--stage-nabidka)',
+  'Jednání': 'var(--stage-jednani)', 'Vyhráno': 'var(--stage-vyhrano)', 'Prohráno': 'var(--stage-prohrano)',
 }
-const dot = (col) => STAGE_COLORS[col.name] || '#9ca3af'
+const dot = (col) => STAGE_COLORS[col.name] || 'var(--stage-prohrano)'
 const money = (v) => `${new Intl.NumberFormat('cs-CZ').format(v || 0)} Kč`
 
 const zakazkyWord = (n) => `${n} ${n === 1 ? 'zakázku' : n >= 2 && n <= 4 ? 'zakázky' : 'zakázek'}`

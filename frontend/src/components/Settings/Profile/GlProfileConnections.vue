@@ -2,20 +2,20 @@
   <!-- GrowUp: v Profilu rovnou vidět roli a napojené schránky (Můj e-mail, Schránka pro Outreach) -->
   <div class="mb-8 flex flex-col gap-3">
     <div class="text-base-semibold text-ink-gray-9">{{ __('Role a napojení') }}</div>
-    <div class="gl-card flex flex-col divide-y divide-[rgba(110,120,200,.14)] !rounded-[20px] px-5">
+    <div class="gl-card flex flex-col divide-y divide-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] !rounded-[20px] px-5">
       <div class="flex items-center justify-between gap-3 py-3.5">
         <div class="flex flex-col gap-0.5">
           <span class="text-base-medium text-ink-gray-8">{{ __('Moje role') }}</span>
           <span class="text-p-sm text-ink-gray-6">{{ roleHint }}</span>
         </div>
-        <span class="rounded-full bg-[rgba(110,120,200,.12)] px-3 py-1 text-[13px] font-semibold text-[#2440a6]">{{ roleLabel }}</span>
+        <span class="rounded-full bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] px-3 py-1 text-[13px] font-semibold text-[var(--c-blue-600)]">{{ roleLabel }}</span>
       </div>
 
       <div class="flex items-center justify-between gap-3 py-3.5">
         <div class="flex min-w-0 flex-col gap-0.5">
           <span class="text-base-medium text-ink-gray-8">{{ __('Můj e-mail') }}</span>
-          <span class="flex items-center gap-1.5 truncate text-p-sm" :class="gmail.data?.connected ? 'text-[#178a4a]' : 'text-ink-gray-6'">
-            <span class="size-2 shrink-0 rounded-full" :class="gmail.data?.connected ? 'bg-[#22b35e]' : 'bg-ink-gray-4'" />
+          <span class="flex items-center gap-1.5 truncate text-p-sm" :class="gmail.data?.connected ? 'text-[var(--c-green-700)]' : 'text-ink-gray-6'">
+            <span class="size-2 shrink-0 rounded-full" :class="gmail.data?.connected ? 'bg-[var(--stage-vyhrano)]' : 'bg-ink-gray-4'" />
             <template v-if="gmail.data?.connected">{{ __('Připojeno') }} · {{ gmail.data.email }}</template>
             <template v-else>{{ __('Nepřipojeno') }}</template>
           </span>
@@ -26,8 +26,8 @@
       <div v-if="outreachEnabled" class="flex items-center justify-between gap-3 py-3.5">
         <div class="flex min-w-0 flex-col gap-0.5">
           <span class="text-base-medium text-ink-gray-8">{{ __('Outreach odesílá z') }}</span>
-          <span class="flex items-center gap-1.5 truncate text-p-sm" :class="outreachFrom ? 'text-[#178a4a]' : 'text-ink-gray-6'">
-            <span class="size-2 shrink-0 rounded-full" :class="outreachFrom ? 'bg-[#22b35e]' : 'bg-[#e0a100]'" />
+          <span class="flex items-center gap-1.5 truncate text-p-sm" :class="outreachFrom ? 'text-[var(--c-green-700)]' : 'text-ink-gray-6'">
+            <span class="size-2 shrink-0 rounded-full" :class="outreachFrom ? 'bg-[var(--stage-vyhrano)]' : 'bg-[var(--stage-nabidka)]'" />
             <template v-if="outreachFrom">{{ __('Připojeno') }} · {{ outreachFrom }}</template>
             <template v-else>{{ __('Nepřipojeno') }}</template>
           </span>

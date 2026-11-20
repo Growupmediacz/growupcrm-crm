@@ -14,26 +14,26 @@
       <div v-for="a in addons.data" :key="a.name" class="gl-card flex flex-col gap-4 !rounded-[20px] p-5">
         <div class="flex items-start justify-between gap-3">
           <div class="flex items-center gap-3">
-            <span class="flex size-11 items-center justify-center rounded-2xl bg-[rgba(110,120,200,.12)] text-[#2440a6]">
+            <span class="flex size-11 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-[var(--c-blue-600)]">
               <GlIcon :name="a.name === 'agent' ? 'sparkles' : 'send'" :size="20" />
             </span>
             <div class="text-[17px] font-bold text-ink-gray-9">{{ a.title }}</div>
           </div>
           <span
             class="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-semibold"
-            :class="a.active ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[rgba(110,120,200,.1)] text-ink-gray-6'"
+            :class="a.active ? 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)]' : 'bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] text-ink-gray-6'"
           >
-            <span class="size-1.5 rounded-full" :class="a.active ? 'bg-[#22b35e]' : 'bg-ink-gray-4'" />
+            <span class="size-1.5 rounded-full" :class="a.active ? 'bg-[var(--stage-vyhrano)]' : 'bg-ink-gray-4'" />
             {{ a.active ? __('Aktivní') : __('Neaktivní') }}
           </span>
         </div>
         <p class="text-[14px] leading-relaxed text-ink-gray-7">{{ a.description }}</p>
         <ul class="flex flex-col gap-1.5 text-[13px] text-ink-gray-7">
           <li v-for="f in a.features" :key="f" class="flex items-center gap-2">
-            <GlIcon name="check" :size="14" class="text-[#22b35e]" />{{ f }}
+            <GlIcon name="check" :size="14" class="text-[var(--stage-vyhrano)]" />{{ f }}
           </li>
         </ul>
-        <p v-if="a.note" class="text-[13px] text-[#a06a00]">{{ a.note }}</p>
+        <p v-if="a.note" class="text-[13px] text-[var(--c-amber-700-2)]">{{ a.note }}</p>
         <div class="mt-auto flex justify-end">
           <router-link v-if="a.active" :to="{ name: a.route }" @click="showSettings = false">
             <Button variant="solid" :label="__('Otevřít')" />

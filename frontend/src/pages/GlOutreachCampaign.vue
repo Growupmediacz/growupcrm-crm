@@ -44,15 +44,15 @@
     <div class="gl-card p-5 md:p-6">
       <h2 class="text-[22px] font-bold tracking-tight text-ink-gray-9">{{ __('Kontakty v kampani') }}</h2>
       <div class="mt-3 flex gap-2 overflow-x-auto pb-1">
-        <button class="gl-chip h-9 shrink-0 rounded-full px-3.5 text-[14px] font-medium" :class="filter === 'all' && '!border-[#0e1330] !bg-[#0e1330] !text-white'" @click="filter = 'all'">{{ __('Vše') }} <span class="num ml-1 opacity-80">{{ d.total }}</span></button>
-        <button v-for="(c, s) in d.counts" :key="s" class="gl-chip flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-[14px] font-medium" :class="filter === s && '!border-[#0e1330] !bg-[#0e1330] !text-white'" @click="filter = s">
+        <button class="gl-chip h-9 shrink-0 rounded-full px-3.5 text-[14px] font-medium" :class="filter === 'all' && '!border-[var(--text-1)] !bg-[var(--text-1)] !text-white'" @click="filter = 'all'">{{ __('Vše') }} <span class="num ml-1 opacity-80">{{ d.total }}</span></button>
+        <button v-for="(c, s) in d.counts" :key="s" class="gl-chip flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-[14px] font-medium" :class="filter === s && '!border-[var(--text-1)] !bg-[var(--text-1)] !text-white'" @click="filter = s">
           <span class="size-2 rounded-full" :style="{ background: CONTACT_STATUS[s] }" />{{ __(s) }} <span class="num opacity-80">{{ c }}</span>
         </button>
       </div>
       <GlEmptyState v-if="!d.contacts.length" class="mt-3" icon="users" :title="__('Zatím žádné kontakty')" :text="__('Přidejte je z CRM, ze souboru CSV nebo podle IČO.')" :action="__('Přidat kontakty')" primary @action="showAdd = true" />
       <div v-else class="mt-2 flex flex-col">
         <div class="hidden grid-cols-[1.4fr_70px_130px_1.3fr_1fr] gap-3 pb-1 text-[12px] font-semibold text-ink-gray-5 md:grid"><span>{{ __('Kontakt') }}</span><span>{{ __('Krok') }}</span><span>{{ __('Stav') }}</span><span>{{ __('Poslední událost') }}</span><span>{{ __('Další') }}</span></div>
-        <div v-for="c in d.contacts" :key="c.name" class="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-0.5 border-t border-[rgba(110,120,200,.12)] py-2.5 first:border-0 md:grid-cols-[1.4fr_70px_130px_1.3fr_1fr]">
+        <div v-for="c in d.contacts" :key="c.name" class="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-0.5 border-t border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] py-2.5 first:border-0 md:grid-cols-[1.4fr_70px_130px_1.3fr_1fr]">
           <span class="flex min-w-0 items-center gap-3"><span class="flex size-9 shrink-0 items-center justify-center rounded-full text-[12px] font-bold" :style="avatarTone(c.contact_name)">{{ initials(c.contact_name) }}</span>
             <span class="min-w-0"><span class="block truncate text-[15px] font-bold text-ink-gray-9">{{ c.contact_name }}</span><span class="block truncate text-[13px] text-ink-gray-5">{{ c.organization_name }}</span></span></span>
           <span class="num hidden text-[14px] text-ink-gray-7 md:block">{{ c.step }} / {{ d.steps.length }}</span>
@@ -85,9 +85,9 @@ import { Breadcrumbs, Button, createResource, toast, usePageMeta } from 'frappe-
 import { computed, ref, watch } from 'vue'
 
 const props = defineProps({ name: { type: String, required: true } })
-const STATUS = { 'Běží': '#22b35e', Pozastaveno: '#e0a100', Koncept: '#9ca3af', 'Dokončeno': 'var(--accent-700)' }
+const STATUS = { 'Běží': 'var(--stage-vyhrano)', Pozastaveno: 'var(--stage-nabidka)', Koncept: 'var(--stage-prohrano)', 'Dokončeno': 'var(--accent-700)' }
 const ICON = { 'E-mail': 'mail', Hovor: 'phone', LinkedIn: 'link' }
-const TONE = { 'E-mail': 'bg-[rgba(20,160,190,.14)] text-[#08626f]', Hovor: 'bg-[rgba(249,115,22,.14)] text-[#a3360a]', LinkedIn: 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]' }
+const TONE = { 'E-mail': 'bg-[color-mix(in_srgb,var(--c-cyan-600)_14%,transparent)] text-[var(--c-cyan-750)]', Hovor: 'bg-[color-mix(in_srgb,var(--stage-jednani)_14%,transparent)] text-[var(--c-orange-650)]', LinkedIn: 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]' }
 const filter = ref('all')
 const pageLength = ref(20)
 const showAdd = ref(false)

@@ -35,11 +35,11 @@ const emit = defineEmits(['changed'])
 
 // barvy jako štítky Pipedrive: horká červená, teplá jantarová, studená modrá
 const TONES = {
-  'Horká': { cls: 'bg-[#e5484d] text-white' },
-  'Teplá': { cls: 'bg-[#ffd84d] text-[#5c3d00]' },
-  'Studená': { cls: 'bg-[#3e63dd] text-white' },
+  'Horká': { cls: 'bg-[var(--c-red-400)] text-white' },
+  'Teplá': { cls: 'bg-[var(--c-amber-350)] text-[var(--c-amber-800)]' },
+  'Studená': { cls: 'bg-[var(--c-blue-450-3)] text-white' },
 }
-const tone = computed(() => TONES[props.value] || { cls: 'bg-[rgba(110,120,200,.14)] text-ink-gray-7' })
+const tone = computed(() => TONES[props.value] || { cls: 'bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] text-ink-gray-7' })
 
 async function set(value) {
   if (value === props.value) return

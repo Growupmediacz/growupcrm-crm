@@ -6,7 +6,7 @@
         v-for="t in typeFilters"
         :key="t.key"
         class="rounded-full border px-3.5 py-1 text-[14px] font-medium transition"
-        :class="filter === t.key ? 'border-[#0e1330] bg-[#0e1330] text-white' : 'border-white/80 bg-white/55 text-ink-gray-7 hover:bg-white/80'"
+        :class="filter === t.key ? 'border-[var(--text-1)] bg-[var(--text-1)] text-white' : 'border-white/80 bg-white/55 text-ink-gray-7 hover:bg-white/80'"
         @click="filter = t.key"
       >
         {{ t.label }}
@@ -39,12 +39,12 @@
         <div class="flex flex-wrap items-center gap-2">
           <a :href="d.file_url" target="_blank" rel="noopener" class="truncate text-[15px] font-semibold text-ink-gray-9 hover:underline">{{ d.file_name }}</a>
           <Dropdown v-if="d.source === 'organization'" :options="typeOptions(d)">
-            <button class="rounded-full bg-[rgba(110,120,200,.12)] px-2 py-0.5 text-[12px] font-semibold text-[#2440a6]">
+            <button class="rounded-full bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] px-2 py-0.5 text-[12px] font-semibold text-[var(--c-blue-600)]">
               {{ d.doc_type || __('Bez typu') }} ▾
             </button>
           </Dropdown>
-          <span v-else-if="d.doc_type" class="rounded-full bg-[rgba(110,120,200,.12)] px-2 py-0.5 text-[12px] font-semibold text-[#2440a6]">{{ d.doc_type }}</span>
-          <span v-if="d.source === 'email'" class="rounded-full px-2 py-0.5 text-[12px] font-semibold" :class="d.direction === 'Received' ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-700)]'">
+          <span v-else-if="d.doc_type" class="rounded-full bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] px-2 py-0.5 text-[12px] font-semibold text-[var(--c-blue-600)]">{{ d.doc_type }}</span>
+          <span v-if="d.source === 'email'" class="rounded-full px-2 py-0.5 text-[12px] font-semibold" :class="d.direction === 'Received' ? 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)]' : 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-700)]'">
             {{ d.direction === 'Received' ? __('Přijato e-mailem') : __('Odesláno e-mailem') }}
           </span>
         </div>
@@ -184,10 +184,10 @@ async function remove(d) {
 const ext = (n) => ((n || '').includes('.') ? n.split('.').pop().slice(0, 4) : '')
 const extTone = (n) => {
   const e = ext(n).toLowerCase()
-  if (e === 'pdf') return 'bg-[rgba(229,72,77,.12)] text-[#b42318]'
-  if (['doc', 'docx', 'odt'].includes(e)) return 'bg-[rgba(59,110,246,.13)] text-[#1f48b8]'
-  if (['xls', 'xlsx', 'csv', 'ods'].includes(e)) return 'bg-[rgba(34,179,94,.13)] text-[#178a4a]'
-  return 'bg-[rgba(110,120,200,.12)] text-[#4a5173]'
+  if (e === 'pdf') return 'bg-[color-mix(in_srgb,var(--c-red-400)_12%,transparent)] text-[var(--c-red-600)]'
+  if (['doc', 'docx', 'odt'].includes(e)) return 'bg-[color-mix(in_srgb,var(--c-blue-400)_13%,transparent)] text-[var(--info)]'
+  if (['xls', 'xlsx', 'csv', 'ods'].includes(e)) return 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_13%,transparent)] text-[var(--c-green-700)]'
+  return 'bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-[var(--c-blue-650)]'
 }
 const fmt = new Intl.DateTimeFormat('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' })
 const dateFmt = (d) => (d ? fmt.format(new Date(String(d).replace(' ', 'T'))) : '')

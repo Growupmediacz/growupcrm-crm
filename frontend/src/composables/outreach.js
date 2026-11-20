@@ -3,25 +3,25 @@ import { call } from 'frappe-ui'
 
 // Stavy kontaktu v kampani (tokeny --cst-* z designu)
 export const CONTACT_STATUS = {
-  'Čeká': '#9CA3AF',
-  'Odesláno': '#3B82F6',
-  'Otevřeno': '#8B5CF6',
-  'Klikl': '#0ea5e9',
-  'Odpověděl': '#22B35E',
-  'Odhlášen': '#a82614',
+  'Čeká': 'var(--stage-prohrano)',
+  'Odesláno': 'var(--stage-nova)',
+  'Otevřeno': 'var(--stage-kontaktovano)',
+  'Klikl': 'var(--c-cyan-500)',
+  'Odpověděl': 'var(--stage-vyhrano)',
+  'Odhlášen': 'var(--overdue)',
   'Dokončeno': 'var(--accent-700)',
 }
 
 // Třídění odpovědí: štítek + barvy
 export const REPLY_LABEL = {
-  'Zájem': 'bg-[rgba(34,179,94,.16)] text-[#0f6b32]',
-  'Později': 'bg-[rgba(224,161,0,.2)] text-[#7a4400]',
-  'Automatická odpověď': 'bg-[rgba(20,160,190,.15)] text-[#08626f]',
-  'Odmítnutí': 'bg-[rgba(200,50,31,.13)] text-[#a82614]',
+  'Zájem': 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_16%,transparent)] text-[var(--success)]',
+  'Později': 'bg-[color-mix(in_srgb,var(--stage-nabidka)_20%,transparent)] text-[var(--warning)]',
+  'Automatická odpověď': 'bg-[color-mix(in_srgb,var(--c-cyan-600)_15%,transparent)] text-[var(--c-cyan-750)]',
+  'Odmítnutí': 'bg-[color-mix(in_srgb,var(--c-red-550)_13%,transparent)] text-[var(--overdue)]',
 }
 
 const TONES = [
-  ['#dde6ff', '#2440a6'], ['#dcf5e6', '#0f6b32'], ['#ffe8d6', '#8a3b0a'], ['#eadcff', '#5a2fc0'], ['#d9f1f6', '#08626f'],
+  ['var(--c-blue-50)', 'var(--c-blue-600)'], ['var(--c-green-100)', 'var(--success)'], ['var(--c-orange-100-2)', 'var(--c-orange-700)'], ['var(--c-violet-50-2)', 'var(--c-violet-550)'], ['var(--c-cyan-100)', 'var(--c-cyan-750)'],
 ]
 export function avatarTone(name = '') {
   let h = 0

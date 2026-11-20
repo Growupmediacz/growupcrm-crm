@@ -24,7 +24,7 @@
         <span class="text-[12px] font-semibold text-ink-gray-5">{{ dayShort(d) }}</span>
         <span
           class="flex size-10 items-center justify-center rounded-full text-[17px] font-bold"
-          :class="same(d, selected) ? 'bg-[var(--accent-600)] text-white shadow-[0_8px_18px_-8px_rgba(91,91,246,.8)]' : isToday(d) ? 'text-[var(--accent-600)]' : 'text-ink-gray-9'"
+          :class="same(d, selected) ? 'bg-[var(--accent-600)] text-white shadow-[0_8px_18px_-8px_color-mix(in_srgb,var(--accent-600)_80%,transparent)]' : isToday(d) ? 'text-[var(--accent-600)]' : 'text-ink-gray-9'"
         >
           {{ d.getDate() }}
         </span>
@@ -39,9 +39,9 @@
 
     <div class="mt-2 flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto pb-28">
       <div v-if="isToday(selected)" class="flex items-center gap-2 px-1">
-        <span class="num w-12 text-right text-[12px] font-bold text-[#e5484d]">{{ hhmm(now) }}</span>
-        <span class="size-2 rounded-full bg-[#e5484d]" />
-        <span class="h-px flex-1 bg-[#e5484d]" />
+        <span class="num w-12 text-right text-[12px] font-bold text-[var(--c-red-400)]">{{ hhmm(now) }}</span>
+        <span class="size-2 rounded-full bg-[var(--c-red-400)]" />
+        <span class="h-px flex-1 bg-[var(--c-red-400)]" />
       </div>
       <!-- design 3. kolo (m3): celodenní položky a úkoly bez času v řádku „Celý den“ -->
       <div v-if="allDayItems.length" class="flex items-start gap-3 px-1">
@@ -119,10 +119,10 @@ const countLabel = computed(() => {
 })
 
 function tone(it) {
-  if (it.done) return 'bg-[rgba(110,120,200,.10)] text-ink-gray-5'
-  if (it.kind === 'event') return 'bg-[rgba(59,110,246,.14)] text-[#1f48b8]'
-  if (it.priority === 'High') return 'bg-[rgba(229,72,77,.13)] text-[#a82614]'
-  return 'bg-[rgba(224,161,0,.16)] text-[#7a4400]'
+  if (it.done) return 'bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] text-ink-gray-5'
+  if (it.kind === 'event') return 'bg-[color-mix(in_srgb,var(--c-blue-400)_14%,transparent)] text-[var(--info)]'
+  if (it.priority === 'High') return 'bg-[color-mix(in_srgb,var(--c-red-400)_13%,transparent)] text-[var(--overdue)]'
+  return 'bg-[color-mix(in_srgb,var(--stage-nabidka)_16%,transparent)] text-[var(--warning)]'
 }
 
 // přejetí prstem doleva/doprava = další/předchozí týden

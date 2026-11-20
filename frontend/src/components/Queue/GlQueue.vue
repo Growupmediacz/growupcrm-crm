@@ -172,11 +172,11 @@ defineExpose({ reload })
 <style scoped>
 .gl-qf {
   display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border-radius: 999px;
-  border: 1px solid var(--field-border); background: #fff; font-size: 14px; font-weight: 600; color: var(--text-2);
+  border: 1px solid var(--field-border); background: var(--c-white); font-size: 14px; font-weight: 600; color: var(--text-2);
 }
 .gl-qf .num { color: var(--text-2); font-weight: 500; }
-.gl-qf.is-on { background: var(--ink-pill, var(--text-1)); border-color: transparent; color: #fff; }
-.gl-qf.is-on .num { color: rgba(255, 255, 255, 0.75); }
+.gl-qf.is-on { background: var(--ink-pill, var(--text-1)); border-color: transparent; color: var(--c-white); }
+.gl-qf.is-on .num { color: color-mix(in srgb, var(--c-white) 75%, transparent); }
 .gl-qf:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 @media (pointer: coarse) { .gl-qf { min-height: var(--hit); } }
 .gl-q-empty { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 48px 16px; text-align: center; color: var(--text-2); }

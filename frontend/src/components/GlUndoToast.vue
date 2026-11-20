@@ -32,7 +32,7 @@ import { undoToast } from '@/composables/glMail'
   border-radius: 16px;
   overflow: hidden;
   background: var(--text-1);
-  color: #fff;
+  color: var(--c-white);
   font-size: 15px;
   box-shadow: var(--mat-sheet-shadow);
 }
@@ -48,10 +48,10 @@ import { undoToast } from '@/composables/glMail'
   padding: 0 16px;
   border-radius: 12px;
   font-weight: 600;
-  background: rgba(255, 255, 255, 0.16);
-  color: #fff;
+  background: color-mix(in srgb, var(--c-white) 16%, transparent);
+  color: var(--c-white);
 }
-.gl-undo-btn:hover { background: rgba(255, 255, 255, 0.26); }
+.gl-undo-btn:hover { background: color-mix(in srgb, var(--c-white) 26%, transparent); }
 .gl-undo-btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 .gl-undo-bar {
   position: absolute;

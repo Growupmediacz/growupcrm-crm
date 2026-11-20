@@ -5,7 +5,7 @@
       <p class="-mt-3 mb-4 text-[13px] text-ink-gray-5">{{ campaignName }} · {{ __('{0} kontaktů', [total]) }}</p>
       <div class="mb-4 grid grid-cols-2 gap-2 md:grid-cols-4">
         <button v-for="s in SOURCES" :key="s.key" type="button" class="flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition" :class="[source === s.key ? 'border-[var(--accent-600)] bg-[color-mix(in_srgb,var(--accent-600)_8%,transparent)]' : 'border-white/90 bg-white/70 hover:bg-white', s.soon && 'opacity-60']" :disabled="s.soon" @click="source = s.key">
-          <span class="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[rgba(110,120,200,.12)]"><GlIcon :name="s.icon" :size="17" /></span>
+          <span class="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)]"><GlIcon :name="s.icon" :size="17" /></span>
           <span class="min-w-0"><span class="block text-[14px] font-bold" :class="source === s.key ? 'text-[var(--accent-700)]' : 'text-ink-gray-9'">{{ s.label }}</span><span class="block truncate text-[12px] text-ink-gray-5">{{ s.soon ? __('brzy') : s.hint }}</span></span>
         </button>
       </div>
@@ -18,7 +18,7 @@
           <select v-model="industry" class="gl-chip h-10 rounded-full px-3 text-[14px]"><option value="">{{ __('Obor: Vše') }}</option><option v-for="i in lists.data?.industries || []" :key="i" :value="i">{{ i }}</option></select>
           <select v-model="relationship" class="gl-chip h-10 rounded-full px-3 text-[14px]"><option value="">{{ __('Stav: Vše') }}</option><option>Prospekt</option><option>Klient</option></select>
         </div>
-        <div class="max-h-[330px] overflow-y-auto rounded-2xl bg-[rgba(110,120,200,.06)] p-1">
+        <div class="max-h-[330px] overflow-y-auto rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_6%,transparent)] p-1">
           <p v-if="!rows.length" class="py-8 text-center text-[14px] text-ink-gray-5">{{ __('Žádné kontakty podle filtru.') }}</p>
           <label v-for="r in rows" :key="r.contact" class="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/60" :class="[picked.has(r.contact) && 'bg-[color-mix(in_srgb,var(--accent-600)_8%,transparent)]', r.flag && 'cursor-not-allowed opacity-70']">
             <input type="checkbox" :disabled="!!r.flag" :checked="picked.has(r.contact)" @change="toggle(r.contact)" />
@@ -26,7 +26,7 @@
             <span class="min-w-0 flex-1"><span class="block truncate text-[15px] font-bold text-ink-gray-9">{{ r.organization_name || r.full_name }}</span><span class="block truncate text-[13px] text-ink-gray-5">{{ r.full_name }}<template v-if="r.designation"> · {{ r.designation }}</template></span></span>
             <span class="hidden w-28 truncate text-[13px] text-ink-gray-7 sm:block">{{ r.territory }}</span>
             <span class="hidden w-28 truncate text-[13px] text-ink-gray-7 md:block">{{ r.industry }}</span>
-            <span class="w-24 text-right text-[13px] font-semibold" :class="r.flag ? 'text-[#a82614]' : 'text-ink-gray-7'">{{ r.flag || r.relationship }}</span>
+            <span class="w-24 text-right text-[13px] font-semibold" :class="r.flag ? 'text-[var(--overdue)]' : 'text-ink-gray-7'">{{ r.flag || r.relationship }}</span>
           </label>
         </div>
       </template>
@@ -34,7 +34,7 @@
       <!-- CSV -->
       <template v-else-if="source === 'csv'">
         <div class="flex flex-col gap-3">
-          <label class="flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-[rgba(110,120,200,.35)] px-4 py-8 text-center hover:bg-white/50">
+          <label class="flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-[color-mix(in_srgb,var(--c-tint)_35%,transparent)] px-4 py-8 text-center hover:bg-white/50">
             <GlIcon name="upload" :size="22" /><span class="text-[15px] font-semibold text-ink-gray-9">{{ csvName || __('Vyberte soubor CSV') }}</span>
             <span class="text-[13px] text-ink-gray-5">{{ __('Sloupce namapujete v dalším kroku. Odhlášené a duplicity se vynechají.') }}</span>
             <input type="file" accept=".csv,text/csv" class="hidden" @change="onFile" />
@@ -61,8 +61,8 @@
 
       <div class="mt-4 flex flex-wrap items-center gap-2">
         <span v-if="source === 'crm'" class="rounded-full bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] px-3 py-1 text-[13px] font-bold text-[var(--accent-700)]">{{ __('{0} vybrané', [picked.size]) }}</span>
-        <span v-if="flagCount('duplicita')" class="rounded-full bg-[rgba(224,161,0,.2)] px-3 py-1 text-[13px] font-bold text-[#7a4400]">{{ __('{0} duplicita vynechána', [flagCount('duplicita')]) }}</span>
-        <span v-if="flagCount('odhlášen')" class="rounded-full bg-[rgba(200,50,31,.12)] px-3 py-1 text-[13px] font-bold text-[#a82614]">{{ __('{0} odhlášený vynechán', [flagCount('odhlášen')]) }}</span>
+        <span v-if="flagCount('duplicita')" class="rounded-full bg-[color-mix(in_srgb,var(--stage-nabidka)_20%,transparent)] px-3 py-1 text-[13px] font-bold text-[var(--warning)]">{{ __('{0} duplicita vynechána', [flagCount('duplicita')]) }}</span>
+        <span v-if="flagCount('odhlášen')" class="rounded-full bg-[color-mix(in_srgb,var(--c-red-550)_12%,transparent)] px-3 py-1 text-[13px] font-bold text-[var(--overdue)]">{{ __('{0} odhlášený vynechán', [flagCount('odhlášen')]) }}</span>
       </div>
       <ErrorMessage class="mt-2" :message="error" />
     </template>

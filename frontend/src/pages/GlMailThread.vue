@@ -117,7 +117,7 @@ async function afterSent(result) {
   border: var(--mat-card-border);
   background: var(--mat-bar);
   backdrop-filter: var(--mat-blur);
-  box-shadow: 0 12px 36px rgba(40, 50, 120, 0.2);
+  box-shadow: 0 12px 36px color-mix(in srgb, var(--c-shadow) 20%, transparent);
   font-size: 16px;
   color: var(--text-2);
 }

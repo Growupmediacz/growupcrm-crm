@@ -14,7 +14,7 @@
     />
     <template v-else>
       <div class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-        <div v-for="t in tiles" :key="t.label" class="rounded-2xl bg-[rgba(110,120,200,.075)] px-4 py-3">
+        <div v-for="t in tiles" :key="t.label" class="rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_7.5%,transparent)] px-4 py-3">
           <div class="text-[13px] text-ink-gray-6">{{ t.label }}</div>
           <div class="num text-[26px] font-bold leading-tight text-ink-gray-9" :class="t.tone">{{ t.value }}</div>
           <div class="text-[12px] text-ink-gray-5">{{ t.sub }}</div>
@@ -34,12 +34,12 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="r in g.rows" :key="r.key" class="border-t border-[rgba(110,120,200,.12)]">
+              <tr v-for="r in g.rows" :key="r.key" class="border-t border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)]">
                 <td class="max-w-[160px] truncate py-1.5 text-ink-gray-9">{{ __(r.label) }}</td>
                 <td class="num py-1.5 text-right">{{ r.count }}</td>
                 <td class="num py-1.5 text-right">{{ formatMinutes(r.median) }}</td>
                 <td class="num py-1.5 text-right" :class="pctTone(r.on_time_pct)">{{ r.on_time_pct === null ? '—' : `${r.on_time_pct} %` }}</td>
-                <td class="num py-1.5 text-right" :class="r.overdue && 'font-bold text-[#a82614]'">{{ r.waiting }}</td>
+                <td class="num py-1.5 text-right" :class="r.overdue && 'font-bold text-[var(--overdue)]'">{{ r.waiting }}</td>
               </tr>
             </tbody>
           </table>
@@ -57,14 +57,14 @@ import { computed } from 'vue'
 const props = defineProps({ data: { type: Object, default: null } })
 
 const hoursLabel = computed(() => String(props.data?.hours ?? 4).replace('.', ','))
-const pctTone = (p) => (p === null ? '' : p >= 80 ? 'text-[#178a4a]' : p >= 50 ? 'text-[#7a4400]' : 'text-[#a82614]')
+const pctTone = (p) => (p === null ? '' : p >= 80 ? 'text-[var(--c-green-700)]' : p >= 50 ? 'text-[var(--warning)]' : 'text-[var(--overdue)]')
 const tiles = computed(() => {
   const d = props.data || {}
   return [
     { label: __('Medián odpovědi'), value: formatMinutes(d.median), sub: __('polovina odpovědí byla rychlejší') },
     { label: __('Průměr odpovědi'), value: formatMinutes(d.avg), sub: __('pracovní čas') },
     { label: __('V termínu'), value: d.on_time_pct === null ? '—' : `${d.on_time_pct} %`, sub: __('z {0} zodpovězených', [d.answered]), tone: pctTone(d.on_time_pct) },
-    { label: __('Čeká na odpověď'), value: d.waiting, sub: d.overdue ? __('{0} po termínu', [d.overdue]) : __('nic po termínu'), tone: d.overdue ? 'text-[#a82614]' : '' },
+    { label: __('Čeká na odpověď'), value: d.waiting, sub: d.overdue ? __('{0} po termínu', [d.overdue]) : __('nic po termínu'), tone: d.overdue ? 'text-[var(--overdue)]' : '' },
   ]
 })
 const groups = computed(() => [

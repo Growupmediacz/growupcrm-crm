@@ -11,7 +11,7 @@
         @click="togglePopover()"
       >
         <GlIcon name="cal" :size="17" class="shrink-0 text-ink-gray-5" />
-        <span class="min-w-0 flex-1 truncate" :class="!model && 'text-[var(--empty-color,#464c70)]'">
+        <span class="min-w-0 flex-1 truncate" :class="!model && 'text-[var(--empty-color,var(--text-3))]'">
           {{ model ? display : placeholder || __('Vyberte datum') }}
         </span>
         <span
@@ -59,7 +59,7 @@
             v-for="s in shortcuts"
             :key="s.label"
             type="button"
-            class="h-8 rounded-full bg-white/80 px-3 text-[13px] font-semibold text-ink-gray-9 shadow-[0_1px_6px_-2px_rgba(64,72,160,0.25)] hover:bg-white"
+            class="h-8 rounded-full bg-white/80 px-3 text-[13px] font-semibold text-ink-gray-9 shadow-[0_1px_6px_-2px_color-mix(in_srgb,var(--c-shadow-2)_25%,transparent)] hover:bg-white"
             @click="pick(s.value, close)"
           >
             {{ s.label }}
@@ -122,7 +122,7 @@ function shift(delta) {
 
 function dayClass(d) {
   const v = iso(view.y, view.m, d)
-  if (v === String(model.value).slice(0, 10)) return 'bg-[var(--accent-600)] font-bold text-white shadow-[0_4px_12px_-4px_rgba(91,91,246,.6)]'
+  if (v === String(model.value).slice(0, 10)) return 'bg-[var(--accent-600)] font-bold text-white shadow-[0_4px_12px_-4px_color-mix(in_srgb,var(--accent-600)_60%,transparent)]'
   if (v === todayIso()) return 'font-bold text-[var(--accent-600)] hover:bg-[color-mix(in_srgb,var(--accent-600)_8%,transparent)]'
   return 'text-ink-gray-9 hover:bg-[color-mix(in_srgb,var(--accent-600)_8%,transparent)]'
 }

@@ -4,8 +4,8 @@
     <template #body-title>
       <!-- design 3. kolo (25): vycentrovaná hlavička s pohárem, názvem a hodnotou zakázky -->
       <div class="relative flex w-full flex-col items-center pt-2 text-center">
-        <div class="pointer-events-none absolute -top-10 left-1/2 h-40 w-72 -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(34,179,94,.22),transparent)]" aria-hidden="true" />
-        <span class="relative flex size-16 items-center justify-center rounded-[20px] bg-[var(--stage-vyhrano)] text-white shadow-[0_10px_24px_-10px_rgba(34,179,94,.8)]">
+        <div class="pointer-events-none absolute -top-10 left-1/2 h-40 w-72 -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--stage-vyhrano)_22%,transparent),transparent)]" aria-hidden="true" />
+        <span class="relative flex size-16 items-center justify-center rounded-[20px] bg-[var(--stage-vyhrano)] text-white shadow-[0_10px_24px_-10px_color-mix(in_srgb,var(--stage-vyhrano)_80%,transparent)]">
           <GlIcon name="star" :size="30" />
         </span>
         <h3 class="relative mt-3 text-[28px] font-bold leading-tight tracking-[-0.02em] text-ink-gray-9">{{ __('Zakázka vyhrána') }}</h3>
@@ -20,7 +20,7 @@
         <div class="text-[16px] font-semibold text-ink-gray-9">{{ __('Co se stalo') }}</div>
         <ul class="flex flex-col gap-2 text-[15px] text-ink-gray-9">
           <li v-for="(line, i) in summary" :key="i" class="flex items-start gap-2.5">
-            <GlIcon name="check" :size="16" class="mt-1 shrink-0 text-[#15803d]" />
+            <GlIcon name="check" :size="16" class="mt-1 shrink-0 text-[var(--c-green-700-2)]" />
             <span class="min-w-0 break-words">{{ line }}</span>
           </li>
         </ul>
@@ -32,10 +32,10 @@
         >
           <GlIcon name="card" :size="15" />{{ __('Návrh faktury') }}
         </router-link>
-        <div v-if="warning" class="rounded-[14px] bg-[rgba(224,161,0,.14)] px-3.5 py-2.5 text-[14px] text-[var(--warning)]">{{ warning }}</div>
+        <div v-if="warning" class="rounded-[14px] bg-[color-mix(in_srgb,var(--stage-nabidka)_14%,transparent)] px-3.5 py-2.5 text-[14px] text-[var(--warning)]">{{ warning }}</div>
       </div>
       <div v-else-if="managerMode" class="flex flex-col gap-4">
-        <div v-if="d.already_won" class="rounded-[14px] bg-[rgba(224,161,0,.14)] px-3.5 py-2.5 text-[14px] text-[var(--warning)]">
+        <div v-if="d.already_won" class="rounded-[14px] bg-[color-mix(in_srgb,var(--stage-nabidka)_14%,transparent)] px-3.5 py-2.5 text-[14px] text-[var(--warning)]">
           {{ __('Zakázka už je vyhraná. Opakované potvrzení nic nezdvojí.') }}
         </div>
         <div>
@@ -138,7 +138,7 @@
               </div>
             </label>
           </div>
-          <div v-if="lead.organization" class="flex items-center gap-2 rounded-[14px] bg-[rgba(34,179,94,.1)] px-3.5 py-2.5 text-[13px] text-[#15803d]">
+          <div v-if="lead.organization" class="flex items-center gap-2 rounded-[14px] bg-[color-mix(in_srgb,var(--stage-vyhrano)_10%,transparent)] px-3.5 py-2.5 text-[13px] text-[var(--c-green-700-2)]">
             <span class="size-2 rounded-full bg-[var(--stage-vyhrano)]" />{{ __('Firma {0} se přesune mezi Klienty.', [lead.organization]) }}
           </div>
         </div>

@@ -35,32 +35,32 @@
       </div>
 
       <div class="gl-card p-3 md:p-4">
-        <form class="mb-2 flex items-center gap-3 rounded-2xl bg-[rgba(110,120,200,.08)] px-4" @submit.prevent="add">
+        <form class="mb-2 flex items-center gap-3 rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] px-4" @submit.prevent="add">
           <GlIcon name="plus" :size="17" class="text-ink-gray-5" />
           <input ref="newEl" v-model="newTitle" class="h-12 flex-1 bg-transparent text-[15px] outline-none" :placeholder="__('Nový úkol – napište a stiskněte Enter')" />
-          <kbd class="rounded-md bg-[rgba(110,120,200,.14)] px-1.5 text-[12px] text-ink-gray-5">↵</kbd>
+          <kbd class="rounded-md bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] px-1.5 text-[12px] text-ink-gray-5">↵</kbd>
         </form>
 
         <GlErrorBanner v-if="res.error" class="my-2" :title="__('Úkoly se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" />
         <GlSkeleton v-else-if="!res.data" :rows="5" />
         <GlEmptyState v-else-if="!items.length" class="my-3" icon="check" :title="bucket === 'all' && !kind ? __('Všechno hotovo') : __('Nic nenalezeno')" :text="bucket === 'all' && !kind ? __('Nemáte žádné otevřené úkoly. Pěkná práce.') : __('Filtru neodpovídá žádný úkol.')" :action="bucket === 'all' && !kind ? '' : __('Zrušit filtr')" @action="(bucket = 'all'), (kind = '')" />
         <template v-for="g in grouped" :key="g.bucket">
-          <div class="mb-1 mt-3 flex items-baseline gap-2 px-2 text-[13px]"><b :class="g.bucket === 'overdue' ? 'text-[#a82614]' : 'text-ink-gray-9'">{{ g.label }}</b><span class="num text-ink-gray-5">{{ g.items.length }}</span></div>
+          <div class="mb-1 mt-3 flex items-baseline gap-2 px-2 text-[13px]"><b :class="g.bucket === 'overdue' ? 'text-[var(--overdue)]' : 'text-ink-gray-9'">{{ g.label }}</b><span class="num text-ink-gray-5">{{ g.items.length }}</span></div>
           <div v-for="t in g.items" :key="t.name" class="flex cursor-pointer items-center gap-3 rounded-2xl px-2 py-2.5 hover:bg-white/50" @click="(e) => !e.target.closest('button,a') && openTask(t.name)">
-            <button class="flex size-6 shrink-0 items-center justify-center rounded-full border-[1.75px] transition" :class="t.status === 'Done' ? 'border-[var(--accent-600)] bg-[var(--accent-600)] text-white' : 'border-[rgba(110,120,200,.45)] hover:border-[var(--accent-600)]'" :aria-label="t.status === 'Done' ? __('Hotovo') : __('Označit jako hotové')" @click="toggle(t)">
+            <button class="flex size-6 shrink-0 items-center justify-center rounded-full border-[1.75px] transition" :class="t.status === 'Done' ? 'border-[var(--accent-600)] bg-[var(--accent-600)] text-white' : 'border-[color-mix(in_srgb,var(--c-tint)_45%,transparent)] hover:border-[var(--accent-600)]'" :aria-label="t.status === 'Done' ? __('Hotovo') : __('Označit jako hotové')" @click="toggle(t)">
               <GlIcon v-if="t.status === 'Done'" name="check" :size="14" />
             </button>
             <!-- mobil (design R2MUkoly): název a pod ním „včera · Zakázka“ -->
             <span v-if="isMobileView" class="min-w-0 flex-1">
               <span class="block text-[17px] leading-snug" :class="t.status === 'Done' ? 'text-ink-gray-5 line-through' : 'font-medium text-ink-gray-9'">{{ t.title }}</span>
-              <span class="block truncate text-[13px] text-ink-gray-5"><span :class="t.bucket === 'overdue' && 'font-semibold text-[#a82614]'">{{ mobileDue(t) }}</span><template v-if="t.ref"> · {{ t.ref.label.split(' · ')[1] || t.ref.label }}</template></span>
+              <span class="block truncate text-[13px] text-ink-gray-5"><span :class="t.bucket === 'overdue' && 'font-semibold text-[var(--overdue)]'">{{ mobileDue(t) }}</span><template v-if="t.ref"> · {{ t.ref.label.split(' · ')[1] || t.ref.label }}</template></span>
             </span>
             <template v-else>
-              <span class="min-w-0 flex-1 truncate text-[15px]" :class="t.status === 'Done' ? 'text-ink-gray-5 line-through' : 'font-medium text-ink-gray-9'">{{ t.title }}<GlIcon v-if="t.flag && t.status !== 'Done'" name="flag" :size="13" class="ml-1.5 inline text-[#a82614]" /></span>
+              <span class="min-w-0 flex-1 truncate text-[15px]" :class="t.status === 'Done' ? 'text-ink-gray-5 line-through' : 'font-medium text-ink-gray-9'">{{ t.title }}<GlIcon v-if="t.flag && t.status !== 'Done'" name="flag" :size="13" class="ml-1.5 inline text-[var(--overdue)]" /></span>
               <router-link v-if="t.ref" :to="refRoute(t.ref)" class="hidden max-w-[260px] shrink-0 truncate rounded-full px-2.5 py-0.5 text-[12px] font-bold sm:block" :class="REF_TONE[t.ref.kind]">{{ t.ref.label }}</router-link>
-              <span class="num w-16 shrink-0 text-right text-[13px]" :class="t.bucket === 'overdue' ? 'font-semibold text-[#a82614]' : 'text-ink-gray-5'">{{ dueLabel(t) }}</span>
+              <span class="num w-16 shrink-0 text-right text-[13px]" :class="t.bucket === 'overdue' ? 'font-semibold text-[var(--overdue)]' : 'text-ink-gray-5'">{{ dueLabel(t) }}</span>
               <img v-if="t.assigned_to && userImage(t.assigned_to)" :src="userImage(t.assigned_to)" class="size-7 shrink-0 rounded-full object-cover" :title="userName(t.assigned_to)" />
-              <span v-else-if="t.assigned_to" class="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" :title="userName(t.assigned_to)">{{ initials(userName(t.assigned_to)) }}</span>
+              <span v-else-if="t.assigned_to" class="flex size-7 shrink-0 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[10px] font-bold text-[var(--c-blue-600)]" :title="userName(t.assigned_to)">{{ initials(userName(t.assigned_to)) }}</span>
               <span v-else class="size-7 shrink-0" />
             </template>
           </div>
@@ -110,7 +110,7 @@ const CHIPS = [
   { key: 'week', label: __('Tento týden'), count: 'week' },
   { key: 'nodate', label: __('Bez termínu'), count: 'nodate' },
 ]
-const chipClass = (c) => (bucket.value === c.key ? (c.key === 'today' ? '!border-[#0e1330] !bg-[#0e1330] !text-white' : 'gl-chip-on') : c.key === 'overdue' && (counts.value.overdue || 0) ? '!bg-[rgba(200,50,31,.1)] !text-[#a82614]' : '')
+const chipClass = (c) => (bucket.value === c.key ? (c.key === 'today' ? '!border-[var(--text-1)] !bg-[var(--text-1)] !text-white' : 'gl-chip-on') : c.key === 'overdue' && (counts.value.overdue || 0) ? '!bg-[color-mix(in_srgb,var(--c-red-550)_10%,transparent)] !text-[var(--overdue)]' : '')
 
 const res = createResource({ url: 'growupcrm.worklists.get_tasks', params: params(), auto: true })
 function params() {
@@ -132,8 +132,8 @@ const grouped = computed(() => {
 })
 
 const REF_TONE = {
-  lead: 'bg-[rgba(139,92,246,.14)] text-[#5a2fc0]', project: 'bg-[rgba(59,110,246,.13)] text-[#1f48b8]',
-  org: 'bg-[rgba(110,120,200,.14)] text-[#4a5173]', contact: 'bg-[rgba(110,120,200,.14)] text-[#4a5173]',
+  lead: 'bg-[color-mix(in_srgb,var(--stage-kontaktovano)_14%,transparent)] text-[var(--c-violet-550)]', project: 'bg-[color-mix(in_srgb,var(--c-blue-400)_13%,transparent)] text-[var(--info)]',
+  org: 'bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] text-[var(--c-blue-650)]', contact: 'bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] text-[var(--c-blue-650)]',
 }
 const refRoute = (r) => ({ lead: { name: 'Lead', params: { leadId: r.to } }, project: { name: 'Project', params: { projectId: r.to } }, org: { name: 'Organization', params: { organizationId: r.to } }, contact: { name: 'Contact', params: { contactId: r.to } } })[r.kind]
 // mobil: „včera“, „9:00“, „30. 9.“

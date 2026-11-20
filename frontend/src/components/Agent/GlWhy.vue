@@ -46,7 +46,7 @@ watch(() => props.defaultOpen, (v) => (inner.value = v))
 </script>
 
 <style scoped>
-.gl-why { background: var(--accent-50, rgba(91, 91, 246, 0.07)); border-radius: 16px; }
+.gl-why { background: var(--accent-50, color-mix(in srgb, var(--accent-600) 7%, transparent)); border-radius: 16px; }
 .gl-why-head { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 44px; padding: 0 16px; border: 0; background: transparent; text-align: left; cursor: pointer; border-radius: 16px; font-size: 15px; font-weight: 650; color: var(--text-1); }
 .gl-why-head:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 .gl-why-score { font-size: 13px; font-weight: 600; color: var(--accent-700); background: var(--accent-soft); border-radius: 999px; padding: 2px 10px; }

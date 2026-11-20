@@ -9,7 +9,7 @@
       <div class="gl-card flex flex-wrap items-center justify-between gap-3 !rounded-[20px] p-5">
         <div>
           <div class="flex items-center gap-2 text-[16px] font-bold text-ink-gray-9">
-            <span class="size-2.5 rounded-full" :class="mb.data?.enabled ? 'bg-[#22b35e]' : 'bg-[#e0a100]'" />{{ mb.data?.enabled ? __('Schránka připojena') : __('Schránka není připojená') }}
+            <span class="size-2.5 rounded-full" :class="mb.data?.enabled ? 'bg-[var(--stage-vyhrano)]' : 'bg-[var(--stage-nabidka)]'" />{{ mb.data?.enabled ? __('Schránka připojena') : __('Schránka není připojená') }}
           </div>
           <div class="mt-1 text-[13px] text-ink-gray-5">{{ mb.data?.from_email || mb.data?.smtp_user || __('Zatím nic nenastaveno') }}<template v-if="mb.data?.last_test_at"> · {{ __('poslední test {0}', [mb.data.last_test_at]) }}</template></div>
         </div>

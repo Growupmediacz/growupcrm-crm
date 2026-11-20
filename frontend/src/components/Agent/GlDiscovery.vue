@@ -15,7 +15,7 @@
     </div>
 
     <div v-if="st" class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-      <label v-for="s in st.segments" :key="s.name" class="flex items-center gap-3 rounded-[14px] bg-[rgba(110,120,200,.06)] px-3 py-2.5">
+      <label v-for="s in st.segments" :key="s.name" class="flex items-center gap-3 rounded-[14px] bg-[color-mix(in_srgb,var(--c-tint)_6%,transparent)] px-3 py-2.5">
         <div class="min-w-0 flex-1">
           <div class="text-[14px] font-semibold text-ink-gray-9">{{ s.name }}</div>
           <div class="truncate text-[12px] text-ink-gray-5" :title="s.target">{{ s.target }}</div>
@@ -29,7 +29,7 @@
       <span class="text-[13px] text-ink-gray-5">{{ __('Odhad: ~{0} kreditů (hledání, ověření webu, obohacení)', [estimate]) }}</span>
     </div>
 
-    <div v-for="r in st?.runs || []" :key="r.name" class="rounded-[16px] border border-[rgba(110,120,200,.16)] p-4">
+    <div v-for="r in st?.runs || []" :key="r.name" class="rounded-[16px] border border-[color-mix(in_srgb,var(--c-tint)_16%,transparent)] p-4">
       <div class="flex flex-wrap items-center gap-3">
         <span class="size-2 rounded-full" :style="{ background: STATUS_COLOR[r.status] }" />
         <b class="text-[14px] text-ink-gray-9">{{ r.status }}</b>
@@ -42,7 +42,7 @@
           <span class="num shrink-0 font-semibold text-ink-gray-9">{{ v.found }} / {{ v.target }} <span class="font-normal text-ink-gray-5">· {{ __('ověřeno {0}', [v.checked]) }}<template v-if="v.osvc || v.unverified"> · {{ __('vyřazeno OSVČ {0}, neověřeno {1}', [v.osvc || 0, v.unverified || 0]) }}</template></span></span>
         </div>
       </div>
-      <p v-if="r.error" class="mt-2 text-[13px] text-[#a82614]">{{ r.error }}</p>
+      <p v-if="r.error" class="mt-2 text-[13px] text-[var(--overdue)]">{{ r.error }}</p>
       <p v-if="r.result.created?.length" class="mt-2 text-[13px] text-ink-gray-5">{{ __('Nové firmy najdete ve Firmách, segment začíná „Agent:“.') }}</p>
     </div>
   </div>
@@ -54,7 +54,7 @@ import { formatDateCz } from '@/utils/glDate'
 import { Button, call, createResource, toast } from 'frappe-ui'
 import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 
-const STATUS_COLOR = { 'Čeká': '#a3a8c3', 'Probíhá': 'var(--accent-600)', 'Hotovo': '#22b35e', 'Chyba': '#d0362a' }
+const STATUS_COLOR = { 'Čeká': 'var(--c-blue-300)', 'Probíhá': 'var(--accent-600)', 'Hotovo': 'var(--stage-vyhrano)', 'Chyba': 'var(--c-red-500)' }
 const state = createResource({ url: 'growupcrm.discovery.get_state', auto: true })
 const st = computed(() => state.data)
 const targets = reactive({})

@@ -35,7 +35,7 @@
               @keydown.up.prevent="moveOrg(-1)"
               @keydown.enter.prevent="pickOrg(orgItems[orgActive])"
             />
-            <span class="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-[rgba(110,120,200,.12)] px-1.5 py-0.5 text-[11px] font-bold text-ink-gray-5">ARES</span>
+            <span class="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] px-1.5 py-0.5 text-[11px] font-bold text-ink-gray-5">ARES</span>
           </div>
           <div
             v-if="!org && orgItems.length"
@@ -52,7 +52,7 @@
             >
               <span
                 class="flex size-8 shrink-0 items-center justify-center rounded-lg text-[11px] font-bold"
-                :class="item.ares ? 'bg-[rgba(110,120,200,.12)] text-ink-gray-5' : 'bg-[#dde6ff] text-[#2440a6]'"
+                :class="item.ares ? 'bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-ink-gray-5' : 'bg-[var(--c-blue-50)] text-[var(--c-blue-600)]'"
               >
                 <GlIcon v-if="item.ares" name="refresh" :size="14" />
                 <template v-else>{{ initials(item.label) }}</template>

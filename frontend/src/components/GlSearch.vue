@@ -43,7 +43,7 @@
               v-for="f in FILTERS"
               :key="f.key"
               class="h-8 rounded-full px-3.5 text-[13px] font-semibold transition"
-              :class="kind === f.key ? 'bg-[var(--accent-600)] text-white' : 'bg-[rgba(110,120,200,.1)] text-ink-gray-7 hover:bg-[var(--line)]'"
+              :class="kind === f.key ? 'bg-[var(--accent-600)] text-white' : 'bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] text-ink-gray-7 hover:bg-[var(--line)]'"
               @click="(kind = f.key), (active = 0), input?.focus()"
             >
               {{ f.label }}
@@ -120,11 +120,11 @@ const leadDefaults = computed(() => ({ status: leadStatuses.data?.[0]?.name || '
 
 const ICON = { organization: 'building', contact: 'user', lead: 'brief', action: 'plus', calendar: 'cal' }
 const TONE = {
-  organization: 'bg-[var(--outline-gray-1)] text-[#4b5280]',
-  contact: 'bg-[#e6ecff] text-[#2440a6]',
-  lead: 'bg-[#efe7ff] text-[#6d3fd0]',
-  action: 'bg-[#dcf5e6] text-[#0f6b32]',
-  calendar: 'bg-[#e6ecff] text-[var(--info)]',
+  organization: 'bg-[var(--outline-gray-1)] text-[var(--c-indigo-600)]',
+  contact: 'bg-[var(--c-blue-50-2)] text-[var(--c-blue-600)]',
+  lead: 'bg-[var(--c-violet-50)] text-[var(--c-violet-450)]',
+  action: 'bg-[var(--c-green-100)] text-[var(--success)]',
+  calendar: 'bg-[var(--c-blue-50-2)] text-[var(--info)]',
 }
 
 // zadání 2027 E3: skupina „Akce“ (prázdný dotaz i shoda textu)

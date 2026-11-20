@@ -66,7 +66,7 @@
             </component>
           </div>
           <div v-if="ov.approve_total" class="mt-4 flex flex-wrap items-center justify-between gap-3">
-            <router-link :to="{ name: 'OutreachReview', params: { name: ov.approve[0].name } }" class="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-[var(--accent-600)] px-5 text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(91,91,246,.7)]">
+            <router-link :to="{ name: 'OutreachReview', params: { name: ov.approve[0].name } }" class="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-[var(--accent-600)] px-5 text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_color-mix(in_srgb,var(--accent-600)_70%,transparent)]">
               <GlIcon name="check" :size="16" />{{ __('Schválit postupně ({0})', [ov.approve_total]) }}
             </router-link>
             <router-link :to="{ name: 'Outreach', params: { tab: 'approve' } }" class="text-[15px] font-semibold text-[var(--accent-600)] hover:underline">{{ __('Projít jednotlivě') }}</router-link>
@@ -85,13 +85,13 @@
       </div>
       <GlSkeleton v-if="queue.loading && !queue.data" :rows="4" />
       <GlEmptyState v-else-if="!queue.data?.length" icon="check" :title="__('Nic ke schválení')" :text="__('Pracovní fronta je prázdná.')" />
-      <router-link v-for="m in queue.data || []" :key="m.name" :to="{ name: 'OutreachReview', params: { name: m.name } }" class="flex items-center gap-3 border-t border-[rgba(110,120,200,.12)] py-3 first:border-0">
+      <router-link v-for="m in queue.data || []" :key="m.name" :to="{ name: 'OutreachReview', params: { name: m.name } }" class="flex items-center gap-3 border-t border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] py-3 first:border-0">
         <span class="flex size-10 shrink-0 items-center justify-center rounded-full text-[12px] font-bold" :style="avatarTone(m.contact_name)">{{ initials(m.contact_name) }}</span>
         <div class="min-w-0 flex-1">
           <div class="truncate"><b class="text-[15px] text-ink-gray-9">{{ m.contact_name }}</b> <span class="text-[13px] text-ink-gray-5">{{ m.organization }} · {{ m.campaign_name }}</span></div>
           <div class="truncate text-[13px] text-ink-gray-7">{{ m.subject }}</div>
         </div>
-        <span v-if="m.status === 'Odloženo'" class="rounded-full bg-[rgba(224,161,0,.2)] px-2.5 py-0.5 text-[12px] font-bold text-[#7a4400]">{{ __('Odloženo') }}</span>
+        <span v-if="m.status === 'Odloženo'" class="rounded-full bg-[color-mix(in_srgb,var(--stage-nabidka)_20%,transparent)] px-2.5 py-0.5 text-[12px] font-bold text-[var(--warning)]">{{ __('Odloženo') }}</span>
         <GlIcon name="right" :size="16" class="text-ink-gray-4" />
       </router-link>
     </div>
@@ -108,8 +108,8 @@
         <h2 class="text-[22px] font-bold tracking-tight text-ink-gray-9">{{ __('Šablony') }}</h2>
         <router-link :to="{ name: 'OutreachTemplate', params: { name: 'new' } }" class="gl-fill">{{ __('Nová šablona') }}</router-link>
       </div>
-      <router-link v-for="t in templates.data || []" :key="t.name" :to="{ name: 'OutreachTemplate', params: { name: t.name } }" class="flex items-center gap-3 border-t border-[rgba(110,120,200,.12)] py-3 first:border-0">
-        <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[rgba(110,120,200,.12)] text-ink-gray-7"><GlIcon :name="STEP_ICON[t.step_type]" :size="18" /></span>
+      <router-link v-for="t in templates.data || []" :key="t.name" :to="{ name: 'OutreachTemplate', params: { name: t.name } }" class="flex items-center gap-3 border-t border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] py-3 first:border-0">
+        <span class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-ink-gray-7"><GlIcon :name="STEP_ICON[t.step_type]" :size="18" /></span>
         <div class="min-w-0 flex-1">
           <div class="truncate text-[15px] font-bold text-ink-gray-9">{{ t.template_name }}</div>
           <div class="truncate text-[13px] text-ink-gray-5">{{ t.step_type }}<template v-if="t.category"> · {{ t.category }}</template><template v-if="t.subject"> · {{ t.subject }}</template></div>
@@ -214,8 +214,8 @@ const kpis = computed(() => {
 })
 const CHANNEL = {
   email: { label: __('E-mail'), icon: 'mail', tile: 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-600)]', pill: 'bg-[color-mix(in_srgb,var(--accent-600)_9%,transparent)] text-[var(--accent-700)]' },
-  call: { label: __('Hovor'), icon: 'phone', tile: 'bg-[rgba(249,115,22,.12)] text-[#c2410c]', pill: 'bg-[rgba(249,115,22,.1)] text-[#c2410c]' },
-  linkedin: { label: __('LinkedIn'), icon: 'link', tile: 'bg-[rgba(10,102,194,.12)] text-[#0a66c2]', pill: 'bg-[rgba(10,102,194,.1)] text-[#0a66c2]' },
+  call: { label: __('Hovor'), icon: 'phone', tile: 'bg-[color-mix(in_srgb,var(--stage-jednani)_12%,transparent)] text-[var(--c-orange-600-2)]', pill: 'bg-[color-mix(in_srgb,var(--stage-jednani)_10%,transparent)] text-[var(--c-orange-600-2)]' },
+  linkedin: { label: __('LinkedIn'), icon: 'link', tile: 'bg-[color-mix(in_srgb,var(--c-sky-600)_12%,transparent)] text-[var(--c-sky-600)]', pill: 'bg-[color-mix(in_srgb,var(--c-sky-600)_10%,transparent)] text-[var(--c-sky-600)]' },
 }
 const todo = computed(() => [
   ...(ov.value?.approve || []).map((m) => ({ kind: 'approve', name: m.name, contact_name: m.contact_name, organization: m.organization, step: m.step_index, channel: 'email', raw: m })),

@@ -185,8 +185,8 @@ const cards = computed(() => {
 })
 
 const tone = {
-  event: 'bg-[rgba(59,110,246,.13)] text-[var(--info)]',
-  task: 'bg-[rgba(234,170,8,.18)] text-[var(--warning)]',
+  event: 'bg-[color-mix(in_srgb,var(--c-blue-400)_13%,transparent)] text-[var(--info)]',
+  task: 'bg-[color-mix(in_srgb,var(--c-amber-550)_18%,transparent)] text-[var(--warning)]',
 }
 const d = (iso) => new Date(String(iso).replace(' ', 'T'))
 const hhmm = (iso) => `${d(iso).getHours()}:${String(d(iso).getMinutes()).padStart(2, '0')}`

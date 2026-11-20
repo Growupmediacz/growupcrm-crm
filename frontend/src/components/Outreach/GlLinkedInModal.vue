@@ -13,7 +13,7 @@
     </template>
     <template #default>
       <div v-if="item" class="flex flex-col gap-4">
-        <div class="flex items-center gap-3 rounded-2xl bg-[rgba(110,120,200,.1)] px-4 py-3">
+        <div class="flex items-center gap-3 rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] px-4 py-3">
           <span class="flex size-11 shrink-0 items-center justify-center rounded-full text-[13px] font-bold" :style="avatarTone(item.contact_name)">{{ initials(item.contact_name) }}</span>
           <div class="min-w-0 flex-1"><div class="truncate text-[15px] font-bold text-ink-gray-9">{{ item.contact_name }}</div><div class="truncate text-[12.5px] text-ink-gray-5">{{ item.designation }}<template v-if="item.designation && item.organization"> · </template>{{ item.organization }}</div></div>
           <a :href="profileUrl" target="_blank" rel="noopener" class="gl-quick shrink-0"><GlIcon name="external" :size="15" />{{ __('Otevřít profil') }}</a>
@@ -24,7 +24,7 @@
         </label>
         <div class="flex items-center gap-3">
           <button class="gl-quick !h-11 !px-5 !text-[15px]" @click="copy"><GlIcon name="copy" :size="16" />{{ __('Zkopírovat zprávu') }}</button>
-          <span v-if="copied" class="flex items-center gap-1 text-[13px] font-semibold text-[#0f6b32]"><GlIcon name="check" :size="14" />{{ __('Zkopírováno') }}</span>
+          <span v-if="copied" class="flex items-center gap-1 text-[13px] font-semibold text-[var(--success)]"><GlIcon name="check" :size="14" />{{ __('Zkopírováno') }}</span>
         </div>
         <p class="text-[13px] text-ink-gray-5">{{ __('LinkedIn neumíme odeslat za vás. Zprávu vložte do LinkedInu a pak krok označte jako hotový.') }}</p>
       </div>

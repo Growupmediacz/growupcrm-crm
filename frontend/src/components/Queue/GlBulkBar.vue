@@ -43,18 +43,18 @@ const warned = computed(() => props.total - props.clean)
 .gl-bulk {
   position: sticky; bottom: 16px; z-index: 20; margin: 8px auto 0; width: fit-content; max-width: 100%;
   display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px; padding: 10px 10px 10px 20px; border-radius: 22px;
-  background: var(--mat-bar); border: var(--mat-card-border); box-shadow: 0 16px 48px rgba(40, 50, 120, 0.2);
+  background: var(--mat-bar); border: var(--mat-card-border); box-shadow: 0 16px 48px color-mix(in srgb, var(--c-shadow) 20%, transparent);
   -webkit-backdrop-filter: var(--mat-blur); backdrop-filter: var(--mat-blur);
 }
 .gl-bulk-info { font-size: 14px; color: var(--text-2); }
 .gl-bulk-info b { color: var(--text-1); font-weight: 650; }
 .gl-bulk-warn { color: var(--warning); font-weight: 600; }
 .gl-bulk-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; }
-.gl-bulk-btn { min-height: var(--hit-sm, 36px); padding: 0 16px; border-radius: 14px; border: 1px solid var(--field-border); background: #fff; font: inherit; font-size: 14px; font-weight: 600; color: var(--text-1); display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: transform var(--t-press, 90ms), background-color var(--t-fast, 120ms); }
+.gl-bulk-btn { min-height: var(--hit-sm, 36px); padding: 0 16px; border-radius: 14px; border: 1px solid var(--field-border); background: var(--c-white); font: inherit; font-size: 14px; font-weight: 600; color: var(--text-1); display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: transform var(--t-press, 90ms), background-color var(--t-fast, 120ms); }
 .gl-bulk-btn:active:not(:disabled) { transform: scale(0.97); }
 .gl-bulk-btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 .gl-bulk-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.gl-bulk-primary { background: var(--accent-600); border-color: transparent; color: #fff; box-shadow: 0 6px 18px color-mix(in srgb, var(--accent-600) 28%, transparent); }
+.gl-bulk-primary { background: var(--accent-600); border-color: transparent; color: var(--c-white); box-shadow: 0 6px 18px color-mix(in srgb, var(--accent-600) 28%, transparent); }
 .gl-bulk-danger { color: var(--overdue); }
 @media (max-width: 767px) {
   /* nad spodní navigací telefonu */

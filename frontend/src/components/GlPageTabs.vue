@@ -36,7 +36,7 @@ const show = computed(
   border-radius: 24px;
   background: var(--mat-bar);
   border: var(--mat-card-border);
-  box-shadow: 0 4px 16px rgba(40, 50, 120, 0.06);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--c-shadow) 6%, transparent);
 }
 .gl-pt-tab {
   display: inline-flex;
@@ -52,11 +52,11 @@ const show = computed(
 }
 .gl-pt-tab:hover {
   color: var(--text-1);
-  background: var(--fill-tinted, rgba(110, 120, 200, 0.075));
+  background: var(--fill-tinted, color-mix(in srgb, var(--c-tint) 7.5%, transparent));
 }
 .gl-pt-tab.is-active {
   background: var(--accent-600);
-  color: #fff;
+  color: var(--c-white);
 }
 .gl-pt-tab:focus-visible {
   outline: none;

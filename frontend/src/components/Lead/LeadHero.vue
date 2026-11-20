@@ -18,7 +18,7 @@
     <span
       v-else-if="next"
       class="inline-flex h-9 min-w-0 shrink items-center gap-1.5 truncate rounded-full px-3 text-[13px] font-semibold"
-      :class="overdue ? 'bg-[rgba(200,50,31,.09)] text-[#a82614]' : 'bg-[var(--warn-bg)] text-[var(--warn-fg)]'"
+      :class="overdue ? 'bg-[color-mix(in_srgb,var(--c-red-550)_9%,transparent)] text-[var(--overdue)]' : 'bg-[var(--warn-bg)] text-[var(--warn-fg)]'"
       :title="`${next.title} · ${nextSub}`"
     >
       <GlIcon name="clock" :size="15" class="shrink-0" /><span class="truncate">{{ next.title }} · {{ dueLabel }}</span>
@@ -55,7 +55,7 @@
         <div v-if="doc.order_value" class="num font-bold leading-tight tracking-tight text-ink-gray-9" :class="compact ? 'text-[22px]' : 'text-[38px]'">{{ money }}</div>
         <!-- oprava 7: prázdná hodnota = tlumené „Bez hodnoty“ + „Doplnit“ -->
         <template v-else>
-          <div class="font-semibold leading-tight text-[var(--empty-color,#464c70)]" :class="compact ? 'text-[16px]' : 'text-[20px]'">{{ __('Bez hodnoty') }}</div>
+          <div class="font-semibold leading-tight text-[var(--empty-color,var(--text-3))]" :class="compact ? 'text-[16px]' : 'text-[20px]'">{{ __('Bez hodnoty') }}</div>
           <button class="gl-fill" @click="emit('fill')">{{ __('Doplnit') }}</button>
         </template>
       </div>
@@ -69,7 +69,7 @@
         :aria-label="__('Posunout do fáze {0}', [__(s.name)])"
         @click="move(s)"
       >
-        <span class="h-1.5 rounded-full" :style="{ background: i <= currentIndex ? 'var(--accent-600)' : 'rgba(110,120,200,.16)' }" />
+        <span class="h-1.5 rounded-full" :style="{ background: i <= currentIndex ? 'var(--accent-600)' : 'color-mix(in srgb, var(--c-tint) 16%, transparent)' }" />
         <span v-if="!compact || i === currentIndex" class="text-[13px]" :class="i === currentIndex ? 'font-bold text-ink-gray-9' : 'text-ink-gray-5'">{{ __(s.name) }}</span>
       </button>
     </div>
@@ -77,15 +77,15 @@
     <!-- Pipedrive „No activity“: otevřená zakázka bez úkolu i schůzky -->
     <div
       v-if="!next && !doc.next_step && isOpen && tasks.data"
-      class="mt-5 flex items-center gap-4 rounded-[18px] bg-[rgba(224,161,0,.14)] px-4 py-3"
+      class="mt-5 flex items-center gap-4 rounded-[18px] bg-[color-mix(in_srgb,var(--stage-nabidka)_14%,transparent)] px-4 py-3"
     >
-      <GlIcon name="alert" :size="22" class="text-[#9a5b00]" />
+      <GlIcon name="alert" :size="22" class="text-[var(--c-amber-700)]" />
       <div class="min-w-0 flex-1">
-        <div class="truncate text-[16px] font-bold text-[#7a4400]">{{ __('Bez dalšího kroku') }}</div>
+        <div class="truncate text-[16px] font-bold text-[var(--warning)]">{{ __('Bez dalšího kroku') }}</div>
         <div class="truncate text-[13px] text-ink-gray-7">{{ __('Naplánujte úkol nebo schůzku, ať zakázka nevychladne.') }}</div>
       </div>
       <button
-        class="inline-flex h-9 items-center gap-2 rounded-full bg-white/80 px-4 text-[14px] font-semibold text-ink-gray-9 shadow-[0_2px_10px_-4px_rgba(64,72,160,.3)] hover:bg-white"
+        class="inline-flex h-9 items-center gap-2 rounded-full bg-white/80 px-4 text-[14px] font-semibold text-ink-gray-9 shadow-[0_2px_10px_-4px_color-mix(in_srgb,var(--c-shadow-2)_30%,transparent)] hover:bg-white"
         :class="compact && '!size-9 !justify-center !px-0'"
         :aria-label="__('Přidat úkol')"
         @click="emit('plan')"
@@ -96,17 +96,17 @@
     <div
       v-if="next"
       class="mt-5 flex items-center gap-4 rounded-[18px] px-4 py-3"
-      :class="overdue ? 'bg-[rgba(200,50,31,.09)]' : 'bg-[rgba(224,161,0,.14)]'"
+      :class="overdue ? 'bg-[color-mix(in_srgb,var(--c-red-550)_9%,transparent)]' : 'bg-[color-mix(in_srgb,var(--stage-nabidka)_14%,transparent)]'"
     >
-      <GlIcon name="clock" :size="22" :class="overdue ? 'text-[#a82614]' : 'text-[#7a4400]'" />
+      <GlIcon name="clock" :size="22" :class="overdue ? 'text-[var(--overdue)]' : 'text-[var(--warning)]'" />
       <div class="min-w-0 flex-1">
-        <div class="truncate text-[16px] font-bold" :class="overdue ? 'text-[#a82614]' : 'text-[#7a4400]'">
+        <div class="truncate text-[16px] font-bold" :class="overdue ? 'text-[var(--overdue)]' : 'text-[var(--warning)]'">
           {{ __('Další krok') }}: {{ next.title }}
         </div>
         <div class="truncate text-[13px] text-ink-gray-7">{{ nextSub }}</div>
       </div>
       <button
-        class="inline-flex h-9 items-center gap-2 rounded-full bg-white/80 px-4 text-[14px] font-semibold text-ink-gray-9 shadow-[0_2px_10px_-4px_rgba(64,72,160,.3)] hover:bg-white"
+        class="inline-flex h-9 items-center gap-2 rounded-full bg-white/80 px-4 text-[14px] font-semibold text-ink-gray-9 shadow-[0_2px_10px_-4px_color-mix(in_srgb,var(--c-shadow-2)_30%,transparent)] hover:bg-white"
         :class="compact && '!size-9 !justify-center !px-0'"
         :aria-label="__('Hotovo')"
         @click="done"
@@ -150,14 +150,14 @@ const isOpen = computed(() => {
   return !!s && !['Won', 'Lost'].includes(s.type)
 })
 const STAGE_COLORS = {
-  'Nová': '#3b82f6',
-  'Kontaktováno': '#8b5cf6',
-  'Nabídka odeslána': '#e0a100',
-  'Jednání': '#f97316',
-  'Vyhráno': '#22b35e',
-  'Prohráno': '#9ca3af',
+  'Nová': 'var(--stage-nova)',
+  'Kontaktováno': 'var(--stage-kontaktovano)',
+  'Nabídka odeslána': 'var(--stage-nabidka)',
+  'Jednání': 'var(--stage-jednani)',
+  'Vyhráno': 'var(--stage-vyhrano)',
+  'Prohráno': 'var(--stage-prohrano)',
 }
-const stageColor = computed(() => STAGE_COLORS[props.doc.status] || '#9ca3af')
+const stageColor = computed(() => STAGE_COLORS[props.doc.status] || 'var(--stage-prohrano)')
 const person = computed(() => [props.doc.first_name, props.doc.last_name].filter(Boolean).join(' '))
 const money = computed(() =>
   props.doc.order_value ? `${new Intl.NumberFormat('cs-CZ').format(props.doc.order_value)} Kč` : '',

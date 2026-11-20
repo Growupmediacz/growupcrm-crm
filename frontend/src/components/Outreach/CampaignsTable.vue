@@ -35,7 +35,7 @@
         <span class="hidden lg:block"><span class="num block text-[15px] text-ink-gray-9">{{ c.sent ? c.replies : '—' }}</span><span v-if="c.sent" class="block text-[12.5px] text-ink-gray-5">{{ __('odpovědí') }}</span></span>
         <span class="hidden lg:block"><span class="num block text-[15px] text-ink-gray-9">{{ c.sent ? c.meetings || 0 : '—' }}</span><span v-if="c.sent" class="block text-[12.5px] text-ink-gray-5">{{ __('schůzky') }}</span></span>
         <span class="col-span-2 flex items-center gap-2 lg:col-span-1">
-          <span class="h-2 flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><span class="block h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${c.progress}%` }" /></span>
+          <span class="h-2 flex-1 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--c-tint)_16%,transparent)]"><span class="block h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${c.progress}%` }" /></span>
           <span class="num w-11 text-right text-[14px] text-ink-gray-8">{{ c.progress }} %</span>
         </span>
       </router-link>
@@ -51,9 +51,9 @@ import { computed, ref } from 'vue'
 const props = defineProps({ rows: { type: Array, default: () => [] } })
 defineEmits(['new'])
 const STATUS = {
-  'Běží': { dot: '#22b35e', cls: 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' },
-  Pozastaveno: { dot: '#e0a100', cls: 'bg-[rgba(224,161,0,.14)] text-[#9a5b00]' },
-  Koncept: { dot: '#9ca3af', cls: 'bg-[rgba(110,120,200,.1)] text-ink-gray-6' },
+  'Běží': { dot: 'var(--stage-vyhrano)', cls: 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)]' },
+  Pozastaveno: { dot: 'var(--stage-nabidka)', cls: 'bg-[color-mix(in_srgb,var(--stage-nabidka)_14%,transparent)] text-[var(--c-amber-700)]' },
+  Koncept: { dot: 'var(--stage-prohrano)', cls: 'bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] text-ink-gray-6' },
   'Dokončeno': { dot: 'var(--accent-600)', cls: 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-700)]' },
 }
 const filter = ref('active')

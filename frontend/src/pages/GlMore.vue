@@ -13,12 +13,12 @@
           <GlIcon name="bell" :size="19" />
           <span
             v-if="unreadNotificationsCount"
-            class="absolute right-2.5 top-2.5 size-2.5 rounded-full border-2 border-white bg-[#e5484d]"
+            class="absolute right-2.5 top-2.5 size-2.5 rounded-full border-2 border-white bg-[var(--c-red-400)]"
           />
         </router-link>
         <Dropdown :options="profileOptions" placement="right">
           <button
-            class="flex size-11 items-center justify-center overflow-hidden rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2440a6] shadow-[0_2px_10px_-3px_rgba(64,72,160,.35)]"
+            class="flex size-11 items-center justify-center overflow-hidden rounded-full bg-[var(--c-blue-50)] text-[13px] font-bold text-[var(--c-blue-600)] shadow-[0_2px_10px_-3px_color-mix(in_srgb,var(--c-shadow-2)_35%,transparent)]"
             :aria-label="__('Profil')"
           >
             <img v-if="user.user_image" :src="user.user_image" :alt="user.full_name" class="size-full object-cover" />
@@ -29,23 +29,23 @@
     </div>
 
     <template v-for="g in groups" :key="g.name">
-      <div class="mt-2 px-1 text-[13px] font-semibold text-[var(--text-3,#464c70)]">{{ g.name }}</div>
+      <div class="mt-2 px-1 text-[13px] font-semibold text-[var(--text-3,var(--text-3))]">{{ g.name }}</div>
       <nav class="gl-card overflow-hidden !rounded-[22px]">
         <router-link
           v-for="(item, i) in g.items"
           :key="item.route"
           :to="{ name: item.route }"
           class="flex min-h-[53px] items-center gap-3.5 px-4 active:bg-white/60"
-          :class="i && 'border-t border-[rgba(110,120,200,.12)]'"
+          :class="i && 'border-t border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)]'"
         >
-          <span class="flex size-9 items-center justify-center rounded-[11px] bg-[rgba(110,120,200,.12)] text-ink-gray-7">
+          <span class="flex size-9 items-center justify-center rounded-[11px] bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-ink-gray-7">
             <GlIcon :name="item.icon" :size="18" />
           </span>
           <span class="flex-1 text-[17px] font-medium text-ink-gray-9">{{ item.label }}</span>
           <span
             v-if="item.count"
             class="num text-[15px] font-semibold"
-            :class="item.hot ? 'text-[#a82614]' : 'text-ink-gray-5'"
+            :class="item.hot ? 'text-[var(--overdue)]' : 'text-ink-gray-5'"
             >{{ item.count }}</span
           >
           <GlIcon name="right" :size="16" class="text-ink-gray-4" />
@@ -56,13 +56,13 @@
     <!-- design 3. kolo (m1/m4): Nastavení a odhlášení na konci -->
     <nav class="gl-card mt-4 overflow-hidden !rounded-[22px]">
       <button class="flex min-h-[53px] w-full items-center gap-3.5 px-4 text-left active:bg-white/60" @click="showSettings = true">
-        <span class="flex size-9 items-center justify-center rounded-[11px] bg-[rgba(110,120,200,.12)] text-ink-gray-7"><GlIcon name="sliders" :size="18" /></span>
+        <span class="flex size-9 items-center justify-center rounded-[11px] bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-ink-gray-7"><GlIcon name="sliders" :size="18" /></span>
         <span class="flex-1 text-[17px] font-medium text-ink-gray-9">{{ __('Nastavení') }}</span>
         <GlIcon name="right" :size="16" class="text-ink-gray-4" />
       </button>
-      <button class="flex min-h-[53px] w-full items-center gap-3.5 border-t border-[rgba(110,120,200,.12)] px-4 text-left active:bg-white/60" @click="logout.submit()">
-        <span class="flex size-9 items-center justify-center rounded-[11px] bg-[rgba(210,58,42,.1)] text-[#b42318]"><GlIcon name="logout" :size="18" /></span>
-        <span class="flex-1 text-[17px] font-medium text-[#b42318]">{{ __('Odhlásit se') }}</span>
+      <button class="flex min-h-[53px] w-full items-center gap-3.5 border-t border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] px-4 text-left active:bg-white/60" @click="logout.submit()">
+        <span class="flex size-9 items-center justify-center rounded-[11px] bg-[color-mix(in_srgb,var(--c-red-500-2)_10%,transparent)] text-[var(--c-red-600)]"><GlIcon name="logout" :size="18" /></span>
+        <span class="flex-1 text-[17px] font-medium text-[var(--c-red-600)]">{{ __('Odhlásit se') }}</span>
       </button>
     </nav>
   </div>

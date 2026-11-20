@@ -90,19 +90,19 @@ export function daysBetween(start, end) {
 // Barvy podle typu činnosti (design 3. kolo, kalendář 06): schůzka modře, hovor oranžově, natáčení fialově,
 // interní šedě, jiné tyrkysově; úkoly žlutě (hotové šedě a přeškrtnuté). Proužek vlevo bere barvu textu (gl3-evt).
 export const ACTIVITY_TYPES = [
-  { value: 'Schůzka', label: 'Schůzka', tone: 'bg-[rgba(59,110,246,.14)] text-[#1f48b8] hover:bg-[rgba(59,110,246,.22)]', dot: '#3b6ef6' },
-  { value: 'Hovor', label: 'Hovor', tone: 'bg-[rgba(249,115,22,.14)] text-[#b4500d] hover:bg-[rgba(249,115,22,.22)]', dot: '#f97316' },
-  { value: 'Natáčení', label: 'Natáčení', tone: 'bg-[rgba(139,92,246,.15)] text-[#6a3fd4] hover:bg-[rgba(139,92,246,.23)]', dot: '#8b5cf6' },
-  { value: 'Interní', label: 'Interní', tone: 'bg-[rgba(110,120,160,.14)] text-[#454c6b] hover:bg-[rgba(110,120,160,.22)]', dot: '#7a819e' },
-  { value: 'Jiné', label: 'Jiné', tone: 'bg-[rgba(8,145,178,.14)] text-[#0b5f73] hover:bg-[rgba(8,145,178,.22)]', dot: '#0891b2' },
+  { value: 'Schůzka', label: 'Schůzka', tone: 'bg-[color-mix(in_srgb,var(--c-blue-400)_14%,transparent)] text-[var(--info)] hover:bg-[color-mix(in_srgb,var(--c-blue-400)_22%,transparent)]', dot: 'var(--c-blue-400)' },
+  { value: 'Hovor', label: 'Hovor', tone: 'bg-[color-mix(in_srgb,var(--stage-jednani)_14%,transparent)] text-[var(--c-orange-600-3)] hover:bg-[color-mix(in_srgb,var(--stage-jednani)_22%,transparent)]', dot: 'var(--stage-jednani)' },
+  { value: 'Natáčení', label: 'Natáčení', tone: 'bg-[color-mix(in_srgb,var(--stage-kontaktovano)_15%,transparent)] text-[var(--c-violet-450-2)] hover:bg-[color-mix(in_srgb,var(--stage-kontaktovano)_23%,transparent)]', dot: 'var(--stage-kontaktovano)' },
+  { value: 'Interní', label: 'Interní', tone: 'bg-[color-mix(in_srgb,var(--c-blue-450-2)_14%,transparent)] text-[var(--c-blue-650-2)] hover:bg-[color-mix(in_srgb,var(--c-blue-450-2)_22%,transparent)]', dot: 'var(--c-blue-450-4)' },
+  { value: 'Jiné', label: 'Jiné', tone: 'bg-[color-mix(in_srgb,var(--c-cyan-650)_14%,transparent)] text-[var(--c-cyan-750-2)] hover:bg-[color-mix(in_srgb,var(--c-cyan-650)_22%,transparent)]', dot: 'var(--c-cyan-650)' },
 ]
-export const TASK_TONE = 'bg-[rgba(234,170,8,.2)] text-[#7a4400] hover:bg-[rgba(234,170,8,.28)]'
+export const TASK_TONE = 'bg-[color-mix(in_srgb,var(--c-amber-550)_20%,transparent)] text-[var(--warning)] hover:bg-[color-mix(in_srgb,var(--c-amber-550)_28%,transparent)]'
 
 export function itemClasses(item) {
   // GrowUp: plán odesílání kampaně (Outreach) – vlastní barva, ať se nesplete se schůzkou
-  if (item.outreach) return 'bg-[rgba(8,145,178,.14)] text-[#0b5f73] border-transparent hover:bg-[rgba(8,145,178,.22)]'
+  if (item.outreach) return 'bg-[color-mix(in_srgb,var(--c-cyan-650)_14%,transparent)] text-[var(--c-cyan-750-2)] border-transparent hover:bg-[color-mix(in_srgb,var(--c-cyan-650)_22%,transparent)]'
   if (item.kind === 'event') return `${(ACTIVITY_TYPES.find((t) => t.value === item.activityType) || ACTIVITY_TYPES[0]).tone} border-transparent`
-  if (item.done) return 'bg-[rgba(110,120,200,.08)] text-ink-gray-4 border-transparent line-through'
+  if (item.done) return 'bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] text-ink-gray-4 border-transparent line-through'
   return `${TASK_TONE} border-transparent`
 }
 

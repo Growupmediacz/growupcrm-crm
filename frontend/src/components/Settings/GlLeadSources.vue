@@ -29,7 +29,7 @@
         :key="c.key"
         class="gl-card flex flex-wrap items-center gap-4 !rounded-[20px] p-4"
       >
-        <span class="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-[rgba(110,120,200,.12)] text-[#2440a6]">
+        <span class="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-[var(--c-blue-600)]">
           <GlIcon :name="ICONS[c.key] || 'link'" :size="18" />
         </span>
         <div class="min-w-0 flex-1">
@@ -37,9 +37,9 @@
             <span class="text-[15px] font-bold text-ink-gray-9">{{ c.title }}</span>
             <span
               class="flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[12px] font-semibold"
-              :class="c.connected ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[rgba(110,120,200,.1)] text-ink-gray-6'"
+              :class="c.connected ? 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)]' : 'bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] text-ink-gray-6'"
             >
-              <span class="size-1.5 rounded-full" :class="c.connected ? 'bg-[#22b35e]' : 'bg-ink-gray-4'" />
+              <span class="size-1.5 rounded-full" :class="c.connected ? 'bg-[var(--stage-vyhrano)]' : 'bg-ink-gray-4'" />
               {{ c.connected ? __('Napojeno') : __('Nenapojeno') }}
             </span>
           </div>
@@ -63,7 +63,7 @@
     </div>
     <div v-else class="min-h-0 flex-1 overflow-y-auto">
       <!-- návod: co je potřeba k napojení Facebook / Instagram Lead Ads -->
-      <details class="mx-6 mt-4 rounded-[18px] bg-[rgba(110,120,200,.08)] px-4 py-3 text-[13.5px] text-ink-gray-7" :open="!fbConnected">
+      <details class="mx-6 mt-4 rounded-[18px] bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] px-4 py-3 text-[13.5px] text-ink-gray-7" :open="!fbConnected">
         <summary class="cursor-pointer font-semibold text-ink-gray-9">{{ __('Jak napojit formuláře z reklam na Facebooku a Instagramu') }}</summary>
         <ol class="mt-2 list-decimal space-y-1 pl-5">
           <li>{{ __('Ve Facebook Business Manageru (Nastavení firmy → Uživatelé → Systémoví uživatelé) vytvořte systémového uživatele a přidělte mu Facebook stránku.') }}</li>
@@ -78,7 +78,7 @@
     <Dialog v-model:open="showKey" :options="{ size: 'lg', title: __('API klíč') }">
       <template #body-content>
         <div v-if="keys" class="flex flex-col gap-3 text-[13.5px]">
-          <p class="rounded-xl bg-[rgba(224,161,0,.14)] px-3 py-2 text-[#7a4400]">{{ __('Tajemství se ukáže jen teď. Uložte ho do systému, který bude zakázky posílat. Předchozí klíč přestal platit.') }}</p>
+          <p class="rounded-xl bg-[color-mix(in_srgb,var(--stage-nabidka)_14%,transparent)] px-3 py-2 text-[var(--warning)]">{{ __('Tajemství se ukáže jen teď. Uložte ho do systému, který bude zakázky posílat. Předchozí klíč přestal platit.') }}</p>
           <div v-for="r in keyRows" :key="r.label">
             <div class="mb-1 text-xs text-ink-gray-5">{{ r.label }}</div>
             <div class="flex items-center gap-2">

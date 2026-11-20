@@ -4,7 +4,7 @@
     <template #body-title>
       <!-- design 3. kolo (24): oranžová ikona telefonu v hlavičce -->
       <div class="flex items-center gap-3.5">
-        <span class="flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-[#f97316] text-white shadow-[0_8px_18px_-8px_rgba(249,115,22,.7)]"><GlIcon name="phone" :size="22" /></span>
+        <span class="flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-[var(--stage-jednani)] text-white shadow-[0_8px_18px_-8px_color-mix(in_srgb,var(--stage-jednani)_70%,transparent)]"><GlIcon name="phone" :size="22" /></span>
         <div class="flex min-w-0 flex-col">
           <h3 class="text-[24px] font-bold leading-tight tracking-[-0.02em] text-ink-gray-9">{{ __('Zapsat hovor') }}</h3>
           <span v-if="leadTitle" class="truncate text-[13px] text-ink-gray-5">{{ [person.name, leadTitle].filter(Boolean).join(' · ') }}</span>
@@ -15,8 +15,8 @@
       <div class="flex flex-col gap-4">
         <!-- z Firmy: k Zakázce firmy, nebo jen k firmě -->
         <GlLeadPicker v-if="organization" v-model="pickedLead" :leads="leads" />
-        <div class="flex items-center gap-3 rounded-2xl bg-[rgba(110,120,200,.08)] px-4 py-3">
-          <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2440a6]">
+        <div class="flex items-center gap-3 rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] px-4 py-3">
+          <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[12px] font-bold text-[var(--c-blue-600)]">
             {{ initials(person.name || leadTitle) }}
           </span>
           <div class="min-w-0 flex-1">
@@ -54,7 +54,7 @@
               :key="c.value"
               type="button"
               class="gl-chip flex h-9 items-center rounded-full px-3.5 text-[14px] font-medium"
-              :class="choice === c.value && '!bg-[#0e1330] !text-white'"
+              :class="choice === c.value && '!bg-[var(--text-1)] !text-white'"
               @click="choice = c.value"
             >
               {{ c.label }}

@@ -39,7 +39,7 @@
           <div class="relative size-[190px] shrink-0">
           <svg viewBox="0 0 180 180" class="size-full" role="img" :aria-label="__('Plnění cílů týmu')">
             <g v-for="(r, i) in rings" :key="r.key" transform="rotate(-90 90 90)">
-              <circle cx="90" cy="90" :r="r.radius" fill="none" stroke="rgba(110,120,200,.14)" stroke-width="14" />
+              <circle cx="90" cy="90" :r="r.radius" fill="none" style="stroke: color-mix(in srgb, var(--c-tint) 14%, transparent)" stroke-width="14" />
               <circle
                 v-if="r.length > 0"
                 cx="90" cy="90" :r="r.radius" fill="none" :style="{ stroke: r.color }" stroke-width="14" stroke-linecap="round"
@@ -70,10 +70,10 @@
       <!-- obchodníci -->
       <!-- mobil: obchodníci jako karty -->
       <template v-if="isMobileView">
-        <div class="-mb-2 px-1 text-[13px] font-semibold text-[var(--text-3,#464c70)]">{{ __('Obchodníci') }}</div>
+        <div class="-mb-2 px-1 text-[13px] font-semibold text-[var(--text-3,var(--text-3))]">{{ __('Obchodníci') }}</div>
         <div class="gl-card !rounded-[22px] px-4">
           <div v-for="(r, i) in p.people" :key="r.user" class="flex items-center gap-3 py-3" :class="i && 'border-t border-[var(--outline-gray-1)]'">
-            <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2440a6]">{{ initials(r.full_name) }}</span>
+            <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[13px] font-bold text-[var(--c-blue-600)]">{{ initials(r.full_name) }}</span>
             <span class="min-w-0 flex-1">
               <span class="block truncate text-[17px] font-bold text-ink-gray-9">{{ r.full_name }}</span>
               <span class="num block text-[13px] text-ink-gray-5">
@@ -104,7 +104,7 @@
             <tr v-for="r in p.people" :key="r.user" class="border-b border-[var(--line)] last:border-b-0">
               <td class="py-4">
                 <span class="flex items-center gap-3">
-                  <GlUserAvatar :user="r.user" class="size-11 bg-[#dde6ff] text-[13px] font-bold text-[#2440a6]" />
+                  <GlUserAvatar :user="r.user" class="size-11 bg-[var(--c-blue-50)] text-[13px] font-bold text-[var(--c-blue-600)]" />
                   <span class="text-ink-gray-9">{{ r.full_name }}</span>
                 </span>
               </td>
@@ -117,7 +117,7 @@
               <td class="py-4">
                 <span v-if="r.progress !== null" class="flex items-center gap-3">
                   <span class="h-2 w-36 overflow-hidden rounded-full bg-[var(--line)]">
-                    <span class="block h-full rounded-full" :class="r.progress < 60 ? 'bg-[#f2b630]' : 'bg-[var(--accent-600)]'" :style="{ width: `${Math.min(r.progress, 100)}%` }" />
+                    <span class="block h-full rounded-full" :class="r.progress < 60 ? 'bg-[var(--c-amber-450)]' : 'bg-[var(--accent-600)]'" :style="{ width: `${Math.min(r.progress, 100)}%` }" />
                   </span>
                   <span class="num text-[15px] text-ink-gray-9">{{ r.progress }} %</span>
                 </span>
@@ -156,7 +156,7 @@
     <div v-if="vp" class="gl-card flex flex-col gap-4 p-5 md:p-6">
       <div class="flex flex-wrap items-center justify-between gap-2">
         <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Kolik firem oslovit') }}</h2>
-        <span v-if="vp.observed?.small_sample" class="inline-flex items-center gap-1.5 rounded-full bg-[rgba(224,161,0,.16)] px-3 py-1 text-[13px] font-semibold text-[var(--warning)]">
+        <span v-if="vp.observed?.small_sample" class="inline-flex items-center gap-1.5 rounded-full bg-[color-mix(in_srgb,var(--stage-nabidka)_16%,transparent)] px-3 py-1 text-[13px] font-semibold text-[var(--warning)]">
           <GlIcon name="alert" :size="14" />{{ __('Málo dat, hrubý odhad') }}
         </span>
       </div>
@@ -200,7 +200,7 @@
           {{ p.projection ?? 0 }}<span v-if="p.team.target.won" class="text-[32px] text-ink-gray-5"> / {{ p.team.target.won }}</span>
         </div>
         <div class="text-[16px] text-ink-gray-5">{{ p.projection !== null ? __('při současném tempu') : __('období už skončilo nebo ještě nezačalo') }}</div>
-        <span v-if="p.projection !== null && p.team.target.won" class="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[14px] font-semibold" :class="p.on_track ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[rgba(224,161,0,.16)] text-[var(--warning)]'">
+        <span v-if="p.projection !== null && p.team.target.won" class="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[14px] font-semibold" :class="p.on_track ? 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)]' : 'bg-[color-mix(in_srgb,var(--stage-nabidka)_16%,transparent)] text-[var(--warning)]'">
           <GlIcon name="arrow" :size="15" />{{ p.on_track ? __('na dobré cestě') : __('pod plánem') }}
         </span>
       </div>
@@ -272,7 +272,7 @@ const vp = computed(() => (!showVolume || volume.error ? null : volume.data || n
 const SERIES = [
 // growup: obrat = vyhrané zakázky + pravidelné tržby z klientů (retainery); pravidelné mají vlastní cíl (Ivan 2026-11-20)
   { key: 'won', label: __('Zakázky'), color: 'var(--accent-600)', radius: 78 },
-  { key: 'meetings', label: __('Schůzky'), color: '#3b9bf6', radius: 63 },
+  { key: 'meetings', label: __('Schůzky'), color: 'var(--c-sky-400)', radius: 63 },
   { key: 'revenue', label: __('Obrat (tis.)'), color: 'var(--stage-kontaktovano)', radius: 48 },
   { key: 'recurring', label: __('Pravidelné (tis.)'), color: 'var(--stage-vyhrano)', radius: 33 },
 ]

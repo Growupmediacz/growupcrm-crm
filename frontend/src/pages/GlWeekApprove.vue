@@ -406,26 +406,26 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 .wk-back:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 .wk-back-block { margin: -4px 0 8px -8px; min-height: 44px; border: 0; background: transparent; cursor: pointer; }
 
-.wk-btn { min-height: var(--hit-sm, 36px); padding: 0 16px; border-radius: 14px; border: 1px solid var(--field-border); background: #fff; font: inherit; font-size: 14px; font-weight: 600; color: var(--text-1); display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-decoration: none; transition: transform var(--t-press, 90ms), background-color var(--t-fast, 120ms), border-color var(--t-fast, 120ms); }
+.wk-btn { min-height: var(--hit-sm, 36px); padding: 0 16px; border-radius: 14px; border: 1px solid var(--field-border); background: var(--c-white); font: inherit; font-size: 14px; font-weight: 600; color: var(--text-1); display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-decoration: none; transition: transform var(--t-press, 90ms), background-color var(--t-fast, 120ms), border-color var(--t-fast, 120ms); }
 .wk-btn:hover:not(:disabled) { border-color: var(--accent-200); }
 .wk-btn:active:not(:disabled) { transform: scale(0.97); }
 .wk-btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 .wk-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.wk-btn-primary { background: var(--accent-600); border-color: transparent; color: #fff; box-shadow: 0 6px 18px color-mix(in srgb, var(--accent-600) 28%, transparent); }
+.wk-btn-primary { background: var(--accent-600); border-color: transparent; color: var(--c-white); box-shadow: 0 6px 18px color-mix(in srgb, var(--accent-600) 28%, transparent); }
 .wk-btn-primary:hover:not(:disabled) { background: var(--accent-700); border-color: transparent; }
 .wk-btn-danger { color: var(--overdue); }
-.wk-btn-danger-solid { background: var(--overdue); border-color: transparent; color: #fff; }
+.wk-btn-danger-solid { background: var(--overdue); border-color: transparent; color: var(--c-white); }
 .wk-kbd { font: 500 12px/1 ui-monospace, Menlo, monospace; padding: 3px 6px; border-radius: 6px; border: 1px solid currentColor; opacity: 0.75; }
 .wk-kbd2 { font: 500 12px/1 ui-monospace, Menlo, monospace; padding: 2px 5px; border-radius: 6px; background: var(--fill-tinted); }
 .wk-hint { margin-left: auto; font-size: 13px; color: var(--text-2); }
 
 .wk-select-wrap { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-2); }
-.wk-select { min-height: var(--hit-sm, 36px); border: 1px solid var(--field-border); border-radius: 12px; background: #fff; padding: 0 12px; font: inherit; font-size: 14px; color: var(--text-1); max-width: 60vw; }
+.wk-select { min-height: var(--hit-sm, 36px); border: 1px solid var(--field-border); border-radius: 12px; background: var(--c-white); padding: 0 12px; font: inherit; font-size: 14px; color: var(--text-1); max-width: 60vw; }
 .wk-select:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 
 .wk-alert { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 18px; background: color-mix(in srgb, var(--overdue) 9%, transparent); }
 
-.wk-sum { display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 14px 16px; border-radius: 18px; background: #fff; border: 1px solid var(--line); }
+.wk-sum { display: flex; flex-direction: column; gap: 2px; min-width: 0; padding: 14px 16px; border-radius: 18px; background: var(--c-white); border: 1px solid var(--line); }
 .wk-sum-l { font-size: 13px; color: var(--text-2); }
 .wk-sum-n { font-size: 24px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; color: var(--text-1); }
 .wk-sum-u { font-size: 15px; color: var(--text-2); font-weight: 400; }
@@ -434,7 +434,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
 .wk-warn-t { color: var(--warning); }
 .wk-ok-t { color: var(--success); }
 
-.wk-after { padding: 12px 16px; border-radius: 18px; background: var(--accent-50, rgba(91, 91, 246, 0.07)); }
+.wk-after { padding: 12px 16px; border-radius: 18px; background: var(--accent-50, color-mix(in srgb, var(--accent-600) 7%, transparent)); }
 .wk-sender-warn { margin: 8px 0 0; display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--warning); }
 
 .wk-two { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }

@@ -37,7 +37,7 @@ export function responseBadge(doc) {
 }
 
 export const BADGE_TONE = {
-  ok: 'bg-[rgba(34,179,94,.13)] text-[#178a4a]',
-  warn: 'bg-[rgba(224,161,0,.16)] text-[#7a4400]',
-  late: 'bg-[rgba(229,72,77,.13)] text-[#a82614]',
+  ok: 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_13%,transparent)] text-[var(--c-green-700)]',
+  warn: 'bg-[color-mix(in_srgb,var(--stage-nabidka)_16%,transparent)] text-[var(--warning)]',
+  late: 'bg-[color-mix(in_srgb,var(--c-red-400)_13%,transparent)] text-[var(--overdue)]',
 }

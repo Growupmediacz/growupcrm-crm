@@ -3,14 +3,14 @@
   <div class="grid min-h-0 flex-1 gap-4 lg:grid-cols-[380px_1fr]">
     <div class="gl-card flex min-h-0 flex-col p-3" :class="current && isMobileView ? 'hidden' : ''">
       <div class="mb-2 flex gap-1.5 px-1">
-        <button v-for="f in FILTERS" :key="f.key" class="gl-chip h-9 rounded-full px-3.5 text-[14px] font-medium" :class="filter === f.key && '!border-[#0e1330] !bg-[#0e1330] !text-white'" @click="filter = f.key">
+        <button v-for="f in FILTERS" :key="f.key" class="gl-chip h-9 rounded-full px-3.5 text-[14px] font-medium" :class="filter === f.key && '!border-[var(--text-1)] !bg-[var(--text-1)] !text-white'" @click="filter = f.key">
           {{ f.label }}<span v-if="f.key === 'open' && list.data?.length" class="num ml-1 opacity-80">{{ list.data.length }}</span>
         </button>
       </div>
       <GlSkeleton v-if="list.loading && !list.data" :rows="3" />
       <GlEmptyState v-else-if="!list.data?.length" icon="inbox" :title="__('Žádné odpovědi')" :text="filter === 'open' ? __('Nevyřízené odpovědi se objeví tady.') : __('V tomto výběru nic není.')" />
       <div class="flex-1 overflow-y-auto">
-        <button v-for="r in list.data || []" :key="r.name" class="mb-1 flex w-full gap-3 rounded-2xl px-3 py-3 text-left transition" :class="current?.name === r.name ? 'bg-white shadow-[0_2px_10px_-4px_rgba(64,72,160,.3)]' : 'hover:bg-white/60'" @click="select(r.name)">
+        <button v-for="r in list.data || []" :key="r.name" class="mb-1 flex w-full gap-3 rounded-2xl px-3 py-3 text-left transition" :class="current?.name === r.name ? 'bg-white shadow-[0_2px_10px_-4px_color-mix(in_srgb,var(--c-shadow-2)_30%,transparent)]' : 'hover:bg-white/60'" @click="select(r.name)">
           <span class="flex size-11 shrink-0 items-center justify-center rounded-full text-[13px] font-bold" :style="avatarTone(r.contact_name)">{{ initials(r.contact_name) }}</span>
           <span class="min-w-0 flex-1">
             <span class="flex items-baseline justify-between gap-2"><b class="truncate text-[16px] text-ink-gray-9">{{ r.contact_name }}</b><span class="num shrink-0 text-[12px] text-ink-gray-5">{{ whenLabel(r.sent_at) }}</span></span>
@@ -31,7 +31,7 @@
           <div class="truncate text-[13px] text-ink-gray-5">{{ current.organization }} · {{ current.campaign_name }}, {{ __('krok {0}', [current.step_index + 1]) }} · {{ __('sekvence zastavena') }}</div>
         </div>
         <Dropdown :options="labelOptions" placement="right">
-          <button class="rounded-full px-3 py-1 text-[12px] font-bold" :class="current.reply_label ? REPLY_LABEL[current.reply_label] : 'bg-[rgba(110,120,200,.14)] text-ink-gray-7'">{{ current.reply_label ? __(current.reply_label) : __('Roztřídit') }}</button>
+          <button class="rounded-full px-3 py-1 text-[12px] font-bold" :class="current.reply_label ? REPLY_LABEL[current.reply_label] : 'bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] text-ink-gray-7'">{{ current.reply_label ? __(current.reply_label) : __('Roztřídit') }}</button>
         </Dropdown>
       </div>
 

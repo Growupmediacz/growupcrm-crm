@@ -2,36 +2,36 @@
   <!-- GrowUp (design 1. kolo DEmail): Nová zpráva jako okno vpravo dole – Komu, Předmět, Šablona, text, Odeslat -->
   <Teleport to="body">
     <div v-if="show" class="gl-sheet fixed bottom-4 right-4 z-[80] flex max-h-[85vh] w-[min(560px,calc(100vw-2rem))] flex-col overflow-hidden rounded-[22px] max-md:inset-x-3 max-md:bottom-3 max-md:w-auto" role="dialog" :aria-label="__('Nová zpráva')">
-      <div class="flex items-center justify-between border-b border-[rgba(110,120,200,.14)] px-5 py-3">
+      <div class="flex items-center justify-between border-b border-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] px-5 py-3">
         <h3 class="text-[16px] font-bold text-ink-gray-9">{{ __('Nová zpráva') }}</h3>
         <div class="flex gap-1">
           <button class="flex size-8 items-center justify-center rounded-full hover:bg-black/5" :aria-label="__('Zavřít')" @click="show = false"><GlIcon name="x" :size="16" /></button>
         </div>
       </div>
       <div class="flex-1 overflow-y-auto">
-        <div class="flex items-center gap-3 border-b border-[rgba(110,120,200,.12)] px-5 py-2.5">
+        <div class="flex items-center gap-3 border-b border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] px-5 py-2.5">
           <span class="w-14 shrink-0 text-[14px] text-ink-gray-5">{{ __('Od') }}</span>
           <span class="min-w-0 flex-1 truncate text-[14px] text-ink-gray-8">{{ getUser()?.email }}</span>
-          <button v-if="mailboxStatus.data && !mailboxStatus.data.connected" class="shrink-0 rounded-full bg-[rgba(214,130,20,.12)] px-3 py-1 text-[12px] font-semibold text-[#8a4b00]" :title="__('Odpovědi klienta se do CRM nedostanou, dokud nepřipojíte svou schránku.')" @click="openMailboxSettings">{{ __('Připojit schránku') }}</button>
+          <button v-if="mailboxStatus.data && !mailboxStatus.data.connected" class="shrink-0 rounded-full bg-[color-mix(in_srgb,var(--c-amber-550-2)_12%,transparent)] px-3 py-1 text-[12px] font-semibold text-[var(--c-orange-750)]" :title="__('Odpovědi klienta se do CRM nedostanou, dokud nepřipojíte svou schránku.')" @click="openMailboxSettings">{{ __('Připojit schránku') }}</button>
         </div>
-        <div class="flex items-center gap-3 border-b border-[rgba(110,120,200,.12)] px-5 py-2.5">
+        <div class="flex items-center gap-3 border-b border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] px-5 py-2.5">
           <span class="w-14 shrink-0 text-[14px] text-ink-gray-5">{{ __('Komu') }}</span>
-          <span v-if="toName" class="flex shrink-0 items-center gap-2 rounded-full bg-white/80 py-0.5 pl-0.5 pr-3 text-[14px] font-medium text-ink-gray-9"><span class="flex size-6 items-center justify-center rounded-full bg-[#dde6ff] text-[9px] font-bold text-[#2440a6]">{{ initials(toName) }}</span>{{ toName }}</span>
+          <span v-if="toName" class="flex shrink-0 items-center gap-2 rounded-full bg-white/80 py-0.5 pl-0.5 pr-3 text-[14px] font-medium text-ink-gray-9"><span class="flex size-6 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[9px] font-bold text-[var(--c-blue-600)]">{{ initials(toName) }}</span>{{ toName }}</span>
           <input v-model="to" class="min-w-0 flex-1 bg-transparent text-[14px] outline-none" :placeholder="__('e-mail příjemce')" />
           <button class="shrink-0 text-[13px] text-ink-gray-5 hover:text-ink-gray-9" @click="showCc = !showCc">{{ __('Kopie') }}</button>
         </div>
-        <div v-if="showCc" class="flex items-center gap-3 border-b border-[rgba(110,120,200,.12)] px-5 py-2.5"><span class="w-14 shrink-0 text-[14px] text-ink-gray-5">{{ __('Kopie') }}</span><input v-model="cc" class="min-w-0 flex-1 bg-transparent text-[14px] outline-none" /></div>
-        <div class="flex items-center gap-3 border-b border-[rgba(110,120,200,.12)] px-5 py-2.5"><span class="w-14 shrink-0 text-[14px] text-ink-gray-5">{{ __('Předmět') }}</span><input v-model="subject" class="min-w-0 flex-1 bg-transparent text-[15px] font-semibold text-ink-gray-9 outline-none" /></div>
-        <div v-if="templates.data?.length" class="flex items-center gap-3 border-b border-[rgba(110,120,200,.12)] px-5 py-2.5">
+        <div v-if="showCc" class="flex items-center gap-3 border-b border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] px-5 py-2.5"><span class="w-14 shrink-0 text-[14px] text-ink-gray-5">{{ __('Kopie') }}</span><input v-model="cc" class="min-w-0 flex-1 bg-transparent text-[14px] outline-none" /></div>
+        <div class="flex items-center gap-3 border-b border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] px-5 py-2.5"><span class="w-14 shrink-0 text-[14px] text-ink-gray-5">{{ __('Předmět') }}</span><input v-model="subject" class="min-w-0 flex-1 bg-transparent text-[15px] font-semibold text-ink-gray-9 outline-none" /></div>
+        <div v-if="templates.data?.length" class="flex items-center gap-3 border-b border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] px-5 py-2.5">
           <span class="w-14 shrink-0 text-[14px] text-ink-gray-5">{{ __('Šablona') }}</span>
-          <div class="flex flex-wrap gap-1.5"><button v-for="t in templates.data" :key="t.name" class="rounded-full px-3 py-1 text-[13px] font-semibold" :class="template === t.name ? 'bg-[#0e1330] text-white' : 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-700)]'" @click="applyTemplate(t)">{{ t.name }}</button></div>
+          <div class="flex flex-wrap gap-1.5"><button v-for="t in templates.data" :key="t.name" class="rounded-full px-3 py-1 text-[13px] font-semibold" :class="template === t.name ? 'bg-[var(--text-1)] text-white' : 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-700)]'" @click="applyTemplate(t)">{{ t.name }}</button></div>
         </div>
         <textarea v-model="body" class="gl-text block min-h-[200px] w-full resize-none bg-transparent px-5 py-4 text-[15px] leading-relaxed text-ink-gray-9 outline-none" lang="cs" :placeholder="__('Napište zprávu…')" />
         <ErrorMessage class="px-5 pb-2" :message="error" />
       </div>
-      <div class="flex items-center justify-end gap-2 border-t border-[rgba(110,120,200,.14)] px-5 py-3">
+      <div class="flex items-center justify-end gap-2 border-t border-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] px-5 py-3">
         <button class="gl-quick !h-11 !px-4 !text-[14px]" :disabled="sending" @click="show = false">{{ __('Zahodit') }}</button>
-        <button class="inline-flex h-11 items-center gap-2 rounded-full bg-[var(--accent-600)] px-5 text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(91,91,246,.7)] disabled:opacity-50" :disabled="sending || !canSend" @click="send">
+        <button class="inline-flex h-11 items-center gap-2 rounded-full bg-[var(--accent-600)] px-5 text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_color-mix(in_srgb,var(--accent-600)_70%,transparent)] disabled:opacity-50" :disabled="sending || !canSend" @click="send">
           <GlIcon name="send" :size="16" />{{ sending ? __('Odesílám…') : __('Odeslat') }}
         </button>
       </div>

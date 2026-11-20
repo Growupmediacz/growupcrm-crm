@@ -293,22 +293,22 @@ defineExpose({ primary: () => (props.item.kind === 'reply' ? primary() : null), 
 <style>
 .gl-q-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--hit, 44px); padding: 0 16px;
-  border-radius: 999px; font-size: 15px; font-weight: 600; color: var(--text-1); background: #fff; border: 1px solid var(--field-border);
+  border-radius: 999px; font-size: 15px; font-weight: 600; color: var(--text-1); background: var(--c-white); border: 1px solid var(--field-border);
   white-space: nowrap; transition: transform var(--t-press, 90ms), border-color var(--t-fast, 120ms), background-color var(--t-fast, 120ms);
 }
 .gl-q-btn:hover { border-color: var(--accent-200); }
 .gl-q-btn:active { transform: scale(0.97); }
 .gl-q-btn:disabled { opacity: 0.55; }
 .gl-q-btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
-.gl-q-btn.is-primary { background: var(--accent-600); color: #fff; border-color: transparent; }
+.gl-q-btn.is-primary { background: var(--accent-600); color: var(--c-white); border-color: transparent; }
 .gl-q-btn.is-primary:hover { background: var(--accent-700); }
 .gl-q-kbd { border-radius: 6px; padding: 0 6px; font-size: 13px; font-weight: 500; background: var(--fill-tinted); color: var(--text-2); }
-.gl-q-kbd.is-dark { background: rgba(255, 255, 255, 0.2); color: #fff; }
+.gl-q-kbd.is-dark { background: color-mix(in srgb, var(--c-white) 20%, transparent); color: var(--c-white); }
 @media (max-width: 767px) { .gl-q-kbd { display: none; } }
 </style>
 <style scoped>
 .gl-qc {
-  padding: 16px 18px; border-radius: 20px; background: #fff; border: 1px solid var(--line); box-shadow: 0 4px 18px rgba(40, 50, 120, 0.05);
+  padding: 16px 18px; border-radius: 20px; background: var(--c-white); border: 1px solid var(--line); box-shadow: 0 4px 18px color-mix(in srgb, var(--c-shadow) 5%, transparent);
   outline: none; transition: border-color var(--t-fast);
 }
 .gl-qc:focus, .gl-qc:focus-within { border-color: var(--accent-200); }
@@ -325,6 +325,6 @@ a.gl-qc-org:hover { text-decoration: underline; }
 .gl-qc-text :deep(.gl-ph) { background: var(--warn-bg); color: var(--warn-fg); font-weight: 600; border-radius: 4px; padding: 0 3px; }
 .gl-qc-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
 .gl-qc-warn { margin-left: auto; font-size: 14px; font-weight: 600; color: var(--warn-fg); }
-.gl-qc-field { flex: 1 1 220px; min-width: 0; min-height: var(--hit, 44px); padding: 0 14px; border-radius: var(--r-field, 14px); border: 1px solid var(--field-border); font-size: 16px; background: #fff; }
+.gl-qc-field { flex: 1 1 220px; min-width: 0; min-height: var(--hit, 44px); padding: 0 14px; border-radius: var(--r-field, 14px); border: 1px solid var(--field-border); font-size: 16px; background: var(--c-white); }
 .gl-qc-field:focus { outline: none; border-color: var(--accent-400); box-shadow: var(--focus-ring); }
 </style>

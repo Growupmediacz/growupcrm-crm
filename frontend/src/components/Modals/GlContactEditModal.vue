@@ -65,7 +65,7 @@
                   >
                     {{ r.primary ? __('Hlavní') : __('Nastavit hlavní') }}
                   </button>
-                  <button type="button" class="shrink-0 text-ink-gray-4 hover:text-[#c8321f]" :aria-label="__('Odebrat')" @click="remove(lists[kind.key], i)">
+                  <button type="button" class="shrink-0 text-ink-gray-4 hover:text-[var(--c-red-550)]" :aria-label="__('Odebrat')" @click="remove(lists[kind.key], i)">
                     <GlIcon name="trash" :size="16" />
                   </button>
                 </div>

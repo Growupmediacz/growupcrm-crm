@@ -14,7 +14,7 @@
             <template v-if="row.value">
               <div class="num flex items-center justify-end gap-2 truncate text-[14px] font-medium text-ink-gray-9">
                 <svg v-if="row.ring" viewBox="0 0 36 36" class="size-7 shrink-0 -rotate-90" aria-hidden="true">
-                  <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(110,120,200,.16)" stroke-width="4" />
+                  <circle cx="18" cy="18" r="14" fill="none" style="stroke: color-mix(in srgb, var(--c-tint) 16%, transparent)" stroke-width="4" />
                   <circle cx="18" cy="18" r="14" fill="none" style="stroke: var(--accent-600)" stroke-width="4" stroke-linecap="round" :stroke-dasharray="`${(row.ring / 100) * 88} 88`" />
                 </svg>
                 <a v-if="row.href" :href="row.href" target="_blank" rel="noopener" class="truncate text-[var(--accent-600)] hover:underline">{{ row.value }}</a>
@@ -108,7 +108,7 @@
     <div class="gl-card p-6">
       <h2 class="mb-3 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Kontakt') }}</h2>
       <div v-if="person.name" class="flex items-center gap-3">
-        <div class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[13px] font-bold text-[#2440a6]">
+        <div class="flex size-11 shrink-0 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[13px] font-bold text-[var(--c-blue-600)]">
           {{ initials(person.name) }}
         </div>
         <div class="min-w-0 flex-1">
@@ -148,7 +148,7 @@
         </p>
         <ul v-if="suggestions.length" class="mt-2 flex flex-col">
           <li v-for="c in suggestions" :key="c.name" class="flex items-center gap-3 py-1.5">
-            <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#dde6ff] text-[12px] font-bold text-[#2440a6]">
+            <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[12px] font-bold text-[var(--c-blue-600)]">
               {{ initials(c.full_name) }}
             </span>
             <span class="min-w-0 flex-1">
@@ -158,7 +158,7 @@
               </span>
             </span>
             <button
-              class="inline-flex h-9 items-center gap-1.5 rounded-full bg-white/85 px-3.5 text-[13px] font-semibold text-ink-gray-9 shadow-[0_2px_10px_-4px_rgba(64,72,160,.3)] hover:bg-white disabled:opacity-50"
+              class="inline-flex h-9 items-center gap-1.5 rounded-full bg-white/85 px-3.5 text-[13px] font-semibold text-ink-gray-9 shadow-[0_2px_10px_-4px_color-mix(in_srgb,var(--c-shadow-2)_30%,transparent)] hover:bg-white disabled:opacity-50"
               :disabled="attaching === c.name"
               @click="attach(c.name)"
             >
@@ -192,7 +192,7 @@
             <div class="truncate text-[15px] font-semibold text-ink-gray-9">{{ doc.organization || doc.organization_link }}</div>
             <div class="flex items-center gap-2 text-[13px] text-ink-gray-5">
               <span v-if="org.data?.relationship" class="flex items-center gap-1.5 font-medium text-ink-gray-7">
-                <span class="size-2 rounded-full" :class="org.data.relationship === 'Klient' ? 'bg-[#22b35e]' : 'bg-[#3b82f6]'" />{{ __(org.data.relationship) }}
+                <span class="size-2 rounded-full" :class="org.data.relationship === 'Klient' ? 'bg-[var(--stage-vyhrano)]' : 'bg-[var(--stage-nova)]'" />{{ __(org.data.relationship) }}
               </span>
               <span v-if="org.data?.ico">{{ __('IČO') }} {{ org.data.ico }}</span>
             </div>

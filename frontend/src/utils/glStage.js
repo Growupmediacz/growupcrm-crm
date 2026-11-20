@@ -1,19 +1,19 @@
 // GrowUp (design 3. kolo): barva fáze podle tokenů. Přijme název barvy z CRM („blue“)
 // nebo třídu z parseColor („!text-blue-600“).
 const STAGE_HEX = {
-  blue: '#3b82f6',
-  purple: '#8b5cf6',
-  violet: '#8b5cf6',
-  yellow: '#e0a100',
-  amber: '#e0a100',
-  orange: '#f97316',
-  green: '#22b35e',
-  red: '#ef4444',
-  pink: '#ec4899',
-  cyan: '#06b6d4',
-  teal: '#14b8a6',
-  gray: '#9ca3af',
-  black: '#0e1330',
+  blue: 'var(--stage-nova)',
+  purple: 'var(--stage-kontaktovano)',
+  violet: 'var(--stage-kontaktovano)',
+  yellow: 'var(--stage-nabidka)',
+  amber: 'var(--stage-nabidka)',
+  orange: 'var(--stage-jednani)',
+  green: 'var(--stage-vyhrano)',
+  red: 'var(--c-red-400-2)',
+  pink: 'var(--c-pink-400)',
+  cyan: 'var(--c-cyan-550)',
+  teal: 'var(--c-teal-600)',
+  gray: 'var(--stage-prohrano)',
+  black: 'var(--text-1)',
 }
 
 export function stageHex(color) {

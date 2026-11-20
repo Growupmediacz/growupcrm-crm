@@ -6,15 +6,15 @@
       <ol class="mb-5 flex flex-wrap items-center gap-2 text-[13px] font-semibold">
         <template v-for="(s, i) in STEPS" :key="s">
           <li class="flex items-center gap-2" :class="step === i ? 'text-ink-gray-9' : 'text-ink-gray-5'">
-            <span class="flex size-7 items-center justify-center rounded-full text-[12px]" :class="step === i ? 'bg-[var(--accent-600)] text-white' : step > i ? 'bg-[rgba(34,179,94,.18)] text-[#0f6b32]' : 'bg-[rgba(110,120,200,.14)]'">{{ step > i ? '✓' : i + 1 }}</span>{{ s }}
+            <span class="flex size-7 items-center justify-center rounded-full text-[12px]" :class="step === i ? 'bg-[var(--accent-600)] text-white' : step > i ? 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_18%,transparent)] text-[var(--success)]' : 'bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)]'">{{ step > i ? '✓' : i + 1 }}</span>{{ s }}
           </li>
-          <span v-if="i < STEPS.length - 1" class="hidden h-px w-8 bg-[rgba(110,120,200,.25)] sm:block" />
+          <span v-if="i < STEPS.length - 1" class="hidden h-px w-8 bg-[color-mix(in_srgb,var(--c-tint)_25%,transparent)] sm:block" />
         </template>
       </ol>
 
       <!-- 1 Soubor -->
       <div v-if="step === 0" class="flex flex-col gap-3">
-        <label class="flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-[rgba(110,120,200,.35)] px-4 py-10 text-center hover:bg-white/50" @dragover.prevent @drop.prevent="onDrop">
+        <label class="flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-[color-mix(in_srgb,var(--c-tint)_35%,transparent)] px-4 py-10 text-center hover:bg-white/50" @dragover.prevent @drop.prevent="onDrop">
           <GlIcon name="upload" :size="24" /><span class="text-[16px] font-semibold text-ink-gray-9">{{ fileName || __('Přetáhněte soubor Excel nebo CSV, nebo klikněte') }}</span>
           <span class="text-[13px] text-ink-gray-5">{{ __('Excel (.xlsx) nebo CSV, první řádek je záhlaví.') }} {{ K.required }}</span>
           <input type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="hidden" @change="(e) => read(e.target.files?.[0])" />
@@ -31,7 +31,7 @@
         </label>
         <p v-if="loading" class="text-[14px] text-ink-gray-5">{{ __('Načítám soubor…') }}</p>
         <p v-else-if="rows.length" class="text-[14px] text-ink-gray-7">{{ __('Načteno {0} řádků.', [rows.length]) }}</p>
-        <p v-else-if="fileName && header.length" class="text-[14px] font-semibold text-[#a82614]">{{ __('Ve vybraném listu je jen záhlaví, žádné řádky s daty.') }}</p>
+        <p v-else-if="fileName && header.length" class="text-[14px] font-semibold text-[var(--overdue)]">{{ __('Ve vybraném listu je jen záhlaví, žádné řádky s daty.') }}</p>
       </div>
 
       <!-- 2 Mapování -->
@@ -43,16 +43,16 @@
       <!-- 3 Kontrola -->
       <div v-else-if="step === 2 && preview">
         <div class="grid grid-cols-3 gap-3">
-          <div class="rounded-2xl bg-[rgba(110,120,200,.1)] px-4 py-3"><div class="num text-[30px] font-bold text-[#0f6b32]">{{ preview.counts['nový'] }}</div><div class="text-[13px] text-ink-gray-5">{{ K.newLabel }}</div></div>
-          <div class="rounded-2xl bg-[rgba(110,120,200,.1)] px-4 py-3"><div class="num text-[30px] font-bold text-[#7a4400]">{{ preview.counts['sloučit'] }}</div><div class="text-[13px] text-ink-gray-5">{{ K.mergeLabel }}</div></div>
-          <div class="rounded-2xl bg-[rgba(110,120,200,.1)] px-4 py-3"><div class="num text-[30px] font-bold text-[#a82614]">{{ preview.counts['chyba'] }}</div><div class="text-[13px] text-ink-gray-5">{{ __('chyba – přeskočíme') }}</div></div>
+          <div class="rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] px-4 py-3"><div class="num text-[30px] font-bold text-[var(--success)]">{{ preview.counts['nový'] }}</div><div class="text-[13px] text-ink-gray-5">{{ K.newLabel }}</div></div>
+          <div class="rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] px-4 py-3"><div class="num text-[30px] font-bold text-[var(--warning)]">{{ preview.counts['sloučit'] }}</div><div class="text-[13px] text-ink-gray-5">{{ K.mergeLabel }}</div></div>
+          <div class="rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] px-4 py-3"><div class="num text-[30px] font-bold text-[var(--overdue)]">{{ preview.counts['chyba'] }}</div><div class="text-[13px] text-ink-gray-5">{{ __('chyba – přeskočíme') }}</div></div>
         </div>
-        <div class="mt-3 max-h-[240px] overflow-y-auto rounded-2xl bg-[rgba(110,120,200,.06)] p-2">
+        <div class="mt-3 max-h-[240px] overflow-y-auto rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_6%,transparent)] p-2">
           <div class="hidden grid-cols-[60px_1.4fr_90px_1.4fr] gap-3 px-2 pb-1 text-[12px] font-semibold text-ink-gray-5 sm:grid"><span>{{ __('Řádek') }}</span><span>{{ K.itemLabel }}</span><span>{{ __('Výsledek') }}</span><span>{{ __('Poznámka') }}</span></div>
           <div v-for="i in preview.items" :key="i.row" class="grid grid-cols-[50px_1fr_auto] items-center gap-x-3 rounded-xl px-2 py-1.5 sm:grid-cols-[60px_1.4fr_90px_1.4fr]">
             <span class="num text-[13px] text-ink-gray-5">{{ i.row }}</span>
             <span class="min-w-0"><span class="block truncate text-[14px] font-bold text-ink-gray-9">{{ i.name || __('(bez názvu)') }}</span><span class="block truncate text-[12px] text-ink-gray-5">{{ i.company || i.email || '' }}</span></span>
-            <span class="text-[13px] font-bold" :class="{ 'text-[#0f6b32]': i.status === 'nový', 'text-[#7a4400]': i.status === 'sloučit', 'text-[#a82614]': i.status === 'chyba' }">{{ K.status[i.status] }}</span>
+            <span class="text-[13px] font-bold" :class="{ 'text-[var(--success)]': i.status === 'nový', 'text-[var(--warning)]': i.status === 'sloučit', 'text-[var(--overdue)]': i.status === 'chyba' }">{{ K.status[i.status] }}</span>
             <span class="col-span-3 truncate text-[13px] text-ink-gray-7 sm:col-span-1">{{ i.note }}</span>
           </div>
         </div>
@@ -66,10 +66,10 @@
 
       <!-- 4 Výsledek -->
       <div v-else-if="step === 3 && result" class="flex flex-col items-center gap-2 py-6 text-center">
-        <span class="flex size-14 items-center justify-center rounded-full bg-[rgba(34,179,94,.16)] text-[#0f6b32]"><GlIcon name="check" :size="26" /></span>
+        <span class="flex size-14 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--stage-vyhrano)_16%,transparent)] text-[var(--success)]"><GlIcon name="check" :size="26" /></span>
         <div class="text-[22px] font-bold text-ink-gray-9">{{ __('Import dokončen') }}</div>
         <p class="text-[14px] text-ink-gray-7">{{ K.result(result) }}</p>
-        <div v-if="result.errors?.length" class="mt-2 max-h-[140px] w-full overflow-y-auto rounded-2xl bg-[rgba(229,72,77,.08)] p-3 text-left text-[13px] text-[#a82614]">
+        <div v-if="result.errors?.length" class="mt-2 max-h-[140px] w-full overflow-y-auto rounded-2xl bg-[color-mix(in_srgb,var(--c-red-400)_8%,transparent)] p-3 text-left text-[13px] text-[var(--overdue)]">
           <div v-for="e in result.errors" :key="e.row">{{ __('Řádek {0}: {1}', [e.row, e.error]) }}</div>
         </div>
         <p v-if="result.campaign" class="text-[13px] text-ink-gray-5">{{ __('Do kampaně přidáno {0}.', [result.campaign.added]) }}</p>

@@ -8,16 +8,16 @@
 
     <p v-if="!p.web_status && !running" class="text-[13px] text-ink-gray-6">{{ __('Agent projde web firmy a doplní, čím se zabývá, služby a návrh úvodní věty do e-mailu.') }}</p>
     <p v-if="p.web_status === 'Bez webu'" class="text-[13px] text-ink-gray-6">{{ __('Firma nemá vyplněný web.') }}</p>
-    <p v-if="data.run?.status === 'Chyba'" class="text-[13px] text-[#a82614]">{{ data.run.error }}</p>
+    <p v-if="data.run?.status === 'Chyba'" class="text-[13px] text-[var(--overdue)]">{{ data.run.error }}</p>
 
     <template v-if="p.web_status === 'Obohaceno'">
-      <div v-if="p.web_scale === 'Velká nebo síť'" class="rounded-[14px] bg-[rgba(214,160,29,.12)] px-3 py-2 text-[13px] text-ink-gray-8">
+      <div v-if="p.web_scale === 'Velká nebo síť'" class="rounded-[14px] bg-[color-mix(in_srgb,var(--c-amber-500)_12%,transparent)] px-3 py-2 text-[13px] text-ink-gray-8">
         <b>{{ __('Velká firma nebo síť.') }}</b> {{ __('Franšíza, pobočka řetězce nebo velká firma. Kampaně ji přeskočí.') }}
       </div>
-      <div v-if="p.web_industry_fit === 'Nesedí'" class="rounded-[14px] bg-[rgba(214,160,29,.12)] px-3 py-2 text-[13px] text-ink-gray-8">
+      <div v-if="p.web_industry_fit === 'Nesedí'" class="rounded-[14px] bg-[color-mix(in_srgb,var(--c-amber-500)_12%,transparent)] px-3 py-2 text-[13px] text-ink-gray-8">
         <b>{{ __('Obor nesedí.') }}</b> {{ __('Podle webu je hlavní činnost „{0}“, v CRM je obor „{1}“. Kampaně firmu přeskočí, dokud se obor neupraví.', [p.web_industry, p.industry || '—']) }}
       </div>
-      <div v-else-if="p.web_industry_fit === 'Jiný'" class="rounded-[14px] bg-[rgba(214,160,29,.12)] px-3 py-2 text-[13px] text-ink-gray-8">
+      <div v-else-if="p.web_industry_fit === 'Jiný'" class="rounded-[14px] bg-[color-mix(in_srgb,var(--c-amber-500)_12%,transparent)] px-3 py-2 text-[13px] text-ink-gray-8">
         {{ __('Hlavní činnost podle webu nepatří do žádného našeho oboru.') }}
       </div>
       <div v-for="f in FIELDS" v-show="p[f.key]" :key="f.key">

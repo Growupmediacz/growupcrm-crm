@@ -39,10 +39,10 @@
               :key="u.name"
               type="button"
               class="gl-chip flex h-9 items-center gap-2 rounded-full pl-1 pr-3.5 text-[14px] font-medium"
-              :class="team.includes(u.name) && '!bg-[#0e1330] !text-white'"
+              :class="team.includes(u.name) && '!bg-[var(--text-1)] !text-white'"
               @click="toggle(u.name)"
             >
-              <span class="flex size-7 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]">{{ initials(u.full_name || u.name) }}</span>
+              <span class="flex size-7 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[10px] font-bold text-[var(--c-blue-600)]">{{ initials(u.full_name || u.name) }}</span>
               {{ (u.full_name || u.name).split(' ')[0] }}
             </button>
           </div>

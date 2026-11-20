@@ -30,8 +30,8 @@
           <div class="flex min-w-0 flex-col gap-1.5">
             <div class="truncate text-[26px] font-bold leading-tight tracking-[-0.02em] text-ink-gray-9">{{ organization.doc.organization_name }}</div>
             <div class="flex min-w-0 items-center gap-2 text-[14px] text-ink-gray-5">
-              <span v-if="organization.doc.relationship" class="flex shrink-0 items-center gap-1.5 rounded-full bg-[rgba(110,120,200,.08)] px-2.5 py-0.5 text-[13px] font-semibold text-ink-gray-8">
-                <span class="size-2 rounded-full" :style="{ background: REL_COLORS[organization.doc.relationship] || '#9ca3af' }" />{{ __(organization.doc.relationship) }}
+              <span v-if="organization.doc.relationship" class="flex shrink-0 items-center gap-1.5 rounded-full bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] px-2.5 py-0.5 text-[13px] font-semibold text-ink-gray-8">
+                <span class="size-2 rounded-full" :style="{ background: REL_COLORS[organization.doc.relationship] || 'var(--stage-prohrano)' }" />{{ __(organization.doc.relationship) }}
               </span>
               <span v-if="organization.doc.ico" class="truncate">{{ __('IČO') }} {{ organization.doc.ico }}</span>
             </div>
@@ -45,7 +45,7 @@
             <div class="text-[13px] text-ink-gray-5">{{ s.label }}</div>
           </div>
         </div>
-        <div v-if="summary?.last_call" class="mt-3 flex items-center gap-3 rounded-[16px] bg-[rgba(224,161,0,.14)] px-4 py-3 text-[#7a4400]">
+        <div v-if="summary?.last_call" class="mt-3 flex items-center gap-3 rounded-[16px] bg-[color-mix(in_srgb,var(--stage-nabidka)_14%,transparent)] px-4 py-3 text-[var(--warning)]">
           <span class="lucide-phone size-5 shrink-0" aria-hidden="true" />
           <span class="min-w-0 flex-1">
             <span class="block truncate text-[14px] font-semibold">{{ __('Poslední hovor') }}: {{ summary.last_call.title }}</span>
@@ -57,7 +57,7 @@
       <!-- GrowUp (oprava 13): Údaje o firmě jen ke čtení; celý formulář CRM až pod „Všechna pole“ -->
       <!-- P3: stav vztahu klienta -->
       <div v-if="showClient && client.data && !allFields" class="px-5 pb-1">
-        <div class="mb-1.5 text-[13px] font-semibold text-[#3D4466]">{{ __('Stav vztahu') }}</div>
+        <div class="mb-1.5 text-[13px] font-semibold text-[var(--c-blue-700)]">{{ __('Stav vztahu') }}</div>
         <div class="gl-seg flex w-full">
           <button v-for="h in HEALTH" :key="h.key" class="gl-seg-btn flex-1 justify-center !px-2 text-[13px]" :class="client.data.health === h.key && 'gl-seg-on'" @click="setHealth(h.key)">
             <span class="size-2 rounded-full" :style="{ background: h.color }" />{{ h.label }}
@@ -93,7 +93,7 @@
         @click="tab = t.key"
       >
         {{ t.label }}
-        <span v-if="t.count !== null" class="num rounded-full px-2 py-0.5 text-[12px] font-bold" :class="tab === t.key ? 'bg-white/25 text-white' : 'bg-[rgba(110,120,200,.12)] text-ink-gray-6'">{{ t.count }}</span>
+        <span v-if="t.count !== null" class="num rounded-full px-2 py-0.5 text-[12px] font-bold" :class="tab === t.key ? 'bg-white/25 text-white' : 'bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-ink-gray-6'">{{ t.count }}</span>
       </button>
     </div>
     <div class="gl-card flex flex-1 flex-col overflow-hidden">
@@ -103,7 +103,7 @@
         <div class="mt-3 text-[24px] font-bold leading-tight tracking-tight text-ink-gray-9">{{ organization.doc.organization_name }}</div>
         <div class="mt-1 flex items-center gap-2 text-[13px] text-ink-gray-6">
           <span v-if="organization.doc.relationship" class="flex items-center gap-1.5 font-bold text-ink-gray-9">
-            <span class="size-2 rounded-full" :style="{ background: REL_COLORS[organization.doc.relationship] || '#9ca3af' }" />
+            <span class="size-2 rounded-full" :style="{ background: REL_COLORS[organization.doc.relationship] || 'var(--stage-prohrano)' }" />
             {{ __(organization.doc.relationship) }}
           </span>
           <span v-if="organization.doc.ico">{{ __('IČO') }} {{ organization.doc.ico }}</span>
@@ -128,12 +128,12 @@
           </div>
         </div>
       </div>
-      <div v-if="isMobileView" class="m-4 mb-0 flex w-fit max-w-full gap-1 overflow-x-auto rounded-full bg-[rgba(110,120,200,.11)] p-[3px]">
+      <div v-if="isMobileView" class="m-4 mb-0 flex w-fit max-w-full gap-1 overflow-x-auto rounded-full bg-[color-mix(in_srgb,var(--c-tint)_11%,transparent)] p-[3px]">
         <button
           v-for="t in tabs"
           :key="t.key"
           class="flex h-8 items-center gap-2 rounded-full px-4 text-[14px] font-semibold text-ink-gray-5 transition hover:text-ink-gray-9"
-          :class="{ '!bg-white !text-ink-gray-9 shadow-[0_2px_10px_-2px_rgba(64,72,160,.28)]': tab === t.key }"
+          :class="{ '!bg-white !text-ink-gray-9 shadow-[0_2px_10px_-2px_color-mix(in_srgb,var(--c-shadow-2)_28%,transparent)]': tab === t.key }"
           @click="tab = t.key"
         >
           {{ t.label }}
@@ -196,7 +196,7 @@
               <router-link
                 v-if="item.lead && !isMobileView"
                 :to="{ name: 'Lead', params: { leadId: item.lead } }"
-                class="max-w-[220px] shrink-0 truncate rounded-full bg-[rgba(110,120,200,.1)] px-3 py-1 text-[13px] font-medium text-ink-gray-7 hover:bg-[rgba(110,120,200,.18)]"
+                class="max-w-[220px] shrink-0 truncate rounded-full bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] px-3 py-1 text-[13px] font-medium text-ink-gray-7 hover:bg-[color-mix(in_srgb,var(--c-tint)_18%,transparent)]"
                 @click.stop
               >{{ item.lead_title }}</router-link>
             </div>
@@ -423,9 +423,9 @@ const showClient = computed(() => agencyEnabled.value && organization.doc?.relat
 const client = createResource({ url: 'growupcrm.clients.get_client', params: { organization: props.organizationId } })
 watch(showClient, (on) => on && client.fetch(), { immediate: true })
 const HEALTH = [
-  { key: 'V pořádku', label: __('V pořádku'), color: '#22b35e' },
-  { key: 'Potřebuje pozornost', label: __('Pozornost'), color: '#e0a100' },
-  { key: 'Ohrožený', label: __('Ohrožený'), color: '#a82614' },
+  { key: 'V pořádku', label: __('V pořádku'), color: 'var(--stage-vyhrano)' },
+  { key: 'Potřebuje pozornost', label: __('Pozornost'), color: 'var(--stage-nabidka)' },
+  { key: 'Ohrožený', label: __('Ohrožený'), color: 'var(--overdue)' },
 ]
 async function setHealth(health) {
   await call('growupcrm.clients.set_health', { organization: props.organizationId, health })
@@ -433,7 +433,7 @@ async function setHealth(health) {
 }
 
 // mobil: rychlé akce přes první kontakt firmy s telefonem / e-mailem
-const REL_COLORS = { Klient: '#22b35e', Prospekt: '#3b82f6', 'Bývalý klient': '#9ca3af' }
+const REL_COLORS = { Klient: 'var(--stage-vyhrano)', Prospekt: 'var(--stage-nova)', 'Bývalý klient': 'var(--stage-prohrano)' }
 const showEvent = ref(false)
 const sessionUser = sessionStore().user
 const calendarUsers = createResource({ url: 'growupcrm.calendar.get_users', auto: true })
@@ -475,10 +475,10 @@ const tabs = computed(() => [
 ])
 // design 3. kolo (05): dlaždice s ikonou, hovory oranžově
 const stats = computed(() => [
-  { label: __('Zakázky'), value: summary.value.leads, icon: 'doc', fg: 'text-[var(--accent-600)]', bg: 'bg-[rgba(110,120,200,.075)]' },
-  { label: __('Schůzky'), value: summary.value.meetings, icon: 'cal', fg: 'text-[#3b6ef6]', bg: 'bg-[rgba(110,120,200,.075)]' },
-  { label: __('Zápisy'), value: summary.value.notes, icon: 'doc', fg: 'text-[#8b5cf6]', bg: 'bg-[rgba(110,120,200,.075)]' },
-  { label: __('Hovory'), value: summary.value.calls, icon: 'phone', fg: 'text-[#f97316]', bg: 'bg-[rgba(249,115,22,.08)]' },
+  { label: __('Zakázky'), value: summary.value.leads, icon: 'doc', fg: 'text-[var(--accent-600)]', bg: 'bg-[color-mix(in_srgb,var(--c-tint)_7.5%,transparent)]' },
+  { label: __('Schůzky'), value: summary.value.meetings, icon: 'cal', fg: 'text-[var(--c-blue-400)]', bg: 'bg-[color-mix(in_srgb,var(--c-tint)_7.5%,transparent)]' },
+  { label: __('Zápisy'), value: summary.value.notes, icon: 'doc', fg: 'text-[var(--stage-kontaktovano)]', bg: 'bg-[color-mix(in_srgb,var(--c-tint)_7.5%,transparent)]' },
+  { label: __('Hovory'), value: summary.value.calls, icon: 'phone', fg: 'text-[var(--stage-jednani)]', bg: 'bg-[color-mix(in_srgb,var(--stage-jednani)_8%,transparent)]' },
 ])
 
 const kind = ref('all')
@@ -495,12 +495,12 @@ const kindLabel = computed(() => ({
   event: __('Schůzka'), note: __('Zápis'), call: __('Hovor'), task: __('Úkol'), comment: __('Komentář'), email: __('E-mail'),
 }))
 const kindTone = {
-  event: 'bg-[rgba(59,110,246,.13)] text-[#1f48b8]',
-  note: 'bg-[rgba(139,92,246,.14)] text-[#5a2fc0]',
-  call: 'bg-[rgba(249,115,22,.14)] text-[#a3360a]',
-  task: 'bg-[rgba(234,170,8,.18)] text-[#7a4400]',
-  comment: 'bg-[rgba(100,110,150,.12)] text-[#4a5173]',
-  email: 'bg-[rgba(20,160,190,.13)] text-[#08626f]',
+  event: 'bg-[color-mix(in_srgb,var(--c-blue-400)_13%,transparent)] text-[var(--info)]',
+  note: 'bg-[color-mix(in_srgb,var(--stage-kontaktovano)_14%,transparent)] text-[var(--c-violet-550)]',
+  call: 'bg-[color-mix(in_srgb,var(--stage-jednani)_14%,transparent)] text-[var(--c-orange-650)]',
+  task: 'bg-[color-mix(in_srgb,var(--c-amber-550)_18%,transparent)] text-[var(--warning)]',
+  comment: 'bg-[color-mix(in_srgb,var(--c-blue-500-2)_12%,transparent)] text-[var(--c-blue-650)]',
+  email: 'bg-[color-mix(in_srgb,var(--c-cyan-600)_13%,transparent)] text-[var(--c-cyan-750)]',
 }
 const kindIcon = {
   event: 'lucide-calendar', note: 'lucide-notebook-pen', call: 'lucide-phone', task: 'lucide-check-square',
@@ -586,9 +586,9 @@ function rowTitle(item) {
 }
 const BADGE = {
   plan: 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]',
-  warn: 'bg-[rgba(224,161,0,.16)] text-[#7a4400]',
-  ok: 'bg-[rgba(34,179,94,.13)] text-[#178a4a]',
-  gray: 'bg-[rgba(110,120,200,.1)] text-ink-gray-6',
+  warn: 'bg-[color-mix(in_srgb,var(--stage-nabidka)_16%,transparent)] text-[var(--warning)]',
+  ok: 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_13%,transparent)] text-[var(--c-green-700)]',
+  gray: 'bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] text-ink-gray-6',
 }
 function rowBadge(item) {
   if (item.kind === 'event' && item.date && toDate(item.date) > new Date()) return { text: __('Naplánováno'), cls: BADGE.plan }

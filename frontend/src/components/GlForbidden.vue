@@ -7,7 +7,7 @@
       <p class="max-w-[460px] text-[16px] leading-relaxed text-ink-gray-7">{{ message || __('Tuhle část vidí jen správci. Pokud ji potřebujete, požádejte o změnu role.') }}</p>
       <div class="mt-2 flex flex-wrap justify-center gap-3">
         <a :href="`mailto:${contact}?subject=${encodeURIComponent('GrowUpCRM – žádost o přístup')}`" class="gl-quick !h-12 !px-5 !text-[15px]"><GlIcon name="mail" :size="16" />{{ __('Požádat o přístup') }}</a>
-        <router-link :to="{ name: 'Today' }" class="inline-flex h-12 items-center rounded-full bg-[var(--accent-600)] px-6 text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(91,91,246,.7)]">{{ __('Zpět na Dnes') }}</router-link>
+        <router-link :to="{ name: 'Today' }" class="inline-flex h-12 items-center rounded-full bg-[var(--accent-600)] px-6 text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_color-mix(in_srgb,var(--accent-600)_70%,transparent)]">{{ __('Zpět na Dnes') }}</router-link>
       </div>
     </div>
   </div>

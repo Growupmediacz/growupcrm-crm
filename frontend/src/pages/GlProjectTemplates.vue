@@ -13,7 +13,7 @@
   <div class="grid min-h-0 flex-1 gap-4 overflow-y-auto px-3 pb-6 md:px-2 lg:grid-cols-[300px_1fr]">
     <div class="gl-card flex h-fit flex-col gap-1 p-3">
       <button v-for="t in list.data || []" :key="t.name" class="flex items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition" :class="current === t.name ? 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)]' : 'hover:bg-white/60'" @click="open(t.name)">
-        <span class="flex size-10 shrink-0 items-center justify-center rounded-xl" :class="TONES[t.icon] || 'bg-[rgba(110,120,200,.12)] text-ink-gray-7'"><GlIcon :name="ICONS[t.icon] || 'edit'" :size="18" /></span>
+        <span class="flex size-10 shrink-0 items-center justify-center rounded-xl" :class="TONES[t.icon] || 'bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-ink-gray-7'"><GlIcon :name="ICONS[t.icon] || 'edit'" :size="18" /></span>
         <span class="min-w-0"><span class="block truncate text-[15px] font-bold text-ink-gray-9">{{ t.name }}</span>
           <span class="block truncate text-[12px] text-ink-gray-5">{{ t.tasks ? `${t.phases} ${phaseWord(t.phases)} · ${t.tasks} úkolů · ${t.duration_days} dní` : __('prázdná šablona') }}</span></span>
       </button>
@@ -26,7 +26,7 @@
           <div class="gl-field flex items-center justify-between"><span class="tabular-nums">{{ duration }} {{ duration === 1 ? 'den' : 'dní' }}</span><span class="text-[13px] text-ink-gray-5">{{ __('spočítáno z úkolů') }}</span></div></div>
       </div>
 
-      <div v-for="(ph, pi) in phases" :key="ph.id" class="rounded-[22px] bg-[rgba(110,120,200,.07)] p-4">
+      <div v-for="(ph, pi) in phases" :key="ph.id" class="rounded-[22px] bg-[color-mix(in_srgb,var(--c-tint)_7%,transparent)] p-4">
         <div class="mb-2 flex items-center gap-2">
           <input v-model="ph.name" class="gl-field !w-[240px] !font-bold" :aria-label="__('Název fáze')" />
           <Dropdown :options="[{ label: __('Smazat fázi'), icon: 'trash-2', theme: 'red', onClick: () => phases.splice(pi, 1) }]" placement="right" class="ml-auto">
@@ -57,7 +57,7 @@ import { Breadcrumbs, Button, Dropdown, ErrorMessage, call, createResource, toas
 import { computed, ref } from 'vue'
 
 const ICONS = { globe: 'globe', send: 'send', play: 'play', edit: 'edit' }
-const TONES = { globe: 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]', send: 'bg-[rgba(20,160,190,.14)] text-[#08626f]', play: 'bg-[rgba(249,115,22,.14)] text-[#a3360a]' }
+const TONES = { globe: 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]', send: 'bg-[color-mix(in_srgb,var(--c-cyan-600)_14%,transparent)] text-[var(--c-cyan-750)]', play: 'bg-[color-mix(in_srgb,var(--stage-jednani)_14%,transparent)] text-[var(--c-orange-650)]' }
 const ROLES = ['Vlastník projektu', 'Člen týmu', 'Klient']
 const phaseWord = (n) => (n === 1 ? 'fáze' : n >= 2 && n <= 4 ? 'fáze' : 'fází')
 

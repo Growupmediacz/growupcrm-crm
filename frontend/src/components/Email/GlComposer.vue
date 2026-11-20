@@ -370,7 +370,7 @@ defineExpose({ focus: () => editor.value?.commands.focus(), send })
   background: white;
   border: 1px solid var(--field-border);
   border-radius: 20px;
-  box-shadow: 0 6px 24px -12px rgba(64, 72, 160, 0.35);
+  box-shadow: 0 6px 24px -12px color-mix(in srgb, var(--c-shadow-2) 35%, transparent);
 }
 .gl-cmp:focus-within { border-color: var(--accent-200); }
 .gl-cmp.is-panel {
@@ -518,7 +518,7 @@ defineExpose({ focus: () => editor.value?.commands.focus(), send })
 }
 .gl-cmp-send:active { transform: scale(0.97); }
 .gl-cmp-send:disabled { opacity: 0.6; }
-.gl-cmp-kbd { border-radius: 6px; background: rgba(255, 255, 255, 0.2); padding: 0 6px; font-size: 13px; font-weight: 500; }
+.gl-cmp-kbd { border-radius: 6px; background: color-mix(in srgb, var(--c-white) 20%, transparent); padding: 0 6px; font-size: 13px; font-weight: 500; }
 @media (max-width: 767px) { .gl-cmp-kbd { display: none; } }
 .gl-cmp-icon:focus-visible, .gl-cmp-ghost:focus-visible, .gl-cmp-send:focus-visible, .gl-cmp-link:focus-visible, .gl-cmp-att-x:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 </style>

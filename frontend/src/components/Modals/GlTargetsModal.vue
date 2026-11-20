@@ -21,7 +21,7 @@
               <tr v-for="r in rows" :key="r.user">
                 <td class="py-2 pr-3">
                   <span class="flex items-center gap-2.5">
-                    <span class="flex size-8 items-center justify-center rounded-full bg-[#dde6ff] text-[11px] font-bold text-[#2440a6]">{{ initials(r.full_name) }}</span>
+                    <span class="flex size-8 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[11px] font-bold text-[var(--c-blue-600)]">{{ initials(r.full_name) }}</span>
                     <span class="font-semibold text-ink-gray-9">{{ r.full_name }}</span>
                   </span>
                 </td>
@@ -33,7 +33,7 @@
                   </span>
                 </td>
               </tr>
-              <tr class="bg-[rgba(110,120,200,.08)] font-bold">
+              <tr class="bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] font-bold">
                 <td class="rounded-l-2xl px-3 py-3 text-ink-gray-9">{{ __('Tým celkem') }}</td>
                 <td v-for="(f, i) in FIELDS" :key="f.key" class="num px-6 py-3 text-ink-gray-9" :class="i === FIELDS.length - 1 && 'rounded-r-2xl'">{{ total(f.key) }}</td>
               </tr>

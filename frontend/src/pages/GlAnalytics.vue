@@ -66,7 +66,7 @@
       <div v-for="k in kpis" :key="k.label" class="gl-card flex min-w-0 flex-col gap-1.5 p-4 md:p-6">
         <div class="flex items-center justify-between gap-2">
           <span class="line-clamp-2 min-w-0 text-[15px] font-semibold leading-snug text-ink-gray-9 md:text-[17px]">{{ k.label }}</span>
-          <span v-if="k.badge" class="shrink-0 rounded-full px-2.5 py-0.5 text-[13px] font-semibold" :class="k.badgeUp ? 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]' : 'bg-[rgba(229,72,77,.12)] text-[#a82614]'">{{ k.badge }}</span>
+          <span v-if="k.badge" class="shrink-0 rounded-full px-2.5 py-0.5 text-[13px] font-semibold" :class="k.badgeUp ? 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]' : 'bg-[color-mix(in_srgb,var(--c-red-400)_12%,transparent)] text-[var(--overdue)]'">{{ k.badge }}</span>
         </div>
         <!-- telefon: zkrácená čísla (66 tis.), celá hodnota v title; číslice stejně široké -->
         <div class="num break-words text-[26px] font-bold leading-tight tracking-tight text-ink-gray-9 tabular-nums md:truncate md:text-[48px]" :title="k.full" :aria-label="k.full">{{ k.value }}</div>
@@ -81,15 +81,15 @@
         <div class="text-[13px] text-ink-gray-5">{{ __('tis. Kč · zvýrazněn poslední měsíc období') }}</div>
         <!-- oprava 26: prázdný stav místo prázdného grafu -->
         <div v-if="!hasRevenue" class="mt-4 flex flex-col items-center gap-3 py-8 text-center">
-          <span class="flex size-14 items-center justify-center rounded-2xl bg-[rgba(110,120,200,.12)] text-ink-gray-7"><GlIcon name="chart" :size="26" /></span>
+          <span class="flex size-14 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-ink-gray-7"><GlIcon name="chart" :size="26" /></span>
           <div class="text-[18px] font-bold text-ink-gray-9">{{ __('Zatím žádné vyhrané zakázky') }}</div>
           <p class="max-w-[300px] text-[14px] text-ink-gray-5">{{ __('Graf tržeb se ukáže po první výhře v tomto období. Zkuste jiné období.') }}</p>
           <div class="flex flex-wrap justify-center gap-2">
             <button class="gl-quick min-h-11 md:min-h-0" @click="setGrain('year')">{{ __('Celý rok') }}</button>
-            <router-link :to="{ name: 'Leads' }" class="inline-flex min-h-11 items-center rounded-full bg-[var(--accent-600)] px-4 md:h-9 md:min-h-0 text-[14px] font-semibold text-white shadow-[0_6px_16px_-6px_rgba(91,91,246,.6)]">{{ __('Zakázky') }}</router-link>
+            <router-link :to="{ name: 'Leads' }" class="inline-flex min-h-11 items-center rounded-full bg-[var(--accent-600)] px-4 md:h-9 md:min-h-0 text-[14px] font-semibold text-white shadow-[0_6px_16px_-6px_color-mix(in_srgb,var(--accent-600)_60%,transparent)]">{{ __('Zakázky') }}</router-link>
           </div>
         </div>
-        <div v-else class="relative mt-4 flex h-[230px] items-end gap-1.5 border-b md:gap-3 border-[rgba(110,120,200,.18)] px-2">
+        <div v-else class="relative mt-4 flex h-[230px] items-end gap-1.5 border-b md:gap-3 border-[color-mix(in_srgb,var(--c-tint)_18%,transparent)] px-2">
           <div
             v-for="(m, i) in data?.by_month || []"
             :key="m.month"
@@ -100,7 +100,7 @@
             <span class="num mb-1 max-w-full truncate text-[13px] font-bold text-ink-gray-9">{{ k(m.value) }}</span>
             <div
               class="w-full max-w-[46px] rounded-t-[4px] transition-all duration-500"
-              :class="i === lastIndex ? 'bg-[var(--accent-600)]' : 'bg-[#c7c9f6] group-hover:bg-[#a5a8f0]'"
+              :class="i === lastIndex ? 'bg-[var(--accent-600)]' : 'bg-[var(--c-indigo-150)] group-hover:bg-[var(--c-indigo-200)]'"
               :style="{ height: `${barHeight(m.value)}%`, minHeight: m.value ? '4px' : '0' }"
             />
             <div v-if="hoverBar === i" class="gl-sheet pointer-events-none absolute bottom-full z-10 mb-2 whitespace-nowrap rounded-xl px-3 py-2 text-[13px]">
@@ -120,7 +120,7 @@
         <div class="mt-4 flex flex-col gap-2.5">
           <div v-for="(f, i) in data?.funnel || []" :key="f.stage" class="flex items-center gap-3" :title="`${__(f.stage)}: ${f.count}`">
             <span class="w-24 shrink-0 text-[14px] leading-tight text-ink-gray-9 md:w-36 md:truncate">{{ __(f.stage) }}</span>
-            <span class="h-3.5 flex-1 rounded-full bg-[rgba(110,120,200,.1)]">
+            <span class="h-3.5 flex-1 rounded-full bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)]">
               <span class="block h-full rounded-full" :style="{ width: `${funnelWidth(f.count)}%`, background: FUNNEL[i] || FUNNEL[FUNNEL.length - 1], minWidth: f.count ? '4px' : '0' }" />
             </span>
             <span class="num w-8 text-right text-[14px] font-bold text-ink-gray-9">{{ f.count }}</span>
@@ -136,10 +136,10 @@
         <div class="text-[13px] text-ink-gray-5">{{ __('vyhrané a otevřené v období') }}</div>
         <GlEmptyState v-if="!data?.sources?.length" class="mt-4" icon="brief" :title="__('Žádné zakázky v období')" :text="__('Zkuste delší období.')" />
         <template v-else>
-          <div class="mt-4 flex h-[150px] items-end gap-1.5 border-b md:gap-3 border-[rgba(110,120,200,.18)] px-1">
+          <div class="mt-4 flex h-[150px] items-end gap-1.5 border-b md:gap-3 border-[color-mix(in_srgb,var(--c-tint)_18%,transparent)] px-1">
             <div v-for="(s, i) in data.sources.slice(0, 5)" :key="s.source" class="flex h-full flex-1 flex-col items-center justify-end" :title="`${__(s.source)}: ${s.count}`">
               <span class="num mb-1 text-[14px] font-semibold text-ink-gray-9">{{ s.count }}</span>
-              <div class="w-full max-w-[64px] rounded-t-[6px]" :class="i === 0 ? 'bg-[var(--accent-600)]' : 'bg-[#c7c9f6]'" :style="{ height: `${(s.count * 100) / maxSource}%`, minHeight: '4px' }" />
+              <div class="w-full max-w-[64px] rounded-t-[6px]" :class="i === 0 ? 'bg-[var(--accent-600)]' : 'bg-[var(--c-indigo-150)]'" :style="{ height: `${(s.count * 100) / maxSource}%`, minHeight: '4px' }" />
             </div>
           </div>
           <div class="mt-2 flex gap-1.5 px-1 md:gap-3">
@@ -153,7 +153,7 @@
         <template v-if="data?.response?.count">
           <div class="num mt-3 text-[44px] font-bold leading-none md:text-[56px] tracking-tight text-ink-gray-9">{{ hoursOf(data.response.avg) }}</div>
           <div class="mt-2 text-[16px] text-ink-gray-5">{{ __('cíl {0} pracovní hodiny', [String(data.response.hours ?? 4).replace('.', ',')]) }}</div>
-          <span v-if="data.response.on_time_pct !== null" class="mt-4 inline-flex w-fit max-w-full flex-wrap items-center gap-2 rounded-full px-3.5 py-1.5 text-[15px] font-semibold" :class="data.response.on_time_pct >= 80 ? 'bg-[rgba(34,179,94,.12)] text-[#178a4a]' : 'bg-[rgba(224,161,0,.16)] text-[#7a4400]'">
+          <span v-if="data.response.on_time_pct !== null" class="mt-4 inline-flex w-fit max-w-full flex-wrap items-center gap-2 rounded-full px-3.5 py-1.5 text-[15px] font-semibold" :class="data.response.on_time_pct >= 80 ? 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)]' : 'bg-[color-mix(in_srgb,var(--stage-nabidka)_16%,transparent)] text-[var(--warning)]'">
             <GlIcon :name="data.response.on_time_pct >= 80 ? 'check' : 'alert'" :size="16" />{{ __('V limitu') }} {{ data.response.on_time_pct }} %
           </span>
         </template>
@@ -169,7 +169,7 @@
           :to="c.organization ? { name: 'Organization', params: { organizationId: c.organization } } : undefined"
           class="flex min-h-14 items-center gap-3 rounded-2xl py-2"
         >
-          <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#efe7ff] text-[13px] font-bold text-[#6d3fd0]">{{ initials(c.name) }}</span>
+          <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-[var(--c-violet-50)] text-[13px] font-bold text-[var(--c-violet-450)]">{{ initials(c.name) }}</span>
           <span class="min-w-0 flex-1">
             <span class="line-clamp-2 break-words text-[15px] font-semibold leading-snug text-ink-gray-9">{{ c.name }}</span>
             <span class="block text-[13px] text-ink-gray-5">{{ clientSub(c) }}</span>
@@ -207,7 +207,7 @@ const GRAINS = [
   { value: 'year', label: __('Rok') },
 ]
 // design 3. kolo (20): barvy fází podle tokenů (Nová, Kontaktováno, Nabídka, Jednání, Vyhráno)
-const FUNNEL = ['#3b82f6', '#8b5cf6', '#e0a100', '#f97316', '#22b35e']
+const FUNNEL = ['var(--stage-nova)', 'var(--stage-kontaktovano)', 'var(--stage-nabidka)', 'var(--stage-jednani)', 'var(--stage-vyhrano)']
 
 const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 const today = new Date()

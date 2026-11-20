@@ -12,7 +12,7 @@
           <template #item="{ element: r, index: i }">
             <div class="flex items-center gap-3 rounded-[18px] border border-[var(--line)] bg-white/80 px-4 py-4" :class="r.disabled && 'opacity-60'">
               <span class="gl3-drag flex cursor-grab text-ink-gray-4" :title="__('Přetáhnout')"><GlIcon name="grip" :size="18" /></span>
-              <span class="flex size-9 shrink-0 items-center justify-center rounded-[11px] bg-[rgba(110,120,200,.1)] text-[15px] font-bold text-ink-gray-7">{{ i + 1 }}</span>
+              <span class="flex size-9 shrink-0 items-center justify-center rounded-[11px] bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] text-[15px] font-bold text-ink-gray-7">{{ i + 1 }}</span>
               <div class="flex min-w-0 flex-1 flex-col gap-1">
                 <div class="flex flex-wrap items-center gap-1.5 text-[15px] text-ink-gray-8">
                   <template v-if="r.conditions.length">
@@ -31,7 +31,7 @@
                   <span>{{ ruleWord(r) }}</span>
                   <span v-if="r.field" class="gl3-rule-chip">{{ r.field }}</span>
                   <span v-for="u in r.users" :key="u.name" class="gl3-rule-chip gl3-rule-user">
-                    <span class="flex size-5 items-center justify-center rounded-full bg-[#dde6ff] text-[9px] font-bold text-[#2440a6]">{{ initials(u.full_name) }}</span>{{ u.full_name }}
+                    <span class="flex size-5 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[9px] font-bold text-[var(--c-blue-600)]">{{ initials(u.full_name) }}</span>{{ u.full_name }}
                   </span>
                 </div>
                 <div class="text-[12.5px] text-ink-gray-5">
@@ -49,16 +49,16 @@
         <!-- výchozí chování bez pravidla -->
         <div class="flex items-center gap-3 rounded-[18px] border border-dashed border-[var(--line)] px-4 py-4">
           <span class="w-[18px]" />
-          <span class="flex size-9 shrink-0 items-center justify-center rounded-[11px] bg-[rgba(110,120,200,.1)] text-[15px] font-bold text-ink-gray-7">{{ list.length + 1 }}</span>
+          <span class="flex size-9 shrink-0 items-center justify-center rounded-[11px] bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] text-[15px] font-bold text-ink-gray-7">{{ list.length + 1 }}</span>
           <div class="flex flex-1 flex-wrap items-center gap-1.5 text-[15px] text-ink-gray-8">
             <span class="font-semibold">{{ __('Ostatní zakázky') }}</span>
             <span class="text-ink-gray-4">→</span>
             <span>{{ __('nechat bez vlastníka a upozornit vedoucí') }}</span>
-            <span class="rounded-full bg-[rgba(110,120,200,.1)] px-2.5 py-0.5 text-[12px] font-semibold text-ink-gray-5">{{ __('Výchozí') }}</span>
+            <span class="rounded-full bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] px-2.5 py-0.5 text-[12px] font-semibold text-ink-gray-5">{{ __('Výchozí') }}</span>
           </div>
         </div>
-        <div class="flex items-center gap-2 rounded-[14px] bg-[rgba(46,107,230,.07)] px-4 py-3 text-[13px] text-ink-gray-7">
-          <GlIcon name="alert" :size="16" class="text-[#2453c9]" />
+        <div class="flex items-center gap-2 rounded-[14px] bg-[color-mix(in_srgb,var(--c-blue-450)_7%,transparent)] px-4 py-3 text-[13px] text-ink-gray-7">
+          <GlIcon name="alert" :size="16" class="text-[var(--c-blue-550)]" />
           {{ __('Když zakázka nemá vlastníka, upozorní se všichni vedoucí a správci.') }}
         </div>
       </div>

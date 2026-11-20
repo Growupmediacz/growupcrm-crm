@@ -6,121 +6,7 @@
    4) třídy materiálů (.gl-card, .gl-nav, .gl-lane, .gl-sheet) pro komponenty growup.
    Dokumentace a hodnoty: docs/DESIGN.md v appce growupcrm. */
 
-:root {
-  /* akcent Indigo */
-  --accent-50: #eef0ff;
-  --accent-200: #c7c9f6;
-  --accent-400: #8b8ff8;
-  --accent-600: #5b5bf6;
-  --accent-700: #4644d9;
-  --accent-900: #312e81;
-  --accent-soft: rgba(91, 91, 246, 0.12);
-  --focus-ring: 0 0 0 4px color-mix(in srgb, var(--accent-600) 18%, transparent);
-
-  /* text a linky */
-  --text-1: #0e1330;
-  --text-2: #3d4466;
-  --text-3: #464c70;
-  --text-placeholder: #5e6486;
-  --text-disabled: #8a90ae;
-  --control-border: #8a90ae; /* WCAG 1.4.11: hranice ovládacího prvku ≥ 3 : 1 */
-  --line: rgba(110, 120, 200, 0.14);
-  --fill-tinted: rgba(110, 120, 200, 0.075);
-
-  /* signály a fáze */
-  --overdue: #a82614;
-  --warning: #7a4400;
-  --info: #1f48b8;
-  --success: #0f6b32;
-  --stage-nova: #3b82f6;
-  --stage-kontaktovano: #8b5cf6;
-  --stage-nabidka: #e0a100;
-  --stage-jednani: #f97316;
-  --stage-vyhrano: #22b35e;
-  --stage-prohrano: #9ca3af;
-
-  /* materiály */
-  --mat-nav-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.56)); /* stejné sklo jako karty */
-  --mat-nav-blur: blur(40px) saturate(200%);
-  --mat-card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.56));
-  --mat-card-blur: blur(36px) saturate(180%);
-  --mat-card-border: 1px solid rgba(255, 255, 255, 0.8);
-  --mat-card-shadow: inset 0 1px 0 #fff, 0 14px 44px -16px rgba(64, 72, 160, 0.24), 0 2px 6px rgba(64, 72, 160, 0.05);
-  --mat-sheet-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.82));
-  --mat-sheet-blur: blur(50px) saturate(200%);
-  --mat-sheet-shadow: inset 0 1px 0 #fff, 0 40px 90px -30px rgba(40, 44, 120, 0.45);
-  --scrim: rgba(40, 44, 90, 0.18);
-
-  /* tvar a pohyb */
-  --r-field: 14px;
-  --r-row: 16px;
-  --r-card-m: 22px;
-  --r-card: 26px;
-  --r-modal: 30px;
-  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
-  --sidebar-w: 264px;
-  /* 2. kolo – doplňky (design/growupcrm-design-2kolo/tokens) */
-  --brand-grad: linear-gradient(145deg, #6e6af6 0%, var(--accent-600) 55%, #3b32c4 100%);
-  --brand-media-text: #0f6b32;
-  --cst-waiting: #9ca3af;
-  --cst-sent: #3b82f6;
-  --cst-opened: #8b5cf6;
-  --cst-replied: #22b35e;
-  --cst-unsub: #a82614;
-  --cst-done: var(--accent-700);
-  --nav-item-h: 36px;
-  --nav-item-fs: 14.5px;
-  --nav-head-fs: 12px;
-  --empty-color: #464c70;
-  --empty-fs: 13px;
-  --row-selected: color-mix(in srgb, var(--accent-600) 7%, transparent);
-  --check-square-radius: 6px;
-  --skeleton: rgba(110, 120, 200, 0.12);
-  --skeleton-shine: rgba(255, 255, 255, 0.55);
-  --dur-skeleton: 1.4s;
-
-  --font-gl: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'InterVar', Inter, system-ui, sans-serif;
-
-  /* frappe-ui: šedá škála a povrchy → indigo tóny a sklo */
-  --surface-base: rgba(255, 255, 255, 0.66);
-  --surface-white: rgba(255, 255, 255, 0.66);
-  --surface-gray-1: rgba(110, 120, 200, 0.05);
-  --surface-gray-2: rgba(110, 120, 200, 0.085);
-  --surface-gray-3: rgba(110, 120, 200, 0.125);
-  --surface-gray-4: rgba(110, 120, 200, 0.18);
-  --surface-gray-5: rgba(110, 120, 200, 0.26);
-  --surface-gray-7: #464c70;
-  --surface-gray-8: #3d4466;
-  --surface-gray-9: #262c52;
-  --surface-gray-10: var(--accent-600);
-  --surface-sidebar: transparent;
-  --surface-elevation-1: rgba(255, 255, 255, 0.94);
-  --surface-elevation-2: rgba(255, 255, 255, 0.96);
-  --surface-elevation-3: rgba(255, 255, 255, 0.98);
-  --surface-modal: rgba(255, 255, 255, 0.9);
-  --surface-menu-bar: rgba(255, 255, 255, 0.94);
-  --surface-cards: rgba(255, 255, 255, 0.66);
-  --ink-gray-1: #f4f5ff;
-  --ink-gray-2: #c9cde6;
-  --ink-gray-3: #8a90ae;
-  --ink-gray-4: #5e6486;
-  --ink-gray-5: #464c70;
-  --ink-gray-6: #4a5174;
-  --ink-gray-7: #3d4466;
-  --ink-gray-8: #1c2242;
-  --ink-gray-9: #0e1330;
-  --outline-gray-1: rgba(110, 120, 200, 0.12);
-  --outline-gray-2: rgba(110, 120, 200, 0.17);
-  --outline-gray-3: rgba(110, 120, 200, 0.28);
-  --outline-gray-4: color-mix(in srgb, var(--accent-600) 55%, transparent);
-  --outline-elevation-1: rgba(110, 120, 200, 0.12);
-  --outline-elevation-2: rgba(110, 120, 200, 0.22);
-  --ink-blue-3: var(--accent-600);
-  --ink-blue-5: var(--accent-700);
-  --ink-blue-6: var(--accent-700);
-  --ink-blue-7: #3730a3;
-}
+/* :root tokeny přesunuty do styles/gl3.css (zadání 2027 kolo 2 V1) */
 
 /* ---------- podklad: hedvábí (styles/pozadi-hedvabi.css, třída .app-bg na <body>) ---------- */
 html,
@@ -138,7 +24,7 @@ body {
   background: color-mix(in srgb, var(--accent-600) 22%, transparent);
 }
 * {
-  scrollbar-color: rgba(110, 120, 200, 0.35) transparent;
+  scrollbar-color: color-mix(in srgb, var(--c-tint) 35%, transparent) transparent;
 }
 
 /* čísla tabulárně */
@@ -163,18 +49,18 @@ table,
   -webkit-backdrop-filter: var(--mat-card-blur);
   backdrop-filter: var(--mat-card-blur);
   border: var(--mat-card-border);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 10px 36px -14px rgba(64, 72, 160, 0.22);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--c-white) 95%, transparent), 0 10px 36px -14px color-mix(in srgb, var(--c-shadow-2) 22%, transparent);
 }
 .gl-lane {
-  background: rgba(255, 255, 255, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: color-mix(in srgb, var(--c-white) 30%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-white) 55%, transparent);
   border-radius: 24px;
 }
 .gl-sheet {
   background: var(--mat-sheet-bg);
   -webkit-backdrop-filter: var(--mat-sheet-blur);
   backdrop-filter: var(--mat-sheet-blur);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid color-mix(in srgb, var(--c-white) 90%, transparent);
   box-shadow: var(--mat-sheet-shadow);
 }
 .gl-lift {
@@ -184,7 +70,7 @@ table,
 }
 .gl-lift:hover {
   transform: translateY(-3px);
-  box-shadow: inset 0 1px 0 #fff, 0 22px 50px -18px rgba(64, 72, 160, 0.32), 0 2px 6px rgba(64, 72, 160, 0.06);
+  box-shadow: inset 0 1px 0 var(--c-white), 0 22px 50px -18px color-mix(in srgb, var(--c-shadow-2) 32%, transparent), 0 2px 6px color-mix(in srgb, var(--c-shadow-2) 6%, transparent);
 }
 
 /* ---------- tlačítka ---------- */
@@ -227,8 +113,8 @@ button.inline-flex.w-6 {
 /* primární (plná) */
 button.bg-surface-gray-10:not([disabled]) {
   background: var(--accent-600);
-  color: #fff;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 8px 18px -8px rgba(30, 25, 110, 0.5);
+  color: var(--c-white);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--c-white) 28%, transparent), 0 8px 18px -8px color-mix(in srgb, var(--c-indigo-750) 50%, transparent);
 }
 button.bg-surface-gray-10:not([disabled]):hover {
   background: var(--accent-600);
@@ -239,16 +125,16 @@ button.bg-surface-gray-10:not([disabled]):active {
 /* sklo (subtle / outline) */
 button.inline-flex.bg-surface-gray-2,
 button.inline-flex.bg-surface-base {
-  background: rgba(255, 255, 255, 0.62);
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  background: color-mix(in srgb, var(--c-white) 62%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-white) 85%, transparent);
   color: var(--text-1);
-  box-shadow: inset 0 1px 0 #fff, 0 4px 14px -6px rgba(64, 72, 160, 0.22);
+  box-shadow: inset 0 1px 0 var(--c-white), 0 4px 14px -6px color-mix(in srgb, var(--c-shadow-2) 22%, transparent);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
 }
 button.inline-flex.bg-surface-gray-2:hover,
 button.inline-flex.bg-surface-base:hover {
-  background: rgba(255, 255, 255, 0.8);
+  background: color-mix(in srgb, var(--c-white) 80%, transparent);
 }
 /* destruktivní */
 button.inline-flex.bg-surface-red-2,
@@ -262,8 +148,8 @@ textarea,
 select {
   border-radius: var(--r-field);
   border-color: var(--control-border);
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: inset 0 1px 2px rgba(64, 72, 160, 0.08);
+  background: color-mix(in srgb, var(--c-white) 70%, transparent);
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--c-shadow-2) 8%, transparent);
   color: var(--text-1);
   transition:
     box-shadow 0.2s ease,
@@ -282,14 +168,14 @@ textarea:focus,
 select:focus {
   border-color: var(--accent-600) !important;
   box-shadow: var(--focus-ring) !important;
-  background: rgba(255, 255, 255, 0.9);
+  background: color-mix(in srgb, var(--c-white) 90%, transparent);
 }
 button.relative.flex.h-7.w-full {
   height: 40px;
   border-radius: var(--r-field);
-  background: rgba(255, 255, 255, 0.7);
+  background: color-mix(in srgb, var(--c-white) 70%, transparent);
   border-color: var(--control-border);
-  box-shadow: inset 0 1px 2px rgba(64, 72, 160, 0.08);
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--c-shadow-2) 8%, transparent);
 }
 
 /* ---------- dialogy, panely, menu ---------- */
@@ -297,7 +183,7 @@ button.relative.flex.h-7.w-full {
   background: var(--mat-sheet-bg) !important;
   -webkit-backdrop-filter: var(--mat-sheet-blur);
   backdrop-filter: var(--mat-sheet-blur);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid color-mix(in srgb, var(--c-white) 90%, transparent);
   box-shadow: var(--mat-sheet-shadow) !important;
   border-radius: var(--r-modal) !important;
 }
@@ -319,7 +205,7 @@ button.relative.flex.h-7.w-full {
   background: var(--mat-sheet-bg) !important;
   -webkit-backdrop-filter: var(--mat-sheet-blur);
   backdrop-filter: var(--mat-sheet-blur);
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid color-mix(in srgb, var(--c-white) 90%, transparent) !important;
   box-shadow: var(--mat-sheet-shadow) !important;
   border-radius: 18px !important;
 }
@@ -373,14 +259,14 @@ button.relative.flex.h-7.w-full {
   color: var(--text-2);
 }
 [class*='group/sidebar-item']:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: color-mix(in srgb, var(--c-white) 50%, transparent);
   color: var(--text-1);
 }
 [class*='group/sidebar-item'].bg-surface-elevation-3 {
-  background: rgba(255, 255, 255, 0.9);
+  background: color-mix(in srgb, var(--c-white) 90%, transparent);
   color: var(--text-1);
   font-weight: 600;
-  box-shadow: 0 2px 10px -3px rgba(64, 72, 160, 0.25);
+  box-shadow: 0 2px 10px -3px color-mix(in srgb, var(--c-shadow-2) 25%, transparent);
 }
 [class*='group/sidebar-item'] .truncate.text-sm {
   font-size: var(--nav-item-fs, 14.5px);
@@ -423,24 +309,24 @@ div.mb-2.grid.items-center.gap-4.rounded.bg-surface-gray-2 * {
 
 /* Mobilní spodní lišta */
 .gl-tabbar {
-  background: linear-gradient(145deg, rgba(255,255,255,.8), rgba(255,255,255,.45));
+  background: linear-gradient(145deg, color-mix(in srgb, var(--c-white) 80%, transparent), color-mix(in srgb, var(--c-white) 45%, transparent));
   backdrop-filter: blur(26px) saturate(170%);
   -webkit-backdrop-filter: blur(26px) saturate(170%);
-  border: 1px solid rgba(255,255,255,.8);
-  box-shadow: inset 0 1px 0 #fff, 0 18px 36px -16px rgba(40,40,120,.4);
+  border: 1px solid color-mix(in srgb, var(--c-white) 80%, transparent);
+  box-shadow: inset 0 1px 0 var(--c-white), 0 18px 36px -16px color-mix(in srgb, var(--c-shadow-3) 40%, transparent);
   padding-bottom: env(safe-area-inset-bottom);
 }
 .gl-tab:active { transform: scale(.94); transition: transform .12s var(--spring, ease); }
 
 /* Kulaté akční tlačítko (Kontakt: volat, e-mail) */
 .gl-round {
-  background: rgba(255,255,255,.72);
-  border: 1px solid rgba(255,255,255,.9);
-  box-shadow: inset 0 1px 0 #fff, 0 6px 16px -10px rgba(40,40,120,.35);
-  color: var(--ink-gray-9, #0e1330);
+  background: color-mix(in srgb, var(--c-white) 72%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-white) 90%, transparent);
+  box-shadow: inset 0 1px 0 var(--c-white), 0 6px 16px -10px color-mix(in srgb, var(--c-shadow-3) 35%, transparent);
+  color: var(--ink-gray-9, var(--text-1));
   transition: transform .15s var(--spring, ease), background .15s;
 }
-.gl-round:hover { background: #fff; }
+.gl-round:hover { background: var(--c-white); }
 .gl-round:active { transform: scale(.94); }
 
 /* Záložky aktivity jako čipy (detail Zakázky) */
@@ -454,27 +340,27 @@ div.mb-2.grid.items-center.gap-4.rounded.bg-surface-gray-2 * {
   height: 36px;
   padding: 0 14px !important;
   border-radius: 999px;
-  background: rgba(255,255,255,.55);
+  background: color-mix(in srgb, var(--c-white) 55%, transparent);
   font-size: 14px;
   font-weight: 600;
-  color: var(--ink-gray-6, #5b6280);
+  color: var(--ink-gray-6, var(--c-blue-550-3));
   transition: background .15s, color .15s;
 }
 .gl-chiptabs [role='tab'] svg { display: none; }
 .gl-chiptabs [role='tab'][aria-selected='true'] {
-  background: #0e1330;
-  color: #fff;
+  background: var(--text-1);
+  color: var(--c-white);
 }
 .gl-chiptabs [role='tablist'] > div:last-child[class*='bottom-0'],
 .gl-chiptabs [role='tablist'] [class*='h-px'] { display: none !important; }
 
 /* Textová pole: frappe-ui jim dává šedé pozadí utilitou, ta přebíjí pravidlo pro pole výše */
 textarea[class*='bg-surface-gray'] {
-  background: rgba(255, 255, 255, 0.7) !important;
-  border-color: rgba(255, 255, 255, 0.9) !important;
+  background: color-mix(in srgb, var(--c-white) 70%, transparent) !important;
+  border-color: color-mix(in srgb, var(--c-white) 90%, transparent) !important;
 }
 textarea[class*='bg-surface-gray']:focus {
-  background: rgba(255, 255, 255, 0.92) !important;
+  background: color-mix(in srgb, var(--c-white) 92%, transparent) !important;
 }
 
 /* Mobil: hlavička stránky se musí vejít vedle tlačítek a hledání */
@@ -502,7 +388,7 @@ textarea[class*='bg-surface-gray']:focus {
   gap: 2px;
   padding: 3px;
   border-radius: 999px;
-  background: rgba(110, 120, 200, 0.11);
+  background: color-mix(in srgb, var(--c-tint) 11%, transparent);
 }
 .gl-seg-btn {
   display: inline-flex;
@@ -513,26 +399,26 @@ textarea[class*='bg-surface-gray']:focus {
   border-radius: 999px;
   font-size: 14px;
   font-weight: 600;
-  color: var(--ink-gray-5, #6b7194);
+  color: var(--ink-gray-5, var(--c-blue-500-3));
   transition: background 0.15s, color 0.15s;
 }
 .gl-seg-on {
-  background: #fff;
-  color: var(--ink-gray-9, #0e1330);
-  box-shadow: 0 2px 10px -2px rgba(64, 72, 160, 0.28);
+  background: var(--c-white);
+  color: var(--ink-gray-9, var(--text-1));
+  box-shadow: 0 2px 10px -2px color-mix(in srgb, var(--c-shadow-2) 28%, transparent);
 }
 
 /* z GlQuickFilter.vue */
 .gl-chip {
-  background: rgba(255, 255, 255, 0.62);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: inset 0 1px 0 #fff, 0 4px 12px -8px rgba(40, 40, 120, 0.3);
-  color: var(--ink-gray-8, #2a2f52);
+  background: color-mix(in srgb, var(--c-white) 62%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-white) 85%, transparent);
+  box-shadow: inset 0 1px 0 var(--c-white), 0 4px 12px -8px color-mix(in srgb, var(--c-shadow-3) 30%, transparent);
+  color: var(--ink-gray-8, var(--c-indigo-750-2));
   transition: background 0.15s, box-shadow 0.15s;
 }
 .gl-chip:hover,
 .gl-chip-open {
-  background: rgba(255, 255, 255, 0.9);
+  background: color-mix(in srgb, var(--c-white) 90%, transparent);
 }
 .gl-chip-on {
   background: color-mix(in srgb, var(--accent-600) 10%, transparent);
@@ -561,7 +447,7 @@ input.gl-chip-input:not(#_):focus {
 }
 
 /* ---------- 2. kolo: jednotná pole (oprava 3) ----------
-   Pole 44 px, zaoblení 14 px, text 15 px regular (hodnota nikdy tučně), štítek 13 px / 600 / #3D4466 nad polem. */
+   Pole 44 px, zaoblení 14 px, text 15 px regular (hodnota nikdy tučně), štítek 13 px / 600 / var(--c-blue-700) nad polem. */
 .gl-field {
   height: 44px;
   padding: 0 14px;
@@ -569,9 +455,9 @@ input.gl-chip-input:not(#_):focus {
   font-size: 15px;
   font-weight: 400;
   color: var(--text-1);
-  background: rgba(255, 255, 255, 0.7);
+  background: color-mix(in srgb, var(--c-white) 70%, transparent);
   border: 1px solid var(--control-border);
-  box-shadow: inset 0 1px 2px rgba(64, 72, 160, 0.08);
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--c-shadow-2) 8%, transparent);
   transition: box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 textarea.gl-field {
@@ -585,14 +471,14 @@ textarea.gl-field {
   outline: none;
   border-color: var(--accent-600) !important;
   box-shadow: var(--focus-ring) !important;
-  background: rgba(255, 255, 255, 0.92);
+  background: color-mix(in srgb, var(--c-white) 92%, transparent);
 }
 .gl-label {
   display: block;
   margin-bottom: 6px;
   font-size: 13px;
   font-weight: 600;
-  color: #3d4466;
+  color: var(--c-blue-700);
 }
 /* dialogy frappe-ui: stejná výška, písmo a štítky jako .gl-field */
 [role='dialog'] input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']):not(.gl-chip-input),
@@ -607,7 +493,7 @@ textarea.gl-field {
 [role='dialog'] label.text-xs.text-ink-gray-5 {
   font-size: 13px;
   font-weight: 600;
-  color: #3d4466;
+  color: var(--c-blue-700);
   margin-bottom: 2px;
 }
 
@@ -619,7 +505,7 @@ textarea.gl-field {
   gap: 2px;
   padding: 3px;
   border-radius: 14px;
-  background: rgba(110, 120, 200, 0.12);
+  background: color-mix(in srgb, var(--c-tint) 12%, transparent);
 }
 .gl-segf > button {
   height: 38px;
@@ -630,10 +516,10 @@ textarea.gl-field {
   transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
 .gl-segf > button[aria-pressed='true'] {
-  background: #fff;
+  background: var(--c-white);
   color: var(--text-1);
   font-weight: 600;
-  box-shadow: 0 2px 10px -2px rgba(64, 72, 160, 0.3);
+  box-shadow: 0 2px 10px -2px color-mix(in srgb, var(--c-shadow-2) 30%, transparent);
 }
 
 /* ---------- 2. kolo: zaškrtávátka (oprava 19) ----------
@@ -643,7 +529,7 @@ input[type='checkbox']:not([role='switch']) {
   height: 18px;
   border-radius: var(--check-square-radius, 6px) !important;
   border: 1.5px solid var(--control-border);
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: color-mix(in srgb, var(--c-white) 80%, transparent);
   color: var(--accent-600);
   cursor: pointer;
 }
@@ -662,7 +548,7 @@ input[type='checkbox']:not([role='switch']):focus-visible {
 
 /* prázdná hodnota (oprava 7): tlumené „Bez hodnoty“ + odkaz „Doplnit“ */
 .gl-empty {
-  color: var(--empty-color, #464c70);
+  color: var(--empty-color, var(--text-3));
   font-size: var(--empty-fs, 13px);
   font-weight: 400;
 }
@@ -701,14 +587,14 @@ input[type='checkbox']:not([role='switch']):focus-visible {
   height: 36px;
   padding: 0 14px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 2px 10px -4px rgba(64, 72, 160, 0.3);
+  background: color-mix(in srgb, var(--c-white) 80%, transparent);
+  box-shadow: 0 2px 10px -4px color-mix(in srgb, var(--c-shadow-2) 30%, transparent);
   font-size: 13px;
   font-weight: 600;
   color: var(--text-1);
   transition: background 0.15s, transform 0.15s;
 }
-.gl-quick:hover { background: #fff; }
+.gl-quick:hover { background: var(--c-white); }
 .gl-quick:active { transform: scale(0.96); }
 
 /* Kanban: posuvník schovaný, pozici ukazuje vlastní ukazatel pod sloupci */
@@ -717,28 +603,28 @@ input[type='checkbox']:not([role='switch']):focus-visible {
 
 /* ---------- 2. kolo: destruktivní tlačítka (oprava 4) ----------
    Smazat nikdy jako výrazné tlačítko na stránce: subtle = červený text bez podkladu (patička formuláře, menu „…“).
-   Plná červená #C8321F jen v potvrzení, které smazání dokončí (solid). */
+   Plná červená var(--c-red-550) jen v potvrzení, které smazání dokončí (solid). */
 button.inline-flex.bg-surface-red-2 {
   background: transparent !important;
   border-color: transparent !important;
   box-shadow: none !important;
-  color: #a82614 !important;
+  color: var(--overdue) !important;
   font-weight: 600;
 }
 button.inline-flex.bg-surface-red-2:hover {
-  background: rgba(200, 50, 31, 0.08) !important;
+  background: color-mix(in srgb, var(--c-red-550) 8%, transparent) !important;
 }
 button.inline-flex.bg-surface-red-7 {
-  background: #c8321f !important;
-  color: #fff !important;
-  box-shadow: 0 6px 18px -8px rgba(200, 50, 31, 0.6) !important;
+  background: var(--c-red-550) !important;
+  color: var(--c-white) !important;
+  box-shadow: 0 6px 18px -8px color-mix(in srgb, var(--c-red-550) 60%, transparent) !important;
 }
 button.inline-flex.bg-surface-red-7:hover {
-  background: #b02a19 !important;
+  background: var(--c-red-600-2) !important;
 }
 
 /* mobilní lišta: aktivní položka v bílé pilulce (design 2. kolo) */
-.gl-tab-on { background: rgba(255, 255, 255, 0.92); border-radius: 22px; box-shadow: 0 2px 10px -3px rgba(64, 72, 160, 0.3); margin: 6px 2px; }
+.gl-tab-on { background: color-mix(in srgb, var(--c-white) 92%, transparent); border-radius: 22px; box-shadow: 0 2px 10px -3px color-mix(in srgb, var(--c-shadow-2) 30%, transparent); margin: 6px 2px; }
 
 /* ---------- 2. kolo: mobilní dialogy jako spodní panel (oprava 27, 29) ----------
    Všechny formuláře v dialogu se na úzkém displeji vysunou zdola: Zrušit vlevo, akce vpravo / velké tlačítko dole. */
@@ -767,7 +653,7 @@ button.inline-flex.bg-surface-red-7:hover {
     height: 5px;
     margin: 8px auto 0;
     border-radius: 999px;
-    background: rgba(110, 120, 200, 0.3);
+    background: color-mix(in srgb, var(--c-tint) 30%, transparent);
   }
   /* akce: Zrušit vlevo, primární vpravo, na celou šířku pod sebe u krátkých panelů */
   .dialog-scroll-container .dialog-content [class*='justify-end'] > button,
@@ -790,11 +676,11 @@ button.inline-flex.bg-surface-red-7:hover {
   border-radius: 18px !important;
   padding: 8px 10px 8px 16px !important;
   /* plné pozadí: panel leží přes seznam a musí být čitelný (GlSelectBanner) */
-  background: rgba(255, 255, 255, 0.97) !important;
+  background: color-mix(in srgb, var(--c-white) 97%, transparent) !important;
   -webkit-backdrop-filter: blur(24px) saturate(170%);
   backdrop-filter: blur(24px) saturate(170%);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 18px 44px -14px rgba(64, 72, 160, 0.4) !important;
+  border: 1px solid color-mix(in srgb, var(--c-white) 90%, transparent);
+  box-shadow: 0 18px 44px -14px color-mix(in srgb, var(--c-shadow-2) 40%, transparent) !important;
 }
 .absolute.inset-x-0.bottom-6.mx-auto.w-max > div > div:first-child {
   border-right: 0 !important;
@@ -825,8 +711,8 @@ button.inline-flex.bg-surface-red-7:hover {
   margin: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
-  --tw-ring-shadow: 0 0 #0000 !important;
-  --tw-shadow: 0 0 #0000 !important;
+  --tw-ring-shadow: 0 0 transparent !important;
+  --tw-shadow: 0 0 transparent !important;
   border-radius: inherit !important;
 }
 
@@ -838,7 +724,7 @@ button.inline-flex.bg-surface-red-7:hover {
 .gl-skel {
   display: block;
   border-radius: 8px;
-  background: linear-gradient(90deg, var(--skeleton, rgba(110, 120, 200, 0.12)) 25%, var(--skeleton-shine, rgba(255, 255, 255, 0.55)) 50%, var(--skeleton, rgba(110, 120, 200, 0.12)) 75%);
+  background: linear-gradient(90deg, var(--skeleton, color-mix(in srgb, var(--c-tint) 12%, transparent)) 25%, var(--skeleton-shine, color-mix(in srgb, var(--c-white) 55%, transparent)) 50%, var(--skeleton, color-mix(in srgb, var(--c-tint) 12%, transparent)) 75%);
   background-size: 200% 100%;
   animation: gl-shimmer var(--dur-skeleton, 1.4s) linear infinite;
 }
@@ -848,8 +734,8 @@ button.inline-flex.bg-surface-red-7:hover {
   gap: 10px;
   padding: 20px;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: color-mix(in srgb, var(--c-white) 50%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-white) 80%, transparent);
 }
 @media (prefers-reduced-motion: reduce) {
   .gl-skel { animation: none; }
@@ -857,7 +743,7 @@ button.inline-flex.bg-surface-red-7:hover {
 
 /* přepínač (nastavení zapnout / vypnout): indigová stopa, bílé kolečko */
 button[role='switch'] {
-  background-color: rgba(110, 120, 200, 0.25) !important;
+  background-color: color-mix(in srgb, var(--c-tint) 25%, transparent) !important;
   border-radius: 999px !important;
   transition: background-color 0.2s ease;
 }
@@ -865,8 +751,8 @@ button[role='switch'][data-state='checked'] {
   background-color: var(--accent-600) !important;
 }
 button[role='switch'] > span {
-  background: #fff !important;
-  box-shadow: 0 2px 6px -1px rgba(40, 40, 120, 0.4);
+  background: var(--c-white) !important;
+  box-shadow: 0 2px 6px -1px color-mix(in srgb, var(--c-shadow-3) 40%, transparent);
   transition: transform 0.35s var(--spring, cubic-bezier(0.34, 1.56, 0.64, 1));
 }
 
@@ -875,7 +761,7 @@ button[role='switch'] > span {
 .gl-text mark,
 [contenteditable] mark {
   background: color-mix(in srgb, var(--accent-600) 12%, transparent);
-  color: #3b32c4;
+  color: var(--c-indigo-500);
   border-radius: 7px;
   padding: 1px 6px;
   font-family: ui-monospace, 'SF Mono', Menlo, monospace;
@@ -885,13 +771,13 @@ button[role='switch'] > span {
 
 /* pole s chybou: červený okraj a nápověda pod polem */
 .gl-field-error {
-  border-color: #a82614 !important;
-  box-shadow: 0 0 0 3px rgba(200, 50, 31, 0.14) !important;
+  border-color: var(--overdue) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-red-550) 14%, transparent) !important;
 }
 .gl-field-hint-error {
   margin-top: 4px;
   font-size: 12px;
-  color: #a82614;
+  color: var(--overdue);
 }
 
 /* detail Zakázky na užším okně (karta aktivity < 640 px): nadpis a „Více“ v prvním řádku, čipy pod nimi */
@@ -917,7 +803,7 @@ button[role='switch'] > span {
   color: var(--text-1);
   transition: background 0.12s;
 }
-.gl-menu-item:hover { background: rgba(255, 255, 255, 0.75); }
+.gl-menu-item:hover { background: color-mix(in srgb, var(--c-white) 75%, transparent); }
 
 /* ---------- animace z designu (stisk a pružina) ---------- */
 @keyframes gl-pop {
@@ -969,7 +855,7 @@ button[role='switch'] > span {
   width: var(--pill-w);
   height: var(--pill-h);
   border-radius: 999px;
-  background: #0e1330;
+  background: var(--text-1);
   transform: translate(var(--pill-x), var(--pill-y));
   transition: transform 0.4s var(--spring, cubic-bezier(0.34, 1.56, 0.64, 1)), width 0.3s ease;
   pointer-events: none;
@@ -985,7 +871,7 @@ button[role='switch'] > span {
   background: var(--mat-sheet-bg) !important;
   -webkit-backdrop-filter: var(--mat-sheet-blur);
   backdrop-filter: var(--mat-sheet-blur);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid color-mix(in srgb, var(--c-white) 90%, transparent);
   box-shadow: var(--mat-sheet-shadow) !important;
   border-radius: 14px;
   overflow: hidden;
@@ -997,14 +883,14 @@ button[role='switch'] > span {
 /* Popisky (Tooltip z frappe-ui): výchozí 12px indigový štítek těsně u okraje menu byl špatně čitelný.
    Větší písmo, tmavé pozadí s vysokým kontrastem a odstup od ikony. */
 [data-reka-popper-content-wrapper] > [data-state][data-side] > .rounded.bg-surface-gray-10 {
-  background: #0e1330 !important;
-  color: #fff !important;
+  background: var(--text-1) !important;
+  color: var(--c-white) !important;
   font-size: 13px !important;
   font-weight: 600;
   line-height: 1.3;
   padding: 6px 10px !important;
   border-radius: 8px !important;
-  box-shadow: 0 8px 24px -8px rgba(14, 19, 48, 0.45) !important;
+  box-shadow: 0 8px 24px -8px color-mix(in srgb, var(--text-1) 45%, transparent) !important;
 }
 [data-reka-popper-content-wrapper] > [data-state][data-side='right'] { margin-left: 8px; }
 [data-reka-popper-content-wrapper] > [data-state][data-side='left'] { margin-right: 8px; }

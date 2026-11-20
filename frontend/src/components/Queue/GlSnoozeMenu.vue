@@ -52,7 +52,7 @@ defineExpose({ toggle: () => (open.value = !open.value) })
 <style scoped>
 .gl-snz {
   position: absolute; z-index: 20; top: calc(100% + 6px); left: 0; min-width: 230px; padding: 6px;
-  border-radius: 16px; background: var(--mat-dialog, #fff); border: 1px solid var(--line); box-shadow: var(--mat-sheet-shadow);
+  border-radius: 16px; background: var(--mat-dialog, var(--c-white)); border: 1px solid var(--line); box-shadow: var(--mat-sheet-shadow);
   animation: gl-snz-in var(--t-base) var(--ease-out);
 }
 @keyframes gl-snz-in { from { opacity: 0; transform: translateY(6px); } }

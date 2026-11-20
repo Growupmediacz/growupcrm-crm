@@ -37,10 +37,10 @@
             v-for="n in res.data.items"
             :key="n.name"
             class="flex items-start gap-3.5 rounded-[18px] p-3.5 text-left transition"
-            :class="selected === n.name ? 'bg-white shadow-[inset_3px_0_0_var(--accent-600),0_6px_18px_-10px_rgba(40,40,120,.3)]' : 'hover:bg-white/60'"
+            :class="selected === n.name ? 'bg-white shadow-[inset_3px_0_0_var(--accent-600),0_6px_18px_-10px_color-mix(in_srgb,var(--c-shadow-3)_30%,transparent)]' : 'hover:bg-white/60'"
             @click="selected = n.name"
           >
-            <span class="flex size-11 shrink-0 items-center justify-center rounded-[13px] bg-[rgba(139,92,246,.13)] text-[#6d3fd6]"><GlIcon name="doc" :size="20" /></span>
+            <span class="flex size-11 shrink-0 items-center justify-center rounded-[13px] bg-[color-mix(in_srgb,var(--stage-kontaktovano)_13%,transparent)] text-[var(--c-violet-450-3)]"><GlIcon name="doc" :size="20" /></span>
             <span class="min-w-0 flex-1">
               <span lang="cs" class="block truncate text-[16px] font-semibold text-ink-gray-9">{{ n.title }}</span>
               <span lang="cs" class="mt-0.5 line-clamp-2 text-[14px] leading-snug text-ink-gray-7">{{ n.content }}</span>
@@ -69,7 +69,7 @@
               <span class="flex items-center gap-1.5 rounded-full border border-[var(--line)] bg-white/70 px-3 py-1.5 text-[13.5px] font-medium text-ink-gray-7"><GlIcon name="cal" :size="15" />{{ fullDate(current.modified) }}</span>
               <span class="ml-1 flex items-center gap-2 text-[14px] text-ink-gray-8">
                 <img v-if="userImage(current.owner)" :src="userImage(current.owner)" class="size-7 rounded-full object-cover" />
-                <span v-else class="flex size-7 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]">{{ initials(userName(current.owner)) }}</span>{{ userName(current.owner) }}
+                <span v-else class="flex size-7 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[10px] font-bold text-[var(--c-blue-600)]">{{ initials(userName(current.owner)) }}</span>{{ userName(current.owner) }}
               </span>
             </div>
             <div class="mt-5 border-t border-[var(--line)]">
@@ -79,9 +79,9 @@
                   <div v-if="sec.label" class="mb-2 text-[13px] font-bold uppercase tracking-[0.06em] text-ink-gray-5">{{ sec.label }}</div>
                   <div lang="cs" class="gl3-note" v-html="sanitizeHTML(sec.html)" />
                 </div>
-                <div v-if="parsed.next" class="mt-1 flex items-center gap-3 rounded-[18px] border border-[rgba(224,161,0,.35)] bg-[rgba(224,161,0,.1)] px-4 py-3">
-                  <GlIcon name="clock" :size="22" class="shrink-0 text-[#d48a00]" />
-                  <span class="min-w-0 flex-1 text-[15px] text-ink-gray-9"><b class="text-[#b06d00]">{{ __('Další krok') }}:</b> {{ parsed.next }}</span>
+                <div v-if="parsed.next" class="mt-1 flex items-center gap-3 rounded-[18px] border border-[color-mix(in_srgb,var(--stage-nabidka)_35%,transparent)] bg-[color-mix(in_srgb,var(--stage-nabidka)_10%,transparent)] px-4 py-3">
+                  <GlIcon name="clock" :size="22" class="shrink-0 text-[var(--c-amber-600)]" />
+                  <span class="min-w-0 flex-1 text-[15px] text-ink-gray-9"><b class="text-[var(--c-amber-650)]">{{ __('Další krok') }}:</b> {{ parsed.next }}</span>
                   <Button variant="solid" iconLeft="check" :label="__('Vytvořit úkol')" @click="taskFromNote" />
                 </div>
               </template>
@@ -101,9 +101,9 @@
           <div lang="cs" class="gl-text line-clamp-4 flex-1 whitespace-pre-line text-[14px] leading-relaxed text-ink-gray-7">{{ n.content }}</div>
           <div class="flex flex-wrap gap-1.5">
             <span v-if="n.ref" class="max-w-full truncate rounded-full px-2.5 py-0.5 text-[12px] font-bold" :class="REF_TONE[n.ref.kind]">{{ n.ref.label }}</span>
-            <span v-if="n.org && n.ref?.kind !== 'org'" class="max-w-full truncate rounded-full bg-[rgba(110,120,200,.14)] px-2.5 py-0.5 text-[12px] font-semibold text-[#4a5173]">{{ n.org }}</span>
+            <span v-if="n.org && n.ref?.kind !== 'org'" class="max-w-full truncate rounded-full bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] px-2.5 py-0.5 text-[12px] font-semibold text-[var(--c-blue-650)]">{{ n.org }}</span>
           </div>
-          <div class="flex items-center gap-2 text-[13px] text-ink-gray-5"><span class="flex size-6 items-center justify-center rounded-full bg-[#dde6ff] text-[9px] font-bold text-[#2440a6]">{{ initials(userName(n.owner)) }}</span>{{ whenLabel(n.modified) }}</div>
+          <div class="flex items-center gap-2 text-[13px] text-ink-gray-5"><span class="flex size-6 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[9px] font-bold text-[var(--c-blue-600)]">{{ initials(userName(n.owner)) }}</span>{{ whenLabel(n.modified) }}</div>
         </div>
       </div>
       <GlTaskModal v-if="showTask" v-model="showTask" :defaults="taskDefaults" @saved="toast.success(__('Úkol je v seznamu Úkoly a v kalendáři.'))" />
@@ -155,8 +155,8 @@ let timer
 watch([scope, period, organization, q, limit], () => { clearTimeout(timer); timer = setTimeout(() => res.fetch(params()), 200) })
 
 const REF_TONE = {
-  lead: 'bg-[rgba(139,92,246,.14)] text-[#5a2fc0]', project: 'bg-[rgba(59,110,246,.13)] text-[#1f48b8]',
-  org: 'bg-[rgba(110,120,200,.14)] text-[#4a5173]', contact: 'bg-[rgba(110,120,200,.14)] text-[#4a5173]',
+  lead: 'bg-[color-mix(in_srgb,var(--stage-kontaktovano)_14%,transparent)] text-[var(--c-violet-550)]', project: 'bg-[color-mix(in_srgb,var(--c-blue-400)_13%,transparent)] text-[var(--info)]',
+  org: 'bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] text-[var(--c-blue-650)]', contact: 'bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] text-[var(--c-blue-650)]',
 }
 const userName = (u) => getUser(u)?.full_name || u
 const initials = (s) => (s || '?').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join('')

@@ -30,17 +30,17 @@
         <div class="mb-1.5 flex items-center justify-between">
           <span class="gl-label !mb-0">{{ __('Text') }}</span>
           <Dropdown :options="varOptions" placement="right">
-            <button class="inline-flex h-8 items-center gap-1.5 rounded-full bg-white/80 px-3 text-[13px] font-semibold text-ink-gray-9 shadow-[0_1px_6px_-2px_rgba(64,72,160,.25)]"><GlIcon name="hash" :size="14" />{{ __('Vložit proměnnou') }}</button>
+            <button class="inline-flex h-8 items-center gap-1.5 rounded-full bg-white/80 px-3 text-[13px] font-semibold text-ink-gray-9 shadow-[0_1px_6px_-2px_color-mix(in_srgb,var(--c-shadow-2)_25%,transparent)]"><GlIcon name="hash" :size="14" />{{ __('Vložit proměnnou') }}</button>
           </Dropdown>
         </div>
-        <div class="mb-1 flex gap-1 rounded-t-xl bg-[rgba(110,120,200,.1)] p-1.5">
+        <div class="mb-1 flex gap-1 rounded-t-xl bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] p-1.5">
           <button class="size-8 rounded-lg font-bold hover:bg-white/70" :aria-label="__('Tučně')" @mousedown.prevent="fmt('bold')">B</button>
           <button class="size-8 rounded-lg italic hover:bg-white/70" :aria-label="__('Kurzíva')" @mousedown.prevent="fmt('italic')">I</button>
           <button class="size-8 rounded-lg hover:bg-white/70" :aria-label="__('Odkaz')" @mousedown.prevent="link"><GlIcon name="link" :size="15" /></button>
         </div>
         <div ref="editor" contenteditable="true" lang="cs" role="textbox" :aria-label="__('Text šablony')" class="gl-field gl-text !h-auto min-h-[260px] whitespace-pre-wrap !rounded-t-none py-3 leading-relaxed outline-none [&_u]:no-underline" @input="onInput" @focus="target = 'body'" />
       </div>
-      <div class="flex items-center gap-2.5 rounded-2xl bg-[rgba(110,120,200,.1)] px-4 py-3 text-[13px] text-ink-gray-7"><GlIcon name="lock" :size="15" class="shrink-0 text-ink-gray-5" />{{ __('Odkaz na odhlášení a adresu sídla přidáme do patičky vždy automaticky.') }}</div>
+      <div class="flex items-center gap-2.5 rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] px-4 py-3 text-[13px] text-ink-gray-7"><GlIcon name="lock" :size="15" class="shrink-0 text-ink-gray-5" />{{ __('Odkaz na odhlášení a adresu sídla přidáme do patičky vždy automaticky.') }}</div>
       <ErrorMessage :message="error" />
     </div>
 
@@ -51,7 +51,7 @@
             <option value="">{{ __('Vzorový kontakt') }}</option><option v-for="c in contacts.data || []" :key="c.name" :value="c.name">{{ c.full_name }}</option>
           </select>
         </div>
-        <div class="rounded-2xl bg-[rgba(110,120,200,.1)] p-4">
+        <div class="rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] p-4">
           <div v-if="form.step_type === 'E-mail'" class="mb-2 text-[15px] font-bold text-ink-gray-9">{{ preview.subject }}</div>
           <!-- eslint-disable-next-line vue/no-v-html -->
           <div lang="cs" class="gl-text text-[14px] leading-relaxed text-ink-gray-7 [&_mark]:rounded [&_mark]:bg-[color-mix(in_srgb,var(--accent-600)_14%,transparent)] [&_mark]:px-0.5" v-html="previewHtml" />

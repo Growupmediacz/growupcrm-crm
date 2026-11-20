@@ -25,12 +25,12 @@ import { useRoute } from 'vue-router'
 const props = defineProps({ row: { type: Object, required: true } })
 const route = useRoute()
 
-const REL_COLORS = { Klient: '#22b35e', Prospekt: '#3b82f6', 'Bývalý klient': '#9ca3af' }
+const REL_COLORS = { Klient: 'var(--stage-vyhrano)', Prospekt: 'var(--stage-nova)', 'Bývalý klient': 'var(--stage-prohrano)' }
 const TONES = [
-  'bg-[#dde6ff] text-[#2440a6]',
-  'bg-[#efe7ff] text-[#6d3fd0]',
-  'bg-[#ffe9d6] text-[#b4560f]',
-  'bg-[#dcf5e6] text-[#0f6b32]',
+  'bg-[var(--c-blue-50)] text-[var(--c-blue-600)]',
+  'bg-[var(--c-violet-50)] text-[var(--c-violet-450)]',
+  'bg-[var(--c-orange-100)] text-[var(--c-orange-600)]',
+  'bg-[var(--c-green-100)] text-[var(--success)]',
 ]
 const tone = (s) => TONES[[...(s || '')].reduce((a, c) => a + c.charCodeAt(0), 0) % TONES.length]
 const initials = (s) =>

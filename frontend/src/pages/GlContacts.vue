@@ -28,7 +28,7 @@
       class="gl-card flex min-h-0 w-full flex-col p-3 md:w-[360px] md:shrink-0"
       :class="selected && isMobileView ? 'hidden' : ''"
     >
-      <label class="flex h-10 items-center gap-2 rounded-2xl bg-[rgba(110,120,200,.08)] px-3">
+      <label class="flex h-10 items-center gap-2 rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] px-3">
         <GlIcon name="search" :size="16" class="text-ink-gray-5" />
         <input v-model="q" class="gl-chip-input flex-1 text-[14px]" :placeholder="__('Jméno, firma, telefon')" />
       </label>
@@ -37,7 +37,7 @@
           v-for="c in directory.data || []"
           :key="c.name"
           class="flex items-center gap-3 rounded-2xl px-2.5 py-2.5 text-left transition"
-          :class="selected === c.name ? 'bg-white shadow-[inset_3px_0_0_var(--accent-600),0_6px_18px_-10px_rgba(40,40,120,.35)]' : 'hover:bg-white/55'"
+          :class="selected === c.name ? 'bg-white shadow-[inset_3px_0_0_var(--accent-600),0_6px_18px_-10px_color-mix(in_srgb,var(--c-shadow-3)_35%,transparent)]' : 'hover:bg-white/55'"
           @click="select(c.name)"
         >
           <img v-if="c.image" :src="c.image" class="size-10 shrink-0 rounded-full object-cover" />
@@ -134,13 +134,13 @@
             <span class="min-w-0 flex-1">
               <span class="flex items-center gap-2">
                 <span class="truncate text-[15px] font-semibold text-ink-gray-9">{{ a.title }}</span>
-                <span v-if="a.badge" class="rounded-full bg-[rgba(224,161,0,.18)] px-2 py-0.5 text-[11px] font-bold text-[#7a4400]">{{ a.badge }}</span>
+                <span v-if="a.badge" class="rounded-full bg-[color-mix(in_srgb,var(--stage-nabidka)_18%,transparent)] px-2 py-0.5 text-[11px] font-bold text-[var(--warning)]">{{ a.badge }}</span>
                 <span v-if="a.upcoming" class="rounded-full bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] px-2 py-0.5 text-[11px] font-bold text-[var(--accent-700)]">{{ __('Naplánováno') }}</span>
               </span>
               <span class="block truncate text-[12.5px] text-ink-gray-5">{{ a.text || when(a.date) }}</span>
             </span>
           </component>
-          <div v-if="card.data.leads.length" class="mt-3 border-t border-[rgba(110,120,200,.14)] pt-3">
+          <div v-if="card.data.leads.length" class="mt-3 border-t border-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] pt-3">
             <div class="mb-1 text-[12px] font-bold text-ink-gray-5">{{ __('Zakázky') }}</div>
             <router-link
               v-for="l in card.data.leads"
@@ -319,12 +319,12 @@ function openImport() {
 }
 
 const KIND = {
-  call: { icon: 'phone', tone: 'bg-[#fde8dc] text-[#a3360a]' },
-  event: { icon: 'cal', tone: 'bg-[#e6ecff] text-[#1f48b8]' },
-  note: { icon: 'doc', tone: 'bg-[#efe7ff] text-[#6d3fd0]' },
-  email: { icon: 'mail', tone: 'bg-[rgba(20,160,190,.13)] text-[#08626f]' },
+  call: { icon: 'phone', tone: 'bg-[var(--c-orange-50)] text-[var(--c-orange-650)]' },
+  event: { icon: 'cal', tone: 'bg-[var(--c-blue-50-2)] text-[var(--info)]' },
+  note: { icon: 'doc', tone: 'bg-[var(--c-violet-50)] text-[var(--c-violet-450)]' },
+  email: { icon: 'mail', tone: 'bg-[color-mix(in_srgb,var(--c-cyan-600)_13%,transparent)] text-[var(--c-cyan-750)]' },
 }
-const TONES = ['bg-[#dde6ff] text-[#2440a6]', 'bg-[#ffe9d6] text-[#b4560f]', 'bg-[#efe7ff] text-[#6d3fd0]', 'bg-[#dcf5e6] text-[#0f6b32]']
+const TONES = ['bg-[var(--c-blue-50)] text-[var(--c-blue-600)]', 'bg-[var(--c-orange-100)] text-[var(--c-orange-600)]', 'bg-[var(--c-violet-50)] text-[var(--c-violet-450)]', 'bg-[var(--c-green-100)] text-[var(--success)]']
 const tone = (s) => TONES[[...(s || '')].reduce((a, ch) => a + ch.charCodeAt(0), 0) % TONES.length]
 const initials = (s) =>
   (s || '?')

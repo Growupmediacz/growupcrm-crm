@@ -2,7 +2,7 @@
   <!-- GrowUp (design 2. kolo, C6): karta Tarif a Uživatelé (obsazená místa). Data: growupcrm.plans.seat_usage
        (obsazená místa = aktivní uživatelé + čekající pozvánky). -->
   <div v-if="usage.data" class="mt-3 grid gap-3 sm:grid-cols-[1.6fr_1fr]">
-    <div class="rounded-[20px] bg-[rgba(110,120,200,.09)] p-5">
+    <div class="rounded-[20px] bg-[color-mix(in_srgb,var(--c-tint)_9%,transparent)] p-5">
       <div class="text-[12px] font-semibold text-ink-gray-5">{{ __('Tarif') }}</div>
       <div class="text-[24px] font-bold tracking-tight text-ink-gray-9">{{ usage.data.name }}</div>
       <div class="mt-1 text-[13px] text-ink-gray-6">
@@ -12,13 +12,13 @@
         <a :href="`mailto:${usage.data.contact_email}?subject=${encodeURIComponent('GrowUpCRM – změna tarifu')}`" class="gl-quick">{{ __('Změnit tarif') }}</a>
       </div>
     </div>
-    <div class="rounded-[20px] bg-[rgba(110,120,200,.09)] p-5">
+    <div class="rounded-[20px] bg-[color-mix(in_srgb,var(--c-tint)_9%,transparent)] p-5">
       <div class="text-[12px] font-semibold text-ink-gray-5">{{ __('Uživatelé') }}</div>
-      <div class="num text-[28px] font-bold leading-tight text-ink-gray-9" :class="full && '!text-[#a82614]'">
+      <div class="num text-[28px] font-bold leading-tight text-ink-gray-9" :class="full && '!text-[var(--overdue)]'">
         {{ usage.data.used }}<span v-if="usage.data.max_users" class="text-[18px] font-medium text-ink-gray-5"> / {{ usage.data.max_users }}</span>
       </div>
-      <div v-if="usage.data.max_users" class="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[rgba(110,120,200,.2)]">
-        <div class="h-full rounded-full" :class="full ? 'bg-[#c8321f]' : 'bg-[var(--accent-600)]'" :style="{ width: `${Math.min(100, (usage.data.used * 100) / usage.data.max_users)}%` }" />
+      <div v-if="usage.data.max_users" class="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--c-tint)_20%,transparent)]">
+        <div class="h-full rounded-full" :class="full ? 'bg-[var(--c-red-550)]' : 'bg-[var(--accent-600)]'" :style="{ width: `${Math.min(100, (usage.data.used * 100) / usage.data.max_users)}%` }" />
       </div>
       <div class="mt-1.5 text-[12px] text-ink-gray-5">{{ free }}</div>
     </div>

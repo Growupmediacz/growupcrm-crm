@@ -75,7 +75,7 @@ function countText(n) {
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  color: var(--ink-gray-9, #14181f);
+  color: var(--ink-gray-9, var(--c-gray-900));
   white-space: nowrap;
 }
 .gl-selbar__count .gl-icon {
@@ -83,8 +83,8 @@ function countText(n) {
   height: 22px !important;
   padding: 3px;
   border-radius: 7px;
-  background: var(--brand-primary, #5b5bf6);
-  color: #fff;
+  background: var(--brand-primary, var(--accent-600));
+  color: var(--c-white);
 }
 .gl-selbar__actions {
   display: flex;
@@ -106,19 +106,19 @@ function countText(n) {
   border-radius: 10px;
   font-weight: 600;
   font-size: 14px;
-  color: var(--ink-gray-8, #1f2430);
-  background: rgba(110, 120, 200, 0.08);
+  color: var(--ink-gray-8, var(--c-blue-850));
+  background: color-mix(in srgb, var(--c-tint) 8%, transparent);
   white-space: nowrap;
 }
 .gl-selbar__btn:hover {
-  background: rgba(110, 120, 200, 0.16);
+  background: color-mix(in srgb, var(--c-tint) 16%, transparent);
 }
 .gl-selbar__btn--danger {
-  color: #b42318;
-  background: rgba(208, 54, 42, 0.08);
+  color: var(--c-red-600);
+  background: color-mix(in srgb, var(--c-red-500) 8%, transparent);
 }
 .gl-selbar__btn--danger:hover {
-  background: rgba(208, 54, 42, 0.16);
+  background: color-mix(in srgb, var(--c-red-500) 16%, transparent);
 }
 .gl-selbar__close {
   display: inline-flex;
@@ -127,9 +127,9 @@ function countText(n) {
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  color: var(--ink-gray-6, #555c6b);
+  color: var(--ink-gray-6, var(--c-gray-600));
 }
 .gl-selbar__close:hover {
-  background: rgba(110, 120, 200, 0.1);
+  background: color-mix(in srgb, var(--c-tint) 10%, transparent);
 }
 </style>

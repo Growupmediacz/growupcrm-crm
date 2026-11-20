@@ -6,15 +6,15 @@
         <h2 class="flex items-center gap-2 text-[20px] font-bold text-ink-gray-9"><GlIcon name="sparkles" :size="19" class="text-[var(--accent-600)]" />{{ __('Agent kampaně') }}</h2>
         <p class="mt-1 text-[14px] text-ink-gray-6">{{ __('Agent napíše každé firmě 4 e-maily z dat jejího webu a ukázky jejího oboru: úvod, follow-up s auditem zdarma, další data z oboru a upřímné rozloučení. Cíl: aby se podívali na ukázku svého oboru a ozvali se kvůli auditu zdarma.') }}</p>
       </div>
-      <span v-if="s?.auto_send" class="rounded-full bg-[rgba(34,179,94,.12)] px-3 py-1 text-[13px] font-semibold text-[#178a4a]">{{ __('Schváleno, odesílá se samo') }}</span>
+      <span v-if="s?.auto_send" class="rounded-full bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] px-3 py-1 text-[13px] font-semibold text-[var(--c-green-700)]">{{ __('Schváleno, odesílá se samo') }}</span>
     </div>
 
-    <div v-if="s && !s.configured" class="rounded-[14px] bg-[rgba(214,130,20,.1)] px-4 py-3 text-[14px] text-[#8a4b00]">{{ __('Agent nemá API klíč Anthropic, obraťte se na správce.') }}</div>
+    <div v-if="s && !s.configured" class="rounded-[14px] bg-[color-mix(in_srgb,var(--c-amber-550-2)_10%,transparent)] px-4 py-3 text-[14px] text-[var(--c-orange-750)]">{{ __('Agent nemá API klíč Anthropic, obraťte se na správce.') }}</div>
 
     <template v-if="s">
       <!-- výsledky -->
       <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
-        <div v-for="k in KPIS" :key="k.key" class="rounded-[14px] bg-[rgba(110,120,200,.06)] px-3 py-2">
+        <div v-for="k in KPIS" :key="k.key" class="rounded-[14px] bg-[color-mix(in_srgb,var(--c-tint)_6%,transparent)] px-3 py-2">
           <div class="text-[12px] text-ink-gray-5">{{ k.label }}</div>
           <div class="num text-[24px] font-bold text-ink-gray-9">{{ k.value(s) }}</div>
         </div>
@@ -46,15 +46,15 @@
         <Button v-if="!s.auto_send && s.ai.ready" :label="__('Přepsat všechny znovu')" :disabled="s.ai.queued > 0" @click="prepare(1)" />
         <span class="text-[13px] text-ink-gray-6">
           {{ __('Texty: {0} z {1} hotovo', [s.ai.ready, s.ai.total]) }}<template v-if="s.ai.queued"> · {{ __('agent píše ({0})…', [s.ai.queued]) }}</template>
-          <template v-if="s.ai.failed"> · <span class="text-[#a82614]">{{ __('{0} chyb', [s.ai.failed]) }}</span></template>
+          <template v-if="s.ai.failed"> · <span class="text-[var(--overdue)]">{{ __('{0} chyb', [s.ai.failed]) }}</span></template>
         </span>
       </div>
-      <div v-for="e in s.errors" :key="e.organization" class="text-[13px] text-[#a82614]">{{ e.organization }}: {{ e.ai_error }}</div>
+      <div v-for="e in s.errors" :key="e.organization" class="text-[13px] text-[var(--overdue)]">{{ e.organization }}: {{ e.ai_error }}</div>
 
       <!-- ukázky ke kontrole -->
       <div v-if="s.samples.length">
         <h3 class="mb-2 text-[16px] font-bold text-ink-gray-9">{{ s.auto_send ? __('Nejbližší naplánované e-maily') : __('Ukázky ke kontrole') }}</h3>
-        <div v-for="m in s.samples" :key="m.name" class="mb-2 rounded-[16px] border border-[rgba(110,120,200,.16)] p-4">
+        <div v-for="m in s.samples" :key="m.name" class="mb-2 rounded-[16px] border border-[color-mix(in_srgb,var(--c-tint)_16%,transparent)] p-4">
           <div class="flex flex-wrap items-baseline justify-between gap-2 text-[13px] text-ink-gray-5">
             <span><b class="text-ink-gray-9">{{ m.organization }}</b> · {{ m.email }}</span>
             <span v-if="m.scheduled_at">{{ __('odejde') }} {{ formatDate(m.scheduled_at) }}</span>
@@ -64,7 +64,7 @@
           <div class="gl-mail mt-1 text-[14px] leading-relaxed text-ink-gray-8" v-html="sanitizeHTML(m.body)" />
           <details v-if="m.followups.length" class="mt-2 text-[13px] text-ink-gray-7">
             <summary class="cursor-pointer text-ink-gray-5">{{ __('Navazující e-maily') }}</summary>
-            <div v-for="(f, i) in m.followups" :key="i" class="mt-3 rounded-[12px] bg-[rgba(110,120,200,.05)] p-3"><b class="text-ink-gray-9">{{ f[0] }}</b><div class="mt-1" v-html="sanitizeHTML(f[1])" /></div>
+            <div v-for="(f, i) in m.followups" :key="i" class="mt-3 rounded-[12px] bg-[color-mix(in_srgb,var(--c-tint)_5%,transparent)] p-3"><b class="text-ink-gray-9">{{ f[0] }}</b><div class="mt-1" v-html="sanitizeHTML(f[1])" /></div>
           </details>
         </div>
       </div>

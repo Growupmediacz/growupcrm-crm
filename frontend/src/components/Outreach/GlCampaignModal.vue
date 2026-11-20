@@ -10,7 +10,7 @@
         <div>
           <span class="gl-label">{{ __('Sekvence kroků') }}</span>
           <div class="flex flex-col gap-2.5">
-            <div v-for="(s, i) in steps" :key="s.id" class="flex flex-wrap items-center gap-2 rounded-2xl bg-[rgba(110,120,200,.08)] p-2.5">
+            <div v-for="(s, i) in steps" :key="s.id" class="flex flex-wrap items-center gap-2 rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] p-2.5">
               <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-white text-[13px] font-bold text-ink-gray-7">{{ i + 1 }}</span>
               <select v-model="s.step_type" class="gl-field !w-[130px]" @change="s.template = ''">
                 <option v-for="t in TYPES" :key="t" :value="t">{{ t }}</option>

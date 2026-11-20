@@ -19,7 +19,7 @@
               :key="t.value"
               type="button"
               class="gl-chip flex h-9 items-center gap-2 rounded-full px-3 text-[13.5px] font-medium"
-              :class="form.activityType === t.value && '!bg-[#0e1330] !text-white'"
+              :class="form.activityType === t.value && '!bg-[var(--text-1)] !text-white'"
               :disabled="!canEdit"
               @click="form.activityType = t.value"
             >

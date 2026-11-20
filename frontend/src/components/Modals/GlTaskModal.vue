@@ -5,7 +5,7 @@
   <Dialog v-model:open="show" :options="{ size: 'xl' }">
     <template #body-title>
       <div class="flex items-center gap-3.5">
-        <span class="flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-[#e0a100] text-white shadow-[0_8px_18px_-8px_rgba(224,161,0,.7)]"><GlIcon name="check" :size="22" /></span>
+        <span class="flex size-12 shrink-0 items-center justify-center rounded-[14px] bg-[var(--stage-nabidka)] text-white shadow-[0_8px_18px_-8px_color-mix(in_srgb,var(--stage-nabidka)_70%,transparent)]"><GlIcon name="check" :size="22" /></span>
         <div class="flex min-w-0 flex-col">
           <h3 class="text-[24px] font-bold leading-tight tracking-[-0.02em] text-ink-gray-9">{{ task ? __('Upravit úkol') : __('Nový úkol') }}</h3>
           <span v-if="form.ref?.label" class="truncate text-[13px] text-ink-gray-5">{{ form.ref.label }}</span>
@@ -30,7 +30,7 @@
                 @click="form.assigned_to = u.name"
               >
                 <img v-if="u.user_image" :src="u.user_image" class="size-7 rounded-full object-cover" />
-                <span v-else class="flex size-7 items-center justify-center rounded-full bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]">{{ initials(u.full_name) }}</span>
+                <span v-else class="flex size-7 items-center justify-center rounded-full bg-[var(--c-blue-50)] text-[10px] font-bold text-[var(--c-blue-600)]">{{ initials(u.full_name) }}</span>
                 {{ u.name === me ? __('Já') : u.full_name }}
               </button>
             </div>
@@ -78,7 +78,7 @@
           </div>
         </div>
         <FormControl v-model="form.description" type="textarea" :rows="3" :label="__('Poznámka')" :placeholder="__('Podrobnosti, na co nezapomenout…')" :disabled="readonly" />
-        <div v-if="readonly" class="rounded-xl bg-[rgba(110,120,200,.08)] px-3 py-2 text-[13px] text-ink-gray-6">{{ __('Úkol patří kolegovi, můžete ho jen zobrazit.') }}</div>
+        <div v-if="readonly" class="rounded-xl bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] px-3 py-2 text-[13px] text-ink-gray-6">{{ __('Úkol patří kolegovi, můžete ho jen zobrazit.') }}</div>
         <ErrorMessage :message="error" />
       </div>
     </template>

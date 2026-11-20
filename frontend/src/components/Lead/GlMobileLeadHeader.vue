@@ -54,8 +54,8 @@ const emit = defineEmits(['changed', 'fill', 'plan', 'stage'])
 const { leadStatuses } = statusesStore()
 
 // barvy fází stejné jako v LeadHero (jen tečka čipu)
-const STAGE_COLORS = { 'Nová': '#3b82f6', 'Kontaktováno': '#8b5cf6', 'Nabídka odeslána': '#e0a100', 'Jednání': '#f97316', 'Vyhráno': '#22b35e', 'Prohráno': '#9ca3af' }
-const stageColor = computed(() => STAGE_COLORS[props.doc.status] || '#9ca3af')
+const STAGE_COLORS = { 'Nová': 'var(--stage-nova)', 'Kontaktováno': 'var(--stage-kontaktovano)', 'Nabídka odeslána': 'var(--stage-nabidka)', 'Jednání': 'var(--stage-jednani)', 'Vyhráno': 'var(--stage-vyhrano)', 'Prohráno': 'var(--stage-prohrano)' }
+const stageColor = computed(() => STAGE_COLORS[props.doc.status] || 'var(--stage-prohrano)')
 const money = computed(() => `${new Intl.NumberFormat('cs-CZ').format(props.doc.order_value || 0)} Kč`)
 const isOpen = computed(() => {
   const s = (leadStatuses.data || []).find((x) => x.name === props.doc.status)

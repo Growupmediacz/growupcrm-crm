@@ -27,7 +27,7 @@
     <div v-if="nextText" class="mt-1.5 flex items-center gap-1.5 text-[14px] font-semibold" :class="nextClass">
       <GlIcon name="clock" :size="15" /><span class="truncate">{{ nextText }}</span>
     </div>
-    <div v-else-if="plain(lead.no_next_step)" class="mt-1.5 flex items-center gap-1.5 text-[14px] font-semibold text-[#9a5b00]">
+    <div v-else-if="plain(lead.no_next_step)" class="mt-1.5 flex items-center gap-1.5 text-[14px] font-semibold text-[var(--c-amber-700)]">
       <GlIcon name="alert" :size="15" /><span class="truncate">{{ __('Bez dalšího kroku') }}</span>
     </div>
   </router-link>
@@ -45,8 +45,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['press'])
 
-const COLORS = { 'Nová': '#3b82f6', 'Kontaktováno': '#8b5cf6', 'Nabídka odeslána': '#e0a100', 'Jednání': '#f97316', 'Vyhráno': '#22b35e', 'Prohráno': '#9ca3af' }
-const color = computed(() => COLORS[props.lead.status] || '#9ca3af')
+const COLORS = { 'Nová': 'var(--stage-nova)', 'Kontaktováno': 'var(--stage-kontaktovano)', 'Nabídka odeslána': 'var(--stage-nabidka)', 'Jednání': 'var(--stage-jednani)', 'Vyhráno': 'var(--stage-vyhrano)', 'Prohráno': 'var(--stage-prohrano)' }
+const color = computed(() => COLORS[props.lead.status] || 'var(--stage-prohrano)')
 const title = computed(() => props.lead.order_title || props.lead.lead_name || props.lead.name)
 const money = computed(() => `${new Intl.NumberFormat('cs-CZ').format(props.lead.order_value)} Kč`)
 
@@ -70,7 +70,7 @@ const next = computed(() => {
   return null
 })
 const nextText = computed(() => next.value?.text)
-const nextClass = computed(() => (next.value?.overdue ? 'text-[#a82614]' : next.value?.event ? 'text-[#1f48b8]' : 'text-[#7a4400]'))
+const nextClass = computed(() => (next.value?.overdue ? 'text-[var(--overdue)]' : next.value?.event ? 'text-[var(--info)]' : 'text-[var(--warning)]'))
 
 let timer = null
 let fired = false

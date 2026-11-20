@@ -5,7 +5,7 @@
     <div class="text-base-semibold text-ink-gray-9">{{ __('Oznámení') }}</div>
     <div class="mt-1 text-p-sm text-ink-gray-6">{{ __('Co vám CRM ohlásí ve zvonku a co pošle e-mailem.') }}</div>
     <div class="mt-4 overflow-hidden rounded-[16px] border border-[var(--line)]">
-      <div class="grid grid-cols-[1fr_56px_56px] sm:grid-cols-[1fr_96px_96px] items-center gap-2 bg-[rgba(110,120,200,.06)] px-3 py-2.5 text-[12px] sm:px-4 sm:text-[13px] font-semibold text-ink-gray-5">
+      <div class="grid grid-cols-[1fr_56px_56px] sm:grid-cols-[1fr_96px_96px] items-center gap-2 bg-[color-mix(in_srgb,var(--c-tint)_6%,transparent)] px-3 py-2.5 text-[12px] sm:px-4 sm:text-[13px] font-semibold text-ink-gray-5">
         <span>{{ __('Událost') }}</span>
         <span class="text-center"><span class="sm:hidden">{{ __('Aplikace') }}</span><span class="max-sm:hidden">{{ __('V aplikaci') }}</span></span>
         <span class="text-center">{{ __('E-mailem') }}</span>

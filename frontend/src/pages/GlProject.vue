@@ -29,17 +29,17 @@
           </div>
           <div class="shrink-0 text-right">
             <div class="text-[13px] text-ink-gray-5">{{ __('Termín') }}</div>
-            <div class="num text-[22px] font-bold md:text-[30px]" :class="p.display_status === 'Zpožděno' ? 'text-[#a82614]' : 'text-ink-gray-9'">{{ p.deadline ? fullDate(p.deadline) : __('Bez termínu') }}</div>
+            <div class="num text-[22px] font-bold md:text-[30px]" :class="p.display_status === 'Zpožděno' ? 'text-[var(--overdue)]' : 'text-ink-gray-9'">{{ p.deadline ? fullDate(p.deadline) : __('Bez termínu') }}</div>
             <div v-if="p.days_left !== null" class="text-[13px] text-ink-gray-5">{{ daysLeft }}</div>
           </div>
         </div>
         <div class="mt-5 flex flex-wrap items-center gap-3">
-          <div class="h-2.5 min-w-[140px] flex-1 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><div class="h-full rounded-full bg-[var(--accent-600)] transition-all duration-500" :style="{ width: `${progress}%` }" /></div>
+          <div class="h-2.5 min-w-[140px] flex-1 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--c-tint)_16%,transparent)]"><div class="h-full rounded-full bg-[var(--accent-600)] transition-all duration-500" :style="{ width: `${progress}%` }" /></div>
           <span class="num text-[15px] font-bold text-ink-gray-9">{{ progress }} %</span>
           <span class="num text-[13px] text-ink-gray-5">{{ __('{0} z {1} úkolů', [doneCount, p.tasks.length]) }}</span>
         </div>
         <!-- čekání na klienta -->
-        <div v-if="p.status === 'Čeká' || p.waiting" class="mt-4 flex flex-wrap items-center gap-3 rounded-[18px] bg-[rgba(224,161,0,.14)] px-4 py-3 text-[#7a4400]">
+        <div v-if="p.status === 'Čeká' || p.waiting" class="mt-4 flex flex-wrap items-center gap-3 rounded-[18px] bg-[color-mix(in_srgb,var(--stage-nabidka)_14%,transparent)] px-4 py-3 text-[var(--warning)]">
           <GlIcon name="clock" :size="22" />
           <div class="min-w-0 flex-1">
             <div class="truncate text-[15px] font-bold">{{ __('Čeká na klienta') }}: {{ p.waiting?.title || p.waiting_note }}</div>
@@ -69,21 +69,21 @@
               <b class="truncate text-[17px] text-ink-gray-9">{{ g.phase || __('Bez fáze') }}</b>
             </button>
             <span class="num text-[14px] text-ink-gray-5">{{ g.done }} / {{ g.tasks.length }}</span>
-            <span class="h-1.5 w-40 overflow-hidden rounded-full bg-[rgba(110,120,200,.16)]"><span class="block h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${g.tasks.length ? (g.done * 100) / g.tasks.length : 0}%` }" /></span>
+            <span class="h-1.5 w-40 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--c-tint)_16%,transparent)]"><span class="block h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${g.tasks.length ? (g.done * 100) / g.tasks.length : 0}%` }" /></span>
             <button v-if="view === 'phase'" class="ml-auto flex shrink-0 items-center gap-1.5 text-[14px] font-semibold text-[var(--accent-600)] hover:underline" @click="openTask(g.phase)"><GlIcon name="plus" :size="15" />{{ __('Přidat úkol') }}</button>
           </div>
           <template v-if="!collapsed[g.phase]">
           <div v-for="t in g.tasks" :key="t.name" class="flex cursor-pointer items-center gap-3 rounded-2xl py-2 pl-7 pr-1 hover:bg-white/50" @click="(e) => !e.target.closest('button,a') && openTask(null, t.name)">
             <button
               class="flex size-6 shrink-0 items-center justify-center rounded-full border-[1.75px] transition"
-              :class="t.status === 'Done' ? 'border-[var(--accent-600)] bg-[var(--accent-600)] text-white' : 'border-[rgba(110,120,200,.45)] hover:border-[var(--accent-600)]'"
+              :class="t.status === 'Done' ? 'border-[var(--accent-600)] bg-[var(--accent-600)] text-white' : 'border-[color-mix(in_srgb,var(--c-tint)_45%,transparent)] hover:border-[var(--accent-600)]'"
               :aria-label="t.status === 'Done' ? __('Vrátit mezi otevřené') : __('Označit jako hotové')"
               @click="toggleTask(t)"
             ><GlIcon v-if="t.status === 'Done'" name="check" :size="14" /></button>
             <span class="min-w-0 flex-1 truncate text-[15px]" :class="t.status === 'Done' ? 'text-ink-gray-5 line-through' : 'font-medium text-ink-gray-9'">{{ t.title }}</span>
-            <span v-if="t.waiting_on_client && t.status !== 'Done'" class="shrink-0 rounded-full bg-[rgba(224,161,0,.22)] px-2.5 py-0.5 text-[11px] font-bold text-[#7a4400]">{{ __('čeká na klienta') }}</span>
-            <span v-if="t.due_date" class="num shrink-0 text-[13px]" :class="isOverdue(t) ? 'font-semibold text-[#a82614]' : 'text-ink-gray-5'">{{ shortDate(t.due_date) }}</span>
-            <GlUserAvatar v-if="t.assigned_to" :user="t.assigned_to" class="size-7 bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" />
+            <span v-if="t.waiting_on_client && t.status !== 'Done'" class="shrink-0 rounded-full bg-[color-mix(in_srgb,var(--stage-nabidka)_22%,transparent)] px-2.5 py-0.5 text-[11px] font-bold text-[var(--warning)]">{{ __('čeká na klienta') }}</span>
+            <span v-if="t.due_date" class="num shrink-0 text-[13px]" :class="isOverdue(t) ? 'font-semibold text-[var(--overdue)]' : 'text-ink-gray-5'">{{ shortDate(t.due_date) }}</span>
+            <GlUserAvatar v-if="t.assigned_to" :user="t.assigned_to" class="size-7 bg-[var(--c-blue-50)] text-[10px] font-bold text-[var(--c-blue-600)]" />
             <span v-else class="size-7 shrink-0" />
           </div>
           </template>
@@ -101,7 +101,7 @@
           <div v-for="r in details" :key="r.label" class="flex items-center justify-between gap-4 border-b border-[var(--line)] py-3 last:border-b-0">
             <dt class="shrink-0 text-[15px] text-ink-gray-5">{{ r.label }}</dt>
             <dd class="flex min-w-0 items-center gap-2 truncate text-right text-[15px] font-medium text-ink-gray-9">
-              <GlUserAvatar v-if="r.user" :user="r.user" class="size-7 bg-[#dde6ff] text-[10px] font-bold text-[#2440a6]" />
+              <GlUserAvatar v-if="r.user" :user="r.user" class="size-7 bg-[var(--c-blue-50)] text-[10px] font-bold text-[var(--c-blue-600)]" />
               <router-link v-if="r.value && r.to" :to="r.to" class="truncate font-semibold text-[var(--accent-600)] hover:underline">{{ r.value }}</router-link>
               <template v-else-if="r.value">{{ r.value }}</template>
               <span v-else class="gl-empty">{{ __('Bez hodnoty') }}</span>
@@ -133,15 +133,15 @@
         <h2 class="mb-3 text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Milníky') }}</h2>
         <div class="relative">
           <div v-for="(m, i) in p.milestones" :key="m.title" class="relative flex gap-4 pb-5 last:pb-0">
-            <span v-if="i < p.milestones.length - 1" class="absolute left-[9px] top-6 h-[calc(100%-18px)] w-px bg-[rgba(110,120,200,.3)]" aria-hidden="true" />
-            <span class="relative z-[1] mt-1 size-[19px] shrink-0 rounded-full border-[3px] border-white shadow-[0_0_0_1px_rgba(110,120,200,.25)]" :style="{ background: m.done ? '#22b35e' : m.client ? '#e0a100' : '#a3a8cc' }" />
+            <span v-if="i < p.milestones.length - 1" class="absolute left-[9px] top-6 h-[calc(100%-18px)] w-px bg-[color-mix(in_srgb,var(--c-tint)_30%,transparent)]" aria-hidden="true" />
+            <span class="relative z-[1] mt-1 size-[19px] shrink-0 rounded-full border-[3px] border-white shadow-[0_0_0_1px_color-mix(in_srgb,var(--c-tint)_25%,transparent)]" :style="{ background: m.done ? 'var(--stage-vyhrano)' : m.client ? 'var(--stage-nabidka)' : 'var(--c-indigo-300)' }" />
             <span class="min-w-0 flex-1 border-b border-[var(--line)] pb-4" :class="i === p.milestones.length - 1 && 'border-b-0 pb-0'">
               <span class="flex items-baseline justify-between gap-3">
                 <span class="truncate text-[16px] font-semibold text-ink-gray-9" :class="m.done && 'line-through opacity-60'">{{ m.title }}</span>
-                <span v-if="m.date && m.client && !m.done" class="num shrink-0 text-[15px]" :class="m.date < today ? 'font-semibold text-[#c8321f]' : 'text-ink-gray-6'">{{ shortDate(m.date) }}</span>
+                <span v-if="m.date && m.client && !m.done" class="num shrink-0 text-[15px]" :class="m.date < today ? 'font-semibold text-[var(--c-red-550)]' : 'text-ink-gray-6'">{{ shortDate(m.date) }}</span>
               </span>
-              <span v-if="m.client && !m.done" class="block text-[14px] font-medium text-[#d48a00]">{{ __('čeká se') }}</span>
-              <span v-else-if="m.date" class="num block text-[14px]" :class="!m.done && m.date < today ? 'font-semibold text-[#c8321f]' : 'text-ink-gray-6'">{{ shortDate(m.date) }}</span>
+              <span v-if="m.client && !m.done" class="block text-[14px] font-medium text-[var(--c-amber-600)]">{{ __('čeká se') }}</span>
+              <span v-else-if="m.date" class="num block text-[14px]" :class="!m.done && m.date < today ? 'font-semibold text-[var(--c-red-550)]' : 'text-ink-gray-6'">{{ shortDate(m.date) }}</span>
             </span>
           </div>
         </div>
@@ -151,9 +151,9 @@
       <div class="gl-card p-6">
         <div class="mb-3 flex items-baseline justify-between"><h2 class="text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Tým') }}</h2><button class="flex items-center gap-1 text-[14px] font-semibold text-[var(--accent-600)] hover:underline" @click="openEdit"><GlIcon name="edit" :size="14" />{{ __('Upravit') }}</button></div>
         <div v-for="m in p.team_load" :key="m.user" class="flex items-center gap-3 border-b border-[var(--line)] py-3 last:border-b-0">
-          <GlUserAvatar :user="m.user" class="size-12 bg-[#dde6ff] text-[14px] font-bold text-[#2440a6]" />
+          <GlUserAvatar :user="m.user" class="size-12 bg-[var(--c-blue-50)] text-[14px] font-bold text-[var(--c-blue-600)]" />
           <span class="min-w-0 flex-1"><span class="block truncate text-[16px] font-semibold text-ink-gray-9">{{ userName(m.user) }}</span><span class="block text-[13px] text-ink-gray-5">{{ m.owner ? __('vlastník') : __('člen týmu') }}</span></span>
-          <span class="num shrink-0 rounded-full bg-[rgba(110,120,200,.1)] px-2.5 py-0.5 text-[12.5px] font-medium text-ink-gray-6">{{ tasksWord(m.tasks) }}</span>
+          <span class="num shrink-0 rounded-full bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] px-2.5 py-0.5 text-[12.5px] font-medium text-ink-gray-6">{{ tasksWord(m.tasks) }}</span>
         </div>
       </div>
     </div>
@@ -223,7 +223,7 @@ const project = createResource({ url: 'growupcrm.projects.get_project', params: 
 const p = computed(() => project.data)
 usePageMeta(() => ({ title: p.value?.project_name || __('Projekt') }))
 
-const STATUS_COLORS = { 'Probíhá': '#3b82f6', 'Průběžně': '#8b5cf6', 'Zpožděno': '#e5484d', 'Čeká': '#e0a100', 'Dokončeno': '#22b35e', 'Zrušeno': '#9ca3af' }
+const STATUS_COLORS = { 'Probíhá': 'var(--stage-nova)', 'Průběžně': 'var(--stage-kontaktovano)', 'Zpožděno': 'var(--c-red-400)', 'Čeká': 'var(--stage-nabidka)', 'Dokončeno': 'var(--stage-vyhrano)', 'Zrušeno': 'var(--stage-prohrano)' }
 const STATUSES = ['Čeká', 'Probíhá', 'Průběžně', 'Dokončeno', 'Zrušeno']
 const today = new Date().toISOString().slice(0, 10)
 

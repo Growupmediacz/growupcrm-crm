@@ -10,12 +10,12 @@
 
     <div v-if="status.loading && !status.data" class="text-ink-gray-5">{{ __('Načítám…') }}</div>
     <template v-else-if="s">
-      <div class="flex items-center gap-4 rounded-[20px] bg-[rgba(110,120,200,.07)] p-4">
-        <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-white text-[20px] font-bold text-[#4285F4]">G</span>
+      <div class="flex items-center gap-4 rounded-[20px] bg-[color-mix(in_srgb,var(--c-tint)_7%,transparent)] p-4">
+        <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-white text-[20px] font-bold text-[var(--c-blue-400-2)]">G</span>
         <div class="min-w-0 flex-1">
           <div class="truncate text-[15px] font-bold text-ink-gray-9">{{ s.email }}</div>
-          <div class="flex items-center gap-1.5 text-[13px]" :class="s.connected ? 'text-[#178a4a]' : 'text-ink-gray-6'">
-            <span class="size-2 rounded-full" :class="s.connected ? 'bg-[#22b35e]' : 'bg-ink-gray-4'" />
+          <div class="flex items-center gap-1.5 text-[13px]" :class="s.connected ? 'text-[var(--c-green-700)]' : 'text-ink-gray-6'">
+            <span class="size-2 rounded-full" :class="s.connected ? 'bg-[var(--stage-vyhrano)]' : 'bg-ink-gray-4'" />
             {{ s.connected ? __('Připojeno') : __('Nepřipojeno') }}
             <span v-if="s.connected && s.last_sync" class="text-ink-gray-5">· {{ __('naposledy staženo') }} {{ formatDate(s.last_sync) }}</span>
           </div>

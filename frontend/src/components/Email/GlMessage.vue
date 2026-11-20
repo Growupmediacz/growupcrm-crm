@@ -107,7 +107,7 @@ const statusLabel = computed(() => {
   border-radius: 12px;
   text-align: left;
 }
-.gl-msg-head:hover { background: var(--fill-tinted, rgba(110, 120, 200, 0.075)); }
+.gl-msg-head:hover { background: var(--fill-tinted, color-mix(in srgb, var(--c-tint) 7.5%, transparent)); }
 .gl-msg-head:focus-visible { outline: none; box-shadow: var(--focus-ring); }
 .gl-msg-av {
   display: inline-flex;

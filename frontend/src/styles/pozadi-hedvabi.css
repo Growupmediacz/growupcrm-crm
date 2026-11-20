@@ -7,7 +7,7 @@
 .app-bg {
   position: relative;
   min-height: 100vh;
-  background-color: #E4E1FF;      /* záloha, než se vlny vykreslí */
+  background-color: var(--c-indigo-50);      /* záloha, než se vlny vykreslí */
   isolation: isolate;
 }
 
@@ -29,7 +29,7 @@
 
 /* Uživatel si v systému vypnul průhlednost → klidné jednobarevné pozadí */
 @media (prefers-reduced-transparency: reduce) {
-  .app-bg::before { background: linear-gradient(180deg, #ECEAFF, #E6ECFF); }
+  .app-bg::before { background: linear-gradient(180deg, var(--c-indigo-50-2), var(--c-blue-50-2)); }
 }
 
 /* Tisk bez pozadí */

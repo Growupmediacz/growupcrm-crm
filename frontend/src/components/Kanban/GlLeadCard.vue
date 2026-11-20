@@ -20,7 +20,7 @@
       <GlIcon name="clock" :size="14" />
       <span class="truncate">{{ nextText }}</span>
     </div>
-    <div v-else-if="lead.no_next_step" class="flex items-center gap-1.5 text-[13px] font-semibold text-[#9a5b00]">
+    <div v-else-if="lead.no_next_step" class="flex items-center gap-1.5 text-[13px] font-semibold text-[var(--c-amber-700)]">
       <GlIcon name="alert" :size="14" />
       <span class="truncate">{{ __('Bez dalšího kroku') }}</span>
     </div>
@@ -77,6 +77,6 @@ const nextText = computed(() =>
     : `${next.value.label} – ${dayLabel(next.value.at)}`,
 )
 const nextClass = computed(() =>
-  next.value.overdue ? 'text-[#a82614]' : next.value.kind === 'event' ? 'text-[#1f48b8]' : 'text-[#7a4400]',
+  next.value.overdue ? 'text-[var(--overdue)]' : next.value.kind === 'event' ? 'text-[var(--info)]' : 'text-[var(--warning)]',
 )
 </script>

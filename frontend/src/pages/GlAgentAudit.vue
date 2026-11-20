@@ -183,10 +183,10 @@ const when = (s) =>
 const statusLabel = (s) => (s === 'OK' ? `✓ ${__('OK')}` : s === 'Odmítnuto' ? `! ${__(s)}` : s === 'Chyba' ? `! ${__(s)}` : s)
 const badge = (s) =>
   s === 'OK'
-    ? 'bg-[rgba(34,179,94,.14)] text-[#15803d]'
+    ? 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_14%,transparent)] text-[var(--c-green-700-2)]'
     : s === 'Odmítnuto'
-      ? 'bg-[rgba(224,161,0,.16)] text-[var(--warning)]'
-      : 'bg-[rgba(200,50,31,.12)] text-[var(--overdue)]'
+      ? 'bg-[color-mix(in_srgb,var(--stage-nabidka)_16%,transparent)] text-[var(--warning)]'
+      : 'bg-[color-mix(in_srgb,var(--c-red-550)_12%,transparent)] text-[var(--overdue)]'
 function refRoute(r) {
   if (!r.reference_name) return null
   if (r.reference_doctype === 'CRM Lead') return { name: 'Lead', params: { leadId: r.reference_name } }

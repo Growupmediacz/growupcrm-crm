@@ -9,7 +9,7 @@
         <span class="text-[15px] font-semibold capitalize" :class="isWeekend(d) ? 'text-ink-gray-4' : 'text-ink-gray-7'">{{ weekdayShort(d) }}</span>
         <span
           class="flex size-9 items-center justify-center rounded-full text-[20px] font-bold tabular-nums"
-          :class="sameDay(d, today) ? 'bg-[var(--accent-600)] text-white shadow-[0_6px_16px_-6px_rgba(91,91,246,.7)]' : 'text-ink-gray-9'"
+          :class="sameDay(d, today) ? 'bg-[var(--accent-600)] text-white shadow-[0_6px_16px_-6px_color-mix(in_srgb,var(--accent-600)_70%,transparent)]' : 'text-ink-gray-9'"
         >
           {{ d.getDate() }}
         </span>
@@ -18,7 +18,7 @@
     <!-- úkoly a celodenní události -->
     <div
       v-if="hasTopRow"
-      class="flex border-b border-[rgba(110,120,200,.16)] pb-2 pr-[var(--sb)]"
+      class="flex border-b border-[color-mix(in_srgb,var(--c-tint)_16%,transparent)] pb-2 pr-[var(--sb)]"
       :style="{ '--sb': scrollbar + 'px' }"
     >
       <div class="w-16 shrink-0 pt-1.5 text-[13px] font-semibold text-ink-gray-7">{{ __('Celý den') }}</div>
@@ -41,7 +41,7 @@
         </button>
         <button
           v-if="!topExpanded && topItems(d).length > TOP_LIMIT"
-          class="rounded-lg px-2 py-0.5 text-left text-[12px] font-semibold text-ink-gray-5 hover:bg-[rgba(110,120,200,.1)] hover:text-ink-gray-9"
+          class="rounded-lg px-2 py-0.5 text-left text-[12px] font-semibold text-ink-gray-5 hover:bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] hover:text-ink-gray-9"
           @click="topExpanded = true"
         >
           + {{ topItems(d).length - TOP_LIMIT }} {{ __('další') }}
@@ -65,7 +65,7 @@
           v-for="d in days"
           :key="d.getTime()"
           class="relative min-w-0 flex-1 cursor-pointer select-none"
-          :class="isWeekend(d) && 'bg-[rgba(110,120,200,.035)]'"
+          :class="isWeekend(d) && 'bg-[color-mix(in_srgb,var(--c-tint)_3.5%,transparent)]'"
           :ref="(el) => setColumn(el, d)"
           @pointerdown="onPointerDown($event, d)"
         >
@@ -84,15 +84,15 @@
           <div
             v-for="h in 24"
             :key="h"
-            class="pointer-events-none absolute inset-x-0 border-t border-[rgba(110,120,200,.14)]"
+            class="pointer-events-none absolute inset-x-0 border-t border-[color-mix(in_srgb,var(--c-tint)_14%,transparent)]"
             :style="{ top: (h - 1) * HOUR_HEIGHT + 'px' }"
           />
           <div
             v-if="sameDay(d, today)"
-            class="pointer-events-none absolute inset-x-0 z-20 border-t-2 border-[#C8321F]"
+            class="pointer-events-none absolute inset-x-0 z-20 border-t-2 border-[var(--c-red-550)]"
             :style="{ top: nowTop + 'px' }"
           >
-            <span class="absolute -left-1.5 -top-[6px] size-2.5 rounded-full bg-[#C8321F]" />
+            <span class="absolute -left-1.5 -top-[6px] size-2.5 rounded-full bg-[var(--c-red-550)]" />
           </div>
           <div
             v-for="b in layout(d)"

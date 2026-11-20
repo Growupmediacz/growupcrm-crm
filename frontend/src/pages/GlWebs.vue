@@ -34,10 +34,10 @@
       >
         <div class="truncate text-[15px] font-semibold text-ink-gray-9">{{ w.organization_name || w.project_name }}</div>
         <div class="mt-0.5 truncate text-[12px] text-ink-gray-5">{{ w.web_slug }}</div>
-        <div v-if="w.status === 'Čeká' && w.waiting_note" class="mt-2 text-[13px] text-[#9a5b00]">{{ w.waiting_note }}</div>
+        <div v-if="w.status === 'Čeká' && w.waiting_note" class="mt-2 text-[13px] text-[var(--c-amber-700)]">{{ w.waiting_note }}</div>
         <div v-else-if="w.next_step" class="mt-2 line-clamp-2 text-[13px] text-ink-gray-7">{{ w.next_step }}</div>
         <div class="mt-2 flex items-center justify-between">
-          <span class="num text-[12px]" :class="(w.days_in_phase || 0) > 5 ? 'font-semibold text-[#a82614]' : 'text-ink-gray-5'">
+          <span class="num text-[12px]" :class="(w.days_in_phase || 0) > 5 ? 'font-semibold text-[var(--overdue)]' : 'text-ink-gray-5'">
             {{ daysLabel(w.days_in_phase) }}
           </span>
           <span class="flex gap-1.5" @click.stop>

@@ -16,15 +16,15 @@
     <div class="grid shrink-0 gap-4 lg:grid-cols-[1fr_340px]">
       <div class="gl-card p-5 md:p-7">
         <dl class="text-[15px]">
-          <div class="flex items-center gap-4 border-b border-[rgba(110,120,200,.14)] py-3"><dt class="w-16 shrink-0 text-ink-gray-5">{{ __('Od') }}</dt><dd class="min-w-0 truncate text-ink-gray-9">{{ m.from }}</dd></div>
-          <div class="flex items-center gap-4 border-b border-[rgba(110,120,200,.14)] py-3">
+          <div class="flex items-center gap-4 border-b border-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] py-3"><dt class="w-16 shrink-0 text-ink-gray-5">{{ __('Od') }}</dt><dd class="min-w-0 truncate text-ink-gray-9">{{ m.from }}</dd></div>
+          <div class="flex items-center gap-4 border-b border-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] py-3">
             <dt class="w-16 shrink-0 text-ink-gray-5">{{ __('Komu') }}</dt>
             <dd class="flex min-w-0 items-center gap-2">
               <span class="flex items-center gap-2 rounded-full bg-white/80 py-1 pl-1 pr-3 text-[14px] font-medium text-ink-gray-9"><span class="flex size-6 items-center justify-center rounded-full text-[10px] font-bold" :style="avatarTone(m.contact_name)">{{ initials(m.contact_name) }}</span>{{ m.contact_name }}</span>
               <span class="truncate text-[13px] text-ink-gray-5">{{ m.email }}</span>
             </dd>
           </div>
-          <div class="flex items-center gap-4 border-b border-[rgba(110,120,200,.14)] py-3"><dt class="w-16 shrink-0 text-ink-gray-5">{{ __('Předmět') }}</dt><dd class="min-w-0 flex-1"><input v-model="subject" class="w-full border-0 bg-transparent text-[16px] font-semibold text-ink-gray-9 outline-none" :aria-label="__('Předmět')" @input="dirty = true" /></dd></div>
+          <div class="flex items-center gap-4 border-b border-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] py-3"><dt class="w-16 shrink-0 text-ink-gray-5">{{ __('Předmět') }}</dt><dd class="min-w-0 flex-1"><input v-model="subject" class="w-full border-0 bg-transparent text-[16px] font-semibold text-ink-gray-9 outline-none" :aria-label="__('Předmět')" @input="dirty = true" /></dd></div>
         </dl>
         <div
           ref="editor"
@@ -32,13 +32,13 @@
           lang="cs"
           role="textbox"
           :aria-label="__('Text e-mailu')"
-          class="gl-text mt-5 min-h-[220px] whitespace-pre-wrap text-[16px] leading-relaxed text-ink-gray-9 outline-none [&_mark]:rounded-md [&_mark]:bg-[color-mix(in_srgb,var(--accent-600)_14%,transparent)] [&_mark]:px-1 [&_mark]:text-[#3b32c4]"
+          class="gl-text mt-5 min-h-[220px] whitespace-pre-wrap text-[16px] leading-relaxed text-ink-gray-9 outline-none [&_mark]:rounded-md [&_mark]:bg-[color-mix(in_srgb,var(--accent-600)_14%,transparent)] [&_mark]:px-1 [&_mark]:text-[var(--c-indigo-500)]"
           @input="onInput"
         />
-        <div class="mt-5 flex items-center gap-2.5 rounded-2xl bg-[rgba(110,120,200,.1)] px-4 py-3 text-[13px] text-ink-gray-7">
+        <div class="mt-5 flex items-center gap-2.5 rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_10%,transparent)] px-4 py-3 text-[13px] text-ink-gray-7">
           <GlIcon name="lock" :size="15" class="shrink-0 text-ink-gray-5" /><span>{{ m.footer }}</span>
         </div>
-        <p v-if="m.unresolved.length" class="mt-3 text-[13px] font-semibold text-[#a82614]">{{ unresolvedLabel }}</p>
+        <p v-if="m.unresolved.length" class="mt-3 text-[13px] font-semibold text-[var(--overdue)]">{{ unresolvedLabel }}</p>
       </div>
 
       <div class="flex flex-col gap-4">
@@ -54,14 +54,14 @@
           </dl>
         </div>
         <div class="gl-card p-5">
-          <h3 class="flex items-center gap-2 text-[16px] font-bold text-ink-gray-9"><GlIcon name="sparkles" :size="16" class="text-[#5a2fc0]" />{{ __('Personalizace') }}</h3>
+          <h3 class="flex items-center gap-2 text-[16px] font-bold text-ink-gray-9"><GlIcon name="sparkles" :size="16" class="text-[var(--c-violet-550)]" />{{ __('Personalizace') }}</h3>
           <p class="mt-1 text-[13px] text-ink-gray-5">{{ __('Zvýrazněné proměnné doplňte nebo upravte přímo v textu e-mailu. Automatický výzkum webu (první věta) přibude později.') }}</p>
         </div>
         <div class="gl-card p-5">
           <h3 class="text-[16px] font-bold text-ink-gray-9">{{ __('Kontroly před odesláním') }}</h3>
           <ul class="mt-2 flex flex-col gap-1.5">
-            <li v-for="c in m.checks" :key="c.label" class="flex items-start gap-2 text-[14px]" :class="c.ok ? 'text-ink-gray-9' : 'font-semibold text-[#a82614]'">
-              <GlIcon :name="c.ok ? 'check' : 'alert'" :size="16" class="mt-0.5 shrink-0" :class="c.ok ? 'text-[#0f6b32]' : ''" />{{ c.label }}
+            <li v-for="c in m.checks" :key="c.label" class="flex items-start gap-2 text-[14px]" :class="c.ok ? 'text-ink-gray-9' : 'font-semibold text-[var(--overdue)]'">
+              <GlIcon :name="c.ok ? 'check' : 'alert'" :size="16" class="mt-0.5 shrink-0" :class="c.ok ? 'text-[var(--success)]' : ''" />{{ c.label }}
             </li>
           </ul>
         </div>
@@ -71,11 +71,11 @@
 
   <!-- spodní lišta akcí -->
   <div v-if="m" class="gl-card fixed inset-x-3 bottom-[calc(max(12px,env(safe-area-inset-bottom))+76px)] z-30 flex items-center justify-between gap-3 !rounded-[22px] px-4 py-3 md:static md:mx-2 md:mb-2">
-    <span class="hidden text-[13px] text-ink-gray-5 lg:block">{{ __('Upravte text přímo v e-mailu') }} · <kbd class="rounded bg-[rgba(110,120,200,.14)] px-1.5">⌘↵</kbd> {{ __('schválit') }} · <kbd class="rounded bg-[rgba(110,120,200,.14)] px-1.5">J</kbd> / <kbd class="rounded bg-[rgba(110,120,200,.14)] px-1.5">K</kbd> {{ __('další / předchozí') }}</span>
+    <span class="hidden text-[13px] text-ink-gray-5 lg:block">{{ __('Upravte text přímo v e-mailu') }} · <kbd class="rounded bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] px-1.5">⌘↵</kbd> {{ __('schválit') }} · <kbd class="rounded bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] px-1.5">J</kbd> / <kbd class="rounded bg-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] px-1.5">K</kbd> {{ __('další / předchozí') }}</span>
     <div class="ml-auto flex items-center gap-2">
       <button class="gl-quick !h-11 !px-4 !text-[15px]" @click="postpone"><GlIcon name="clock" :size="16" />{{ __('Odložit') }}</button>
       <button class="gl-quick !h-11 !px-4 !text-[15px]" @click="skip"><GlIcon name="skip" :size="16" />{{ __('Přeskočit') }}</button>
-      <button class="inline-flex h-11 items-center gap-2 rounded-full bg-[var(--accent-600)] px-5 text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(91,91,246,.7)] disabled:opacity-50" :disabled="sending || !canSend" :title="!canSend ? blockReason : ''" @click="approve">
+      <button class="inline-flex h-11 items-center gap-2 rounded-full bg-[var(--accent-600)] px-5 text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_color-mix(in_srgb,var(--accent-600)_70%,transparent)] disabled:opacity-50" :disabled="sending || !canSend" :title="!canSend ? blockReason : ''" @click="approve">
         <GlIcon name="send" :size="16" />{{ __('Schválit a odeslat') }}
       </button>
     </div>

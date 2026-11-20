@@ -261,7 +261,7 @@ defineExpose({ openNew, reload: () => threads.reload() })
 }
 .gl-conv-btn[aria-pressed='true'] { background: var(--accent-soft); border-color: var(--accent-200); }
 .gl-conv-kbd { border-radius: 6px; background: var(--state-them-bg); padding: 0 6px; font-size: 13px; font-weight: 500; color: var(--text-2); }
-.gl-conv-kbd.is-dark { background: rgba(255, 255, 255, 0.2); color: white; }
+.gl-conv-kbd.is-dark { background: color-mix(in srgb, var(--c-white) 20%, transparent); color: white; }
 .gl-conv-sticky { position: sticky; bottom: 16px; display: flex; justify-content: center; margin-top: 16px; pointer-events: none; }
 .gl-conv-reply {
   pointer-events: auto;
@@ -275,7 +275,7 @@ defineExpose({ openNew, reload: () => threads.reload() })
   font-weight: 600;
   color: white;
   background: var(--accent-600);
-  box-shadow: 0 10px 30px rgba(40, 50, 120, 0.18);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--c-shadow) 18%, transparent);
   transition: transform var(--t-press);
 }
 .gl-conv-reply:active { transform: scale(0.97); }
