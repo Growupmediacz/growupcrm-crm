@@ -30,7 +30,7 @@
       </router-link>
     </span>
     <Dropdown v-if="viewControls?.viewsDropdownOptions" :options="viewControls.viewsDropdownOptions">
-      <button class="gl-round flex size-9 shrink-0 items-center justify-center rounded-full" :aria-label="__('Pohledy')" :title="__('Pohledy')">
+      <button class="gl-round flex size-9 max-md:size-11 shrink-0 items-center justify-center rounded-full" :aria-label="__('Pohledy')" :title="__('Pohledy')">
         <span class="lucide-chevron-down size-4" aria-hidden="true" />
       </button>
     </Dropdown>

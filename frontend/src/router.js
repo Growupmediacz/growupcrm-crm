@@ -3,6 +3,7 @@ import { call } from 'frappe-ui'
 import { usersStore } from '@/stores/users'
 import { sessionStore } from '@/stores/session'
 import { viewsStore } from '@/stores/views'
+import { PHONE_MAX } from '@/composables/glBreakpoint'
 
 let personaChecked = false
 export const PERSONA_DONE_KEY = 'crm_persona_captured'
@@ -56,7 +57,8 @@ const routes = [
   {
     path: '/leads/:leadId',
     name: 'Lead',
-    component: () => import(`@/pages/${handleMobileView('Lead')}.vue`),
+    // GrowUp (2027 E2): telefon / desktop se přepíná i při změně šířky (GlLeadSwitch), ne jednou při načtení
+    component: () => import('@/pages/GlLeadSwitch.vue'),
     props: true,
   },
   // GrowUp (zadání 2027 E1): vlákno e-mailů zakázky přes celou obrazovku (telefon)
@@ -212,7 +214,8 @@ const routes = [
 ]
 
 const handleMobileView = (componentName) => {
-  return window.innerWidth < 768 ? `Mobile${componentName}` : componentName
+  // GrowUp (2027 E2): stejná hranice jako glBreakpoint (768 px)
+  return window.innerWidth < PHONE_MAX ? `Mobile${componentName}` : componentName
 }
 
 let router = createRouter({

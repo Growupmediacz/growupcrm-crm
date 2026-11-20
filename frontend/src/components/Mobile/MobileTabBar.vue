@@ -9,7 +9,7 @@
       v-for="t in tabs"
       :key="t.key"
       :to="t.to"
-      class="gl-tab flex min-h-[56px] flex-1 flex-col items-center justify-center gap-0.5 text-[11px] font-bold"
+      class="gl-tab flex min-h-[56px] flex-1 flex-col items-center justify-center gap-0.5 text-[13px] font-bold"
       :class="t.active ? 'gl-tab-on text-[var(--accent-600)]' : 'text-ink-gray-5'"
       :aria-current="t.active ? 'page' : undefined"
     >

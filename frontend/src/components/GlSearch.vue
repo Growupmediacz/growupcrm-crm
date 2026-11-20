@@ -2,7 +2,7 @@
   <!-- GrowUp: globální hledání ⌘K (design Liquid Glass). Data: growupcrm.search.search -->
   <button
     v-if="!hideTrigger"
-    class="gl-round flex size-10 items-center justify-center rounded-full"
+    class="gl-round flex size-10 max-md:size-11 items-center justify-center rounded-full"
     :aria-label="__('Hledat (⌘K)')"
     :title="__('Hledat (⌘K)')"
     @click="open"

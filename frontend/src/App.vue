@@ -18,6 +18,7 @@ import { sessionStore } from '@/stores/session'
 import { FrappeUIProvider, setConfig, useTheme } from 'frappe-ui'
 import { computed, defineAsyncComponent, provide } from 'vue'
 import { handleMailboxReturn } from '@/composables/gmail'
+import { isPhone } from '@/composables/glBreakpoint'
 
 const session = sessionStore()
 provide('session', session)
@@ -37,13 +38,8 @@ const MobileLayout = defineAsyncComponent(
 const DesktopLayout = defineAsyncComponent(
   () => import('./components/Layouts/DesktopLayout.vue'),
 )
-const Layout = computed(() => {
-  if (window.innerWidth < 640) {
-    return MobileLayout
-  } else {
-    return DesktopLayout
-  }
-})
+// GrowUp (2027 E2): jedna hranice 768 px a reaktivně (otočení, změna šířky okna)
+const Layout = computed(() => (isPhone.value ? MobileLayout : DesktopLayout))
 
 setConfig('systemTimezone', window.timezone?.system || null)
 setConfig('localTimezone', window.timezone?.user || null)

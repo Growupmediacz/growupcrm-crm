@@ -1,9 +1,10 @@
 <template>
-  <!-- GrowUp (design 3. kolo, mobil): posuvné záložky se stránkami aktivní skupiny pod nadpisem.
+  <!-- GrowUp (zadání 2027 E2): přepínač stránek skupiny v hlavičce, zalamuje se (nic oříznutého, žádný vodorovný posun).
+       Dřív (design 3. kolo, mobil): posuvné záložky se stránkami aktivní skupiny pod nadpisem.
        Jen na seznamech, na detailu ne. -->
   <nav
     v-if="show"
-    class="gl3-pills flex gap-2 overflow-x-auto px-4 pb-2 pt-1"
+    class="gl3-pills gl-pills-wrap flex flex-wrap gap-2 px-4 pb-2 pt-1"
     :aria-label="__(group.label)"
   >
     <router-link
@@ -30,3 +31,7 @@ const show = computed(
   () => group.value && group.value.key !== 'today' && activePage.value?.key === route.name && group.value.pages.length > 1,
 )
 </script>
+<style scoped>
+/* telefon: cíl 44 px (gl3-pill má 36 px pro desktop) */
+.gl-pills-wrap .gl3-pill { height: 44px; padding: 0 16px; font-size: 15px; }
+</style>

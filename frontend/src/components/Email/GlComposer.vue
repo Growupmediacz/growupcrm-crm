@@ -13,8 +13,9 @@
       :aria-label="title || __('Napsat e-mail')"
       @keydown.capture="onKeydown"
     >
-      <div v-if="mode === 'sheet'" class="gl-cmp-grab" aria-hidden="true" />
-      <div v-if="mode !== 'inline' || title" class="gl-cmp-hd">
+      <!-- E2: stažením úchytu nebo hlavičky dolů se panel zavře a koncept uloží -->
+      <div v-if="mode === 'sheet'" class="gl-cmp-grab-area" aria-hidden="true" v-on="sheetDrag.handlers"><div class="gl-cmp-grab" /></div>
+      <div v-if="mode !== 'inline' || title" class="gl-cmp-hd" v-on="mode === 'sheet' ? sheetDrag.handlers : {}">
         <button v-if="mode !== 'inline'" type="button" class="gl-cmp-icon" :aria-label="__('Zavřít a uložit koncept')" @click="close">
           <GlIcon name="x" :size="20" />
         </button>
@@ -115,6 +116,7 @@ import MultiSelectEmailInput from '@/components/Controls/MultiSelectEmailInput.v
 import EmailTemplateSelectorModal from '@/components/Modals/EmailTemplateSelectorModal.vue'
 import { commentToolbar, uploadFile } from '@/components/editor/config'
 import { useDraft, hasUserText } from '@/composables/glDraft'
+import { useSheetDrag } from '@/composables/glSheetDrag'
 import { sendWithUndo } from '@/composables/glUndoSend'
 import { countPlaceholders, htmlText, loadMailSettings, mailSettings, quoteBlock, restoredDraft, setUndoSeconds, signatureHtml } from '@/composables/glMail'
 import { validateEmail, submitShortcutLabel } from '@/utils'
@@ -140,6 +142,7 @@ const emit = defineEmits(['sent', 'close'])
 
 const uid = 'cmp' + Math.random().toString(36).slice(2, 7)
 const root = ref(null)
+const sheetDrag = useSheetDrag(root, () => close())
 const ed = ref(null)
 const subjectInput = ref(null)
 const ccInput = ref(null)
@@ -402,11 +405,15 @@ defineExpose({ focus: () => editor.value?.commands.focus(), send })
 .gl-cmp.is-sheet .gl-cmp-ed { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .gl-cmp.is-sheet :deep(.gl-cmp-body) { flex: 1; overflow-y: auto; min-height: 0; }
 .gl-cmp.is-sheet .gl-cmp-bar { padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
+/* E2: čipy příjemců na telefonu jako cíl 44 px */
+.gl-cmp.is-sheet :deep(.gl-cmp-row button) { min-height: 44px; }
 .gl-cmp-scrim { position: fixed; inset: 0; z-index: 94; background: var(--scrim); animation: gl-fade var(--t-sheet) var(--ease-panel); }
 @keyframes gl-cmp-in { from { opacity: 0; transform: translateX(24px); } }
 @keyframes gl-cmp-up { from { transform: translateY(100%); } }
 @keyframes gl-fade { from { opacity: 0; } }
-.gl-cmp-grab { width: 40px; height: 5px; border-radius: 3px; background: var(--text-2); opacity: 0.4; margin: 8px auto 0; flex: none; }
+.gl-cmp-grab-area { flex: none; padding: 8px 0 6px; touch-action: none; cursor: grab; }
+.gl-cmp.is-sheet .gl-cmp-hd { touch-action: none; }
+.gl-cmp-grab { width: 40px; height: 5px; border-radius: 3px; background: var(--text-2); opacity: 0.4; margin: 0 auto; }
 .gl-cmp-hd { display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; border-bottom: 1px solid var(--line); flex: none; }
 .gl-cmp-row :deep(input.search-input) { min-width: 80px; background: transparent; font-size: 15px; }
 .gl-cmp-row {

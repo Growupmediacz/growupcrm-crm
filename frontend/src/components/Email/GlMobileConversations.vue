@@ -2,7 +2,7 @@
   <!-- GrowUp (zadání 2027 E1, návrh b): konverzace zakázky na telefonu – seznam vláken, klepnutí otevře vlákno
        přes celou obrazovku (GlMailThread), „Nová zpráva“ jako spodní panel s editorem. -->
   <section class="mt-4" :aria-label="__('Konverzace')">
-    <div class="mb-1 flex items-center justify-between px-1">
+    <div class="mb-1 flex flex-wrap items-center justify-between gap-2 px-1">
       <h2 class="text-[22px] font-bold tracking-tight text-ink-gray-9">{{ __('Konverzace') }}</h2>
       <button type="button" class="gl-mc-new" @click="openNew"><GlIcon name="plus" :size="17" />{{ __('Nová zpráva') }}</button>
     </div>

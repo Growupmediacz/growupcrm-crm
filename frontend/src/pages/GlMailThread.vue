@@ -1,6 +1,6 @@
 <template>
   <!-- GrowUp (zadání 2027 E1, návrh b): vlákno e-mailů přes celou obrazovku (hlavně telefon), jeden posuvník,
-       dole pilulka „Odpovědět…“, editor jako spodní panel do 92 % výšky. Schování spodní lišty aplikace je na týmu E2. -->
+       dole pilulka „Odpovědět…“, editor jako spodní panel do 92 % výšky. Spodní lišta aplikace je tu schovaná (E2, MobileLayout). -->
   <div class="gl-mt">
     <header class="gl-mt-top">
       <button type="button" class="gl-mt-icon" :aria-label="__('Zpět na zakázku')" @click="back"><GlIcon name="left" :size="22" /></button>
@@ -98,11 +98,11 @@ async function afterSent() {
 }
 </script>
 <style scoped>
-.gl-mt { display: flex; min-height: 100%; flex-direction: column; padding-bottom: 96px; }
+.gl-mt { display: flex; min-height: 100%; flex-direction: column; padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
 .gl-mt-top { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 4px; padding: 6px 8px; background: var(--mat-bar); backdrop-filter: var(--mat-blur); border-bottom: 1px solid var(--line); }
 .gl-mt-icon { display: grid; place-items: center; width: var(--hit); height: var(--hit); border-radius: 14px; color: var(--text-1); }
 .gl-mt-body { padding: 16px; max-width: 860px; width: 100%; margin: 0 auto; }
-.gl-mt-dock { position: fixed; left: 12px; right: 12px; z-index: 30; bottom: calc(max(12px, env(safe-area-inset-bottom)) + 76px); display: flex; }
+.gl-mt-dock { position: fixed; left: 12px; right: 12px; z-index: 30; bottom: max(12px, env(safe-area-inset-bottom)); display: flex; }
 @media (min-width: 768px) { .gl-mt-dock { left: 50%; right: auto; transform: translateX(-50%); width: 560px; bottom: 104px; } }
 .gl-mt-reply {
   display: flex;

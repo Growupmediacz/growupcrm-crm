@@ -13,53 +13,68 @@
       </Dropdown>
     </header>
   </LayoutHeader>
-  <div v-if="doc.name" class="flex min-h-0 flex-1 flex-col overflow-y-auto px-4" :class="nextStage ? 'pb-[150px]' : 'pb-24'">
-    <LeadHero :key="heroKey" :doc="doc" :stageOptions="mobileStages" compact @changed="afterChange" @fill="openDetails(true)" @plan="activities?.modalRef?.showTask()" />
+  <!-- zadání 2027 E2 (návrh e): jediný posuvník je rodič v MobileLayout, tady žádný vnitřní overflow.
+       Nízká hlavička, lepivé záložky, dole GlActionBar. -->
+  <div v-if="doc.name" class="gl-actionbar-space">
+    <GlMobileLeadHeader
+      :key="heroKey"
+      :doc="doc"
+      :title="title"
+      @changed="afterChange"
+      @fill="openDetails(true)"
+      @plan="activities?.modalRef?.showTask()"
+      @stage="showStages = true"
+    />
 
-    <!-- design 3. kolo (m2): 4 rychlé akce s popisky -->
-    <div class="mt-3 grid grid-cols-4 gap-2">
+    <div class="gl-ltabs" role="tablist" :aria-label="__('Části zakázky')">
       <button
-        v-for="a in actions.slice(0, 4)"
-        :key="a.label"
-        class="flex flex-col items-center gap-1.5 py-1 text-[13px] font-medium text-ink-gray-8"
-        :disabled="a.disabled"
-        @click="a.onClick"
+        v-for="t in leadTabs"
+        :key="t.key"
+        type="button"
+        role="tab"
+        :id="`gl-ltab-${t.key}`"
+        :aria-selected="leadTab === t.key"
+        :aria-controls="`gl-lpanel-${t.key}`"
+        :tabindex="leadTab === t.key ? 0 : -1"
+        class="gl-ltab"
+        :class="leadTab === t.key && 'is-on'"
+        @click="leadTab = t.key"
       >
-        <span class="flex size-12 items-center justify-center rounded-full bg-white/90 text-[var(--accent-600)] shadow-[0_6px_16px_-8px_rgba(40,50,120,.35)]"><GlIcon :name="a.icon" :size="21" /></span>
-        {{ a.label }}
+        {{ t.label }}<span v-if="t.badge" class="gl-ltab-badge">{{ t.badge }}</span>
       </button>
     </div>
 
-    <!-- Hodnota a Kontakt -->
-    <div class="gl-card mt-3 !rounded-[20px] px-4">
-      <div class="flex min-h-[56px] items-center justify-between gap-3 py-2">
-        <span class="text-[15px] text-ink-gray-5">{{ __('Hodnota') }}</span>
-        <span v-if="doc.order_value" class="num text-[17px] font-bold text-ink-gray-9">{{ valueText }}</span>
-        <span v-else class="flex flex-col items-start">
-          <span class="text-[20px] font-semibold text-[var(--empty-color,#464c70)]">{{ __('Bez hodnoty') }}</span>
-        </span>
+    <!-- Komunikace (e-maily jako konverzace, zadání 2027 E1); prázdný stav řeší GlThreadList -->
+    <div v-show="leadTab === 'comm'" id="gl-lpanel-comm" role="tabpanel" aria-labelledby="gl-ltab-comm" class="px-4">
+      <GlMobileConversations ref="conversations" :docname="leadId" :doc="doc" @sent="afterChange" />
+    </div>
+
+    <!-- Detaily -->
+    <div v-show="leadTab === 'details'" id="gl-lpanel-details" role="tabpanel" aria-labelledby="gl-ltab-details" class="px-4 pt-3">
+      <div class="gl-card !rounded-[20px] px-4">
+        <div class="flex min-h-[56px] items-center justify-between gap-3 py-2">
+          <span class="text-[15px] text-ink-gray-5">{{ __('Hodnota') }}</span>
+          <span v-if="doc.order_value" class="num text-[17px] font-bold text-ink-gray-9">{{ valueText }}</span>
+          <button v-else type="button" class="min-h-[44px] text-[17px] font-semibold text-[var(--accent-700)]" @click="openDetails(true)">{{ __('Bez hodnoty') }} · {{ __('Doplnit') }}</button>
+        </div>
+        <button class="flex min-h-[56px] w-full items-center justify-between gap-3 border-t border-[var(--line)] py-2 text-left" @click="openContact">
+          <span class="text-[15px] text-ink-gray-5">{{ __('Kontakt') }}</span>
+          <span v-if="personName" class="min-w-0 flex-1 truncate text-right text-[17px] font-semibold text-ink-gray-9">{{ personName }}</span>
+          <span v-else class="flex-1 text-right text-[17px] font-semibold text-[var(--accent-600)]">+ {{ __('Přidat kontakt') }}</span>
+          <GlIcon name="right" :size="16" class="shrink-0 text-ink-gray-4" />
+        </button>
       </div>
-      <button v-if="!doc.order_value" class="gl-fill -mt-2 mb-2 block text-[14px]" @click="openDetails(true)">{{ __('Doplnit') }}</button>
-      <button class="flex min-h-[56px] w-full items-center justify-between gap-3 border-t border-[rgba(110,120,200,.14)] py-2 text-left" @click="openContact">
-        <span class="text-[15px] text-ink-gray-5">{{ __('Kontakt') }}</span>
-        <span v-if="personName" class="min-w-0 flex-1 truncate text-right text-[17px] font-semibold text-ink-gray-9">{{ personName }}</span>
-        <span v-else class="flex-1 text-right text-[17px] font-semibold text-[var(--accent-600)]">+ {{ __('Přidat kontakt') }}</span>
-        <GlIcon name="right" :size="16" class="shrink-0 text-ink-gray-4" />
-      </button>
+      <button type="button" class="mt-2 inline-flex min-h-[44px] items-center px-1 text-[15px] font-semibold text-[var(--accent-700)]" @click="openDetails(false)">{{ __('Všechny detaily') }}</button>
     </div>
-    <button class="mt-2 self-start px-1 text-[13px] font-semibold text-[var(--accent-600)]" @click="openDetails(false)">{{ __('Všechny detaily') }}</button>
 
-    <!-- zadání 2027 E1: e-maily jako konverzace (vlákno přes celou obrazovku), v Aktivitě už nejsou -->
-    <GlMobileConversations ref="conversations" :docname="leadId" :doc="doc" @sent="afterChange" />
-
-    <!-- Aktivita -->
-    <h2 class="mb-1 mt-4 px-1 text-[22px] font-bold tracking-tight text-ink-gray-9">{{ __('Aktivita') }}</h2>
-    <div class="gl-chiptabs flex min-h-[420px] flex-col">
+    <!-- Úkoly a Záznamy: jedna instance Activities (musí zůstat připojená kvůli dialogům), přepíná se jen vnitřní záložka -->
+    <div v-show="leadTab === 'tasks' || leadTab === 'records'" :id="`gl-lpanel-${leadTab}`" role="tabpanel" :aria-labelledby="`gl-ltab-${leadTab}`" class="gl-chiptabs px-4 pt-2">
       <Tabs
         v-model="tabIndex"
         as="div"
         :tabs="tabs"
-        class="flex flex-1 flex-col [&_[role='tab']]:px-0 [&_[role='tab']]:shrink-0 [&_[role='tablist']]:min-h-[45px] [&_[role='tablist']]:flex-wrap [&_[role='tabpanel']:not([hidden])]:flex [&_[role='tabpanel']:not([hidden])]:grow"
+        class="flex flex-col [&_[role='tab']]:px-0 [&_[role='tab']]:shrink-0 [&_[role='tablist']]:min-h-[45px] [&_[role='tablist']]:flex-wrap"
+        :class="leadTab === 'tasks' && '[&_[role=\'tablist\']]:hidden'"
       >
         <template #tab-panel>
           <Activities
@@ -79,24 +94,28 @@
   </div>
   <ErrorPage v-else-if="errorTitle" :errorTitle="errorTitle" :errorMessage="errorMessage" />
 
-  <!-- hlavní akce přilepená nad spodní lištou (design 3. kolo, m2) -->
-  <div v-if="doc.name && nextStage" class="fixed inset-x-3 bottom-[calc(max(12px,env(safe-area-inset-bottom))+76px)] z-30">
+  <GlActionBar v-if="doc.name" :actions="barActions" :ariaLabel="__('Akce zakázky')" />
+
+  <!-- změna fáze ve spodním panelu (stejné onClick jako dřív: dialogy Vyhráno / Prohráno zůstávají) -->
+  <GlSheet v-model:open="showStages" :title="__('Změnit fázi')">
     <button
-      class="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[var(--accent-600)] text-[16px] font-semibold text-white shadow-[0_10px_24px_-10px_rgba(40,50,120,.6)] active:opacity-90"
-      @click="nextStage.onClick()"
+      v-for="o in mobileStages"
+      :key="o.value"
+      type="button"
+      class="flex min-h-[52px] w-full items-center gap-3 rounded-[14px] px-3 text-left text-[16px]"
+      :class="o.value === doc.status ? 'bg-[var(--accent-soft)] font-semibold' : ''"
+      :aria-current="o.value === doc.status ? 'true' : undefined"
+      @click="pickStage(o)"
     >
-      <GlIcon name="arrow" :size="18" />{{ __('Posunout do {0}', [nextStage.label]) }}
+      <component :is="o.icon" v-if="o.icon" />
+      {{ o.label }}
     </button>
-  </div>
+  </GlSheet>
 
   <!-- Detaily a kontakt ve spodním panelu -->
-  <Dialog v-model:open="showDetails" :title="__('Detaily')">
-    <template #default>
-      <div class="max-h-[70vh] overflow-y-auto">
-        <LeadAside v-model:editing="editingDetails" mobile :doc="doc" @email="openEmail" @call="(p) => ((callPerson = p), (showCall = true))" @saved="afterChange" />
-      </div>
-    </template>
-  </Dialog>
+  <GlSheet v-model:open="showDetails" :title="__('Detaily')" size="full">
+    <LeadAside v-model:editing="editingDetails" mobile :doc="doc" @email="openEmail" @call="(p) => ((callPerson = p), (showCall = true))" @saved="afterChange" />
+  </GlSheet>
   <GlCallModal v-if="showCall" v-model="showCall" :lead="doc" :person="callPerson" @saved="afterChange" />
   <CalendarEventModal
     v-if="showSchedule"
@@ -137,7 +156,9 @@ import WhatsAppIcon from '@/components/Icons/WhatsAppIcon.vue'
 import IndicatorIcon from '@/components/Icons/IndicatorIcon.vue'
 import LostReasonModal from '@/components/Modals/LostReasonModal.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
-import LeadHero from '@/components/Lead/LeadHero.vue'
+import GlMobileLeadHeader from '@/components/Lead/GlMobileLeadHeader.vue'
+import GlActionBar from '@/components/Mobile/GlActionBar.vue'
+import GlSheet from '@/components/Mobile/GlSheet.vue'
 import LeadAside from '@/components/Lead/LeadAside.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlMobileConversations from '@/components/Email/GlMobileConversations.vue'
@@ -378,6 +399,8 @@ async function triggerStatusChange(value) {
 // --- GrowUp: mobilní detail (oprava 24) ---
 const activities = ref(null)
 const heroKey = ref(0)
+const showStages = ref(false)
+const leadTab = ref('comm')
 const showDetails = ref(false)
 const editingDetails = ref(false)
 const showCall = ref(false)
@@ -399,6 +422,7 @@ const personName = computed(() => [doc.value.first_name, doc.value.last_name].fi
 async function afterChange() {
   await document.reload()
   activities.value?.all_activities?.reload()
+  openTasks.reload()
   heroKey.value++
 }
 async function confirmWon(values) {
@@ -417,24 +441,51 @@ function openContact() {
 const conversations = ref(null)
 function openEmail() {
   showDetails.value = false
+  leadTab.value = 'comm'
   conversations.value?.openNew()
 }
 
-const nextStage = computed(() => {
-  const order = mobileStages.value.filter((o) => getLeadStatus(o.value)?.type !== 'Lost')
-  const i = order.findIndex((o) => o.value === doc.value.status)
-  if (i < 0 || getLeadStatus(doc.value.status)?.type === 'Lost') return null
-  return order[i + 1] || null
+// počet otevřených úkolů do odznaku záložky
+const openTasks = createResource({
+  url: 'frappe.client.get_count',
+  params: { doctype: 'CRM Task', filters: { reference_doctype: 'CRM Lead', reference_docname: props.leadId, status: ['not in', ['Done', 'Canceled']] } },
+  auto: true,
 })
-const actions = computed(() => [
-  { label: __('Zavolat'), icon: 'phone', onClick: () => ((callPerson.value = {}), (showCall.value = true)) },
-  { label: __('Zápis'), icon: 'doc', onClick: () => activities.value?.modalRef?.showNote() },
-  { label: __('E-mail'), icon: 'mail', onClick: openEmail },
-  { label: __('Naplánovat'), icon: 'cal', onClick: () => (showSchedule.value = true) },
-  { label: __('Další fáze'), icon: 'arrow', primary: true, disabled: !nextStage.value, onClick: () => nextStage.value?.onClick() },
+const leadTabs = computed(() => [
+  { key: 'comm', label: __('Komunikace') },
+  { key: 'details', label: __('Detaily') },
+  { key: 'tasks', label: __('Úkoly'), badge: openTasks.data || 0 },
+  { key: 'records', label: __('Záznamy') },
 ])
+// vnitřní záložka Activities podle vnější: Úkoly = Tasks, Záznamy = Vše
+watch(leadTab, (k) => {
+  const name = k === 'tasks' ? 'Tasks' : k === 'records' ? 'Activity' : null
+  const i = tabs.value.findIndex((t) => t.name === name)
+  if (i >= 0) tabIndex.value = i
+})
+function pickStage(o) {
+  showStages.value = false
+  o.onClick?.()
+}
+// lišta akcí: hlavní je e-mail, nejvýš 4 tlačítka; Naplánovat a Zápis jsou v „⋯“
+const hasPhone = computed(() => !!(doc.value.mobile_no || doc.value.phone))
+const barActions = computed(() =>
+  [
+    { key: 'mail', label: __('E-mail'), icon: 'mail', primary: true, onClick: openEmail },
+    hasPhone.value && { key: 'call', label: __('Zavolat'), icon: 'phone', onClick: () => ((callPerson.value = {}), (showCall.value = true)) },
+    { key: 'task', label: __('Úkol'), icon: 'plus', onClick: () => activities.value?.modalRef?.showTask() },
+    { key: 'stage', label: __('Fáze') + ' ›', onClick: () => (showStages.value = true) },
+  ].filter(Boolean),
+)
 const moreOptions = computed(() => [
   { group: __('Změnit stav'), items: mobileStages.value },
+  {
+    group: __('Přidat'),
+    items: [
+      { label: __('Naplánovat'), icon: 'cal', onClick: () => (showSchedule.value = true) },
+      { label: __('Zápis'), icon: 'doc', onClick: () => activities.value?.modalRef?.showNote() },
+    ],
+  },
   {
     group: __('Zakázka'),
     items: [
@@ -483,3 +534,11 @@ function reloadAssignees(data) {
   }
 }
 </script>
+<style scoped>
+/* lepivé záložky v posuvném rodiči (MobileLayout), cíl 44 px */
+.gl-ltabs { position: sticky; top: 0; z-index: 5; display: flex; gap: 4px; padding: 8px 16px; background: var(--mat-bar); backdrop-filter: var(--mat-blur); border-bottom: 1px solid var(--line); }
+.gl-ltab { flex: 1; min-width: 0; min-height: 44px; border-radius: 14px; font-size: 15px; font-weight: 600; color: var(--text-2); display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.gl-ltab.is-on { background: var(--accent-soft); color: var(--accent-700); }
+.gl-ltab:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.gl-ltab-badge { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; font-size: 13px; line-height: 20px; color: #fff; background: var(--accent-600); }
+</style>
