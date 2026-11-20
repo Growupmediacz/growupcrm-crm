@@ -12,7 +12,7 @@
         <GlLeadPicker v-model="lead" :leads="leads" />
         <FormControl v-if="kind !== 'comment'" ref="titleRef" v-model="title" :label="kind === 'task' ? __('Název úkolu') : __('Nadpis')" :placeholder="kind === 'task' ? __('Např. Poslat nabídku') : __('Např. Schůzka s jednatelem')" />
         <div>
-          <div class="mb-1.5 text-xs text-ink-gray-5">
+          <div class="mb-1.5 text-[13px] text-ink-gray-5">
             {{ kind === 'task' ? __('Popis') : __('Text') }}
             <span class="text-ink-gray-4">· {{ __('@ označí kolegu, dostane upozornění') }}</span>
           </div>
@@ -20,11 +20,11 @@
         </div>
         <div v-if="kind === 'task'" class="grid grid-cols-2 gap-3">
           <div>
-            <div class="mb-1.5 text-xs text-ink-gray-5">{{ __('Termín') }}</div>
+            <div class="mb-1.5 text-[13px] text-ink-gray-5">{{ __('Termín') }}</div>
             <GlDatePicker v-model="dueDate" :label="__('Termín')" />
           </div>
           <div>
-            <div class="mb-1.5 text-xs text-ink-gray-5">{{ __('Priorita') }}</div>
+            <div class="mb-1.5 text-[13px] text-ink-gray-5">{{ __('Priorita') }}</div>
             <select v-model="priority" class="gl-field w-full">
               <option value="Low">{{ __('Nízká') }}</option>
               <option value="Medium">{{ __('Střední') }}</option>
@@ -32,7 +32,7 @@
             </select>
           </div>
           <div class="col-span-2">
-            <div class="mb-1.5 text-xs text-ink-gray-5">{{ __('Přiřadit') }}</div>
+            <div class="mb-1.5 text-[13px] text-ink-gray-5">{{ __('Přiřadit') }}</div>
             <select v-model="assignedTo" class="gl-field w-full">
               <option v-for="u in userOptions" :key="u.value" :value="u.value">{{ u.label }}</option>
             </select>

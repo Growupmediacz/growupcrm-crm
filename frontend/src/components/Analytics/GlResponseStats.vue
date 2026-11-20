@@ -1,6 +1,6 @@
 <template>
   <!-- GrowUp: Analytika → Rychlost reakce na příchozí zakázky (growupcrm.response_time.stats) -->
-  <div class="gl-card p-6">
+  <div class="gl-card p-5">
     <div class="flex flex-wrap items-baseline justify-between gap-2">
       <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Rychlost reakce na poptávky') }}</h2>
       <span class="text-[13px] text-ink-gray-5">{{ __('příchozí zakázky v období · lhůta {0} pracovních hodin', [hoursLabel]) }}</span>
@@ -16,15 +16,15 @@
       <div class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
         <div v-for="t in tiles" :key="t.label" class="rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_7.5%,transparent)] px-4 py-3">
           <div class="text-[13px] text-ink-gray-6">{{ t.label }}</div>
-          <div class="num text-[26px] font-bold leading-tight text-ink-gray-9" :class="t.tone"><GlNumber :value="t.raw" :format="FMT_ANY" :suffix="t.suffix" :fallback="String(t.value)" /></div>
-          <div class="text-[12px] text-ink-gray-5">{{ t.sub }}</div>
+          <div class="num text-[32px] font-medium leading-tight text-ink-gray-9" :class="t.tone"><GlNumber :value="t.raw" :format="FMT_ANY" :suffix="t.suffix" :fallback="String(t.value)" /></div>
+          <div class="text-[13px] text-ink-gray-5">{{ t.sub }}</div>
         </div>
       </div>
       <div class="mt-5 grid gap-5 lg:grid-cols-2">
         <div v-for="g in groups" :key="g.title">
           <div class="mb-2 text-[14px] font-semibold text-ink-gray-8">{{ g.title }}</div>
-          <table class="w-full text-left text-[13.5px]">
-            <thead class="text-[12px] text-ink-gray-5">
+          <table class="w-full text-left text-[14px]">
+            <thead class="text-[13px] text-ink-gray-5">
               <tr>
                 <th class="py-1 font-medium">{{ g.col }}</th>
                 <th class="py-1 text-right font-medium">{{ __('Zakázek') }}</th>

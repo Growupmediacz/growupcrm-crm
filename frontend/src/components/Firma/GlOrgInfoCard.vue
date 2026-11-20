@@ -4,7 +4,7 @@
   <div v-if="!editing" class="gl-card p-6">
     <div class="mb-2 flex items-baseline justify-between">
       <h2 class="text-[18px] font-bold tracking-tight text-ink-gray-9">{{ __('Údaje o firmě') }}</h2>
-      <button class="gl-fill text-[15px]" @click="startEdit">{{ __('Upravit') }}</button>
+      <button class="gl-fill min-h-[36px] text-[15px] max-md:min-h-[44px]" @click="startEdit">{{ __('Upravit') }}</button>
     </div>
     <dl class="flex flex-col">
       <div v-for="row in rows" :key="row.label" class="flex items-baseline justify-between gap-4 py-[7px]">
@@ -20,7 +20,7 @@
   <form v-else class="gl-card flex flex-col gap-3.5 p-6 ring-2 ring-[color-mix(in_srgb,var(--accent-600)_35%,transparent)]" @submit.prevent="save">
     <div class="flex items-center justify-between">
       <h2 class="text-[18px] font-bold tracking-tight text-ink-gray-9">{{ __('Údaje o firmě') }}</h2>
-      <span class="rounded-full bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] px-2.5 py-0.5 text-[12px] font-semibold text-[var(--accent-700)]">{{ __('Úpravy') }}</span>
+      <span class="rounded-full bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] px-2.5 py-0.5 text-[13px] font-semibold text-[var(--accent-700)]">{{ __('Úpravy') }}</span>
     </div>
     <label>
       <span class="gl-label">{{ __('Web') }}</span>

@@ -8,10 +8,10 @@
         v-if="organizationsListView?.customListActions"
         :actions="organizationsListView.customListActions"
       />
-      <Button iconLeft="lucide-refresh-cw" class="hidden md:inline-flex" @click="showOrganizationModal = true">
+      <Button iconLeft="lucide-refresh-cw" class="hidden min-h-[36px] md:inline-flex" @click="showOrganizationModal = true">
         {{ __('Načíst z ARES') }}
       </Button>
-      <Button variant="solid" iconLeft="lucide-plus" class="max-md:!h-11 max-md:!min-w-11" @click="showOrganizationModal = true">
+      <Button variant="solid" iconLeft="lucide-plus" class="min-h-[36px] max-md:!h-11 max-md:!min-w-11" @click="showOrganizationModal = true">
         <span class="hidden sm:inline">{{ __('Nová firma') }}</span>
       </Button>
     </template>

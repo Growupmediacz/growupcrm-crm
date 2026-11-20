@@ -26,7 +26,7 @@
       {{ __('Načíst další') }}
     </button>
     <span v-else />
-    <span class="flex items-center justify-end gap-1 text-[13px] text-[var(--text-3,var(--text-3))]">
+    <span v-if="pageSizes" class="flex items-center justify-end gap-1 text-[13px] text-[var(--text-3,var(--text-3))]">
       {{ __('Na stránku') }}
       <template v-for="(n, i) in pageLengthOptions" :key="n">
         <span v-if="i" aria-hidden="true">·</span>
@@ -40,6 +40,7 @@
         </button>
       </template>
     </span>
+    <span v-else />
   </div>
 </template>
 
@@ -49,6 +50,8 @@ import { computed } from 'vue'
 
 const props = defineProps({
   modelValue: { type: Number, default: 20 },
+  // GrowUp (V2): false = bez voleb „Na stránku 20 · 50 · 100“ (Firmy mají jen „Načíst další“)
+  pageSizes: { type: Boolean, default: true },
   options: {
     type: Object,
     default: () => ({ rowCount: 0, totalCount: 0, pageLengthOptions: [20, 50, 100] }),

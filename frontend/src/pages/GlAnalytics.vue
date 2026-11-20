@@ -34,7 +34,7 @@
   <GlForbidden v-if="res.error && isForbidden(res.error)" :message="res.error.messages?.[0]" />
   <div v-else-if="res.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Analytiku se nepodařilo načíst')" :text="res.error.messages?.[0]" @retry="res.reload()" /></div>
   <div v-else-if="!res.data" class="px-3 md:px-2"><GlSkeleton :rows="5" /></div>
-  <div v-else class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
+  <div v-else class="flex flex-col gap-4 px-3 pb-6 md:px-2">
     <!-- oprava 26: na mobilu přepínač Měsíc / Čtvrtletí / Rok na celou šířku pod nadpisem -->
     <div v-if="isMobileView" class="gl-seg flex w-full flex-wrap">
       <button v-for="o in GRAINS" :key="o.value" class="gl-seg-btn min-h-11 flex-1 justify-center" :class="grain === o.value && 'gl-seg-on'" @click="setGrain(o.value)">{{ o.label }}</button>
@@ -63,32 +63,24 @@
 
     <div class="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
       <!-- design 3. kolo (20): tučný název, velké číslo, popisek; trend jako štítek vpravo -->
-      <div v-for="k in kpis" :key="k.label" class="gl-card flex min-w-0 flex-col gap-1.5 p-4 md:p-6">
+      <div v-for="k in kpis" :key="k.label" class="gl-card flex min-w-0 flex-col gap-1.5 p-5">
         <div class="flex items-center justify-between gap-2">
           <span class="line-clamp-2 min-w-0 text-[15px] font-semibold leading-snug text-ink-gray-9 md:text-[17px]">{{ k.label }}</span>
           <span v-if="k.badge" class="shrink-0 rounded-full px-2.5 py-0.5 text-[13px] font-semibold" :class="k.badgeUp ? 'bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] text-[var(--accent-700)]' : 'bg-[color-mix(in_srgb,var(--c-red-400)_12%,transparent)] text-[var(--overdue)]'">{{ k.badge }}</span>
         </div>
         <!-- telefon: zkrácená čísla (66 tis.), celá hodnota v title; číslice stejně široké -->
-        <div class="num break-words text-[26px] font-bold leading-tight tracking-tight text-ink-gray-9 tabular-nums md:truncate md:text-[48px]" :title="k.full" :aria-label="k.full"><GlNumber :value="k.raw" :format="k.format" :suffix="k.suffix" :fallback="String(k.value)" /></div>
+        <div class="num break-words text-[32px] font-medium leading-tight tracking-tight text-ink-gray-9 tabular-nums md:truncate md:text-[40px]" :title="k.full" :aria-label="k.full"><GlNumber :value="k.raw" :format="k.format" :suffix="k.suffix" :fallback="String(k.value)" /></div>
         <div class="line-clamp-2 text-[14px] leading-snug text-ink-gray-5 md:truncate md:text-[15px]">{{ k.sub }}</div>
       </div>
     </div>
 
     <div class="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
       <!-- tržby po měsících: jedna řada, aktuální měsíc zvýrazněný -->
-      <div class="gl-card min-w-0 p-4 md:p-6">
+      <div class="gl-card min-w-0 p-5">
         <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Tržby po měsících') }}</h2>
         <div class="text-[13px] text-ink-gray-5">{{ __('tis. Kč · zvýrazněn poslední měsíc období') }}</div>
         <!-- oprava 26: prázdný stav místo prázdného grafu -->
-        <div v-if="!hasRevenue" class="mt-4 flex flex-col items-center gap-3 py-8 text-center">
-          <span class="flex size-14 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-ink-gray-7"><GlIcon name="chart" :size="26" /></span>
-          <div class="text-[18px] font-bold text-ink-gray-9">{{ __('Zatím žádné vyhrané zakázky') }}</div>
-          <p class="max-w-[300px] text-[14px] text-ink-gray-5">{{ __('Graf tržeb se ukáže po první výhře v tomto období. Zkuste jiné období.') }}</p>
-          <div class="flex flex-wrap justify-center gap-2">
-            <button class="gl-quick min-h-11 md:min-h-0" @click="setGrain('year')">{{ __('Celý rok') }}</button>
-            <router-link :to="{ name: 'Leads' }" class="inline-flex min-h-11 items-center rounded-full bg-[var(--accent-600)] px-4 md:h-9 md:min-h-0 text-[14px] font-semibold text-white shadow-[0_6px_16px_-6px_color-mix(in_srgb,var(--accent-600)_60%,transparent)]">{{ __('Zakázky') }}</router-link>
-          </div>
-        </div>
+        <GlEmptyState v-if="!hasRevenue" class="mt-4" icon="chart" :title="__('Zatím žádné vyhrané zakázky')" :text="__('Graf tržeb se ukáže po první výhře v tomto období. Zkuste jiné období.')" :action="__('Celý rok')" @action="setGrain('year')" />
         <div v-else class="relative mt-4 flex h-[230px] items-end gap-1.5 border-b md:gap-3 border-[color-mix(in_srgb,var(--c-tint)_18%,transparent)] px-2">
           <div
             v-for="(m, i) in data?.by_month || []"
@@ -109,12 +101,12 @@
           </div>
         </div>
         <div v-if="hasRevenue" class="mt-2 flex gap-1.5 px-2 md:gap-3">
-          <span v-for="m in data?.by_month || []" :key="m.month" class="min-w-0 flex-1 truncate text-center text-[13px] text-ink-gray-5 md:text-[12px]">{{ m.label }}</span>
+          <span v-for="m in data?.by_month || []" :key="m.month" class="min-w-0 flex-1 truncate text-center text-[13px] text-ink-gray-5">{{ m.label }}</span>
         </div>
       </div>
 
       <!-- trychtýř -->
-      <div class="gl-card min-w-0 p-4 md:p-6">
+      <div class="gl-card min-w-0 p-5">
         <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Trychtýř') }}</h2>
         <div class="text-[13px] text-ink-gray-5">{{ __('kolik zakázek z období dosáhlo aspoň dané fáze') }}</div>
         <div v-gl-animate class="mt-4 flex flex-col gap-2.5">
@@ -131,8 +123,8 @@
 
     <div class="grid gap-4 lg:grid-cols-[1.15fr_1fr_1.2fr]">
       <!-- design 3. kolo (20): zdroje jako sloupce, nejčastější zvýrazněný -->
-      <div class="gl-card min-w-0 p-4 md:p-6">
-        <h2 class="text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Zdroje zakázek') }}</h2>
+      <div class="gl-card min-w-0 p-5">
+        <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Zdroje zakázek') }}</h2>
         <div class="text-[13px] text-ink-gray-5">{{ __('vyhrané a otevřené v období') }}</div>
         <GlEmptyState v-if="!data?.sources?.length" class="mt-4" icon="brief" :title="__('Žádné zakázky v období')" :text="__('Zkuste delší období.')" />
         <template v-else>
@@ -148,10 +140,10 @@
         </template>
       </div>
       <!-- reakční doba: průměr, lhůta a podíl v limitu; podrobnosti níž -->
-      <div class="gl-card flex min-w-0 flex-col p-4 md:p-6">
-        <h2 class="text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Reakční doba') }}</h2>
+      <div class="gl-card flex min-w-0 flex-col p-5">
+        <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Reakční doba') }}</h2>
         <template v-if="data?.response?.count">
-          <div class="num mt-3 text-[44px] font-bold leading-none md:text-[56px] tracking-tight text-ink-gray-9"><GlNumber :value="avgParts.value" :format="avgParts.format" :suffix="avgParts.suffix" /></div>
+          <div class="num mt-3 text-[40px] font-medium leading-none tracking-tight text-ink-gray-9"><GlNumber :value="avgParts.value" :format="avgParts.format" :suffix="avgParts.suffix" /></div>
           <div class="mt-2 text-[16px] text-ink-gray-5">{{ __('cíl {0} pracovní hodiny', [String(data.response.hours ?? 4).replace('.', ',')]) }}</div>
           <span v-if="data.response.on_time_pct !== null" class="mt-4 inline-flex w-fit max-w-full flex-wrap items-center gap-2 rounded-full px-3.5 py-1.5 text-[15px] font-semibold" :class="data.response.on_time_pct >= 80 ? 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)]' : 'bg-[color-mix(in_srgb,var(--stage-nabidka)_16%,transparent)] text-[var(--warning)]'">
             <GlIcon :name="data.response.on_time_pct >= 80 ? 'check' : 'alert'" :size="16" />{{ __('V limitu') }} <GlNumber :value="data.response.on_time_pct" suffix=" %" />
@@ -159,8 +151,8 @@
         </template>
         <GlEmptyState v-else class="mt-2" icon="clock" :title="__('Zatím bez dat')" :text="__('Měří se příchozí zakázky z webu, formulářů a Facebooku.')" />
       </div>
-      <div v-gl-animate class="gl-card min-w-0 p-4 md:p-6">
-        <h2 class="mb-3 text-[24px] font-bold tracking-tight text-ink-gray-9">{{ __('Nejlepší klienti') }}</h2>
+      <div v-gl-animate class="gl-card min-w-0 p-5">
+        <h2 class="mb-3 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Nejlepší klienti') }}</h2>
         <GlEmptyState v-if="!data?.clients?.length" icon="star" :title="__('Zatím žádná výhra')" :text="__('Nejlepší klienti se ukážou po první vyhrané zakázce v období.')" />
         <component
           :is="c.organization ? 'router-link' : 'div'"
@@ -367,5 +359,4 @@ const avgParts = computed(() => {
   if (min === null || min === undefined) return {}
   return min < 60 ? { value: Math.round(min), suffix: ' min' } : { value: min / 60, format: { maximumFractionDigits: 1 }, suffix: ' h' }
 })
-const hoursOf = (min) => (min === null || min === undefined ? '—' : min < 60 ? `${Math.round(min)} min` : `${new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 1 }).format(min / 60)} h`)
 </script>

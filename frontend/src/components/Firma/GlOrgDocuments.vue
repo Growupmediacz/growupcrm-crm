@@ -1,29 +1,30 @@
 <template>
   <!-- GrowUp: Firma → Dokumenty (growupcrm.documents): nahrané k firmě, přílohy zakázek a odeslaných e-mailů -->
   <div>
-    <div class="mb-4 flex flex-wrap items-center gap-1.5">
+    <div class="mb-4 flex flex-wrap items-center gap-2">
       <button
         v-for="t in typeFilters"
         :key="t.key"
-        class="rounded-full border px-3.5 py-1 text-[14px] font-medium transition"
+        class="min-h-[36px] rounded-full border px-3.5 py-1 text-[14px] max-md:min-h-[44px] font-medium transition"
         :class="filter === t.key ? 'border-[var(--text-1)] bg-[var(--text-1)] text-white' : 'border-white/80 bg-white/55 text-ink-gray-7 hover:bg-white/80'"
         @click="filter = t.key"
       >
         {{ t.label }}
       </button>
-      <div class="ml-auto flex items-center gap-2">
-        <input v-model="search" class="gl-field h-9 w-48" :placeholder="__('Hledat dokument…')" />
+      <div class="flex min-w-0 flex-wrap items-center gap-2 md:ml-auto">
+        <input v-model="search" class="gl-field h-9 w-48 max-w-full max-md:h-11 max-md:w-full" :placeholder="__('Hledat dokument…')" />
         <Dropdown :options="uploadOptions" placement="right">
           <Button variant="solid" iconLeft="lucide-upload" :label="__('Nahrát dokument')" :loading="uploading" />
         </Dropdown>
       </div>
     </div>
     <input ref="fileInput" type="file" class="hidden" @change="onFile" />
-    <p class="-mt-2 mb-3 text-[12px] text-ink-gray-5">
+    <p class="mb-3 text-[13px] text-ink-gray-5">
       {{ __('Max. {0} MB na soubor. Smlouvy, nabídky a ceníky nejlépe jako PDF. Přílohy e-mailů ze zakázek se sem přidávají samy.', [maxMb]) }}
     </p>
 
     <GlSkeleton v-if="docs.loading && !docs.data" :rows="3" />
+    <GlErrorBanner v-else-if="docs.error" :title="__('Dokumenty se nepodařilo načíst')" :text="docs.error.messages?.[0]" @retry="docs.reload()" />
     <GlEmptyState
       v-else-if="!list.length"
       class="my-6"
@@ -31,20 +32,20 @@
       :title="search || filter !== 'all' ? __('Nic nenalezeno') : __('Zatím žádné dokumenty')"
       :text="__('Nahrajte smlouvu, nabídku nebo ceník. Najdete je tu i za půl roku.')"
     />
-    <div v-for="d in list" v-else :key="d.name" class="mb-2 flex items-start gap-3 rounded-2xl bg-white/55 px-3 py-2.5">
-      <span class="flex size-10 shrink-0 items-center justify-center rounded-xl text-[11px] font-bold uppercase" :class="extTone(d.file_name)">
+    <div v-for="d in list" v-else :key="d.name" class="mb-2 flex min-w-0 items-start gap-3 rounded-2xl bg-white/55 px-3 py-2.5">
+      <span class="flex size-10 shrink-0 items-center justify-center rounded-xl text-[13px] font-bold uppercase" :class="extTone(d.file_name)">
         {{ ext(d.file_name) || '—' }}
       </span>
       <div class="min-w-0 flex-1">
         <div class="flex flex-wrap items-center gap-2">
-          <a :href="d.file_url" target="_blank" rel="noopener" class="truncate text-[15px] font-semibold text-ink-gray-9 hover:underline">{{ d.file_name }}</a>
+          <a :href="d.file_url" target="_blank" rel="noopener" class="min-w-0 max-w-full break-words text-[15px] font-semibold text-ink-gray-9 hover:underline">{{ d.file_name }}</a>
           <Dropdown v-if="d.source === 'organization'" :options="typeOptions(d)">
-            <button class="rounded-full bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] px-2 py-0.5 text-[12px] font-semibold text-[var(--c-blue-600)]">
+            <button class="rounded-full bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] px-2 py-0.5 text-[13px] font-semibold text-[var(--c-blue-600)]">
               {{ d.doc_type || __('Bez typu') }} ▾
             </button>
           </Dropdown>
-          <span v-else-if="d.doc_type" class="rounded-full bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] px-2 py-0.5 text-[12px] font-semibold text-[var(--c-blue-600)]">{{ d.doc_type }}</span>
-          <span v-if="d.source === 'email'" class="rounded-full px-2 py-0.5 text-[12px] font-semibold" :class="d.direction === 'Received' ? 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)]' : 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-700)]'">
+          <span v-else-if="d.doc_type" class="rounded-full bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] px-2 py-0.5 text-[13px] font-semibold text-[var(--c-blue-600)]">{{ d.doc_type }}</span>
+          <span v-if="d.source === 'email'" class="rounded-full px-2 py-0.5 text-[13px] font-semibold" :class="d.direction === 'Received' ? 'bg-[color-mix(in_srgb,var(--stage-vyhrano)_12%,transparent)] text-[var(--c-green-700)]' : 'bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-700)]'">
             {{ d.direction === 'Received' ? __('Přijato e-mailem') : __('Odesláno e-mailem') }}
           </span>
         </div>
@@ -60,13 +61,14 @@
           <span class="text-ink-gray-5"> · {{ sizeFmt(d.file_size) }}</span>
         </div>
       </div>
-      <Button v-if="d.source === 'organization'" variant="ghost" icon="lucide-trash-2" :aria-label="__('Smazat')" @click="remove(d)" />
+      <Button v-if="d.source === 'organization'" variant="ghost" class="max-md:!size-11" icon="lucide-trash-2" :aria-label="__('Smazat')" @click="remove(d)" />
     </div>
   </div>
 </template>
 
 <script setup>
 import GlEmptyState from '@/components/GlEmptyState.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import GlSkeleton from '@/components/GlSkeleton.vue'
 import { saveFailed } from '@/composables/glToast'
 import { Button, Dropdown, call, createResource, toast } from 'frappe-ui'

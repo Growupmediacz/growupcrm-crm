@@ -3,7 +3,7 @@
   <div v-if="data && (data.profile.web_status || data.can_run)" class="gl-card mt-3 flex flex-col gap-3 p-4">
     <div class="flex items-center justify-between gap-2">
       <div class="flex items-center gap-2 text-[15px] font-bold text-ink-gray-9"><GlIcon name="sparkles" :size="17" class="text-[var(--accent-600)]" />{{ __('Z webu') }}</div>
-      <Button v-if="data.can_run" size="sm" :label="running ? __('Agent pracuje…') : p.web_status === 'Obohaceno' ? __('Aktualizovat') : __('Obohatit')" :loading="starting" :disabled="running" @click="start" />
+      <Button v-if="data.can_run" class="min-h-[36px]" :label="running ? __('Agent pracuje…') : p.web_status === 'Obohaceno' ? __('Aktualizovat') : __('Obohatit')" :loading="starting" :disabled="running" @click="start" />
     </div>
 
     <p v-if="!p.web_status && !running" class="text-[13px] text-ink-gray-6">{{ __('Agent projde web firmy a doplní, čím se zabývá, služby a návrh úvodní věty do e-mailu.') }}</p>
@@ -21,21 +21,21 @@
         {{ __('Hlavní činnost podle webu nepatří do žádného našeho oboru.') }}
       </div>
       <div v-for="f in FIELDS" v-show="p[f.key]" :key="f.key">
-        <div class="text-[12px] font-semibold uppercase tracking-wide text-ink-gray-5">{{ f.label }}</div>
+        <div class="text-[13px] font-semibold uppercase tracking-wide text-ink-gray-5">{{ f.label }}</div>
         <div class="text-[14px] leading-snug text-ink-gray-8">{{ p[f.key] }}</div>
       </div>
       <div v-if="p.web_opener" class="rounded-[14px] bg-[color-mix(in_srgb,var(--accent-600)_7%,transparent)] px-3 py-2">
-        <div class="text-[12px] font-semibold uppercase tracking-wide text-[var(--accent-700)]">{{ __('Úvodní věta do e-mailu') }}</div>
+        <div class="text-[13px] font-semibold uppercase tracking-wide text-[var(--accent-700)]">{{ __('Úvodní věta do e-mailu') }}</div>
         <div class="text-[14px] italic leading-snug text-ink-gray-9">„{{ p.web_opener }}“</div>
       </div>
       <div v-if="data.people.length">
-        <div class="text-[12px] font-semibold uppercase tracking-wide text-ink-gray-5">{{ __('Lidé na webu') }}</div>
+        <div class="text-[13px] font-semibold uppercase tracking-wide text-ink-gray-5">{{ __('Lidé na webu') }}</div>
         <div v-for="person in data.people" :key="person.name" class="text-[14px] text-ink-gray-8">
           <b>{{ person.name }}</b><span v-if="person.role" class="text-ink-gray-6"> · {{ person.role }}</span>
           <span v-if="person.email" class="text-ink-gray-6"> · {{ person.email }}</span>
         </div>
       </div>
-      <div class="text-[12px] text-ink-gray-5">{{ __('Obohaceno') }} {{ formatDate(p.web_enriched_at) }}<template v-if="data.run?.credits"> · {{ data.run.credits }} {{ __('kreditů') }}</template></div>
+      <div class="text-[13px] text-ink-gray-5">{{ __('Obohaceno') }} {{ formatDate(p.web_enriched_at) }}<template v-if="data.run?.credits"> · {{ data.run.credits }} {{ __('kreditů') }}</template></div>
     </template>
   </div>
 </template>

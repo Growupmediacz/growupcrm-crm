@@ -144,8 +144,9 @@
     </div>
   </div>
   <div v-else class="flex items-center justify-between gap-2 px-5 py-4">
+    <!-- GrowUp (kolo 2 V2): řada rychlých filtrů se zalamuje, nic se neořízne (jako filtry Kanbanu) -->
     <FadedScrollableDiv
-      class="flex flex-1 items-center overflow-x-auto -ml-1 h-9"
+      class="flex min-h-9 min-w-0 flex-1 flex-wrap items-center -ml-1"
       orientation="horizontal"
     >
       <div

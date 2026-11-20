@@ -22,31 +22,32 @@
     </template>
   </LayoutHeader>
 
-  <div class="flex min-h-0 flex-1 gap-3 overflow-hidden px-2 pb-2">
+  <!-- GrowUp (zadání 2027 kolo 2 V2): jeden posuvník stránky; levý seznam je lepivý s vnitřním posuvem jen na desktopu ≥ 1100 px -->
+  <div class="flex items-start gap-3 px-3 pb-6 md:px-2">
     <!-- seznam -->
     <div
-      class="gl-card flex min-h-0 w-full flex-col p-3 md:w-[360px] md:shrink-0"
+      class="gl-card flex w-full flex-col p-3 md:w-[360px] md:shrink-0 min-[1100px]:sticky min-[1100px]:top-0 min-[1100px]:max-h-[calc(100vh-110px)]"
       :class="selected && isMobileView ? 'hidden' : ''"
     >
-      <label class="flex h-10 items-center gap-2 rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] px-3">
+      <label class="flex h-11 items-center gap-2 rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_8%,transparent)] px-3">
         <GlIcon name="search" :size="16" class="text-ink-gray-5" />
-        <input v-model="q" class="gl-chip-input flex-1 text-[14px]" :placeholder="__('Jméno, firma, telefon')" />
+        <input v-model="q" class="gl-chip-input flex-1 text-[15px]" :placeholder="__('Jméno, firma, telefon')" />
       </label>
-      <div class="mt-2 flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto">
+      <div class="mt-2 flex min-h-0 flex-1 flex-col gap-0.5 min-[1100px]:overflow-y-auto">
         <button
           v-for="c in directory.data || []"
           :key="c.name"
-          class="flex items-center gap-3 rounded-2xl px-2.5 py-2.5 text-left transition"
-          :class="selected === c.name ? 'bg-white shadow-[inset_3px_0_0_var(--accent-600),0_6px_18px_-10px_color-mix(in_srgb,var(--c-shadow-3)_35%,transparent)]' : 'hover:bg-white/55'"
+          class="flex min-h-[56px] items-center gap-3 rounded-2xl px-2.5 py-2 text-left transition max-md:min-h-[60px]"
+          :class="selected === c.name ? 'bg-[var(--accent-soft)] shadow-[inset_3px_0_0_var(--accent-600)]' : 'hover:bg-white/55'"
           @click="select(c.name)"
         >
           <img v-if="c.image" :src="c.image" class="size-10 shrink-0 rounded-full object-cover" />
-          <span v-else class="flex size-10 shrink-0 items-center justify-center rounded-full text-[12px] font-bold" :class="tone(c.full_name)">
+          <span v-else class="flex size-10 shrink-0 items-center justify-center rounded-full text-[14px] font-bold" :class="tone(c.full_name)">
             {{ initials(c.full_name || c.name) }}
           </span>
           <span class="min-w-0 flex-1">
             <span class="block truncate text-[15px] font-semibold text-ink-gray-9">{{ c.full_name || c.name }}</span>
-            <span class="block truncate text-[12.5px] text-ink-gray-5">{{ sub(c) }}</span>
+            <span class="block truncate text-[14px] text-ink-gray-5">{{ sub(c) }}</span>
           </span>
         </button>
         <GlErrorBanner v-if="directory.error" :title="__('Kontakty se nepodařilo načíst')" @retry="directory.reload()" />
@@ -64,8 +65,8 @@
     </div>
 
     <!-- karta -->
-    <div v-if="card.data" class="flex min-h-0 min-w-0 flex-1 flex-col gap-3 overflow-y-auto overflow-x-hidden" :class="!selected && isMobileView ? 'hidden' : ''">
-      <button v-if="isMobileView" class="self-start text-[15px] font-semibold text-[var(--accent-600)]" @click="selected = ''">
+    <div v-if="card.data" class="flex min-w-0 flex-1 flex-col gap-4" :class="!selected && isMobileView ? 'hidden' : ''">
+      <button v-if="isMobileView" class="min-h-[44px] self-start text-[15px] font-semibold text-[var(--accent-600)]" @click="selected = ''">
         ‹ {{ __('Kontakty') }}
       </button>
       <!-- design 3. kolo (10): avatar vlevo, jméno, role · firma (odkaz), pod tím 4 akce přes celou šířku -->
@@ -96,32 +97,34 @@
             v-for="a in actions"
             :key="a.label"
             :href="a.href"
-            class="gl-round flex flex-col items-center gap-1.5 rounded-2xl py-3 text-[13px] font-bold"
-            :class="a.disabled && 'pointer-events-none opacity-40'"
-            @click="a.onClick && ($event.preventDefault(), a.onClick())"
+            class="gl-round flex min-h-[44px] flex-col items-center gap-1.5 rounded-2xl py-3 text-[14px] font-bold"
+            :class="a.disabled && 'cursor-not-allowed opacity-40'"
+            :title="a.disabled ? a.disabledTitle : undefined"
+            :aria-disabled="a.disabled ? 'true' : undefined"
+            @click="a.disabled ? $event.preventDefault() : a.onClick && ($event.preventDefault(), a.onClick())"
           >
             <GlIcon :name="a.icon" :size="20" class="text-[var(--accent-600)]" />{{ a.label }}
           </a>
         </div>
       </div>
 
-      <div class="grid min-w-0 gap-3 lg:grid-cols-2">
+      <div class="grid min-w-0 gap-4 lg:grid-cols-2">
         <div class="gl-card min-w-0 p-6">
           <h2 class="mb-3 text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Údaje') }}</h2>
           <dl class="flex flex-col">
-            <div v-for="r in details" :key="r.label" class="flex items-baseline justify-between gap-4 py-[7px]">
+            <div v-for="r in details" :key="r.label" class="flex items-baseline justify-between gap-4 min-h-[36px] py-1.5">
               <dt class="shrink-0 text-[14px] text-ink-gray-5">{{ r.label }}</dt>
-              <dd class="min-w-0 truncate text-right text-[14px] font-medium text-ink-gray-9">
+              <dd class="min-w-0 truncate text-right text-[15px] font-medium text-ink-gray-9">
                 <a v-if="r.href" :href="r.href" target="_blank" class="font-semibold text-[var(--accent-600)] hover:underline">{{ r.value }}</a>
                 <template v-else-if="r.value">
                   {{ r.value }}
-                  <span v-if="r.sub" class="block text-[12px] font-normal text-ink-gray-5">{{ r.sub }}</span>
+                  <span v-if="r.sub" class="block text-[13px] font-normal text-ink-gray-5">{{ r.sub }}</span>
                 </template>
-                <span v-else class="gl-empty">{{ __('Bez hodnoty') }}</span>
+                <span v-else class="gl-empty text-[14px]">{{ __('Bez hodnoty') }}</span>
               </dd>
             </div>
           </dl>
-          <button class="mt-3 inline-block text-[13px] font-semibold text-[var(--accent-600)] hover:underline" @click="showEdit = true">
+          <button class="mt-2 inline-flex min-h-[36px] items-center text-[14px] font-semibold text-[var(--accent-600)] hover:underline max-md:min-h-[44px]" @click="showEdit = true">
             {{ __('Upravit údaje') }}
           </button>
         </div>
@@ -134,30 +137,30 @@
             v-for="(a, i) in card.data.activity"
             :key="i"
             :to="a.lead ? { name: 'Lead', params: { leadId: a.lead } } : undefined"
-            class="flex items-center gap-3 rounded-2xl py-2"
+            class="flex min-h-[56px] items-center gap-3 rounded-2xl py-2"
           >
             <span class="flex size-10 shrink-0 items-center justify-center rounded-xl" :class="KIND[a.kind].tone">
               <GlIcon :name="KIND[a.kind].icon" :size="18" />
             </span>
             <span class="min-w-0 flex-1">
-              <span class="flex items-center gap-2">
+              <span class="flex min-w-0 items-center gap-2">
                 <span class="truncate text-[15px] font-semibold text-ink-gray-9">{{ a.title }}</span>
-                <span v-if="a.badge" class="rounded-full bg-[color-mix(in_srgb,var(--stage-nabidka)_18%,transparent)] px-2 py-0.5 text-[11px] font-bold text-[var(--warning)]">{{ a.badge }}</span>
-                <span v-if="a.upcoming" class="rounded-full bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] px-2 py-0.5 text-[11px] font-bold text-[var(--accent-700)]">{{ __('Naplánováno') }}</span>
+                <span v-if="a.badge" class="rounded-full bg-[color-mix(in_srgb,var(--stage-nabidka)_18%,transparent)] px-2.5 py-0.5 text-[13px] font-bold text-[var(--warning)]">{{ a.badge }}</span>
+                <span v-if="a.upcoming" class="rounded-full bg-[color-mix(in_srgb,var(--accent-600)_12%,transparent)] px-2.5 py-0.5 text-[13px] font-bold text-[var(--accent-700)]">{{ __('Naplánováno') }}</span>
               </span>
-              <span class="block truncate text-[12.5px] text-ink-gray-5">{{ a.text || when(a.date) }}</span>
+              <span class="block truncate text-[14px] text-ink-gray-5">{{ a.text || when(a.date) }}</span>
             </span>
           </component>
           <div v-if="card.data.leads.length" class="mt-3 border-t border-[color-mix(in_srgb,var(--c-tint)_14%,transparent)] pt-3">
-            <div class="mb-1 text-[12px] font-bold text-ink-gray-5">{{ __('Zakázky') }}</div>
+            <div class="mb-1 text-[13px] font-bold text-ink-gray-5">{{ __('Zakázky') }}</div>
             <router-link
               v-for="l in card.data.leads"
               :key="l.name"
               :to="{ name: 'Lead', params: { leadId: l.name } }"
-              class="flex items-center justify-between gap-3 py-1 text-[14px] hover:text-[var(--accent-600)]"
+              class="flex min-h-[36px] items-center justify-between gap-3 py-1 text-[14px] hover:text-[var(--accent-600)] max-md:min-h-[44px]"
             >
               <span class="truncate font-medium">{{ l.order_title || l.lead_name || l.name }}</span>
-              <span class="shrink-0 text-[12.5px] text-ink-gray-5">{{ __(l.status) }}</span>
+              <span class="shrink-0 text-[13px] text-ink-gray-5">{{ __(l.status) }}</span>
             </router-link>
           </div>
         </div>
@@ -195,7 +198,7 @@
   <Dialog v-model:open="showNote" :title="__('Zápis')">
     <template #default>
       <FormControl v-model="noteText" type="textarea" :rows="5" :placeholder="__('Co jste probrali…')" />
-      <div class="mt-2 text-[12px] text-ink-gray-5">{{ noteTarget }}</div>
+      <div class="mt-2 text-[13px] text-ink-gray-5">{{ noteTarget }}</div>
     </template>
     <template #actions>
       <div class="flex justify-end gap-2">
@@ -278,8 +281,8 @@ const c = computed(() => card.data?.contact || {})
 const phone = computed(() => c.value.mobile_no || c.value.phone || '')
 
 const actions = computed(() => [
-  { label: __('Zavolat'), icon: 'phone', href: phone.value ? `tel:${phone.value}` : undefined, disabled: !phone.value },
-  { label: __('E-mail'), icon: 'mail', href: c.value.email_id ? `mailto:${c.value.email_id}` : undefined, disabled: !c.value.email_id },
+  { label: __('Zavolat'), icon: 'phone', href: phone.value ? `tel:${phone.value}` : undefined, disabled: !phone.value, disabledTitle: __('Kontakt nemá telefon') },
+  { label: __('E-mail'), icon: 'mail', href: c.value.email_id ? `mailto:${c.value.email_id}` : undefined, disabled: !c.value.email_id, disabledTitle: __('Kontakt nemá e-mail') },
   { label: __('Schůzka'), icon: 'cal', onClick: () => (showEvent.value = true) },
   { label: __('Zápis'), icon: 'doc', onClick: () => ((noteText.value = ''), (showNote.value = true)) },
 ])

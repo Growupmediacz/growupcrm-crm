@@ -7,7 +7,7 @@
         <!-- design 3. kolo (17): Aktivní · Čeká · Dokončené vedle nadpisu -->
         <div class="gl-seg hidden h-12 items-center md:inline-flex">
           <button v-for="t in TABS" :key="t.value" class="gl-seg-btn !h-10 !px-5 !text-[15px]" :class="tab === t.value && 'gl-seg-on !bg-[var(--accent-600)] !text-white'" @click="tab = t.value">
-            {{ t.label }} <span class="num opacity-80">{{ board.data?.counts?.[t.value] ?? '' }}</span>
+            {{ t.label }} <GlNumber class="num opacity-80" :value="board.data?.counts?.[t.value]" fallback="" />
           </button>
         </div>
       </div>
@@ -24,12 +24,12 @@
         </template>
         <template #body="{ close }">
           <div class="gl-sheet mt-2 w-[300px] rounded-[20px] p-4">
-            <div class="mb-2 text-[12px] font-bold text-ink-gray-5">{{ __('Stav') }}</div>
+            <div class="mb-2 text-[13px] font-bold text-ink-gray-5">{{ __('Stav') }}</div>
             <label v-for="s in FILTER_STATUSES" :key="s" class="flex cursor-pointer items-center gap-2.5 py-1.5 text-[14px]">
               <input v-model="draftStatuses" type="checkbox" :value="s" class="rounded" />
               <span class="size-2 rounded-full" :style="{ background: STATUS_COLORS[s] }" />{{ __(s) }}
             </label>
-            <div class="mb-2 mt-3 text-[12px] font-bold text-ink-gray-5">{{ __('Termín') }}</div>
+            <div class="mb-2 mt-3 text-[13px] font-bold text-ink-gray-5">{{ __('Termín') }}</div>
             <div class="gl-seg flex w-full">
               <button v-for="d in DUE" :key="d.value" class="gl-seg-btn flex-1 justify-center !px-2" :class="draftDue === d.value && 'gl-seg-on'" @click="draftDue = d.value">
                 {{ d.label }}
@@ -51,61 +51,99 @@
   <GlForbidden v-if="board.error && isForbidden(board.error)" :message="board.error.messages?.[0]" />
   <div v-else-if="board.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Projekty se nepodařilo načíst')" :text="board.error.messages?.[0]" @retry="board.reload()" /></div>
   <div v-else-if="!board.data" class="px-3 md:px-2"><GlSkeleton :rows="5" /></div>
-  <div v-else class="flex flex-col gap-4 overflow-y-auto px-3 pb-6 md:px-2">
+  <div v-else class="flex flex-col gap-4 px-3 pb-6 md:px-2">
     <div class="gl-seg self-start md:hidden">
       <button v-for="t in TABS" :key="t.value" class="gl-seg-btn" :class="tab === t.value && 'gl-seg-on'" @click="tab = t.value">
-        {{ t.label }} <span class="num opacity-70">{{ board.data?.counts?.[t.value] ?? '' }}</span>
+        {{ t.label }} <GlNumber class="num opacity-70" :value="board.data?.counts?.[t.value]" fallback="" />
       </button>
     </div>
 
-    <div class="gl-card overflow-x-auto p-2">
-      <table class="w-full min-w-[720px] text-left text-[15px]">
-        <thead class="text-[14px] font-medium text-ink-gray-5">
-          <tr>
-            <th class="px-3 py-2">{{ __('Projekt') }}</th>
-            <th class="px-3 py-2">{{ __('Stav') }}</th>
-            <th class="w-[220px] px-3 py-2">{{ __('Postup') }}</th>
-            <th class="px-3 py-2">{{ __('Termín') }}</th>
-            <th class="px-3 py-2">{{ __('Tým') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="p in board.data?.projects || []"
-            :key="p.name"
-            class="cursor-pointer border-t border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] hover:bg-white/50"
-            @click="router.push({ name: 'Project', params: { projectId: p.name } })"
-          >
-            <td class="px-3 py-3.5">
-              <div class="text-[16px] font-semibold text-ink-gray-9">{{ p.project_name }}</div>
-              <div class="truncate text-[13.5px] text-ink-gray-5">{{ subline(p) }}</div>
-            </td>
-            <td class="px-3 py-3">
-              <span class="gl3-stage" :style="{ '--stage': STATUS_COLORS[p.display_status] }">{{ statusLabel(p) }}</span>
-            </td>
-            <td class="px-3 py-3">
-              <div class="flex items-center gap-3">
-                <div class="h-2 flex-1 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--c-tint)_16%,transparent)]">
-                  <div class="h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${p.progress || 0}%` }" />
-                </div>
-                <span class="num w-12 text-right text-[15px] text-ink-gray-8">{{ Math.round(p.progress || 0) }} %</span>
-              </div>
-            </td>
-            <td class="num whitespace-nowrap px-3 py-3" :class="p.display_status === 'Zpožděno' ? 'font-semibold text-[var(--overdue)]' : 'text-ink-gray-7'">
-              {{ p.deadline ? shortDate(p.deadline) : '' }}
-            </td>
-            <td class="px-3 py-3">
-              <span class="flex -space-x-1.5">
-                <GlUserAvatar v-for="u in p.team.slice(0, 4)" :key="u" :user="u" class="size-9 border-2 border-white bg-[var(--c-blue-50)] text-[11px] font-bold text-[var(--c-blue-600)]" />
-              </span>
-            </td>
-          </tr>
-          <tr v-if="board.data && !board.data.projects.length">
-            <td colspan="5" class="px-3 py-6"><GlEmptyState icon="folder" :title="__('Žádné projekty')" :action="__('Nový projekt')" primary @action="showNew = true" /></td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- GrowUp (zadání 2027 kolo 2 V2): tabulka v plné výšce (stránku posouvá layout), na telefonu seznam karet -->
+    <div v-if="board.data && !board.data.projects.length" class="gl-card shrink-0 p-5">
+      <GlEmptyState icon="folder" :title="__('Žádné projekty')" :action="__('Nový projekt')" primary @action="showNew = true" />
     </div>
+    <template v-else>
+      <div class="gl-card hidden shrink-0 overflow-x-auto p-2 md:block">
+        <table class="w-full min-w-[720px] text-left text-[15px]">
+          <thead class="text-[14px] font-medium text-ink-gray-5">
+            <tr>
+              <th class="px-3 py-2">{{ __('Projekt') }}</th>
+              <th class="px-3 py-2">{{ __('Stav') }}</th>
+              <th class="w-[220px] px-3 py-2">{{ __('Postup') }}</th>
+              <th class="px-3 py-2">{{ __('Termín') }}</th>
+              <th class="px-3 py-2">{{ __('Tým') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="p in board.data?.projects || []"
+              :key="p.name"
+              tabindex="0"
+              class="h-16 cursor-pointer border-t border-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] outline-none transition-colors duration-[var(--t-fast)] hover:bg-[color-mix(in_srgb,var(--accent-600)_6%,transparent)] focus-visible:bg-[color-mix(in_srgb,var(--accent-600)_8%,transparent)]"
+              @click="openProject(p)"
+              @keydown.enter="openProject(p)"
+            >
+              <td class="px-3 py-2">
+                <div class="text-[16px] font-semibold text-ink-gray-9">{{ p.project_name }}</div>
+                <div class="truncate text-[14px] text-ink-gray-5">{{ subline(p) }}</div>
+              </td>
+              <td class="px-3 py-2">
+                <span class="gl3-stage" :style="{ '--stage': STATUS_COLORS[p.display_status] }">{{ statusLabel(p) }}</span>
+              </td>
+              <td class="px-3 py-2">
+                <div class="flex items-center gap-3">
+                  <div class="h-2 flex-1 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--c-tint)_16%,transparent)]">
+                    <div class="h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${p.progress || 0}%` }" />
+                  </div>
+                  <span class="num w-12 text-right text-[15px] text-ink-gray-8">{{ Math.round(p.progress || 0) }} %</span>
+                </div>
+              </td>
+              <td class="num whitespace-nowrap px-3 py-2" :class="p.display_status === 'Zpožděno' ? 'font-semibold text-[var(--overdue)]' : 'text-ink-gray-7'">
+                {{ p.deadline ? shortDate(p.deadline) : '' }}
+              </td>
+              <td class="px-3 py-2">
+                <span class="flex -space-x-1.5">
+                  <GlUserAvatar v-for="u in p.team.slice(0, 4)" :key="u" :user="u" class="size-9 border-2 border-white bg-[var(--c-blue-50)] text-[13px] font-bold text-[var(--c-blue-600)]" />
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex flex-col gap-3 md:hidden">
+        <div
+          v-for="p in board.data?.projects || []"
+          :key="p.name"
+          tabindex="0"
+          class="gl-card shrink-0 cursor-pointer p-4 outline-none"
+          @click="openProject(p)"
+          @keydown.enter="openProject(p)"
+        >
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <div class="truncate text-[16px] font-semibold text-ink-gray-9">{{ p.project_name }}</div>
+              <div class="truncate text-[14px] text-ink-gray-5">{{ subline(p) }}</div>
+            </div>
+            <span class="gl3-stage shrink-0" :style="{ '--stage': STATUS_COLORS[p.display_status] }">{{ statusLabel(p) }}</span>
+          </div>
+          <div class="mt-3 flex items-center gap-3">
+            <div class="h-2 flex-1 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--c-tint)_16%,transparent)]">
+              <div class="h-full rounded-full bg-[var(--accent-600)]" :style="{ width: `${p.progress || 0}%` }" />
+            </div>
+            <span class="num w-12 text-right text-[14px] text-ink-gray-8">{{ Math.round(p.progress || 0) }} %</span>
+          </div>
+          <div class="mt-3 flex items-center justify-between gap-3">
+            <span class="num text-[14px]" :class="p.display_status === 'Zpožděno' ? 'font-semibold text-[var(--overdue)]' : 'text-ink-gray-7'">
+              {{ p.deadline ? `${__('Termín')}: ${shortDate(p.deadline)}` : '' }}
+            </span>
+            <span class="flex shrink-0 -space-x-1.5">
+              <GlUserAvatar v-for="u in p.team.slice(0, 4)" :key="u" :user="u" class="size-9 border-2 border-white bg-[var(--c-blue-50)] text-[13px] font-bold text-[var(--c-blue-600)]" />
+            </span>
+          </div>
+        </div>
+      </div>
+    </template>
 
     <div class="grid gap-4 lg:grid-cols-3">
       <div class="gl-card p-5">
@@ -118,7 +156,7 @@
           </span>
           <span class="min-w-0 flex-1">
             <span class="block truncate text-[15px] font-semibold text-ink-gray-9">{{ w.title }}</span>
-            <span class="block truncate text-[12.5px] text-ink-gray-5">{{ w.organization }}</span>
+            <span class="block truncate text-[13px] text-ink-gray-5">{{ w.organization }}</span>
           </span>
           <span class="shrink-0 rounded-full px-3 py-1 text-[13px] font-medium" :class="w.kind === 'task' ? 'bg-[color-mix(in_srgb,var(--stage-nabidka)_14%,transparent)] text-[var(--c-amber-650)]' : 'bg-[color-mix(in_srgb,var(--c-blue-400)_10%,transparent)] text-[var(--info)]'">{{ w.kind === 'task' ? __('Úkol') : __('Schůzka') }}</span>
         </div>
@@ -137,7 +175,7 @@
           </span>
           <span class="num w-12 shrink-0 text-right text-[15px] text-ink-gray-8" :title="__('{0} úkolů na 7 dní', [l.tasks])">{{ l.percent }} %</span>
         </div>
-        <div class="mt-2 text-[11.5px] text-ink-gray-4">{{ __('Otevřené úkoly projektů na příštích 7 dní, 10 úkolů = 100 %.') }}</div>
+        <div class="mt-2 text-[13px] text-ink-gray-5">{{ __('Otevřené úkoly projektů na příštích 7 dní, 10 úkolů = 100 %.') }}</div>
       </div>
 
       <div class="gl-card p-5">
@@ -156,10 +194,7 @@
             <Button iconLeft="lucide-mail" :label="__('Připomenout klientovi')" :loading="reminding" @click="remindOverdue" />
           </div>
         </template>
-        <div v-else class="mt-2 flex flex-col items-center gap-2 rounded-[18px] bg-[color-mix(in_srgb,var(--stage-vyhrano)_7%,transparent)] py-6 text-center">
-          <span class="flex size-10 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--stage-vyhrano)_15%,transparent)] text-[var(--c-green-700)]"><GlIcon name="check" :size="20" /></span>
-          <span class="text-[15px] font-medium text-ink-gray-8">{{ __('Nic není po termínu.') }}</span>
-        </div>
+        <GlEmptyState v-else icon="circle-check" :title="__('Nic není po termínu.')" />
       </div>
     </div>
   </div>
@@ -173,6 +208,7 @@ import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import { isForbidden } from '@/utils/glErrors'
 import GlForbidden from '@/components/GlForbidden.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import GlNumber from '@/components/GlNumber.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlNewProjectModal from '@/components/Modals/GlNewProjectModal.vue'
 import GlUserAvatar from '@/components/GlUserAvatar.vue'
@@ -231,6 +267,7 @@ function clearFilters(close) {
   applyFilters(close)
 }
 
+const openProject = (p) => router.push({ name: 'Project', params: { projectId: p.name } })
 const statusLabel = (p) => (p.status === 'Čeká' && p.waiting_note ? __('Čeká') : __(p.display_status))
 function subline(p) {
   const parts = [p.organization_name]

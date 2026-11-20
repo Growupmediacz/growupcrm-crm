@@ -145,6 +145,7 @@
   </ListView>
   <ListFooter
     v-model="pageLengthCount"
+    :page-sizes="false"
     class="border-t sm:px-5 px-3 py-2"
     :options="{
       rowCount: options.rowCount,
@@ -181,7 +182,7 @@ const initials = (s) =>
     .slice(0, 2)
     .map((w) => w[0].toUpperCase())
     .join('')
-import HeartIcon from '@/components/Icons/HeartIcon.vue'
+import HeartIcon from '~icons/lucide/heart'
 import RatingInput from '@/components/Controls/RatingInput.vue'
 import ListBulkActions from '@/components/ListBulkActions.vue'
 import ListRows from '@/components/ListViews/ListRows.vue'

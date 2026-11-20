@@ -6,7 +6,7 @@
     </template>
     <template #right-header>
       <!-- GrowUp: přidává se v sekci (Aktivita → typ, Zakázky, Kontakty, Pobočky), horní „Nová zakázka“ není -->
-      <Button v-if="isMobileView && headerAdd" variant="solid" icon="lucide-plus" :aria-label="headerAdd.label" @click="headerAdd.onClick" />
+      <Button v-if="isMobileView && headerAdd" variant="solid" icon="lucide-plus" class="max-md:!size-11" :aria-label="headerAdd.label" @click="headerAdd.onClick" />
       <template v-else>
       <Button
         v-if="organization.doc.ico"
@@ -49,9 +49,9 @@
           <span class="lucide-phone size-5 shrink-0" aria-hidden="true" />
           <span class="min-w-0 flex-1">
             <span class="block truncate text-[14px] font-semibold">{{ __('Poslední hovor') }}: {{ summary.last_call.title }}</span>
-            <span class="block truncate text-[12.5px] opacity-80">{{ dateTime(summary.last_call.date) }}<template v-if="summary.last_call.user_name"> · {{ summary.last_call.user_name }}</template></span>
+            <span class="block truncate text-[13px] opacity-80">{{ dateTime(summary.last_call.date) }}<template v-if="summary.last_call.user_name"> · {{ summary.last_call.user_name }}</template></span>
           </span>
-          <Button variant="solid" size="sm" :label="__('Zavolat')" @click="showCall = true" />
+          <Button variant="solid" :label="__('Zavolat')" @click="showCall = true" />
         </div>
       </div>
       <!-- GrowUp (oprava 13): Údaje o firmě jen ke čtení; celý formulář CRM až pod „Všechna pole“ -->
@@ -88,70 +88,73 @@
       <button
         v-for="t in tabs"
         :key="t.key"
-        class="flex h-12 shrink-0 items-center gap-2 rounded-full px-5 text-[15px] font-semibold transition"
+        class="flex h-12 shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-5 text-[15px] font-semibold transition"
         :class="tab === t.key ? 'bg-[var(--accent-600)] text-white shadow-[0_8px_18px_-8px_color-mix(in_srgb,var(--accent-600)_70%,transparent)]' : 'bg-white/60 text-ink-gray-7 hover:bg-white'"
         @click="tab = t.key"
       >
         {{ t.label }}
-        <span v-if="t.count !== null" class="num rounded-full px-2 py-0.5 text-[12px] font-bold" :class="tab === t.key ? 'bg-white/25 text-white' : 'bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-ink-gray-6'">{{ t.count }}</span>
+        <span v-if="t.count !== null" class="num rounded-full px-2 py-0.5 text-[13px] font-bold" :class="tab === t.key ? 'bg-white/25 text-white' : 'bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-ink-gray-6'">{{ t.count }}</span>
       </button>
     </div>
-    <div class="gl-card flex flex-1 flex-col overflow-hidden">
+    <div class="gl-card flex min-w-0 flex-1 flex-col overflow-hidden">
       <!-- mobil (design „Mobil – Detail firmy“): logo, stav, rychlé akce a čísla -->
-      <div v-if="isMobileView" class="flex flex-col items-center px-4 pt-5 text-center">
-        <Avatar size="3xl" class="h-16 w-16" :label="organization.doc.organization_name" :image="organization.doc.organization_logo" />
-        <div class="mt-3 text-[24px] font-bold leading-tight tracking-tight text-ink-gray-9">{{ organization.doc.organization_name }}</div>
-        <div class="mt-1 flex items-center gap-2 text-[13px] text-ink-gray-6">
+      <!-- GrowUp (zadání 2027 kolo 2 V2): hlavička na telefonu se nesmí ořezat, záložky jako posuvná řada pilulek bez překryvu -->
+      <div v-if="isMobileView" class="flex min-w-0 flex-col items-center px-4 pt-5 text-center">
+        <Avatar size="3xl" class="h-16 w-16 shrink-0" :label="organization.doc.organization_name" :image="organization.doc.organization_logo" />
+        <div class="mt-3 w-full min-w-0 break-words text-[22px] font-bold leading-tight tracking-tight text-ink-gray-9">{{ organization.doc.organization_name }}</div>
+        <div class="mt-1 flex max-w-full flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[14px] text-ink-gray-6">
           <span v-if="organization.doc.relationship" class="flex items-center gap-1.5 font-bold text-ink-gray-9">
             <span class="size-2 rounded-full" :style="{ background: REL_COLORS[organization.doc.relationship] || 'var(--stage-prohrano)' }" />
             {{ __(organization.doc.relationship) }}
           </span>
           <span v-if="organization.doc.ico">{{ __('IČO') }} {{ organization.doc.ico }}</span>
         </div>
-        <div class="mt-4 grid w-full grid-cols-4 gap-2">
+        <div class="mt-4 grid w-full min-w-0 grid-cols-4 gap-2">
           <a
             v-for="a in mobileActions"
             :key="a.label"
             :href="a.href"
             :target="a.external ? '_blank' : undefined"
-            class="gl-round flex flex-col items-center gap-1 rounded-2xl py-2.5 text-[12px] font-bold"
+            class="gl-round flex min-h-[44px] min-w-0 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 text-[13px] font-bold"
             :class="a.disabled && 'pointer-events-none opacity-40'"
             @click="a.onClick && ($event.preventDefault(), a.onClick())"
           >
-            <GlIcon :name="a.icon" :size="19" class="text-[var(--accent-600)]" />{{ a.label }}
+            <GlIcon :name="a.icon" :size="19" class="text-[var(--accent-600)]" /><span class="max-w-full truncate">{{ a.label }}</span>
           </a>
         </div>
-        <div v-if="summary" class="mt-2 grid w-full grid-cols-4 gap-2">
-          <div v-for="st in stats" :key="st.label" class="rounded-2xl bg-white/60 py-2">
-            <div class="text-[20px] font-bold text-ink-gray-9">{{ st.value }}</div>
-            <div class="text-[11px] text-ink-gray-5">{{ st.label }}</div>
+        <div v-if="summary" class="mt-2 grid w-full min-w-0 grid-cols-4 gap-2">
+          <div v-for="st in stats" :key="st.label" class="min-w-0 rounded-2xl bg-white/60 py-2">
+            <div class="num text-[20px] font-bold text-ink-gray-9">{{ st.value }}</div>
+            <div class="truncate px-1 text-[13px] text-ink-gray-5">{{ st.label }}</div>
           </div>
         </div>
       </div>
-      <div v-if="isMobileView" class="m-4 mb-0 flex w-fit max-w-full gap-1 overflow-x-auto rounded-full bg-[color-mix(in_srgb,var(--c-tint)_11%,transparent)] p-[3px]">
+      <div v-if="isMobileView" class="mt-4 flex min-w-0 gap-2 overflow-x-auto px-4 pb-1" role="tablist">
         <button
           v-for="t in tabs"
           :key="t.key"
-          class="flex h-8 items-center gap-2 rounded-full px-4 text-[14px] font-semibold text-ink-gray-5 transition hover:text-ink-gray-9"
-          :class="{ '!bg-white !text-ink-gray-9 shadow-[0_2px_10px_-2px_color-mix(in_srgb,var(--c-shadow-2)_28%,transparent)]': tab === t.key }"
+          role="tab"
+          :aria-selected="tab === t.key"
+          class="flex min-h-[44px] shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-4 text-[15px] font-semibold transition"
+          :class="tab === t.key ? 'bg-[var(--accent-600)] text-white' : 'bg-white/60 text-ink-gray-7 ring-1 ring-[var(--line)]'"
           @click="tab = t.key"
         >
-          {{ t.label }}
-          <Badge v-if="t.count !== null" variant="subtle" theme="gray" size="sm">{{ t.count }}</Badge>
+          <span>{{ t.label }}</span>
+          <span v-if="t.count !== null" class="num shrink-0 rounded-full px-2 py-0.5 text-[13px] font-bold leading-tight" :class="tab === t.key ? 'bg-white/25 text-white' : 'bg-[color-mix(in_srgb,var(--c-tint)_12%,transparent)] text-ink-gray-6'">{{ t.count }}</span>
         </button>
       </div>
 
-      <div class="flex-1 overflow-y-auto p-5">
+      <div class="min-w-0 flex-1 overflow-y-auto p-4 md:p-5">
         <GlErrorBanner v-if="overview.error" class="mb-3" :title="__('Přehled firmy se nepodařilo načíst')" :text="overview.error.messages?.[0]" @retry="overview.reload()" />
         <!-- Aktivita -->
         <div v-if="tab === 'activity'">
           <!-- design 3. kolo (05): nadpis, filtry a Přidat, skupiny Nadcházející a po dnech, zakázka vpravo -->
-          <h2 v-if="!isMobileView" class="mb-4 text-[28px] font-bold tracking-[-0.02em] text-ink-gray-9">{{ __('Aktivita') }}</h2>
-          <div class="mb-3 flex flex-wrap items-center gap-2">
+          <h2 v-if="!isMobileView" class="mb-4 text-[20px] font-bold tracking-[-0.01em] text-ink-gray-9">{{ __('Aktivita') }}</h2>
+          <div class="mb-3 flex min-w-0 flex-wrap items-center gap-2">
             <button
               v-for="f in kindFilters"
               :key="f.key"
-              class="h-10 rounded-full px-4 text-[15px] font-medium transition"
+              class="min-h-[40px] rounded-full px-4 text-[15px] font-medium transition max-md:min-h-[44px]"
               :class="kind === f.key ? 'bg-[var(--accent-600)] text-white' : 'bg-white/60 text-ink-gray-7 ring-1 ring-[var(--line)] hover:bg-white'"
               @click="kind = f.key"
             >
@@ -159,7 +162,7 @@
             </button>
             <div v-if="!isMobileView" class="ml-auto">
               <Dropdown v-if="kind === 'all'" :options="addOptions" placement="right">
-                <Button iconLeft="lucide-plus" :label="__('Přidat')" />
+                <Button class="min-h-[36px]" iconLeft="lucide-plus" :label="__('Přidat')" />
               </Dropdown>
               <Button v-else-if="addByKind[kind]" iconLeft="lucide-plus" :label="addByKind[kind].label" @click="addByKind[kind].onClick" />
             </div>
@@ -167,19 +170,19 @@
           <GlSkeleton v-if="overviewFirstLoad" :rows="3" />
           <GlEmptyState v-else-if="!timeline.length && !overview.error" class="my-8" icon="clock" :title="__('Zatím žádná aktivita')" :text="__('Zápisy, hovory, schůzky a úkoly u zakázek této firmy se zobrazí tady.')" />
           <template v-for="g in timelineGroups" :key="g.label">
-            <div class="mt-3 border-b border-[var(--line)] pb-2 text-[16px] font-bold text-ink-gray-9">{{ g.label }}</div>
+            <div class="mt-3 min-w-0 border-b border-[var(--line)] pb-2 text-[16px] font-bold text-ink-gray-9">{{ g.label }}</div>
             <div
               v-for="item in g.items"
               :key="item.kind + item.id"
-              class="flex items-start gap-4 border-b border-[var(--line)] px-1 py-3.5 last:border-b-0"
+              class="flex min-w-0 items-start gap-3 border-b border-[var(--line)] px-1 py-3.5 last:border-b-0 md:gap-4"
               :class="EDITABLE[item.kind] && 'cursor-pointer transition hover:bg-white/50'"
               :title="EDITABLE[item.kind] ? __('Upravit') : ''"
               @click="EDITABLE[item.kind] && editItem(item)"
             >
-              <div class="flex size-12 shrink-0 items-center justify-center rounded-[14px]" :class="kindTone[item.kind]">
+              <div class="flex size-11 shrink-0 items-center justify-center rounded-[14px] md:size-12" :class="kindTone[item.kind]">
                 <span :class="kindIcon[item.kind]" class="size-5" aria-hidden="true" />
               </div>
-              <div class="min-w-0 flex-1">
+              <div class="min-w-0 flex-1 break-words">
                 <div class="flex flex-wrap items-center gap-x-2.5 gap-y-1">
                   <router-link
                     v-if="item.kind === 'email' && item.lead"
@@ -188,7 +191,7 @@
                     @click.stop
                   >{{ rowTitle(item) }}</router-link>
                   <span v-else class="text-[16px] font-semibold text-ink-gray-9">{{ rowTitle(item) }}</span>
-                  <span v-if="rowBadge(item)" class="rounded-full px-2.5 py-0.5 text-[12.5px] font-semibold" :class="rowBadge(item).cls">{{ rowBadge(item).text }}</span>
+                  <span v-if="rowBadge(item)" class="rounded-full px-2.5 py-0.5 text-[13px] font-semibold" :class="rowBadge(item).cls">{{ rowBadge(item).text }}</span>
                 </div>
                 <div v-if="item.text" class="mt-1 line-clamp-2 whitespace-pre-line text-[14px] text-ink-gray-7">{{ plain(item.text) }}</div>
                 <div class="mt-1 text-[13.5px] text-ink-gray-5">
@@ -214,32 +217,38 @@
         <!-- Zakázky -->
         <div v-else-if="tab === 'leads'">
           <div class="mb-3 flex justify-end">
-            <Button :label="__('Nová zakázka')" iconLeft="lucide-plus" @click="showLeadModal = true" />
+            <Button class="max-md:!min-h-[44px]" :label="__('Nová zakázka')" iconLeft="lucide-plus" @click="showLeadModal = true" />
           </div>
           <GlSkeleton v-if="overviewFirstLoad" :rows="3" />
           <GlEmptyState v-else-if="!leads.length && !overview.error" class="my-6" icon="brief" :title="__('Zatím žádná zakázka')" :text="__('Firma zatím nemá žádnou zakázku.')" :action="__('Nová zakázka')" primary @action="showLeadModal = true" />
-          <table v-else-if="leads.length" class="w-full text-left text-sm">
-            <thead class="text-xs text-ink-gray-5">
+          <div v-else-if="leads.length && isMobileView" class="flex flex-col gap-2">
+            <router-link v-for="l in leads" :key="l.name" :to="{ name: 'Lead', params: { leadId: l.name } }" class="flex min-h-[56px] min-w-0 flex-col justify-center rounded-2xl bg-white/55 px-4 py-2.5">
+              <span class="break-words text-[15px] font-semibold text-ink-gray-9">{{ l.order_title || l.lead_name || l.name }}</span>
+              <span class="mt-0.5 break-words text-[14px] text-ink-gray-6">{{ [__(l.status), money(l.order_value), l.owner_name].filter(Boolean).join(' · ') }}</span>
+            </router-link>
+          </div>
+          <table v-else-if="leads.length" class="w-full text-left text-[14px]">
+            <thead class="text-[13px] text-ink-gray-5">
               <tr>
-                <th class="py-2 pr-3 font-normal">{{ __('Zakázka') }}</th>
-                <th class="py-2 pr-3 font-normal">{{ __('Stav') }}</th>
-                <th class="py-2 pr-3 font-normal">{{ __('Hodnota') }}</th>
-                <th class="py-2 pr-3 font-normal">{{ __('Pobočka') }}</th>
-                <th class="py-2 pr-3 font-normal">{{ __('Obchodník') }}</th>
-                <th class="py-2 font-normal">{{ __('Změněno') }}</th>
+                <th class="py-2.5 pr-3 font-normal">{{ __('Zakázka') }}</th>
+                <th class="py-2.5 pr-3 font-normal">{{ __('Stav') }}</th>
+                <th class="py-2.5 pr-3 font-normal">{{ __('Hodnota') }}</th>
+                <th class="py-2.5 pr-3 font-normal">{{ __('Pobočka') }}</th>
+                <th class="py-2.5 pr-3 font-normal">{{ __('Obchodník') }}</th>
+                <th class="py-2.5 font-normal">{{ __('Změněno') }}</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="l in leads" :key="l.name" class="border-t">
-                <td class="py-2 pr-3">
+                <td class="py-2.5 pr-3">
                   <router-link :to="{ name: 'Lead', params: { leadId: l.name } }" class="text-ink-blue-5 hover:underline">{{ l.order_title || l.lead_name || l.name }}</router-link>
-                  <div v-if="l.order_title && l.lead_name" class="text-xs text-ink-gray-5">{{ l.lead_name }}</div>
+                  <div v-if="l.order_title && l.lead_name" class="text-[13px] text-ink-gray-5">{{ l.lead_name }}</div>
                 </td>
-                <td class="py-2 pr-3">{{ __(l.status) }}</td>
-                <td class="py-2 pr-3">{{ money(l.order_value) }}</td>
-                <td class="py-2 pr-3">{{ l.branch_name }}</td>
-                <td class="py-2 pr-3">{{ l.owner_name }}</td>
-                <td class="py-2">{{ dateTime(l.modified) }}</td>
+                <td class="py-2.5 pr-3">{{ __(l.status) }}</td>
+                <td class="py-2.5 pr-3">{{ money(l.order_value) }}</td>
+                <td class="py-2.5 pr-3">{{ l.branch_name }}</td>
+                <td class="py-2.5 pr-3">{{ l.owner_name }}</td>
+                <td class="py-2.5">{{ dateTime(l.modified) }}</td>
               </tr>
             </tbody>
           </table>
@@ -248,31 +257,37 @@
         <!-- Kontakty -->
         <div v-else-if="tab === 'contacts'">
           <div class="mb-3 flex justify-end">
-            <Button :label="__('Přidat kontakt')" iconLeft="lucide-plus" @click="showContactDialog = true" />
+            <Button class="max-md:!min-h-[44px]" :label="__('Přidat kontakt')" iconLeft="lucide-plus" @click="showContactDialog = true" />
           </div>
           <GlSkeleton v-if="overviewFirstLoad" :rows="3" />
           <GlEmptyState v-else-if="!contacts.length && !overview.error" class="my-6" icon="users" :title="__('Zatím tu nejsou žádné kontakty')" :text="__('Přidejte třeba účetní nebo technika.')" />
-          <table v-else-if="contacts.length" class="w-full text-left text-sm">
-            <thead class="text-xs text-ink-gray-5">
+          <div v-else-if="contacts.length && isMobileView" class="flex flex-col gap-2">
+            <router-link v-for="c in contacts" :key="c.name" :to="{ name: 'Contact', params: { contactId: c.name } }" class="flex min-h-[56px] min-w-0 flex-col justify-center rounded-2xl bg-white/55 px-4 py-2.5">
+              <span class="break-words text-[15px] font-semibold text-ink-gray-9">{{ c.full_name || c.name }}</span>
+              <span class="mt-0.5 break-words text-[14px] text-ink-gray-6">{{ [c.designation, c.email_id, c.mobile_no].filter(Boolean).join(' · ') }}</span>
+            </router-link>
+          </div>
+          <table v-else-if="contacts.length" class="w-full text-left text-[14px]">
+            <thead class="text-[13px] text-ink-gray-5">
               <tr>
-                <th class="py-2 pr-3 font-normal">{{ __('Jméno') }}</th>
-                <th class="py-2 pr-3 font-normal">{{ __('Typ') }}</th>
-                <th class="py-2 pr-3 font-normal">{{ __('Pozice') }}</th>
-                <th class="py-2 pr-3 font-normal">{{ __('Pobočka') }}</th>
-                <th class="py-2 pr-3 font-normal">{{ __('E-mail') }}</th>
-                <th class="py-2 font-normal">{{ __('Mobil') }}</th>
+                <th class="py-2.5 pr-3 font-normal">{{ __('Jméno') }}</th>
+                <th class="py-2.5 pr-3 font-normal">{{ __('Typ') }}</th>
+                <th class="py-2.5 pr-3 font-normal">{{ __('Pozice') }}</th>
+                <th class="py-2.5 pr-3 font-normal">{{ __('Pobočka') }}</th>
+                <th class="py-2.5 pr-3 font-normal">{{ __('E-mail') }}</th>
+                <th class="py-2.5 font-normal">{{ __('Mobil') }}</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="c in contacts" :key="c.name" class="border-t">
-                <td class="py-2 pr-3">
+                <td class="py-2.5 pr-3">
                   <router-link :to="{ name: 'Contact', params: { contactId: c.name } }" class="text-ink-blue-5 hover:underline">{{ c.full_name || c.name }}</router-link>
                 </td>
-                <td class="py-2 pr-3">{{ c.contact_type ? __(c.contact_type) : '' }}</td>
-                <td class="py-2 pr-3">{{ c.designation }}</td>
-                <td class="py-2 pr-3">{{ c.branch_name }}</td>
-                <td class="py-2 pr-3">{{ c.email_id }}</td>
-                <td class="py-2">{{ c.mobile_no }}</td>
+                <td class="py-2.5 pr-3">{{ c.contact_type ? __(c.contact_type) : '' }}</td>
+                <td class="py-2.5 pr-3">{{ c.designation }}</td>
+                <td class="py-2.5 pr-3">{{ c.branch_name }}</td>
+                <td class="py-2.5 pr-3">{{ c.email_id }}</td>
+                <td class="py-2.5">{{ c.mobile_no }}</td>
               </tr>
             </tbody>
           </table>
@@ -281,29 +296,38 @@
         <!-- Pobočky -->
         <div v-else-if="tab === 'branches'">
           <div class="mb-3 flex justify-end">
-            <Button :label="__('Přidat pobočku')" iconLeft="lucide-plus" @click="editBranch(null)" />
+            <Button class="max-md:!min-h-[44px]" :label="__('Přidat pobočku')" iconLeft="lucide-plus" @click="editBranch(null)" />
           </div>
           <GlSkeleton v-if="overviewFirstLoad" :rows="3" />
           <GlEmptyState v-else-if="!branches.length && !overview.error" class="my-6" icon="map-pin" :title="__('Firma zatím nemá pobočky')" :text="__('Pobočka určuje kraj a odpovědného obchodníka zakázky.')" />
-          <table v-else-if="branches.length" class="w-full text-left text-sm">
-            <thead class="text-xs text-ink-gray-5">
+          <div v-else-if="branches.length && isMobileView" class="flex flex-col gap-2">
+            <div v-for="b in branches" :key="b.name" class="flex min-h-[56px] min-w-0 items-center gap-2 rounded-2xl bg-white/55 px-4 py-2.5">
+              <div class="min-w-0 flex-1">
+                <div class="break-words text-[15px] font-semibold text-ink-gray-9">{{ b.branch_name }}</div>
+                <div class="break-words text-[14px] text-ink-gray-6">{{ [b.city, b.territory, b.responsible_name].filter(Boolean).join(' · ') }}</div>
+              </div>
+              <Button variant="ghost" class="max-md:!min-h-[44px]" :label="__('Upravit')" @click="editBranch(b)" />
+            </div>
+          </div>
+          <table v-else-if="branches.length" class="w-full text-left text-[14px]">
+            <thead class="text-[13px] text-ink-gray-5">
               <tr>
-                <th class="py-2 pr-3 font-normal">{{ __('Pobočka') }}</th>
-                <th class="py-2 pr-3 font-normal">{{ __('Kraj') }}</th>
-                <th class="py-2 pr-3 font-normal">{{ __('Město') }}</th>
-                <th class="py-2 pr-3 font-normal">{{ __('Odpovědný obchodník') }}</th>
-                <th class="py-2 pr-3 font-normal">{{ __('Zakázky') }}</th>
-                <th class="py-2" />
+                <th class="py-2.5 pr-3 font-normal">{{ __('Pobočka') }}</th>
+                <th class="py-2.5 pr-3 font-normal">{{ __('Kraj') }}</th>
+                <th class="py-2.5 pr-3 font-normal">{{ __('Město') }}</th>
+                <th class="py-2.5 pr-3 font-normal">{{ __('Odpovědný obchodník') }}</th>
+                <th class="py-2.5 pr-3 font-normal">{{ __('Zakázky') }}</th>
+                <th class="py-2.5" />
               </tr>
             </thead>
             <tbody>
               <tr v-for="b in branches" :key="b.name" class="border-t">
-                <td class="py-2 pr-3 text-ink-gray-9">{{ b.branch_name }}</td>
-                <td class="py-2 pr-3">{{ b.territory }}</td>
-                <td class="py-2 pr-3">{{ b.city }}</td>
-                <td class="py-2 pr-3">{{ b.responsible_name }}</td>
-                <td class="py-2 pr-3">{{ b.leads }}</td>
-                <td class="py-2 text-right"><Button variant="ghost" :label="__('Upravit')" @click="editBranch(b)" /></td>
+                <td class="py-2.5 pr-3 text-ink-gray-9">{{ b.branch_name }}</td>
+                <td class="py-2.5 pr-3">{{ b.territory }}</td>
+                <td class="py-2.5 pr-3">{{ b.city }}</td>
+                <td class="py-2.5 pr-3">{{ b.responsible_name }}</td>
+                <td class="py-2.5 pr-3">{{ b.leads }}</td>
+                <td class="py-2.5 text-right"><Button variant="ghost" class="max-md:!min-h-[44px]" :label="__('Upravit')" @click="editBranch(b)" /></td>
               </tr>
             </tbody>
           </table>
