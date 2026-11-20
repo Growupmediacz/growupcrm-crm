@@ -11,8 +11,9 @@
     </template>
   </LayoutHeader>
 
-  <div v-if="msg.error" class="px-4 py-10 text-center text-ink-gray-5">{{ msg.error.messages?.[0] || __('Zprávu se nepodařilo načíst.') }}</div>
-  <div v-else-if="m" class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-3 pb-24 md:px-2 md:pb-2">
+  <div v-if="msg.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Zprávu se nepodařilo načíst')" :text="msg.error.messages?.[0]" @retry="msg.reload()" /></div>
+  <div v-else-if="!m" class="px-3 md:px-2"><GlSkeleton :rows="4" /></div>
+  <div v-else class="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-3 pb-24 md:px-2 md:pb-2">
     <div class="grid shrink-0 gap-4 lg:grid-cols-[1fr_340px]">
       <div class="gl-card p-5 md:p-7">
         <dl class="text-[15px]">
@@ -85,6 +86,8 @@
 <script setup>
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
+import GlSkeleton from '@/components/GlSkeleton.vue'
 import { api, avatarTone, initials } from '@/composables/outreach'
 import { sanitizeHTML } from '@/utils'
 import { Breadcrumbs, createResource, toast, usePageMeta } from 'frappe-ui'

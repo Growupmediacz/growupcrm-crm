@@ -1,7 +1,8 @@
 <template>
-  <!-- GrowUp (design systém 2. kola): prázdný stav = ikona, jedna věta, co dělat, jedna akce. Vždy česky, nikdy „nic nenalezeno (Záznamy)“ -->
+  <!-- GrowUp (design systém 2. kola, kolo 2027/2 V1): prázdný stav = ikona Lucide v kruhu, jedna věta, co dělat, jedna akce. Vždy česky.
+       Stejný vzhled jako „Všechno vyřízeno“ ve frontě Dnes (DESIGN-ZADANI 1.6). -->
   <div class="flex flex-col items-center gap-2 rounded-[22px] bg-[color-mix(in_srgb,var(--c-tint)_7%,transparent)] px-6 py-9 text-center">
-    <span class="flex size-12 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--accent-600)_10%,transparent)] text-[var(--accent-700)]"><GlIcon :name="icon" :size="22" /></span>
+    <span class="flex size-14 items-center justify-center rounded-full bg-[var(--accent-soft)] text-[var(--accent-600)]"><GlIcon :name="icon" :size="24" /></span>
     <div class="text-[16px] font-bold text-ink-gray-9">{{ title }}</div>
     <p v-if="text" class="max-w-[320px] text-[13px] leading-relaxed text-ink-gray-6">{{ text }}</p>
     <div v-if="$slots.default || action" class="mt-1">

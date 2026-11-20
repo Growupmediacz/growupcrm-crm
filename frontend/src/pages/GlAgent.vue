@@ -66,7 +66,9 @@
           <Button iconLeft="lucide-x" theme="red" :label="selected.length ? __('Zamítnout vybrané') : __('Zamítnout vše')" :loading="busy" @click="decideBulk('reject')" />
         </div>
       </div>
-      <GlEmptyState v-if="sg && !sg.rows.length" class="mt-4" icon="users" :title="sgEmail && sg.without_email ? __('Všechny návrhy s e-mailem jsou vyřízené') : __('Žádné návrhy')"
+      <GlErrorBanner v-if="suggestions.error" class="mt-4" :title="__('Návrhy se nepodařilo načíst')" @retry="suggestions.reload()" />
+      <GlSkeleton v-else-if="suggestions.loading && !suggestions.data" class="mt-4" :rows="3" />
+      <GlEmptyState v-else-if="sg && !sg.rows.length" class="mt-4" icon="users" :title="sgEmail && sg.without_email ? __('Všechny návrhy s e-mailem jsou vyřízené') : __('Žádné návrhy')"
         :text="sgEmail && sg.without_email ? __('Zbývá {0} lidí bez e-mailu. E-maily jim dohledá Anymailfinder (Dohledat e-maily výše); jako kontakty je přidáte po vypnutí filtru „jen s e-mailem“.', [sg.without_email]) : __('Návrhy vznikají z obohacení firem a z ARES.')" />
       <div v-else-if="sg" class="mt-4 overflow-x-auto">
         <table class="w-full min-w-[860px] text-left text-[15px]">

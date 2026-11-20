@@ -18,7 +18,7 @@
   <div v-else-if="board.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Weby se nepodařilo načíst')" :text="board.error.messages?.[0]" @retry="board.reload()" /></div>
   <div v-else-if="!board.data" class="px-3 md:px-2"><GlSkeleton :rows="5" /></div>
   <div v-else-if="!board.data.webs.length" class="px-3 md:px-2">
-    <GlEmptyState icon="globe" :title="__('Zatím žádné weby')" :text="__('Nový web založí Claude skillem novy-web, objeví se tady ve fázi 0 Ukázka nebo 1 Objednáno.')" />
+    <GlEmptyState icon="globe" :title="__('Zatím žádné weby')" :text="__('Weby klientů se objeví tady, jakmile se založí ukázka nebo objednávka.')" />
   </div>
   <div v-else class="flex min-h-0 flex-1 gap-3 overflow-x-auto px-3 pb-6 md:px-2">
     <section v-for="phase in columns" :key="phase.name" class="gl-card flex w-[272px] shrink-0 flex-col gap-2 self-start p-3">

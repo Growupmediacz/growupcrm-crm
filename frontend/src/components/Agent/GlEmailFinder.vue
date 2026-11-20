@@ -16,6 +16,9 @@
       </div>
     </div>
 
+    <GlErrorBanner v-if="state.error" :title="__('Dohledání e-mailů se nepodařilo načíst')" @retry="state.reload()" />
+    <GlSkeleton v-else-if="state.loading && !state.data" :rows="2" />
+
     <div v-if="st && !st.configured" class="rounded-[14px] bg-[color-mix(in_srgb,var(--c-amber-500)_12%,transparent)] px-4 py-2.5 text-[14px] text-ink-gray-8">
       <b>{{ __('Anymailfinder zatím není nastavený.') }}</b> {{ __('Chybí API klíč, obraťte se na správce.') }}
     </div>
@@ -61,7 +64,9 @@
 </template>
 
 <script setup>
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import GlIcon from '@/components/GlIcon.vue'
+import GlSkeleton from '@/components/GlSkeleton.vue'
 import { saveFailed } from '@/composables/glToast'
 import { Button, FormControl, call, createResource, toast } from 'frappe-ui'
 import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'

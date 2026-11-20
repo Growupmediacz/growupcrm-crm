@@ -49,9 +49,17 @@
             <span class="block truncate text-[12.5px] text-ink-gray-5">{{ sub(c) }}</span>
           </span>
         </button>
-        <div v-if="directory.data && !directory.data.length" class="px-3 py-6 text-center text-[14px] text-ink-gray-5">
-          {{ q ? __('Nic nenalezeno.') : __('Zatím žádné kontakty.') }}
-        </div>
+        <GlErrorBanner v-if="directory.error" :title="__('Kontakty se nepodařilo načíst')" @retry="directory.reload()" />
+        <GlSkeleton v-else-if="directory.loading && !directory.data" :rows="6" />
+        <GlEmptyState
+          v-else-if="directory.data && !directory.data.length"
+          class="mt-2"
+          icon="users"
+          :title="q ? __('Nic nenalezeno') : __('Zatím žádné kontakty')"
+          :action="q ? '' : __('Nový kontakt')"
+          primary
+          @action="showContactModal = true"
+        />
       </div>
     </div>
 
@@ -199,6 +207,8 @@
 </template>
 <script setup>
 import GlEmptyState from '@/components/GlEmptyState.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
+import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import CalendarEventModal from '@/components/Modals/CalendarEventModal.vue'

@@ -8,7 +8,8 @@
       </p>
     </div>
 
-    <div v-if="status.loading && !status.data" class="text-ink-gray-5">{{ __('Načítám…') }}</div>
+    <GlSkeleton v-if="status.loading && !status.data" :rows="2" />
+    <GlErrorBanner v-else-if="status.error && !s" :title="__('Schránku se nepodařilo načíst')" @retry="status.reload()" />
     <template v-else-if="s">
       <div class="flex items-center gap-4 rounded-[20px] bg-[color-mix(in_srgb,var(--c-tint)_7%,transparent)] p-4">
         <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-white text-[20px] font-bold text-[var(--c-blue-400-2)]">G</span>
@@ -43,6 +44,7 @@
 
 <script setup>
 import GlErrorBanner from '@/components/GlErrorBanner.vue'
+import GlSkeleton from '@/components/GlSkeleton.vue'
 import { saveFailed } from '@/composables/glToast'
 import { formatDate } from '@/utils'
 import { Button, createResource, call, toast } from 'frappe-ui'

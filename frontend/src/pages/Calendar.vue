@@ -74,8 +74,9 @@
       </button>
       <span v-if="team.length" class="text-[13px] text-ink-gray-5">· {{ __('počet schůzek v týdnu') }}</span>
     </div>
+    <GlErrorBanner v-if="loadError" :title="__('Kalendář se nepodařilo načíst')" :text="loadError" @retry="reload" />
     <div class="gl-card relative flex-1 overflow-hidden">
-      <div v-if="loading" class="absolute right-4 top-2 z-30 text-xs text-ink-gray-5">{{ __('Načítání…') }}</div>
+      <div v-if="loading && !loaded" class="absolute inset-0 z-30 bg-white/70 p-4"><GlSkeleton :rows="4" /></div>
       <CalendarMonth
         v-if="view === 'month'"
         :days="days"
@@ -148,8 +149,10 @@ import {
   toItems,
 } from '@/composables/calendar'
 import GlIcon from '@/components/GlIcon.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
+import GlSkeleton from '@/components/GlSkeleton.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
-import { Button, call, toast, usePageMeta } from 'frappe-ui'
+import { Button, call, usePageMeta } from 'frappe-ui'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 usePageMeta(() => ({ title: __('Kalendář') }))
@@ -170,6 +173,8 @@ const scope = ref('mine')
 const anchor = ref(startOfDay(new Date()))
 const items = ref([])
 const loading = ref(false)
+const loaded = ref(false)
+const loadError = ref('')
 const isManager = ref(false)
 const currentUser = ref('')
 const users = ref([])
@@ -218,15 +223,17 @@ let requestId = 0
 async function reload() {
   const id = ++requestId
   loading.value = true
+  loadError.value = ''
   try {
     const data = await fetchCalendar(range.value.start, range.value.end, scope.value)
     if (id !== requestId) return
     items.value = toItems(data)
     isManager.value = data.is_manager
     currentUser.value = data.user
+    loaded.value = true
     loadTeam()
   } catch (e) {
-    if (id === requestId) toast.error(e.messages?.[0] || __('Kalendář se nepodařilo načíst'))
+    if (id === requestId) loadError.value = e.messages?.[0] || e.message || __('Zkuste to prosím znovu.')
   } finally {
     if (id === requestId) loading.value = false
   }

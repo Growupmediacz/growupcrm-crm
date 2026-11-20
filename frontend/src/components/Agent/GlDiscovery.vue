@@ -14,6 +14,9 @@
       </div>
     </div>
 
+    <GlErrorBanner v-if="state.error" :title="__('Hledání firem se nepodařilo načíst')" @retry="state.reload()" />
+    <GlSkeleton v-else-if="state.loading && !state.data" :rows="2" />
+
     <div v-if="st" class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
       <label v-for="s in st.segments" :key="s.name" class="flex items-center gap-3 rounded-[14px] bg-[color-mix(in_srgb,var(--c-tint)_6%,transparent)] px-3 py-2.5">
         <div class="min-w-0 flex-1">
@@ -49,6 +52,8 @@
 </template>
 
 <script setup>
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
+import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import { formatDateCz } from '@/utils/glDate'
 import { Button, call, createResource, toast } from 'frappe-ui'

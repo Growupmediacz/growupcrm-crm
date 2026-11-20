@@ -142,6 +142,7 @@
       </div>
 
       <div class="flex-1 overflow-y-auto p-5">
+        <GlErrorBanner v-if="overview.error" class="mb-3" :title="__('Přehled firmy se nepodařilo načíst')" :text="overview.error.messages?.[0]" @retry="overview.reload()" />
         <!-- Aktivita -->
         <div v-if="tab === 'activity'">
           <!-- design 3. kolo (05): nadpis, filtry a Přidat, skupiny Nadcházející a po dnech, zakázka vpravo -->
@@ -163,7 +164,8 @@
               <Button v-else-if="addByKind[kind]" iconLeft="lucide-plus" :label="addByKind[kind].label" @click="addByKind[kind].onClick" />
             </div>
           </div>
-          <GlEmptyState v-if="!timeline.length" class="my-8" icon="clock" :title="__('Zatím žádná aktivita')" :text="__('Zápisy, hovory, schůzky a úkoly u zakázek této firmy se zobrazí tady.')" />
+          <GlSkeleton v-if="overviewFirstLoad" :rows="3" />
+          <GlEmptyState v-else-if="!timeline.length && !overview.error" class="my-8" icon="clock" :title="__('Zatím žádná aktivita')" :text="__('Zápisy, hovory, schůzky a úkoly u zakázek této firmy se zobrazí tady.')" />
           <template v-for="g in timelineGroups" :key="g.label">
             <div class="mt-3 border-b border-[var(--line)] pb-2 text-[16px] font-bold text-ink-gray-9">{{ g.label }}</div>
             <div
@@ -214,8 +216,9 @@
           <div class="mb-3 flex justify-end">
             <Button :label="__('Nová zakázka')" iconLeft="lucide-plus" @click="showLeadModal = true" />
           </div>
-          <GlEmptyState v-if="!leads.length" class="my-6" icon="brief" :title="__('Zatím žádná zakázka')" :text="__('Firma zatím nemá žádnou zakázku.')" :action="__('Nová zakázka')" primary @action="showLeadModal = true" />
-          <table v-else class="w-full text-left text-sm">
+          <GlSkeleton v-if="overviewFirstLoad" :rows="3" />
+          <GlEmptyState v-else-if="!leads.length && !overview.error" class="my-6" icon="brief" :title="__('Zatím žádná zakázka')" :text="__('Firma zatím nemá žádnou zakázku.')" :action="__('Nová zakázka')" primary @action="showLeadModal = true" />
+          <table v-else-if="leads.length" class="w-full text-left text-sm">
             <thead class="text-xs text-ink-gray-5">
               <tr>
                 <th class="py-2 pr-3 font-normal">{{ __('Zakázka') }}</th>
@@ -247,10 +250,9 @@
           <div class="mb-3 flex justify-end">
             <Button :label="__('Přidat kontakt')" iconLeft="lucide-plus" @click="showContactDialog = true" />
           </div>
-          <div v-if="!contacts.length" class="py-16 text-center text-sm text-ink-gray-5">
-            {{ __('Zatím tu nejsou žádné kontakty. Přidejte třeba účetní nebo technika.') }}
-          </div>
-          <table v-else class="w-full text-left text-sm">
+          <GlSkeleton v-if="overviewFirstLoad" :rows="3" />
+          <GlEmptyState v-else-if="!contacts.length && !overview.error" class="my-6" icon="users" :title="__('Zatím tu nejsou žádné kontakty')" :text="__('Přidejte třeba účetní nebo technika.')" />
+          <table v-else-if="contacts.length" class="w-full text-left text-sm">
             <thead class="text-xs text-ink-gray-5">
               <tr>
                 <th class="py-2 pr-3 font-normal">{{ __('Jméno') }}</th>
@@ -281,10 +283,9 @@
           <div class="mb-3 flex justify-end">
             <Button :label="__('Přidat pobočku')" iconLeft="lucide-plus" @click="editBranch(null)" />
           </div>
-          <div v-if="!branches.length" class="py-16 text-center text-sm text-ink-gray-5">
-            {{ __('Firma zatím nemá pobočky. Pobočka určuje kraj a odpovědného obchodníka zakázky.') }}
-          </div>
-          <table v-else class="w-full text-left text-sm">
+          <GlSkeleton v-if="overviewFirstLoad" :rows="3" />
+          <GlEmptyState v-else-if="!branches.length && !overview.error" class="my-6" icon="map-pin" :title="__('Firma zatím nemá pobočky')" :text="__('Pobočka určuje kraj a odpovědného obchodníka zakázky.')" />
+          <table v-else-if="branches.length" class="w-full text-left text-sm">
             <thead class="text-xs text-ink-gray-5">
               <tr>
                 <th class="py-2 pr-3 font-normal">{{ __('Pobočka') }}</th>
@@ -353,6 +354,8 @@
 
 <script setup>
 import GlEmptyState from '@/components/GlEmptyState.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
+import GlSkeleton from '@/components/GlSkeleton.vue'
 import ErrorPage from '@/components/ErrorPage.vue'
 import Resizer from '@/components/Resizer.vue'
 import SidePanelLayout from '@/components/SidePanelLayout.vue'
@@ -416,6 +419,7 @@ function reload() {
 }
 
 const summary = computed(() => overview.data?.summary)
+const overviewFirstLoad = computed(() => overview.loading && !overview.data)
 const allFields = ref(false)
 
 // P3: firma ve stavu Klient (jen agenturní moduly): spolupráce, projekty, stav vztahu

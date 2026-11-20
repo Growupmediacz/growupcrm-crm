@@ -19,7 +19,7 @@
           <select v-model="relationship" class="gl-chip h-10 rounded-full px-3 text-[14px]"><option value="">{{ __('Stav: Vše') }}</option><option>Prospekt</option><option>Klient</option></select>
         </div>
         <div class="max-h-[330px] overflow-y-auto rounded-2xl bg-[color-mix(in_srgb,var(--c-tint)_6%,transparent)] p-1">
-          <p v-if="!rows.length" class="py-8 text-center text-[14px] text-ink-gray-5">{{ __('Žádné kontakty podle filtru.') }}</p>
+          <GlEmptyState v-if="!rows.length" icon="users" :title="__('Žádné kontakty podle filtru')" />
           <label v-for="r in rows" :key="r.contact" class="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 hover:bg-white/60" :class="[picked.has(r.contact) && 'bg-[color-mix(in_srgb,var(--accent-600)_8%,transparent)]', r.flag && 'cursor-not-allowed opacity-70']">
             <input type="checkbox" :disabled="!!r.flag" :checked="picked.has(r.contact)" @change="toggle(r.contact)" />
             <span class="flex size-9 shrink-0 items-center justify-center rounded-full text-[12px] font-bold" :style="avatarTone(r.organization_name || r.full_name)">{{ initials(r.organization_name || r.full_name) }}</span>
@@ -79,6 +79,7 @@
 </template>
 
 <script setup>
+import GlEmptyState from '@/components/GlEmptyState.vue'
 import GlErrorBanner from '@/components/GlErrorBanner.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import { api, avatarTone, initials } from '@/composables/outreach'

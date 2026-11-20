@@ -12,6 +12,9 @@
       </div>
     </div>
 
+    <GlErrorBanner v-if="profile.error" :title="__('Profil firmy se nepodařilo načíst')" @retry="profile.reload()" />
+    <GlSkeleton v-else-if="profile.loading && !profile.data" :rows="2" />
+
     <div v-if="p" class="text-[13px] text-ink-gray-5">
       <template v-if="p.last_sync">{{ __('Načteno') }} {{ formatDate(p.last_sync) }}<template v-if="p.sync_credits"> · {{ p.sync_credits }} {{ __('kreditů') }}</template></template>
       <template v-if="p.sync_status && p.sync_status !== 'Hotovo'"> · {{ p.sync_status }}</template>
@@ -61,6 +64,8 @@
 
 <script setup>
 import GlEmptyState from '@/components/GlEmptyState.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
+import GlSkeleton from '@/components/GlSkeleton.vue'
 import { saveFailed } from '@/composables/glToast'
 import { formatDate } from '@/utils'
 import { Button, call, createResource, toast } from 'frappe-ui'

@@ -15,8 +15,9 @@
     </template>
   </LayoutHeader>
 
-  <div v-if="project.error" class="px-4 py-10 text-center text-ink-gray-5">{{ project.error.messages?.[0] || __('Projekt se nepodařilo načíst.') }}</div>
-  <div v-else-if="p" class="flex min-h-0 flex-1 gap-3 overflow-hidden px-2 pb-2">
+  <div v-if="project.error" class="px-3 md:px-2"><GlErrorBanner :title="__('Projekt se nepodařilo načíst')" :text="project.error.messages?.[0]" @retry="project.reload()" /></div>
+  <div v-else-if="!p" class="px-3 md:px-2"><GlSkeleton :rows="4" /></div>
+  <div v-else class="flex min-h-0 flex-1 gap-3 overflow-hidden px-2 pb-2">
     <div class="flex min-w-0 flex-1 flex-col gap-3 overflow-y-auto">
       <div class="gl-card p-5 md:p-6">
         <div class="flex items-start justify-between gap-6">
@@ -88,7 +89,7 @@
           </div>
           </template>
         </div>
-        <p v-if="!groups.length" class="py-6 text-center text-[14px] text-ink-gray-5">{{ view === 'mine' ? __('Žádné vaše úkoly.') : __('Projekt zatím nemá úkoly.') }}</p>
+        <GlEmptyState v-if="!groups.length" class="my-4" icon="circle-check" :title="view === 'mine' ? __('Žádné vaše úkoly') : __('Projekt zatím nemá úkoly')" />
       </div>
     </div>
 
@@ -204,6 +205,9 @@
 </template>
 <script setup>
 import GlIcon from '@/components/GlIcon.vue'
+import GlEmptyState from '@/components/GlEmptyState.vue'
+import GlErrorBanner from '@/components/GlErrorBanner.vue'
+import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlTaskModal from '@/components/Modals/GlTaskModal.vue'
 import GlDatePicker from '@/components/GlDatePicker.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'

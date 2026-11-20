@@ -101,7 +101,7 @@
             </td>
           </tr>
           <tr v-if="board.data && !board.data.projects.length">
-            <td colspan="5" class="px-3 py-10 text-center text-ink-gray-5">{{ __('Žádné projekty.') }}</td>
+            <td colspan="5" class="px-3 py-6"><GlEmptyState icon="folder" :title="__('Žádné projekty')" :action="__('Nový projekt')" primary @action="showNew = true" /></td>
           </tr>
         </tbody>
       </table>

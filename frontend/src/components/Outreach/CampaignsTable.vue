@@ -8,10 +8,15 @@
         <button class="gl-seg-btn !px-5" :class="filter === 'all' && 'gl-seg-on !bg-[var(--accent-600)] !text-white'" @click="filter = 'all'">{{ __('Vše') }}</button>
       </div>
     </div>
-    <div v-if="!shown.length" class="flex flex-col items-center gap-3 py-8 text-center">
-      <p class="text-[14px] text-ink-gray-5">{{ rows.length ? __('Žádná aktivní kampaň.') : __('Zatím žádná kampaň. Založte první a přidejte do ní kontakty z CRM.') }}</p>
-      <Button variant="solid" iconLeft="lucide-plus" :label="__('Nová kampaň')" @click="$emit('new')" />
-    </div>
+    <GlEmptyState
+      v-if="!shown.length"
+      icon="mail"
+      :title="rows.length ? __('Žádná aktivní kampaň') : __('Zatím žádná kampaň')"
+      :text="rows.length ? '' : __('Založte první a přidejte do ní kontakty z CRM.')"
+      :action="__('Nová kampaň')"
+      primary
+      @action="$emit('new')"
+    />
     <div v-else class="flex flex-col">
       <div class="hidden grid-cols-[minmax(0,1fr)_120px_90px_80px_150px] gap-3 border-b border-[var(--line)] pb-2 text-[14px] text-ink-gray-5 lg:grid">
         <span>{{ __('Název kampaně') }}</span><span>{{ __('Stav') }}</span><span>{{ __('Odpovědi') }}</span><span>{{ __('Schůzky') }}</span><span>{{ __('% hotovo') }}</span>
@@ -44,8 +49,8 @@
 </template>
 
 <script setup>
+import GlEmptyState from '@/components/GlEmptyState.vue'
 import GlIcon from '@/components/GlIcon.vue'
-import { Button } from 'frappe-ui'
 import { computed, ref } from 'vue'
 
 const props = defineProps({ rows: { type: Array, default: () => [] } })
