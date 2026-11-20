@@ -497,3 +497,50 @@ body.app-bg::before {
   .gl3-kchosen { transform: none; transition: none; }
 }
 
+
+/* ---------------------------------------------------------------------
+   Zadání 2027 (DESIGN-ZADANI.md 1.1, 1.2, 1.7): pohyb, cílové plochy, čtení e-mailu.
+   --------------------------------------------------------------------- */
+:root {
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-panel: cubic-bezier(0.32, 0.72, 0, 1);
+  --t-press: 90ms;
+  --t-fast: 120ms;
+  --t-base: 180ms;
+  --t-panel: 220ms;
+  --t-sheet: 280ms;
+  --hit: 44px;
+  --hit-sm: 36px;
+  --read-size: 16px;
+  --read-lh: 1.6;
+  --read-w: 720px;
+  --state-us-bg: color-mix(in srgb, var(--accent-600) 12%, transparent);
+  --state-us-fg: var(--accent-700);
+  --state-them-bg: rgba(110, 120, 200, 0.12);
+  --state-them-fg: var(--text-2);
+  --state-done-bg: rgba(15, 107, 50, 0.1);
+  --state-done-fg: #0f6b32;
+  --warn-bg: rgba(214, 130, 20, 0.14);
+  --warn-fg: #7a4400;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --t-press: 0ms;
+    --t-fast: 0ms;
+    --t-base: 0ms;
+    --t-panel: 0ms;
+    --t-sheet: 0ms;
+  }
+}
+@media (pointer: coarse) {
+  :root {
+    --hit-sm: 44px;
+  }
+}
+
+/* Zadání 2027 E1: záložky Konverzace / Záznamy v detailu zakázky (Lead.vue) */
+.gl-mailtabs { display: flex; gap: 4px; margin: 12px 16px 0; padding: 3px; border-radius: 14px; background: var(--fill-tinted, rgba(110, 120, 200, 0.075)); align-self: flex-start; }
+.gl-mailtab { min-height: var(--hit-sm); padding: 0 18px; border-radius: 11px; font-size: 15px; font-weight: 600; color: var(--text-2); }
+.gl-mailtab[aria-pressed='true'] { background: white; color: var(--text-1); box-shadow: 0 1px 4px rgba(40, 50, 120, 0.12); }
+.gl-mailtab:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.gl-lead-mail.gl-chiptabs-d [role='tablist'] { padding-left: 20px !important; }
