@@ -44,7 +44,7 @@
             <div v-if="whatsapp.header" class="text-base-semibold">
               {{ whatsapp.header }}
             </div>
-            <div v-html="sanitizeHTML(formatWhatsAppMessage(whatsapp.reply_message))" />
+            <div v-html="formatWhatsAppMessage(whatsapp.reply_message)" />
             <div v-if="whatsapp.footer" class="text-xs text-ink-gray-5">
               {{ whatsapp.footer }}
             </div>
@@ -81,18 +81,18 @@
             <div v-if="whatsapp.header" class="text-base-semibold">
               {{ whatsapp.header }}
             </div>
-            <div v-html="sanitizeHTML(formatWhatsAppMessage(whatsapp.template))" />
+            <div v-html="formatWhatsAppMessage(whatsapp.template)" />
             <div v-if="whatsapp.footer" class="text-xs text-ink-gray-5">
               {{ whatsapp.footer }}
             </div>
           </div>
           <div
             v-else-if="whatsapp.content_type == 'text'"
-            v-html="sanitizeHTML(formatWhatsAppMessage(whatsapp.message))"
+            v-html="formatWhatsAppMessage(whatsapp.message)"
           />
           <div
             v-else-if="whatsapp.content_type == 'button'"
-            v-html="sanitizeHTML(formatWhatsAppMessage(whatsapp.message))"
+            v-html="formatWhatsAppMessage(whatsapp.message)"
           />
           <div v-else-if="whatsapp.content_type == 'image'">
             <img
@@ -103,7 +103,7 @@
             <div
               v-if="!whatsapp.message.startsWith('/files/')"
               class="mt-1.5"
-              v-html="sanitizeHTML(formatWhatsAppMessage(whatsapp.message))"
+              v-html="formatWhatsAppMessage(whatsapp.message)"
             />
           </div>
           <div
@@ -134,7 +134,7 @@
             <div
               v-if="!whatsapp.message.startsWith('/files/')"
               class="mt-1.5"
-              v-html="sanitizeHTML(formatWhatsAppMessage(whatsapp.message))"
+              v-html="formatWhatsAppMessage(whatsapp.message)"
             />
           </div>
           <div class="-mb-1 flex shrink-0 items-end gap-1 text-ink-gray-5">
