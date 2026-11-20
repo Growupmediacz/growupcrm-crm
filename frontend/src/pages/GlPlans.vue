@@ -129,6 +129,66 @@
       </div>
     </div>
 
+    <!-- zadání 2027 E3: obrat se třemi čísly (obchodník vidí jen nasmlouváno) -->
+    <div v-if="revenueCards.length" class="gl-card flex flex-col gap-4 p-5 md:p-6">
+      <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Obrat') }} · {{ p.label }}</h2>
+        <span v-if="sourceLabel" class="text-[14px] text-ink-gray-5">{{ __('Plnění cíle se počítá z čísla „{0}“.', [sourceLabel]) }}</span>
+      </div>
+      <div class="grid gap-3" :class="revenueCards.length > 1 ? 'sm:grid-cols-3' : ''">
+        <div
+          v-for="c in revenueCards"
+          :key="c.key"
+          class="flex min-w-0 flex-col gap-1 rounded-[18px] border px-4 py-3.5"
+          :class="c.counted ? 'border-[var(--accent-600)] bg-[var(--accent-soft)]' : 'border-[var(--line)] bg-white/60'"
+        >
+          <span class="flex items-center gap-2 text-[14px] font-semibold text-ink-gray-7">
+            {{ c.label }}
+            <span v-if="c.counted && revenueCards.length > 1" class="rounded-full bg-[color-mix(in_srgb,var(--accent-600)_14%,transparent)] px-2 py-0.5 text-[13px] font-semibold text-[var(--accent-700)]">{{ __('počítá se') }}</span>
+          </span>
+          <span class="truncate text-[30px] font-medium leading-tight tracking-tight tabular-nums text-ink-gray-9" :title="money(c.value)">{{ money(c.value) }}</span>
+          <span v-if="c.recurring" class="text-[13px] tabular-nums text-ink-gray-5">{{ __('z toho pravidelné {0}', [money(c.recurring)]) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- kolik firem oslovit (jen vedoucí; obchodník dostane chybu práv a karta se nevykreslí) -->
+    <div v-if="vp" class="gl-card flex flex-col gap-4 p-5 md:p-6">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <h2 class="text-[20px] font-bold tracking-tight text-ink-gray-9">{{ __('Kolik firem oslovit') }}</h2>
+        <span v-if="vp.observed?.small_sample" class="inline-flex items-center gap-1.5 rounded-full bg-[rgba(224,161,0,.16)] px-3 py-1 text-[13px] font-semibold text-[#7a4400]">
+          <GlIcon name="alert" :size="14" />{{ __('Málo dat, hrubý odhad') }}
+        </span>
+      </div>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="flex flex-col gap-1 rounded-[18px] bg-[rgba(110,120,200,.075)] px-4 py-3.5">
+          <span class="text-[14px] text-ink-gray-5">{{ __('Doporučeno týdně') }}</span>
+          <span class="text-[30px] font-medium leading-tight tabular-nums text-ink-gray-9">{{ vp.recommended_per_week ?? '—' }}</span>
+          <span class="text-[13px] text-ink-gray-5">{{ __('firem k oslovení') }}</span>
+        </div>
+        <div class="flex flex-col gap-1 rounded-[18px] bg-[rgba(110,120,200,.075)] px-4 py-3.5">
+          <span class="text-[14px] text-ink-gray-5">{{ __('Webů ještě potřeba') }}</span>
+          <span class="text-[30px] font-medium leading-tight tabular-nums text-ink-gray-9">{{ czNumber(vp.webs_needed ?? 0) }}</span>
+          <span class="text-[13px] text-ink-gray-5">{{ __('do konce roku {0}', [vp.year]) }}</span>
+        </div>
+        <div class="flex flex-col gap-1 rounded-[18px] bg-[rgba(110,120,200,.075)] px-4 py-3.5">
+          <span class="text-[14px] text-ink-gray-5">{{ __('Zbývá týdnů') }}</span>
+          <span class="text-[30px] font-medium leading-tight tabular-nums text-ink-gray-9">{{ vp.weeks_left ?? '—' }}</span>
+          <span v-if="vp.pool_weeks" class="text-[13px] text-ink-gray-5">{{ __('zásoba firem vystačí na {0} týdnů', [czNumber(vp.pool_weeks)]) }}</span>
+        </div>
+      </div>
+      <div v-if="vp.scenarios?.length" class="flex flex-col">
+        <div class="grid grid-cols-[1fr_auto_auto] gap-x-4 pb-1.5 text-[13px] text-ink-gray-5">
+          <span>{{ __('Scénář') }}</span><span class="text-right">{{ __('Z oslovení na zakázku') }}</span><span class="w-20 text-right">{{ __('Týdně') }}</span>
+        </div>
+        <div v-for="sc in vp.scenarios" :key="sc.scenario" class="grid min-h-9 grid-cols-[1fr_auto_auto] items-center gap-x-4 border-t border-[var(--line)] py-1.5 text-[15px]">
+          <span class="min-w-0 break-words text-ink-gray-9">{{ __(sc.scenario) }}</span>
+          <span class="text-right tabular-nums text-ink-gray-7">{{ czNumber(sc.contact_to_win) }} %</span>
+          <span class="w-20 text-right font-semibold tabular-nums text-ink-gray-9">{{ sc.per_week ?? '—' }}</span>
+        </div>
+      </div>
+    </div>
+
     <div class="grid gap-4 md:grid-cols-3">
       <!-- design 3. kolo (19): velké číslo, stav „na dobré cestě / pod plánem“ dole -->
       <div class="gl-card flex flex-col gap-2 p-6">
@@ -166,6 +226,7 @@
   <GlTargetsModal v-if="showTargets" v-model="showTargets" :months="monthOptions" :initial="editMonth" @saved="plan.reload()" />
 </template>
 <script setup>
+import { usersStore } from '@/stores/users'
 import GlSkeleton from '@/components/GlSkeleton.vue'
 import GlIcon from '@/components/GlIcon.vue'
 import GlUserAvatar from '@/components/GlUserAvatar.vue'
@@ -187,6 +248,25 @@ const showTargets = ref(false)
 const plan = createResource({ url: 'growupcrm.goals.get_plan', makeParams: () => ({ period: period.value }), auto: true })
 watch(period, () => plan.reload())
 const p = computed(() => plan.data)
+
+// zadání 2027 E3: tři čísla obratu (nasmlouváno, vystaveno, zaplaceno); obchodník má issued/paid null, tak ukážeme jen nasmlouváno
+const money = (n) => `${new Intl.NumberFormat('cs-CZ').format(Math.round(n || 0))} Kč`
+const revenueCards = computed(() => {
+  const r = p.value?.revenue
+  if (!r) return []
+  const counted = r.source === 'invoices' && r.issued !== null && r.issued !== undefined ? 'issued' : 'contracted'
+  const cards = [{ key: 'contracted', label: __('Nasmlouváno'), value: r.contracted, recurring: r.contracted_recurring }]
+  if (r.issued !== null && r.issued !== undefined) cards.push({ key: 'issued', label: __('Vystaveno'), value: r.issued, recurring: r.issued_recurring })
+  if (r.paid !== null && r.paid !== undefined) cards.push({ key: 'paid', label: __('Zaplaceno'), value: r.paid, recurring: r.paid_recurring })
+  return cards.map((c) => ({ ...c, counted: c.key === counted }))
+})
+const sourceLabel = computed(() => (revenueCards.value.length > 1 ? (revenueCards.value.find((c) => c.counted)?.label || '') : ''))
+
+// kolik firem oslovit: volání smí jen vedoucí, při chybě práv se karta skryje
+// zadání 2027 E3: „Kolik firem oslovit“ jen vedoucímu (obsahuje cíl obratu a při zdroji „faktury“ i vystavené částky)
+const showVolume = usersStore().isManager()
+const volume = createResource({ url: 'growupcrm.goals.volume_plan', auto: showVolume })
+const vp = computed(() => (!showVolume || volume.error ? null : volume.data || null))
 
 // barvy řad ověřené validátorem palety (CVD, kontrast); u kruhů je vždy legenda s hodnotami
 const SERIES = [
