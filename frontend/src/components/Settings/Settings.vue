@@ -1,12 +1,12 @@
 <template>
   <!-- GrowUp (design 3. kolo, 07 a 26–34): Nastavení jako celá stránka místo okna.
        Desktop: vlevo skupiny sekcí, vpravo obsah. Mobil: seznam sekcí, po výběru obsah se „‹ Nastavení“. -->
-  <div class="flex h-full min-h-0 flex-col gap-5">
+  <div class="flex min-h-0 flex-1 flex-col gap-5">
     <div class="flex shrink-0 items-end justify-between gap-4 px-1 pt-1">
       <div>
-        <button v-if="isMobileView && mobileOpen" class="mb-1 text-[15px] font-semibold text-[var(--accent-600)]" @click="mobileOpen = false">‹ {{ __('Nastavení') }}</button>
+        <button v-if="isMobileView && mobileOpen" class="mb-1 flex min-h-[44px] items-center text-[15px] font-semibold text-[var(--accent-600)]" @click="backToList">‹ {{ __('Nastavení') }}</button>
         <!-- mobil v sekci: nadpis nese karta sekce, nahoře jen „‹ Nastavení“ (jinak by byl nadpis dvakrát) -->
-        <h1 v-if="!(isMobileView && mobileOpen)" class="text-[32px] font-bold leading-tight tracking-[-0.025em] text-ink-gray-9 md:text-[40px]">{{ __('Nastavení') }}</h1>
+        <h1 v-if="!hideTitle && !(isMobileView && mobileOpen)" class="text-[32px] font-bold leading-tight tracking-[-0.025em] text-ink-gray-9 md:text-[40px]">{{ __('Nastavení') }}</h1>
         <div v-if="!(isMobileView && mobileOpen)" class="text-[15px] text-ink-gray-5">{{ subtitle }}</div>
       </div>
       <button v-if="!isMobileView" class="gl-round flex size-10 items-center justify-center rounded-full" :aria-label="__('Zavřít nastavení')" :title="__('Zavřít')" @click="close">
@@ -43,6 +43,7 @@
   </div>
 </template>
 <script setup>
+import router from '@/router'
 import AgencySettings from '@/components/Settings/AgencySettings.vue'
 import GlEmailSettings from '@/components/Settings/GlEmailSettings.vue'
 import GlLeadSources from '@/components/Settings/GlLeadSources.vue'
@@ -82,7 +83,7 @@ import EmailTemplatePage from '@/components/Settings/EmailTemplate/EmailTemplate
 import TelephonyPage from '@/components/Settings/Telephony/TelephonyPage.vue'
 import Icon from '@/components/Icon.vue'
 import { usersStore } from '@/stores/users'
-import { showSettings, activeSettingsPage, isMobileView } from '@/composables/settings'
+import { activeSettingsPage, isMobileView, settingsSlug } from '@/composables/settings'
 import { isWhatsappInstalled } from '@/composables/whatsapp'
 import { Avatar, createResource } from 'frappe-ui'
 import GlSettingsGroup from '@/components/Settings/GlSettingsGroup.vue'
@@ -91,6 +92,12 @@ import { ref, markRaw, computed, watch, h, nextTick, defineComponent } from 'vue
 import AssignmentRulePage from './AssignmentRules/AssignmentRulePage.vue'
 import ShieldCheck from '~icons/lucide/shield-check'
 import SlaConfig from './Sla/SlaConfig.vue'
+
+// GrowUp (zadání 2027 E3): sekce je v adrese /settings/<sekce>; hideTitle = nadpis nese hlavička stránky (GlSettings)
+const props = defineProps({
+  section: { type: String, default: '' },
+  hideTitle: { type: Boolean, default: false },
+})
 
 const { isManager, getUser } = usersStore()
 
@@ -182,6 +189,8 @@ const tabs = computed(() => {
   item.assignment.label = __('Pravidla přiřazení')
   item.templates.label = __('Šablony e-mailů')
   item.brand.label = __('Značka')
+  item.sla.label = __('Pravidla SLA')
+  item.telephony.label = __('Telefonie')
   let _tabs = [
     { label: __('Účet'), items: [item.profile, item.preferences] },
     { label: __('Tým'), items: [team, item.assignment, item.response], condition: () => isManager() },
@@ -220,7 +229,8 @@ const ALIASES = {
 const allItems = () => tabs.value.flatMap((tab) => tab.items)
 const activeTab = ref(allItems()[0])
 const sidebarContainer = ref(null)
-const mobileOpen = ref(false)
+// na telefonu: bez sekce v adrese seznam, se sekcí její obsah
+const mobileOpen = computed(() => !!props.section)
 
 const subtitle = computed(() => [brand.name || 'GrowUpCRM', planLabel.value].filter(Boolean).join(' · '))
 const planLabel = computed(() => (plan.data?.name ? __('tarif {0}', [plan.data.name]) : ''))
@@ -232,14 +242,25 @@ function setActiveTab(tabName) {
   activeTab.value = (label && allItems().find((t) => t.label === label)) || allItems()[0]
 }
 
+function goTo(label) {
+  const section = settingsSlug(label)
+  if (section && section !== props.section) router.push({ name: 'Settings', params: { section } })
+}
+
 function openPage(label) {
-  activeSettingsPage.value = label
+  teamSub.value = 0
+  generalSub.value = 0
   setActiveTab(label)
-  mobileOpen.value = true
+  goTo(label)
+}
+
+function backToList() {
+  router.push({ name: 'Settings' })
 }
 
 function close() {
-  showSettings.value = false
+  if (window.history.state?.back) router.back()
+  else router.push({ name: 'Today' })
 }
 
 // Scroll the settings sidebar so the active page is in view (e.g. when opened
@@ -251,11 +272,27 @@ function scrollActiveIntoView() {
   })
 }
 
+// sekce z adresy (i po Zpět v prohlížeči)
+watch(
+  () => props.section,
+  (section) => {
+    const found = section && allItems().find((t) => settingsSlug(t.label) === section)
+    if (found) activeTab.value = found
+    else if (section) router.replace({ name: 'Settings', params: { section: settingsSlug(allItems()[0]?.label) } })
+    else if (!isMobileView.value) router.replace({ name: 'Settings', params: { section: settingsSlug(allItems()[0]?.label) } })
+    scrollActiveIntoView()
+  },
+  { immediate: true },
+)
+
+// starší kód nastaví activeSettingsPage (např. „Invite User“): přejít na sekci a záložku, příznak vrátit
 watch(
   activeSettingsPage,
   (activePage) => {
+    if (!activePage) return
     setActiveTab(activePage)
-    if (activePage) mobileOpen.value = true
+    goTo(ALIASES[activePage]?.[0] || activePage)
+    activeSettingsPage.value = ''
     scrollActiveIntoView()
   },
   { immediate: true },

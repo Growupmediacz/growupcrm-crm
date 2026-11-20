@@ -1,9 +1,13 @@
 // GrowUp (design 3. kolo): navigace na jednom místě.
 // Úroveň 1 = skupina (levá lišta na desktopu, spodní lišta na mobilu),
-// úroveň 2 = stránky skupiny (spodní lišta na desktopu, záložky pod nadpisem na mobilu).
+// úroveň 2 = stránky skupiny (pilulky v hlavičce stránky: GlPageTabs na desktopu, GlSectionPills na mobilu; zadání 2027 E3).
 import { agencyEnabled, agentEnabled, analyticsEnabled, outreachEnabled } from '@/composables/agency'
 import { useLeadsOnlyMode, LEADS_ONLY_HIDDEN_ROUTES } from '@/composables/leadsOnlyMode'
+import { usersStore } from '@/stores/users'
 import { useStorage } from '@vueuse/core'
+
+// vedoucí obchodu / správce (usersStore se volá až při vyhodnocení, ne při načtení modulu)
+const isManager = () => usersStore().isManager()
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -17,10 +21,10 @@ const PAGES = [
     key: 'Outreach',
     label: 'Outreach',
     icon: 'send',
-    routes: ['Outreach', 'OutreachReview', 'OutreachCampaign', 'OutreachTemplate'],
+    routes: ['Outreach', 'OutreachReview', 'OutreachCampaign', 'OutreachTemplate', 'WeekApprove'],
     condition: () => outreachEnabled.value,
   },
-  { key: 'Agent', label: 'Agent', icon: 'sparkles', routes: ['Agent'], condition: () => agentEnabled.value },
+  { key: 'Agent', label: 'Agent', icon: 'sparkles', routes: ['Agent', 'AgentLog'], condition: () => agentEnabled.value },
   { key: 'Tasks', label: 'Úkoly', icon: 'check', routes: ['Tasks'] },
   { key: 'Calendar', label: 'Kalendář', icon: 'cal', routes: ['Calendar'] },
   { key: 'Notes', label: 'Zápisy', icon: 'doc', routes: ['Notes'] },
@@ -35,6 +39,8 @@ const PAGES = [
   },
   { key: 'Webs', label: 'Weby', icon: 'globe', routes: ['Webs'], condition: () => agencyEnabled.value },
   { key: 'Plans', label: 'Plány', icon: 'target', routes: ['Plans'], condition: () => agencyEnabled.value },
+  // zadání 2027 E3 (G): faktury jen pro vedoucího obchodu / správce (obchodník je nevidí ani v navigaci; API je chrání samo)
+  { key: 'Invoices', label: 'Faktury', icon: 'doc', routes: ['Invoices'], condition: () => agencyEnabled.value && isManager() },
   { key: 'Analytics', label: 'Analytika', icon: 'chart', routes: ['Analytics'], condition: () => analyticsEnabled.value },
 ]
 
@@ -42,7 +48,7 @@ const GROUPS = [
   { key: 'today', label: 'Dnes', icon: 'grid', pages: ['Today', 'Leads', 'Organizations', 'ContactsCards', 'Outreach', 'Agent'] },
   { key: 'sales', label: 'Prodej', icon: 'brief', pages: ['Leads', 'Organizations', 'ContactsCards', 'Outreach', 'Agent'] },
   { key: 'work', label: 'Práce', icon: 'check', pages: ['Tasks', 'Calendar', 'Notes', 'Call Logs'] },
-  { key: 'delivery', label: 'Dodání', icon: 'folder', pages: ['Clients', 'Projects', 'Webs', 'Plans', 'Analytics'] },
+  { key: 'delivery', label: 'Dodání', icon: 'folder', pages: ['Clients', 'Projects', 'Webs', 'Plans', 'Invoices', 'Analytics'] },
 ]
 
 // naposledy navštívená stránka každé skupiny (klik na skupinu tam vrátí)

@@ -123,6 +123,11 @@ const routes = [
   },
   // GrowUp: Agent (Firecrawl) – výzkum firem, jen správci se zapnutým modulem
   { path: '/agent', name: 'Agent', component: () => import('@/pages/GlAgent.vue') },
+  // GrowUp (zadání 2027 E3): Týden ke schválení v CRM (místo stránky mimo CRM), záznam agenta, faktury, Nastavení s adresou
+  { path: '/outreach/week/:name?', name: 'WeekApprove', component: () => import('@/pages/GlWeekApprove.vue'), props: true },
+  { path: '/agent/log', name: 'AgentLog', component: () => import('@/pages/GlAgentAudit.vue') },
+  { path: '/invoices', name: 'Invoices', component: () => import('@/pages/GlInvoices.vue') },
+  { path: '/settings/:section?', name: 'Settings', component: () => import('@/pages/GlSettings.vue'), props: true },
   { path: '/outreach/review/:name', name: 'OutreachReview', component: () => import('@/pages/GlOutreachReview.vue'), props: true },
   { path: '/outreach/campaigns/:name', name: 'OutreachCampaign', component: () => import('@/pages/GlOutreachCampaign.vue'), props: true },
   { path: '/outreach/templates/:name', name: 'OutreachTemplate', component: () => import('@/pages/GlOutreachTemplate.vue'), props: true },

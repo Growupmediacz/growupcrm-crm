@@ -1,6 +1,6 @@
 <template>
   <!-- GrowUp (design 3. kolo): levá plovoucí lišta. Skupiny vedou na naposledy otevřenou stránku skupiny,
-       stránky skupiny jsou ve spodní liště (GlTabBar). Panel oznámení se ukotví k tomuto prvku. -->
+       stránky skupiny jsou v hlavičce stránky (GlPageTabs, zadání 2027 E3). Panel oznámení se ukotví k tomuto prvku. -->
   <div class="relative flex h-full shrink-0 flex-col items-center gap-6">
     <router-link
       :to="{ name: 'Today' }"
@@ -15,9 +15,8 @@
         v-for="g in mainGroups"
         :key="g.key"
         :to="groupTarget(g)"
-        @click="showSettings = false"
         class="gl3-rail-item"
-        :class="!showSettings && isActiveGroup(g) && 'is-active'"
+        :class="isActiveGroup(g) && 'is-active'"
         :aria-current="isActiveGroup(g) ? 'page' : undefined"
       >
         <span class="gl3-rail-icon"><GlIcon :name="g.icon" :size="22" /></span>
@@ -32,9 +31,8 @@
       <template v-for="g in sectionGroups" :key="g.key">
         <router-link
           :to="groupTarget(g)"
-          @click="showSettings = false"
           class="gl3-rail-item"
-          :class="!showSettings && isActiveGroup(g) && 'is-active'"
+          :class="isActiveGroup(g) && 'is-active'"
           :aria-current="isActiveGroup(g) ? 'page' : undefined"
         >
           <span class="gl3-rail-icon"><GlIcon :name="g.icon" :size="22" /></span>
@@ -58,11 +56,22 @@
         <span class="gl3-rail-label">{{ __('Oznámení') }}</span>
       </button>
 
-      <button class="gl3-rail-item" :class="showSettings && 'is-active'" @click="showSettings = !showSettings">
+      <!-- zadání 2027 E3: Nastavení je stránka s adresou (/settings/…), Zpět v prohlížeči funguje -->
+      <router-link
+        :to="{ name: 'Settings' }"
+        class="gl3-rail-item"
+        :class="route.name === 'Settings' && 'is-active'"
+        :aria-current="route.name === 'Settings' ? 'page' : undefined"
+      >
         <span class="gl3-rail-icon"><GlIcon name="sliders" :size="22" /></span>
         <span class="gl3-rail-label">{{ __('Nastavení') }}</span>
-      </button>
+      </router-link>
     </nav>
+
+    <!-- avatar a účet: dřív na konci spodní lišty (GlTabBar), ta se v E3 ruší -->
+    <div class="mt-auto pb-1">
+      <UserDropdown footer :isCollapsed="true" placement="right" />
+    </div>
 
     <Notifications />
     <GlSearch hide-trigger />
@@ -76,7 +85,7 @@ import GlSearch from '@/components/GlSearch.vue'
 import Notifications from '@/components/Notifications.vue'
 import { useGlNav } from '@/composables/glNav'
 import { openGlSearch } from '@/composables/glSearch'
-import { showSettings } from '@/composables/settings'
+import UserDropdown from '@/components/UserDropdown.vue'
 import { getSettings } from '@/stores/settings'
 import { notificationsStore, unreadNotificationsCount, visible as notificationsVisible } from '@/stores/notifications'
 import { computed, ref, watch } from 'vue'
